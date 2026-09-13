@@ -29,6 +29,9 @@ jobs:
         run: npm ci
 
       - name: Build
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
         run: npm run build
 
       - name: Verify build output
@@ -40,6 +43,9 @@ jobs:
           if [ ! -f dist/.htaccess ]; then
             echo "::error::dist/.htaccess not found — public/.htaccess was not copied into the build output."
             exit 1
+          fi
+          if [ -z "${{ secrets.VITE_SUPABASE_URL }}" ] || [ -z "${{ secrets.VITE_SUPABASE_ANON_KEY }}" ]; then
+            echo "::warning::VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY repo secrets are not set — this build's Supabase client falls back to a mock (no writes reach the database). Add them under Settings > Secrets and variables > Actions."
           fi
 
       - name: Publish dist/ to deploy branch
