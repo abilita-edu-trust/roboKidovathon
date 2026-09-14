@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { RefHero } from './components/RefHero';
 import { RefHeroMarquee } from './components/RefHeroMarquee';
+import { RefTheExperience } from './components/RefTheExperience';
 import { RefWorkflowMindMap } from './components/RefWorkflowMindMap';
 import { RefTrackComparison } from './components/RefTrackComparison';
 import { RefKioskShowcase } from './components/RefKioskShowcase';
@@ -54,10 +55,16 @@ export function App() {
             {/* 02. Trusted Partners Marquee / Ticker (directly below Hero) */}
             <RefHeroMarquee />
 
-            {/* 03. Workflow Mind Map: From Parts to City Final */}
+            {/* 03. Dual Experience Pathways: RoboKidovation & Young Innovators Hackathon */}
+            <RefTheExperience
+              onNavigate={handleNavigate}
+              onOpenRegister={() => setIsRegisterOpen(true)}
+            />
+
+            {/* 04. Workflow Mind Map: From Parts to City Final */}
             <RefWorkflowMindMap onNavigate={handleNavigate} />
 
-            {/* 04. Top Three Cards: Robo Sprint / Robo Sprint Advanced / Robo Quiz */}
+            {/* 04. Top Three Cards: Robo Sprint / Robo Sprint Advanced / Robo Trials */}
             <RefTrackComparison
               onNavigate={handleNavigate}
               onOpenRegister={() => setIsRegisterOpen(true)}

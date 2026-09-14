@@ -13,8 +13,8 @@ export const RefWorkshopTapeBanner: React.FC<RefWorkshopTapeBannerProps> = ({
   onOpenDeckModal,
 }) => {
   return (
-    <section className="w-full bg-white text-[#0A1930] py-14 sm:py-18 px-4 sm:px-8 lg:px-12 border-t border-slate-200 overflow-hidden select-none">
-      <div className="max-w-[1400px] mx-auto">
+    <section className="w-full bg-white text-[#0A1930] py-14 sm:py-18 px-3 sm:px-6 border-t border-slate-200 overflow-hidden select-none">
+      <div className="w-full">
 
         {/* Clean, High-Impact Pre-Footer CTA Card */}
         <motion.div
@@ -22,7 +22,7 @@ export const RefWorkshopTapeBanner: React.FC<RefWorkshopTapeBannerProps> = ({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-50px' }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="relative rounded-[32px] overflow-hidden p-8 sm:p-12 md:p-14 bg-[#F2F6FA] border border-slate-200/90 shadow-sm text-center flex flex-col items-center justify-center space-y-7"
+          className="relative overflow-hidden p-8 sm:p-12 md:p-14 bg-[#F2F6FA] border border-slate-200/90 shadow-sm text-center flex flex-col items-center justify-center space-y-7"
         >
           {/* Main Headline */}
           <div className="relative space-y-3 max-w-3xl">

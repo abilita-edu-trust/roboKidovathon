@@ -13,8 +13,8 @@ export const EventsPage: React.FC<EventsPageProps> = ({
   onOpenRegister,
 }) => {
   return (
-    <div className="w-full min-h-screen bg-white text-[#0A1930] pt-28 pb-24 px-6 sm:px-10 select-none">
-      <div className="max-w-[1440px] mx-auto space-y-16">
+    <div className="w-full min-h-screen bg-white text-[#0A1930] pt-28 pb-24 px-3 sm:px-6 select-none">
+      <div className="w-full space-y-16">
 
         {/* Back Button */}
         <motion.button
@@ -59,10 +59,10 @@ export const EventsPage: React.FC<EventsPageProps> = ({
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="rounded-3xl border border-slate-200 bg-[#F8FAFC] p-8 sm:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 shadow-sm"
+            className="border border-slate-200 bg-[#F8FAFC] p-8 sm:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 shadow-sm"
           >
             <div className="lg:col-span-3 space-y-2">
-              <span className="inline-block text-[10px] font-mono-code font-bold text-[#006AA7] bg-[#006AA7]/10 px-3 py-1.5 rounded-full uppercase tracking-wide">
+              <span className="inline-block text-[10px] font-mono-code font-bold text-[#006AA7] uppercase tracking-wider">
                 STAGE 01 QUALIFIERS
               </span>
               <div className="flex items-center gap-2 text-[#006AA7] pt-2">
@@ -86,7 +86,7 @@ export const EventsPage: React.FC<EventsPageProps> = ({
                 Held inside each participating school across the final sessions of the 20-hour STEM project. Student teams test their built robots under official 3-minute referee match conditions. One winning Explorer team (Grades 3–6) and one winning Advanced team (Grades 7–9) qualify to represent their school in the municipal final.
               </p>
               <div className="pt-2">
-                <span className="text-xs font-mono-code font-bold text-[#0A1930] bg-[#FFCD00]/30 border border-[#FFCD00]/60 px-3 py-1 rounded-full uppercase">
+                <span className="text-xs font-mono-code font-bold text-[#0A1930] uppercase tracking-wider">
                   Advancement: 1 Explorer + 1 Advanced Team per School
                 </span>
               </div>
@@ -101,14 +101,14 @@ export const EventsPage: React.FC<EventsPageProps> = ({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: idx * 0.1 }}
-              className={`rounded-3xl border p-8 sm:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 shadow-sm ${
+              className={`border p-8 sm:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 shadow-sm ${
                 event.id === 'robokidovation-final'
                   ? 'border-[#006AA7]/40 bg-white'
                   : 'border-slate-200 bg-[#F8FAFC]'
               }`}
             >
               <div className="lg:col-span-3 space-y-2">
-                <span className="inline-block text-[10px] font-mono-code font-bold text-[#0A1930] bg-[#FFCD00] px-3 py-1.5 rounded-full uppercase tracking-wide">
+                <span className="inline-block text-[10px] font-mono-code font-bold text-[#0A1930] uppercase tracking-wider">
                   {event.day}
                 </span>
                 <div className="flex items-center gap-2 text-[#006AA7] pt-2">
@@ -144,7 +144,7 @@ export const EventsPage: React.FC<EventsPageProps> = ({
                       {event.categories.map((c) => (
                         <span
                           key={c}
-                          className="text-[10px] font-mono-code font-bold text-[#0A1930] bg-[#F8FAFC] border border-slate-200 px-3 py-1.5 rounded-full uppercase tracking-wide"
+                          className="text-[10px] font-mono-code font-bold text-[#0A1930] bg-[#F8FAFC] border border-slate-200 px-3 py-1.5 uppercase tracking-wide"
                         >
                           {c}
                         </span>
@@ -166,7 +166,7 @@ export const EventsPage: React.FC<EventsPageProps> = ({
         </div>
 
         {/* ── BOTTOM FAQ BANNER ── */}
-        <div className="p-8 sm:p-12 rounded-3xl bg-[#013A63] text-white text-center space-y-4">
+        <div className="p-8 sm:p-12 bg-[#013A63] text-white text-center space-y-4">
           <h3 className="font-headline font-black text-2xl uppercase tracking-tight">
             Questions About Event Attendance &amp; Schedules?
           </h3>

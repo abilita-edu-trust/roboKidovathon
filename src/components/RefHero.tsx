@@ -49,72 +49,72 @@ export const RefHero: React.FC<RefHeroProps> = ({
 
       {/* ── GRADIENT SCRIM ── */}
       <div className="absolute inset-0 z-[1] pointer-events-none">
-        {/* Strong left fade — keeps headline readable over any video content */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-black/10" />
-        {/* Bottom-up fade — grounds the content block */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
-        {/* Top vignette — softens the navbar edge */}
-        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black/40 to-transparent" />
+        {/* Soft left fade — keeps headline readable while letting video shine */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-black/15 to-transparent" />
+        {/* Bottom-up fade — grounds bottom content gently */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+        {/* Top subtle vignette */}
+        <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-black/20 to-transparent" />
       </div>
 
       {/* ── CONTENT: pinned to bottom of screen ── */}
-      <div className="relative z-10 w-full max-w-[1600px] mx-auto pl-4 sm:pl-8 lg:pl-10 pr-6 sm:pr-10 lg:pr-12 pb-16 sm:pb-20 pt-28">
+      <div className="relative z-10 w-full pl-3 pr-3 sm:pl-6 sm:pr-6 pb-12 sm:pb-16 pt-24">
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-end">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-end">
 
           {/* LEFT: headline block */}
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-7 space-y-5"
+            className="lg:col-span-7 space-y-3.5 sm:space-y-4"
           >
             {/* Eyebrow */}
-            <span className="font-mono-code font-bold text-[11px] sm:text-xs text-[#FFCD00] tracking-[0.25em] uppercase">
+            <span className="font-mono-code font-bold text-[10px] sm:text-[11px] text-[#FFCD00] tracking-[0.2em] uppercase block">
               4–5 DECEMBER 2026 · VÄSTERÅS, SWEDEN
             </span>
 
-            {/* Main headline - decreased by 10% */}
+            {/* Main headline - refined & compact */}
             <h1
-              className="font-headline font-black uppercase text-white tracking-tight leading-[0.95]"
-              style={{ fontSize: 'clamp(2.5rem, 6.3vw, 5.85rem)' }}
+              className="font-headline font-black uppercase text-white tracking-tight leading-[0.98]"
+              style={{ fontSize: 'clamp(1.85rem, 4.2vw, 3.85rem)' }}
             >
               Build ideas.<br />
               Test them.<br />
               <span className="text-[#FFCD00]">Take them further.</span>
             </h1>
 
-            {/* Sub-copy - decreased by 10% */}
-            <p className="text-xs sm:text-sm md:text-base text-white/70 font-light leading-relaxed max-w-lg">
+            {/* Sub-copy - refined size */}
+            <p className="text-xs sm:text-sm text-white/75 font-light leading-relaxed max-w-md">
               Västerås Future Innovators — hands-on STEM robotics and the Young Innovators Hackathon,
               built for Swedish schools, grades 3–9 and Gymnasium.
             </p>
 
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 sm:gap-4 pt-2">
+            {/* CTAs - compact & sharp */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1.5">
               <button
                 onClick={onOpenRegister}
-                className="px-7 py-4 rounded-full bg-[#FFCD00] hover:bg-[#E6B800] text-[#0A1930] font-syne font-black text-xs sm:text-sm tracking-wider uppercase transition-all shadow-xl flex items-center justify-center gap-2"
+                className="px-5 py-3 sm:px-6 sm:py-3 bg-[#FFCD00] hover:bg-[#E6B800] text-[#0A1930] font-syne font-black text-xs tracking-wider uppercase transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 active:scale-[0.98]"
               >
                 <span>REGISTER SCHOOL / TEAM</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-3.5 h-3.5" />
               </button>
 
               <button
                 onClick={() => onNavigate('events')}
-                className="px-7 py-4 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/25 font-syne font-bold text-xs sm:text-sm tracking-wider uppercase transition-all backdrop-blur-sm flex items-center justify-center gap-2"
+                className="px-5 py-3 sm:px-6 sm:py-3 bg-white/10 hover:bg-white/20 text-white border border-white/25 font-syne font-bold text-xs tracking-wider uppercase transition-all backdrop-blur-sm flex items-center justify-center gap-2 active:scale-[0.98]"
               >
                 <span>EXPLORE EVENTS</span>
               </button>
             </div>
           </motion.div>
 
-          {/* RIGHT: quick-fact pills, bottom-aligned */}
+          {/* RIGHT: quick-fact pills, bottom-aligned - refined & compact */}
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-5 flex flex-wrap gap-2.5 items-end justify-start lg:justify-end"
+            className="lg:col-span-5 flex flex-wrap gap-2 items-end justify-start lg:justify-end"
           >
             {[
               { label: 'GRADES', value: '3–9 + GYM' },
@@ -126,12 +126,12 @@ export const RefHero: React.FC<RefHeroProps> = ({
             ].map((fact) => (
               <div
                 key={fact.label}
-                className="flex flex-col gap-0.5 px-4 py-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 text-white"
+                className="flex flex-col gap-0.5 px-3 py-2 sm:px-3.5 sm:py-2.5 bg-white/10 backdrop-blur-md border border-white/15 text-white"
               >
-                <span className="font-mono-code font-bold text-[9px] sm:text-[10px] text-white/50 uppercase tracking-widest">
+                <span className="font-mono-code font-bold text-[8.5px] sm:text-[9px] text-white/55 uppercase tracking-widest">
                   {fact.label}
                 </span>
-                <span className="font-headline font-black text-sm sm:text-base tracking-wide uppercase">
+                <span className="font-headline font-black text-xs sm:text-sm tracking-wide uppercase">
                   {fact.value}
                 </span>
               </div>

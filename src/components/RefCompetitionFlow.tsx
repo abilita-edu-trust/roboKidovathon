@@ -1,6 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Wrench, Target, Trophy, Calendar } from 'lucide-react';
+import {
+  roboSprintObstacleClose,
+  roboSprintTopDown,
+  roboPrecisionArenaEmpty,
+} from '../assets/images';
 
 interface RefCompetitionFlowProps {
   onOpenRegister?: () => void;
@@ -19,8 +24,11 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
       tagline: 'Build the foundation.',
       timing: 'OCTOBER · 20H STEM',
       icon: Wrench,
+      image: roboSprintObstacleClose,
+      imageTag: 'MECHANICAL ASSEMBLY',
+      imageCaption: 'Classroom rover build & hurdle obstacle testing',
       description:
-        'Hands-on robotics curriculum delivered directly to school classrooms. Every student builds, wires, and drives a working competition rover from turnkey mechanical kits.',
+        'Students build, wire, and drive a working competition rover from turnkey mechanical kits — delivered directly to your classroom.',
       specs: [
         { label: 'DELIVERY', value: 'Turnkey 6V DC Kits' },
         { label: 'COHORTS', value: 'Grades 3–6 & 7–9' },
@@ -35,8 +43,11 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
       tagline: 'Put the skills to the test.',
       timing: 'NOVEMBER · SCHOOL ARENA',
       icon: Target,
+      image: roboSprintTopDown,
+      imageTag: 'TACTICAL MATCH COURT',
+      imageCaption: 'Standardized 2.44 × 1.22 m 1 vs 1 competition mat',
       description:
-        'Fast-paced 1 vs 1 match heats on the standardized 2.44 × 1.22 m Dual Court. Students navigate obstacles, clear ball transfer hurdles, and battle for the school slot.',
+        'Fast-paced 1 vs 1 heats on a standardized dual court. Navigate obstacles, clear hurdles, and battle for the school slot.',
       specs: [
         { label: 'ARENA', value: '2.44 × 1.22 m Mat' },
         { label: 'MATCH DURATION', value: '03:00 (1 vs 1)' },
@@ -51,8 +62,11 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
       tagline: 'Compete at the highest level.',
       timing: 'DECEMBER 4 & 5, 2026',
       icon: Trophy,
+      image: roboPrecisionArenaEmpty,
+      imageTag: 'CHAMPIONSHIP VENUE',
+      imageCaption: 'Live tournament floor setup in Västerås',
       description:
-        'The championship showdown in Västerås. Qualifying school cohorts battle live before teachers, parents, and industry judges for medals, trophies, and the grand title.',
+        'Qualifying school cohorts battle live in Västerås for medals, trophies, and the grand title.',
       specs: [
         { label: 'VENUE', value: 'Västerås Arena' },
         { label: 'PRIZE POOL', value: 'SEK 3,000' },
@@ -65,15 +79,15 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
   return (
     <section
       id="competition-flow"
-      className="w-full bg-[#F4F8FB] text-[#0A1930] py-16 sm:py-20 px-4 sm:px-8 lg:px-12 border-t border-slate-200 select-none relative overflow-hidden"
+      className="w-full bg-[#F4F8FB] text-[#0A1930] py-16 sm:py-20 px-3 sm:px-6 border-t border-slate-200 select-none relative overflow-hidden"
     >
-      <div className="max-w-[1400px] mx-auto space-y-12 relative z-10">
+      <div className="w-full space-y-12 relative z-10">
 
         {/* ── SECTION HEADER ── */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-4">
           <div className="space-y-3 max-w-2xl">
             <span className="text-xs font-mono-code font-bold tracking-[0.25em] text-[#006AA7] uppercase block">
-              COMPETITION JOURNEY // VÄSTERÅS 2026
+              COMPETITION JOURNEY
             </span>
 
             <h2
@@ -84,8 +98,8 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
               <span className="text-[#006AA7]">TO THE ARENA FINALS</span>
             </h2>
 
-            <p className="text-sm sm:text-base text-slate-600 font-light leading-relaxed max-w-xl pt-1">
-              A structured three-phase competition journey designed for Swedish schools. Students engineer rovers in the classroom, qualify locally, and compete on the championship stage.
+            <p className="text-sm text-slate-500 font-light leading-relaxed max-w-md pt-1">
+              Three phases. One structured journey from classroom to championship.
             </p>
           </div>
 
@@ -93,7 +107,7 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
             {onOpenRegister && (
               <button
                 onClick={onOpenRegister}
-                className="bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] font-black text-xs sm:text-sm py-3 px-6 rounded-full shadow-xs flex items-center gap-2 transition-transform hover:scale-105 uppercase tracking-wider"
+                className="bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] font-black text-xs sm:text-sm py-3 px-6 shadow-xs flex items-center gap-2 transition-transform hover:scale-105 uppercase tracking-wider"
               >
                 <span>REGISTER SCHOOL</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -102,7 +116,7 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
             {onNavigate && (
               <button
                 onClick={() => onNavigate('how-it-works')}
-                className="bg-white hover:bg-slate-50 text-[#0A1930] border border-slate-300 font-bold text-xs sm:text-sm py-3 px-5 rounded-full shadow-2xs transition-transform hover:scale-105 uppercase tracking-wider"
+                className="bg-white hover:bg-slate-50 text-[#0A1930] border border-slate-300 font-bold text-xs sm:text-sm py-3 px-5 shadow-2xs transition-transform hover:scale-105 uppercase tracking-wider"
               >
                 <span>PROGRAMME DETAILS</span>
               </button>
@@ -122,14 +136,14 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: idx * 0.12 }}
-                className={`rounded-[28px] p-6 sm:p-8 flex flex-col justify-between space-y-6 transition-all duration-300 relative ${
+                className={`p-6 sm:p-8 flex flex-col justify-between space-y-6 transition-all duration-300 relative ${
                   stage.isDark
                     ? 'bg-[#0A1930] text-white border border-slate-800 shadow-xl'
                     : 'bg-white text-[#0A1930] border border-slate-200/90 shadow-md hover:shadow-xl'
                 }`}
               >
                 <div className="space-y-5">
-                  {/* Top Bar: Stage Number + Badge */}
+                  {/* Top Bar: Stage Number + Clean Tag */}
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <span
@@ -140,10 +154,10 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
                         {stage.num}
                       </span>
                       <span
-                        className={`text-[10px] font-mono-code font-bold px-2.5 py-1 rounded-full uppercase tracking-wider ${
+                        className={`text-[10px] font-mono-code font-bold uppercase tracking-wider ${
                           stage.isDark
-                            ? 'bg-white/10 text-[#FFCD00] border border-[#FFCD00]/30'
-                            : 'bg-sky-50 text-[#006AA7] border border-sky-200'
+                            ? 'text-[#FFCD00]'
+                            : 'text-[#006AA7]'
                         }`}
                       >
                         {stage.badge}
@@ -151,7 +165,7 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
                     </div>
 
                     <div
-                      className={`w-9 h-9 rounded-full flex items-center justify-center ${
+                      className={`w-9 h-9 flex items-center justify-center ${
                         stage.isDark ? 'bg-white/10 text-[#FFCD00]' : 'bg-slate-100 text-[#006AA7]'
                       }`}
                     >
@@ -190,7 +204,7 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
                 {/* Technical Metric Modules (Real Info as Design) */}
                 <div className="space-y-4 pt-2">
                   <div
-                    className={`grid grid-cols-3 gap-2 p-3 rounded-2xl border font-mono-code ${
+                    className={`grid grid-cols-3 gap-2 p-3 border font-mono-code ${
                       stage.isDark
                         ? 'bg-[#061224] border-white/10 text-white'
                         : 'bg-[#F8FAFC] border-slate-100 text-[#0A1930]'

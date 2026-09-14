@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, ArrowRight, ShieldCheck, Award, MapPin } from 'lucide-react';
-import { roboPrecisionActionWide } from '../assets/images';
+import { ArrowLeft, ArrowRight, ShieldCheck, Award, MapPin, Sparkles } from 'lucide-react';
+import { bannerActionStripCollage } from '../assets/images';
 import { PARTNER_LOGOS } from '../data/roboData';
 
 interface AboutPageProps {
@@ -14,8 +14,8 @@ export const AboutPage: React.FC<AboutPageProps> = ({
   onNavigateHome,
 }) => {
   return (
-    <div className="w-full min-h-screen bg-white text-[#0A1930] pt-28 pb-24 px-6 sm:px-10 select-none">
-      <div className="max-w-[1440px] mx-auto space-y-16">
+    <div className="w-full min-h-screen bg-white text-[#0A1930] pt-28 pb-24 px-3 sm:px-6 select-none">
+      <div className="w-full space-y-16">
 
         {/* Back Button */}
         <motion.button
@@ -80,13 +80,13 @@ export const AboutPage: React.FC<AboutPageProps> = ({
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-              <div className="p-4 rounded-2xl bg-[#F8FAFC] border border-slate-200 flex items-center gap-3">
+              <div className="p-4 bg-[#F8FAFC] border border-slate-200 flex items-center gap-3">
                 <Award className="w-5 h-5 text-[#006AA7] shrink-0" />
                 <span className="text-xs font-mono-code font-bold text-[#0A1930] uppercase">
                   Explorer &amp; Advanced Leagues
                 </span>
               </div>
-              <div className="p-4 rounded-2xl bg-[#F8FAFC] border border-slate-200 flex items-center gap-3">
+              <div className="p-4 bg-[#F8FAFC] border border-slate-200 flex items-center gap-3">
                 <ShieldCheck className="w-5 h-5 text-[#006AA7] shrink-0" />
                 <span className="text-xs font-mono-code font-bold text-[#0A1930] uppercase">
                   Lgr22 &amp; Gy25 Alignment
@@ -105,7 +105,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
             </div>
           </motion.div>
 
-          {/* Visual Column */}
+          {/* Visual Column: Authentic Action Strip Collage */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -113,32 +113,40 @@ export const AboutPage: React.FC<AboutPageProps> = ({
             transition={{ duration: 0.8 }}
             className="lg:col-span-5 space-y-4"
           >
-            <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-[#0A1930] aspect-[4/3] shadow-md group">
+            <div className="relative overflow-hidden border-2 border-slate-200 bg-[#0A1930] shadow-xl group aspect-[9/13] max-h-[580px] flex items-center justify-center">
               <img
-                src={roboPrecisionActionWide}
-                alt="Students collaborating on robotics"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90"
+                src={bannerActionStripCollage}
+                alt="Blix-A-Thon hands-on building to arena competition"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
-              <div className="absolute bottom-6 left-6 right-6">
+              
+              {/* Floating Badge */}
+              <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none">
+                <span className="bg-[#0A1930]/90 backdrop-blur-md text-[#FFCD00] text-[10px] font-mono-code font-bold px-3 py-1.5 border border-white/10 shadow-md uppercase tracking-wider flex items-center gap-1.5">
+                  <Sparkles className="w-3 h-3" />
+                  <span>BLIX-A-THON ACTION REEL</span>
+                </span>
+              </div>
+
+              {/* Bottom Caption Overlay */}
+              <div className="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-[#0A1930] via-[#0A1930]/80 to-transparent">
                 <span className="text-[10px] font-mono-code font-bold text-[#FFCD00] uppercase block mb-1">
-                  VÄSTERÅS FUTURE INNOVATORS · 2026 EDITION
+                  FROM WORKBENCH TO ARENA PODIUM
                 </span>
-                <span className="font-headline font-bold text-lg text-white uppercase">
-                  Bringing Schools Together Through Robotics
-                </span>
+                <p className="font-syne font-bold text-sm sm:text-base text-white uppercase tracking-tight leading-snug">
+                  Real students assembling, racing &amp; stacking in live tournament heats
+                </p>
               </div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-[#F8FAFC] border border-slate-200 flex items-center justify-between text-xs font-mono-code text-slate-500">
+            <div className="p-4 bg-[#F8FAFC] border border-slate-200 flex items-center justify-between text-xs font-mono-code text-slate-500">
               <span className="flex items-center gap-1.5">
                 <MapPin className="w-4 h-4 text-[#006AA7]" />
                 <span>VÄSTERÅS, SWEDEN</span>
               </span>
-              <span>GRAND FINALE · NOV 13, 2026</span>
+              <span className="font-bold text-[#0A1930]">DECEMBER 4 &amp; 5, 2026</span>
             </div>
           </motion.div>
-
         </div>
 
         {/* ── ORGANIZING PARTNERS ── */}
@@ -156,7 +164,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
             {PARTNER_LOGOS.map((partner) => (
               <div
                 key={partner.name}
-                className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200 text-center space-y-4 shadow-sm flex flex-col items-center justify-between"
+                className="p-6 bg-[#F8FAFC] border border-slate-200 text-center space-y-4 shadow-sm flex flex-col items-center justify-between"
               >
                 <div className="h-16 flex items-center justify-center p-2">
                   <img

@@ -30,8 +30,8 @@ export const Lgr22Page: React.FC<Lgr22PageProps> = ({
   };
 
   return (
-    <div className="w-full min-h-screen bg-white text-[#0A1930] pt-28 pb-24 px-6 sm:px-10 select-none">
-      <div className="max-w-[1440px] mx-auto space-y-16">
+    <div className="w-full min-h-screen bg-white text-[#0A1930] pt-28 pb-24 px-3 sm:px-6 select-none">
+      <div className="w-full space-y-16">
 
         {/* Back Button */}
         <motion.button
@@ -103,10 +103,10 @@ export const Lgr22Page: React.FC<Lgr22PageProps> = ({
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: idx * 0.1 }}
-                  className="p-8 rounded-3xl bg-[#F8FAFC] border border-slate-200 space-y-4 shadow-sm flex flex-col justify-between"
+                  className="p-8 bg-[#F8FAFC] border border-slate-200 space-y-4 shadow-sm flex flex-col justify-between"
                 >
                   <div className="space-y-4">
-                    <div className="w-12 h-12 rounded-2xl bg-[#006AA7]/10 border border-[#006AA7]/20 flex items-center justify-center text-[#006AA7]">
+                    <div className="w-12 h-12 bg-[#006AA7]/10 border border-[#006AA7]/20 flex items-center justify-center text-[#006AA7]">
                       <Icon className="w-6 h-6" />
                     </div>
                     <h3 className="font-headline font-bold text-xl text-[#0A1930] uppercase">
@@ -148,7 +148,7 @@ export const Lgr22Page: React.FC<Lgr22PageProps> = ({
               return (
                 <div
                   key={pathway.id}
-                  className={`rounded-3xl border bg-white p-8 space-y-4 shadow-sm transition-colors ${
+                  className={`border bg-white p-8 space-y-4 shadow-sm transition-colors ${
                     isOpen ? 'border-[#006AA7]/40 shadow-md' : 'border-slate-200 hover:border-[#006AA7]/30'
                   }`}
                 >
@@ -158,7 +158,7 @@ export const Lgr22Page: React.FC<Lgr22PageProps> = ({
                     </span>
                     <button
                       onClick={() => togglePathway(pathway.id)}
-                      className="p-1 rounded-full text-slate-400 hover:text-[#0A1930]"
+                      className="p-1 text-slate-400 hover:text-[#0A1930]"
                     >
                       <motion.div animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.25 }}>
                         <ChevronDown className="w-4 h-4" />
@@ -172,7 +172,7 @@ export const Lgr22Page: React.FC<Lgr22PageProps> = ({
                     {pathway.focus.map((f) => (
                       <span
                         key={f}
-                        className="text-[10px] font-mono-code font-bold text-[#0A1930] bg-[#F8FAFC] border border-slate-200 px-3 py-1.5 rounded-full uppercase tracking-wide"
+                        className="text-[10px] font-mono-code font-bold text-[#0A1930] bg-[#F8FAFC] border border-slate-200 px-3 py-1.5 uppercase tracking-wide"
                       >
                         {f}
                       </span>
@@ -209,10 +209,10 @@ export const Lgr22Page: React.FC<Lgr22PageProps> = ({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="rounded-3xl border border-slate-200 bg-[#F8FAFC] p-8 sm:p-12 space-y-5"
+          className="border border-slate-200 bg-[#F8FAFC] p-8 sm:p-12 space-y-5"
         >
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-[#006AA7]/10 border border-[#006AA7]/20 flex items-center justify-center text-[#006AA7]">
+            <div className="w-11 h-11 bg-[#006AA7]/10 border border-[#006AA7]/20 flex items-center justify-center text-[#006AA7]">
               <GraduationCap className="w-5 h-5" />
             </div>
             <div>
@@ -231,7 +231,7 @@ export const Lgr22Page: React.FC<Lgr22PageProps> = ({
             {GY25_CONNECTIONS.connections.map((c) => (
               <span
                 key={c}
-                className="text-[10px] font-mono-code font-bold text-[#0A1930] bg-white border border-slate-200 px-3 py-1.5 rounded-full uppercase tracking-wide"
+                className="text-[10px] font-mono-code font-bold text-[#0A1930] bg-white border border-slate-200 px-3 py-1.5 uppercase tracking-wide"
               >
                 {c}
               </span>
@@ -240,7 +240,7 @@ export const Lgr22Page: React.FC<Lgr22PageProps> = ({
         </motion.div>
 
         {/* ── EVIDENCE & PORTFOLIO BANNER ── */}
-        <div className="rounded-3xl p-8 sm:p-12 bg-[#013A63] text-white space-y-4 shadow-md">
+        <div className="p-8 sm:p-12 bg-[#013A63] text-white space-y-4 shadow-md">
           <h3 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight">
             Evidence Of Learning For Classroom Assessment
           </h3>
@@ -257,7 +257,7 @@ export const Lgr22Page: React.FC<Lgr22PageProps> = ({
             </button>
             <button
               onClick={onNavigateHome}
-              className="px-6 py-3.5 rounded-full border border-white/20 hover:border-white text-white text-xs font-bold uppercase tracking-wider transition-all"
+              className="px-6 py-3.5 border border-white/20 hover:border-white text-white text-xs font-bold uppercase tracking-wider transition-all"
             >
               <span>RETURN TO HOME</span>
             </button>

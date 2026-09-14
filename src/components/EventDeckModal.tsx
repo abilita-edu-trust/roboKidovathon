@@ -38,10 +38,10 @@ export const EventDeckModal: React.FC<EventDeckModalProps> = ({ isOpen, onClose 
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto select-none">
       <div onClick={onClose} className="fixed inset-0 bg-[#0A1930]/60 backdrop-blur-md -z-10" />
 
-      <div className="relative w-full max-w-lg bg-white border border-slate-200 rounded-3xl shadow-2xl p-6 sm:p-10 my-8 text-[#0A1930]">
+      <div className="relative w-full max-w-lg bg-white border border-slate-200 shadow-2xl p-6 sm:p-10 my-8 text-[#0A1930]">
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 p-2 rounded-full text-slate-400 hover:text-[#0A1930] hover:bg-slate-100 transition-colors"
+          className="absolute top-6 right-6 p-2 text-slate-400 hover:text-[#0A1930] hover:bg-slate-100 transition-colors"
           aria-label="Close modal"
         >
           <X className="w-5 h-5" />
@@ -61,9 +61,9 @@ export const EventDeckModal: React.FC<EventDeckModalProps> = ({ isOpen, onClose 
             </p>
 
             {/* Visual Document Previews */}
-            <div className="my-4 grid grid-cols-2 gap-3 p-3 bg-slate-50 rounded-2xl border border-slate-200">
+            <div className="my-4 grid grid-cols-2 gap-3 p-3 bg-slate-50 border border-slate-200">
               <div className="space-y-1">
-                <div className="h-20 rounded-xl overflow-hidden bg-[#070709] border border-slate-200 p-1">
+                <div className="h-20 overflow-hidden bg-[#070709] border border-slate-200 p-1">
                   <img
                     src={roboSprintArenaMat}
                     alt="3D Arena Spec"
@@ -75,7 +75,7 @@ export const EventDeckModal: React.FC<EventDeckModalProps> = ({ isOpen, onClose 
                 </span>
               </div>
               <div className="space-y-1">
-                <div className="h-20 rounded-xl overflow-hidden bg-white border border-slate-200 p-1">
+                <div className="h-20 overflow-hidden bg-white border border-slate-200 p-1">
                   <img
                     src={roboSprintKitPieces}
                     alt="Kit Piece List"
@@ -99,11 +99,11 @@ export const EventDeckModal: React.FC<EventDeckModalProps> = ({ isOpen, onClose 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="principal@skola.se"
-                  className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-300 focus:border-[#006AA7] focus:outline-none text-xs sm:text-sm text-[#0A1930] transition-colors"
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-300 focus:border-[#006AA7] focus:outline-none text-xs sm:text-sm text-[#0A1930] transition-colors"
                 />
               </div>
 
-              <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-[11px] font-mono-code text-slate-500 space-y-1">
+              <div className="p-3.5 bg-slate-50 border border-slate-200 text-[11px] font-mono-code text-slate-500 space-y-1">
                 <div className="flex items-center gap-1.5 text-[#0A1930] font-bold">
                   <ShieldCheck className="w-4 h-4 text-[#006AA7]" />
                   <span>DOCUMENT DETAILS</span>
@@ -113,7 +113,7 @@ export const EventDeckModal: React.FC<EventDeckModalProps> = ({ isOpen, onClose 
               </div>
 
               {submitError && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-2xl flex items-center gap-2 text-xs font-mono-code text-red-600">
+                <div className="p-3 bg-red-50 border border-red-200 flex items-center gap-2 text-xs font-mono-code text-red-600">
                   <AlertCircle className="w-4 h-4 flex-shrink-0" />
                   <span>{submitError}</span>
                 </div>
@@ -131,7 +131,7 @@ export const EventDeckModal: React.FC<EventDeckModalProps> = ({ isOpen, onClose 
           </div>
         ) : (
           <div className="py-8 text-center flex flex-col items-center">
-            <div className="w-14 h-14 rounded-full bg-[#006AA7]/10 border border-[#006AA7]/40 flex items-center justify-center text-[#006AA7] mb-4">
+            <div className="w-14 h-14 bg-[#006AA7]/10 border border-[#006AA7]/40 flex items-center justify-center text-[#006AA7] mb-4">
               <CheckCircle2 className="w-7 h-7" />
             </div>
             <h3 className="font-headline font-black text-xl text-[#0A1930] uppercase tracking-tight">

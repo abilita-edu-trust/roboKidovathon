@@ -61,10 +61,10 @@ export const Navbar: React.FC<NavbarProps> = ({
         className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 select-none ${
           isScrolled
             ? 'bg-white/95 backdrop-blur-md border-b border-slate-200 py-3 text-[#0A1930] shadow-sm'
-            : 'bg-black/40 backdrop-blur-sm border-b border-white/10 py-4 text-white'
+            : 'bg-transparent border-b border-transparent py-4 sm:py-5 text-white'
         }`}
       >
-        <div className="max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-10 flex items-center justify-between gap-4">
+        <div className="w-full px-4 sm:px-6 flex items-center justify-between gap-4">
 
           {/* Brand Mark */}
           <button
@@ -84,10 +84,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Desktop Navigation Links */}
           <nav
-            className={`hidden lg:flex items-center gap-1 p-1 rounded-full transition-all duration-300 ${
+            className={`hidden lg:flex items-center gap-1 p-1 transition-all duration-300 ${
               isScrolled
                 ? 'bg-slate-100 border border-slate-200'
-                : 'bg-black/30 border border-white/15 backdrop-blur-md'
+                : 'bg-black/20 border border-white/20 backdrop-blur-sm'
             }`}
           >
             {navLinks.map((item) => {
@@ -96,14 +96,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   key={item.id}
                   onClick={() => handleLinkClick(item.id)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-display font-medium tracking-wide transition-all duration-200 ${
+                  className={`px-3.5 py-1.5 text-xs font-display font-medium tracking-wide transition-all duration-200 ${
                     isScrolled
                       ? isActive
-                        ? 'text-[#006AA7] bg-white font-bold border border-slate-200 shadow-sm'
-                        : 'text-slate-600 hover:text-[#0A1930] hover:bg-white/80'
+                        ? 'bg-[#006AA7] text-white font-bold'
+                        : 'text-slate-600 hover:text-[#0A1930] hover:bg-slate-200/60'
                       : isActive
-                      ? 'text-white bg-white/20 font-bold border border-white/20 shadow-sm'
-                      : 'text-slate-300 hover:text-white hover:bg-white/10'
+                      ? 'bg-[#FFCD00] text-[#0A1930] font-bold'
+                      : 'text-white/90 hover:text-white hover:bg-white/15'
                   }`}
                 >
                   {item.label}
@@ -207,7 +207,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="relative max-w-lg w-full bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-2xl z-10 space-y-6 text-[#0A1930]"
+              className="relative max-w-lg w-full bg-white p-6 sm:p-8 border border-slate-200 shadow-2xl z-10 space-y-6 text-[#0A1930]"
             >
               <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                 <div>
@@ -220,7 +220,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </div>
                 <button
                   onClick={() => setContactModalOpen(false)}
-                  className="p-2 rounded-full text-slate-400 hover:text-[#0A1930] hover:bg-slate-100 transition-colors"
+                  className="p-2 text-slate-400 hover:text-[#0A1930] hover:bg-slate-100 transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -231,7 +231,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   Have questions about bringing the 20-hour STEM project to your school or preparing a student team? Contact the organizing secretariat:
                 </p>
 
-                <div className="space-y-3 p-4 bg-[#F8FAFC] rounded-2xl border border-slate-200 font-mono-code text-xs">
+                <div className="space-y-3 p-4 bg-[#F8FAFC] border border-slate-200 font-mono-code text-xs">
                   <div className="flex items-start gap-3">
                     <MapPin className="w-4 h-4 text-[#006AA7] shrink-0 mt-0.5" />
                     <div>
@@ -271,7 +271,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </button>
                 <button
                   onClick={() => setContactModalOpen(false)}
-                  className="w-full sm:w-auto px-5 py-3 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-mono-code text-xs font-bold uppercase transition-colors"
+                  className="w-full sm:w-auto px-5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-mono-code text-xs font-bold uppercase transition-colors"
                 >
                   CLOSE
                 </button>

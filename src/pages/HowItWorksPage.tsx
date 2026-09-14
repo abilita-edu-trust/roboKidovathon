@@ -69,8 +69,8 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
   ];
 
   return (
-    <div className="w-full min-h-screen bg-white text-[#0A1930] pt-28 pb-24 px-6 sm:px-10 select-none">
-      <div className="max-w-[1440px] mx-auto space-y-16">
+    <div className="w-full min-h-screen bg-white text-[#0A1930] pt-28 pb-24 px-3 sm:px-6 select-none">
+      <div className="w-full space-y-16">
 
         {/* Back Button */}
         <motion.button
@@ -118,8 +118,8 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
                 The Six Competition Stages
               </h2>
             </div>
-            <span className="text-xs font-mono-code text-slate-500 uppercase">
-              Autumn 2026 Season Timeline
+            <span className="text-xs font-mono-code text-slate-400">
+              COMPLETE PARTICIPANT PATHWAY
             </span>
           </div>
 
@@ -131,21 +131,21 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: idx * 0.08 }}
-                className={`p-7 rounded-3xl border flex flex-col justify-between space-y-5 transition-all shadow-sm ${
+                className={`p-7 border flex flex-col justify-between space-y-5 transition-all shadow-sm ${
                   step.highlight
-                    ? 'bg-[#013A63] text-white border-[#013A63]'
-                    : 'bg-[#F8FAFC] text-[#0A1930] border-slate-200 hover:border-[#006AA7]/40'
+                    ? 'bg-[#0A1930] text-white border-slate-800'
+                    : 'bg-white text-[#0A1930] border-slate-200 hover:border-[#006AA7]/40'
                 }`}
               >
-                <div className="space-y-3">
+                <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className={`font-headline font-black text-4xl leading-none ${
+                    <span className={`font-mono-code font-black text-2xl ${
                       step.highlight ? 'text-[#FFCD00]' : 'text-[#006AA7]'
                     }`}>
                       {step.num}
                     </span>
-                    <span className={`text-[9px] font-mono-code font-bold px-2.5 py-1 rounded-full uppercase tracking-wider ${
-                      step.highlight ? 'bg-white/15 text-white' : 'bg-white text-slate-600 border border-slate-200'
+                    <span className={`text-[9px] font-mono-code font-bold uppercase tracking-wider ${
+                      step.highlight ? 'text-[#FFCD00]' : 'text-[#006AA7]'
                     }`}>
                       {step.badge}
                     </span>
@@ -196,7 +196,7 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: idx * 0.08 }}
-                  className={`text-center rounded-2xl border bg-[#F8FAFC] p-5 space-y-1.5 transition-colors w-full ${
+                  className={`text-center border bg-[#F8FAFC] p-5 space-y-1.5 transition-colors w-full ${
                     isOpen ? 'border-[#006AA7]/40 shadow-sm' : 'border-slate-200 hover:border-[#006AA7]/30'
                   }`}
                 >
@@ -248,7 +248,7 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
             </p>
           </div>
 
-          <div className="overflow-x-auto rounded-3xl border border-slate-200">
+          <div className="overflow-x-auto border border-slate-200">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-[#F8FAFC] border-b border-slate-200">
@@ -295,7 +295,7 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.06 }}
-                className="p-6 rounded-2xl bg-[#F8FAFC] border border-slate-200 space-y-2 shadow-sm"
+                className="p-6 bg-[#F8FAFC] border border-slate-200 space-y-2 shadow-sm"
               >
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-[#006AA7]" />
@@ -312,7 +312,7 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
         </div>
 
         {/* Bottom CTA */}
-        <div className="p-8 sm:p-12 rounded-3xl bg-[#0A1930] text-white text-center space-y-6">
+        <div className="p-8 sm:p-12 bg-[#0A1930] text-white text-center space-y-6">
           <h3 className="font-headline font-black text-2xl sm:text-4xl uppercase tracking-tight">
             Ready to Plan a STEM Project for Your School?
           </h3>
@@ -328,7 +328,7 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
             </button>
             <button
               onClick={onNavigateHome}
-              className="px-6 py-4 rounded-full border border-white/20 hover:border-white text-white text-xs font-bold uppercase tracking-wider transition-all"
+              className="px-6 py-4 border border-white/20 hover:border-white text-white text-xs font-bold uppercase tracking-wider transition-all"
             >
               <span>BACK TO HOME</span>
             </button>

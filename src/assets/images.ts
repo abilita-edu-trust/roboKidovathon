@@ -25,8 +25,12 @@ import roboPrecisionTowerBot from './WhatsApp Image 2026-09-09 at 15.11.12 (2).j
 import roboPrecisionArenaEmpty from './WhatsApp Image 2026-09-09 at 15.11.08.jpeg';
 import mascotRobotHeader from './mascot_robot_header.jpg';
 import bannerRoboSprint from './banner_robo_sprint.jpg';
+import bannerRoboSprintJunior from './banner_robo_sprint_junior.jpg';
 import bannerRoboSprintAdvanced from './banner_robo_sprint_advanced.jpg';
+import bannerRoboSprintSenior from './banner_robo_sprint_senior.jpg';
 import bannerRoboQuiz from './banner_robo_quiz.jpg';
+import bannerRoboTrials from './banner_robo_trials.jpg';
+import bannerActionStripCollage from './banner_action_strip_collage.jpg';
 import cardRoverSprint from './card_rover_sprint.jpg';
 import cardRoverAdvanced from './card_rover_advanced.jpg';
 import cardRobotQuiz from './card_robot_quiz.jpg';
@@ -42,10 +46,14 @@ export {
   cadBlueprintReference,
   ecosystemRobotTop,
 
-  // Card Banners (User Provided)
+  // Card Banners (User Provided Official Assets)
   bannerRoboSprint,
+  bannerRoboSprintJunior,
   bannerRoboSprintAdvanced,
+  bannerRoboSprintSenior,
   bannerRoboQuiz,
+  bannerRoboTrials,
+  bannerActionStripCollage,
 
   // 3D Illustration Mascot & Rover Assets
   mascotRobotHeader,
@@ -89,6 +97,15 @@ export interface CompetitionMediaItem {
 }
 
 export const TOURNAMENT_GALLERY: CompetitionMediaItem[] = [
+  {
+    id: 'action-strip-collage',
+    title: 'Workshop Build to Arena Showdown',
+    category: 'sprint',
+    tag: 'BLIX-A-THON ACTION REEL',
+    desc: 'From tactical barrier obstacle navigation to workbench assembly and live podium cup stacking.',
+    src: bannerActionStripCollage,
+    aspect: 'portrait',
+  },
   {
     id: 'sprint-action-1',
     title: 'Robo-Sprint Barrier Face-Off',

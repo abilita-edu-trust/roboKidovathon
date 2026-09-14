@@ -13,7 +13,7 @@ export const RefManifesto: React.FC<RefManifestoProps> = ({ onNavigate }) => {
       icon: Cpu,
       title: '20-Hour STEM Project',
       badge: 'GRADES 3–6 & 7–9',
-      desc: 'A structured ten-session project delivered directly in your classroom. Mentors bring the official Robo-Sprint kits, gearboxes, and test mats so every student builds a functioning robot.',
+      desc: 'Ten sessions, delivered in your classroom. Mentors bring official Robo-Sprint kits so every student builds a functioning robot.',
       action: 'STEM Programme',
       route: 'how-it-works',
     },
@@ -21,7 +21,7 @@ export const RefManifesto: React.FC<RefManifestoProps> = ({ onNavigate }) => {
       icon: ShieldCheck,
       title: 'Lgr22-Linked Learning',
       badge: 'CURRICULUM FIT',
-      desc: 'Practical learning opportunities connected to Teknik, Matematik, and NO/Fysik in Lgr22. Students produce real documentation, reflections, and measurements usable in ordinary teacher assessment.',
+      desc: 'Practical learning linked to Teknik, Matematik & Fysik in Lgr22 — with real documentation students can use in teacher assessment.',
       action: 'Lgr22 Alignment',
       route: 'lgr22',
     },
@@ -29,22 +29,22 @@ export const RefManifesto: React.FC<RefManifestoProps> = ({ onNavigate }) => {
       icon: Trophy,
       title: 'Grand Finale, Dec 4 & 5',
       badge: 'CITY FINAL · SEK 3,000',
-      desc: 'School qualifier champions advance to compete live in Västerås for SEK 3,000 in prizes, official trophies, and certificates before an audience of peers, teachers, and partners.',
+      desc: 'School qualifier champions compete live in Västerås for SEK 3,000 in prizes, trophies, and certificates.',
       action: 'Event Details',
       route: 'events',
     },
   ];
 
   return (
-    <section className="w-full bg-white text-[#0A1930] py-14 sm:py-18 px-6 sm:px-10 border-t border-slate-200 overflow-hidden">
-      <div className="max-w-[1280px] mx-auto space-y-16">
+    <section className="w-full bg-white text-[#0A1930] py-14 sm:py-18 px-3 sm:px-6 border-t border-slate-200 overflow-hidden">
+      <div className="w-full mx-auto space-y-16">
 
         {/* ── MANIFESTO HEADLINE & INTRO ── */}
-        <div className="text-center max-w-3xl mx-auto space-y-6">
+        <div className="text-center max-w-4xl mx-auto space-y-6">
 
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#006AA7]/10 text-[#006AA7] text-[10px] font-mono-code font-bold uppercase tracking-widest mx-auto">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>THE VÄSTERÅS FUTURE INNOVATORS PHILOSOPHY</span>
+        <div className="inline-flex items-center gap-2 text-[#006AA7] text-xs font-mono-code font-bold uppercase tracking-widest mx-auto">
+            <Sparkles className="w-4 h-4" />
+            <span>VÄSTERÅS FUTURE INNOVATORS 2026</span>
           </div>
 
           <motion.h2
@@ -67,7 +67,7 @@ export const RefManifesto: React.FC<RefManifestoProps> = ({ onNavigate }) => {
             transition={{ duration: 0.7, delay: 0.2 }}
             className="text-sm sm:text-base text-slate-600 font-light leading-relaxed max-w-2xl mx-auto"
           >
-            Västerås Future Innovators 2026 turns abstract STEM concepts into real, team-built machines. Students learn mechanical problem-solving with genuine motors, gearboxes, and chassis components — developing engineering intuition and collaborative confidence.
+            Real motors, gearboxes, and chassis — building engineering intuition and team confidence.
           </motion.p>
 
           <motion.div
@@ -105,14 +105,14 @@ export const RefManifesto: React.FC<RefManifestoProps> = ({ onNavigate }) => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
                 whileHover={{ y: -6, borderColor: 'rgba(0, 106, 167, 0.3)' }}
-                className="p-8 rounded-3xl bg-[#F8FAFC] border border-slate-200 space-y-4 flex flex-col justify-between hover:border-[#006AA7]/30 transition-all shadow-sm"
+                className="p-8 bg-[#F8FAFC] border border-slate-200 space-y-4 flex flex-col justify-between hover:border-[#006AA7]/30 transition-all shadow-sm"
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <div className="w-12 h-12 rounded-2xl bg-[#006AA7]/10 border border-[#006AA7]/20 flex items-center justify-center text-[#006AA7]">
+                    <div className="w-12 h-12 bg-[#006AA7]/10 border border-[#006AA7]/20 flex items-center justify-center text-[#006AA7]">
                       <Icon className="w-6 h-6" />
                     </div>
-                    <span className="text-[10px] font-mono-code font-bold text-slate-500 bg-white border border-slate-200 px-2.5 py-1 rounded-full uppercase tracking-wider">
+                    <span className="text-[10px] font-mono-code font-bold text-slate-500 bg-white border border-slate-200 px-2.5 py-1 uppercase tracking-wider">
                       {pillar.badge}
                     </span>
                   </div>

@@ -100,8 +100,8 @@ export const ForSchoolsPage: React.FC<ForSchoolsPageProps> = ({
   ];
 
   return (
-    <div className="w-full min-h-screen bg-white text-[#0A1930] pt-28 pb-24 px-6 sm:px-10 select-none">
-      <div className="max-w-[1440px] mx-auto space-y-16">
+    <div className="w-full min-h-screen bg-white text-[#0A1930] pt-28 pb-24 px-3 sm:px-6 select-none">
+      <div className="w-full space-y-16">
 
         {/* Back Button */}
         <motion.button
@@ -170,7 +170,7 @@ export const ForSchoolsPage: React.FC<ForSchoolsPageProps> = ({
             {ONBOARDING_STEPS.map((step) => (
               <div
                 key={step.num}
-                className="p-8 rounded-3xl bg-[#F8FAFC] border border-slate-200 space-y-3 shadow-sm"
+                className="p-8 bg-[#F8FAFC] border border-slate-200 space-y-3 shadow-sm"
               >
                 <span className="font-headline font-black text-4xl text-[#006AA7] block">
                   {step.num}
@@ -205,12 +205,12 @@ export const ForSchoolsPage: React.FC<ForSchoolsPageProps> = ({
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: idx * 0.08 }}
-                  className={`text-left w-full p-6 rounded-2xl bg-[#F8FAFC] border space-y-3 transition-colors ${
+                  className={`text-left w-full p-6 bg-[#F8FAFC] border space-y-3 transition-colors ${
                     isOpen ? 'border-[#006AA7]/40 shadow-sm' : 'border-slate-200 hover:border-[#006AA7]/30'
                   }`}
                 >
                   <div className="flex items-start justify-between gap-2">
-                    <div className="w-10 h-10 rounded-xl bg-[#006AA7]/10 border border-[#006AA7]/20 flex items-center justify-center text-[#006AA7]">
+                    <div className="w-10 h-10 bg-[#006AA7]/10 border border-[#006AA7]/20 flex items-center justify-center text-[#006AA7]">
                       <Icon className="w-5 h-5" />
                     </div>
                     <motion.div animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.25 }}>
@@ -245,7 +245,7 @@ export const ForSchoolsPage: React.FC<ForSchoolsPageProps> = ({
         </div>
 
         {/* ── WHAT THE SCHOOL NEEDS ── */}
-        <div className="p-8 sm:p-12 rounded-3xl bg-[#F8FAFC] border border-slate-200 space-y-6">
+        <div className="p-8 sm:p-12 bg-[#F8FAFC] border border-slate-200 space-y-6">
           <div className="border-b border-slate-200 pb-4">
             <span className="text-[10px] font-mono-code font-bold text-[#006AA7] uppercase tracking-wider block">
               REQUIREMENTS CHECKLIST
@@ -284,7 +284,7 @@ export const ForSchoolsPage: React.FC<ForSchoolsPageProps> = ({
         </div>
 
         {/* ── SAFETY & PRIVACY COMPLIANCE ── */}
-        <div className="p-8 rounded-3xl bg-[#F8FAFC] border border-slate-200 space-y-4">
+        <div className="p-8 bg-[#F8FAFC] border border-slate-200 space-y-4">
           <div className="flex items-center gap-3 text-[#006AA7]">
             <ShieldCheck className="w-6 h-6" />
             <h3 className="font-headline font-bold text-xl uppercase tracking-wider text-[#0A1930]">
@@ -315,7 +315,7 @@ export const ForSchoolsPage: React.FC<ForSchoolsPageProps> = ({
               return (
                 <div
                   key={item.id}
-                  className={`rounded-2xl border bg-[#F8FAFC] overflow-hidden transition-colors ${
+                  className={`border bg-[#F8FAFC] overflow-hidden transition-colors ${
                     isOpen ? 'border-[#006AA7]/40 shadow-sm' : 'border-slate-200'
                   }`}
                 >
@@ -362,9 +362,9 @@ export const ForSchoolsPage: React.FC<ForSchoolsPageProps> = ({
         </div>
 
         {/* ── ENROL COHORT ACTION BANNER ── */}
-        <div className="p-8 sm:p-12 rounded-3xl bg-[#FFCD00] text-[#0A1930] grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-md">
+        <div className="p-8 sm:p-12 bg-[#FFCD00] text-[#0A1930] grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-md">
           <div className="lg:col-span-8 space-y-2">
-            <span className="text-[10px] font-mono-code font-bold uppercase tracking-widest bg-black/10 px-3 py-1 rounded-full inline-block">
+            <span className="text-[10px] font-mono-code font-bold uppercase tracking-widest text-[#0A1930] block">
               RESERVE WORKSHOP DATES FOR AUTUMN 2026
             </span>
             <h3 className="font-headline font-black text-3xl sm:text-4xl uppercase">
@@ -385,7 +385,7 @@ export const ForSchoolsPage: React.FC<ForSchoolsPageProps> = ({
 
             <button
               onClick={onOpenDeckModal}
-              className="px-6 py-3.5 rounded-full border border-black/30 hover:border-black text-xs font-mono-code text-[#0A1930] uppercase tracking-wider transition-colors flex items-center justify-center gap-2 font-bold"
+              className="px-6 py-3.5 border border-black/30 hover:border-black text-xs font-mono-code text-[#0A1930] uppercase tracking-wider transition-colors flex items-center justify-center gap-2 font-bold"
             >
               <Download className="w-4 h-4" />
               <span>REQUEST PROGRAMME DETAILS</span>

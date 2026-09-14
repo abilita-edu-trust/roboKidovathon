@@ -57,8 +57,8 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
   ];
 
   return (
-    <div className="w-full min-h-screen bg-white text-[#0A1930] pt-28 pb-24 px-6 sm:px-10 select-none">
-      <div className="max-w-[1440px] mx-auto space-y-16">
+    <div className="w-full min-h-screen bg-white text-[#0A1930] pt-28 pb-24 px-3 sm:px-6 select-none">
+      <div className="w-full space-y-16">
 
         {/* Back Button */}
         <motion.button
@@ -106,35 +106,27 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
             </span>
           </div>
 
-          <div className="overflow-x-auto rounded-3xl border border-slate-200 bg-[#F8FAFC]">
-            <table className="w-full text-left border-collapse min-w-[700px]">
+          <div className="overflow-x-auto border border-slate-200 bg-[#F8FAFC]">
+            <table className="w-full text-left text-xs font-mono-code border-collapse">
               <thead>
-                <tr className="border-b border-slate-200 bg-white">
-                  <th className="p-4 text-[10px] font-mono-code font-bold text-slate-500 uppercase">Track</th>
-                  <th className="p-4 text-[10px] font-mono-code font-bold text-slate-500 uppercase">Grades</th>
-                  <th className="p-4 text-[10px] font-mono-code font-bold text-slate-500 uppercase">Control Method</th>
-                  <th className="p-4 text-[10px] font-mono-code font-bold text-slate-500 uppercase">Arena Dimensions</th>
-                  <th className="p-4 text-[10px] font-mono-code font-bold text-slate-500 uppercase">Match Format</th>
+                <tr className="border-b border-slate-200 bg-slate-100 text-[#0A1930] font-bold">
+                  <th className="p-4 uppercase">Track</th>
+                  <th className="p-4 uppercase">Grades</th>
+                  <th className="p-4 uppercase">Format</th>
+                  <th className="p-4 uppercase">Control</th>
+                  <th className="p-4 uppercase">Arena</th>
+                  <th className="p-4 uppercase">Focus</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-slate-200">
                 {TRACK_SUMMARY.map((row) => (
-                  <tr key={row.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors">
-                    <td className="p-4 font-headline font-bold text-sm text-[#0A1930]">
-                      {row.title}
-                    </td>
-                    <td className="p-4 text-xs font-mono-code font-semibold text-[#006AA7]">
-                      {row.grades}
-                    </td>
-                    <td className="p-4 text-xs text-slate-600 font-light">
-                      {row.control}
-                    </td>
-                    <td className="p-4 text-xs font-mono-code text-slate-600">
-                      {row.arena}
-                    </td>
-                    <td className="p-4 text-xs font-mono-code text-slate-500">
-                      {row.format}
-                    </td>
+                  <tr key={row.id} className="hover:bg-white transition-colors">
+                    <td className="p-4 font-bold text-[#006AA7]">{row.title}</td>
+                    <td className="p-4 text-slate-700">{row.grades}</td>
+                    <td className="p-4 text-slate-700">{row.format}</td>
+                    <td className="p-4 text-slate-700">{row.control}</td>
+                    <td className="p-4 text-slate-700">{row.arena}</td>
+                    <td className="p-4 text-slate-700">{row.focus}</td>
                   </tr>
                 ))}
               </tbody>
@@ -151,7 +143,7 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: idx * 0.1 }}
-              className="rounded-[32px] border border-slate-200 overflow-hidden bg-white shadow-md flex flex-col justify-between"
+              className="border border-slate-200 overflow-hidden bg-white shadow-md flex flex-col justify-between"
             >
               <div>
                 {/* Category Banner */}
@@ -165,11 +157,12 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
 
                   <div className="absolute bottom-5 left-5 sm:left-6 right-5 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
                     <div>
-                      <div className="flex items-center gap-2 mb-1.5">
-                        <span className="text-[10px] font-mono-code font-bold tracking-[0.2em] bg-[#006AA7] px-2.5 py-0.5 rounded-full uppercase text-white">
+                      <div className="flex items-center gap-3 mb-1.5 font-mono-code font-bold text-xs uppercase tracking-wider">
+                        <span className="text-[#FFCD00]">
                           {cat.ageRange}
                         </span>
-                        <span className="text-[11px] font-mono-code font-bold bg-white/20 backdrop-blur-md px-2.5 py-0.5 rounded-full text-white">
+                        <span className="text-white/70">·</span>
+                        <span className="text-white">
                           {cat.division}
                         </span>
                       </div>
@@ -189,7 +182,7 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
                   {cat.specs.map((s: { label: string; value: string }) => (
                     <div
                       key={s.label}
-                      className="p-3 rounded-2xl bg-white border border-slate-200 space-y-0.5"
+                      className="p-3 bg-white border border-slate-200 space-y-0.5"
                     >
                       <span className="block text-[9px] font-mono-code font-bold text-[#006AA7] uppercase">
                         {s.label}
@@ -249,7 +242,7 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
                           </h3>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             {cat.judgingWeights.map((j) => (
-                              <div key={j.label} className="flex items-center justify-between text-xs font-mono-code p-2.5 rounded-xl bg-[#F8FAFC] border border-slate-200">
+                              <div key={j.label} className="flex items-center justify-between text-xs font-mono-code p-2.5 bg-[#F8FAFC] border border-slate-200">
                                 <span className="text-slate-600">{j.label}</span>
                                 <span className="font-bold text-[#006AA7]">{j.pct}</span>
                               </div>
@@ -298,7 +291,7 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
                           title: `${cat.title} - Official 244 × 122 cm Arena Blueprint`,
                         })
                       }
-                      className="p-3.5 rounded-2xl bg-white border border-slate-200 group cursor-pointer space-y-2.5 shadow-xs hover:border-[#006AA7]/40 transition-all flex flex-col justify-between"
+                      className="p-3.5 bg-white border border-slate-200 group cursor-pointer space-y-2.5 shadow-xs hover:border-[#006AA7]/40 transition-all flex flex-col justify-between"
                     >
                       <div className="flex items-center justify-between">
                         <span className="text-[10px] font-mono-code font-bold text-[#006AA7] uppercase">
@@ -309,7 +302,7 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
                           <span>EXPAND</span>
                         </span>
                       </div>
-                      <div className="relative rounded-xl overflow-hidden bg-white p-2 border border-slate-100 flex items-center justify-center min-h-[120px]">
+                      <div className="relative overflow-hidden bg-white p-2 border border-slate-100 flex items-center justify-center min-h-[120px]">
                         <img
                           src={cat.arenaMatFocusUrl || cat.arenaMatUrl}
                           alt={`${cat.title} Arena Mat`}
@@ -330,7 +323,7 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
                           title: `${cat.title} - Official Hardware Kit Inventory`,
                         })
                       }
-                      className="p-3.5 rounded-2xl bg-white border border-slate-200 group cursor-pointer space-y-2.5 shadow-xs hover:border-[#006AA7]/40 transition-all flex flex-col justify-between"
+                      className="p-3.5 bg-white border border-slate-200 group cursor-pointer space-y-2.5 shadow-xs hover:border-[#006AA7]/40 transition-all flex flex-col justify-between"
                     >
                       <div className="flex items-center justify-between">
                         <span className="text-[10px] font-mono-code font-bold text-[#006AA7] uppercase">
@@ -341,7 +334,7 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
                           <span>EXPAND</span>
                         </span>
                       </div>
-                      <div className="relative rounded-xl overflow-hidden bg-white p-2 border border-slate-100 flex items-center justify-center min-h-[120px]">
+                      <div className="relative overflow-hidden bg-white p-2 border border-slate-100 flex items-center justify-center min-h-[120px]">
                         <img
                           src={cat.kitImageUrl}
                           alt={`${cat.title} Kit Pieces`}
@@ -362,7 +355,7 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
 
         {/* ── GENERAL ARENA RULES & PENALTIES ── */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <div className="lg:col-span-8 rounded-3xl border border-slate-200 bg-white p-8 space-y-4 shadow-sm">
+          <div className="lg:col-span-8 border border-slate-200 bg-white p-8 space-y-4 shadow-sm">
             <h3 className="font-headline font-black text-lg uppercase tracking-wider text-[#0A1930]">
               General Match Regulations
             </h3>
@@ -377,7 +370,7 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
             </ol>
           </div>
 
-          <div className="lg:col-span-4 rounded-3xl border border-slate-200 bg-[#013A63] p-8 space-y-4 text-white shadow-sm">
+          <div className="lg:col-span-4 border border-slate-200 bg-[#013A63] p-8 space-y-4 text-white shadow-sm">
             <h3 className="font-headline font-black text-lg uppercase tracking-wider text-[#FFCD00]">
               Infringements &amp; Fair Play
             </h3>
@@ -391,7 +384,7 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
         </div>
 
         {/* Bottom CTA Banner */}
-        <div className="p-8 sm:p-12 rounded-3xl bg-[#F8FAFC] border border-slate-200 text-center space-y-5">
+        <div className="p-8 sm:p-12 bg-[#F8FAFC] border border-slate-200 text-center space-y-5">
           <h3 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#0A1930]">
             Need Clarification On Specific Track Rules?
           </h3>
@@ -432,7 +425,7 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="relative max-w-4xl w-full max-h-[90vh] bg-white rounded-3xl overflow-hidden shadow-2xl z-10 flex flex-col"
+              className="relative max-w-4xl w-full max-h-[90vh] bg-white overflow-hidden shadow-2xl z-10 flex flex-col"
             >
               <div className="flex items-center justify-between p-4 sm:p-6 border-b border-slate-200 bg-slate-50">
                 <h3 className="font-syne font-bold text-base sm:text-lg text-[#0A1930] uppercase">
@@ -440,7 +433,7 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
                 </h3>
                 <button
                   onClick={() => setZoomImage(null)}
-                  className="p-2 rounded-full text-slate-500 hover:text-[#0A1930] hover:bg-slate-200 transition-colors"
+                  className="p-2 text-slate-500 hover:text-[#0A1930] hover:bg-slate-200 transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -455,7 +448,7 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
               <div className="p-4 border-t border-slate-200 text-right bg-slate-50">
                 <button
                   onClick={() => setZoomImage(null)}
-                  className="px-5 py-2 rounded-full bg-[#0A1930] text-white font-mono-code text-xs uppercase"
+                  className="px-5 py-2 bg-[#0A1930] text-white font-mono-code text-xs uppercase"
                 >
                   CLOSE WINDOW
                 </button>

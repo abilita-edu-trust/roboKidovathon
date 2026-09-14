@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   Compass,
@@ -8,7 +8,10 @@ import {
   Trophy,
   Award,
   ArrowRight,
+  ArrowDown,
+  ChevronRight,
   GitBranch,
+  Sparkles,
 } from 'lucide-react';
 
 interface RefWorkflowMindMapProps {
@@ -16,6 +19,8 @@ interface RefWorkflowMindMapProps {
 }
 
 export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({ onNavigate }) => {
+  const [activeHover, setActiveHover] = useState<number | null>(null);
+
   const nodes = [
     {
       step: '01',
@@ -24,8 +29,13 @@ export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({ onNaviga
       detail: 'Wheels, axles, gears & motors',
       icon: Compass,
       color: '#006AA7',
-      bg: 'bg-sky-50 text-[#006AA7] border-sky-200',
-      dotColor: 'bg-[#006AA7]',
+      hoverCardClass: 'hover:bg-[#006AA7] hover:border-[#006AA7] hover:shadow-[0_14px_30px_rgba(0,106,167,0.28)]',
+      hoverStepClass: 'group-hover:text-[#FFCD00]',
+      hoverTitleClass: 'group-hover:text-white',
+      hoverSubClass: 'group-hover:text-sky-100',
+      hoverDetailClass: 'group-hover:text-white/90',
+      hoverIconBoxClass: 'group-hover:bg-white group-hover:text-[#006AA7]',
+      hoverCtaClass: 'group-hover:text-white group-hover:border-white/20',
     },
     {
       step: '02',
@@ -33,9 +43,14 @@ export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({ onNaviga
       subtitle: 'Stable chassis',
       detail: 'Assemble drivetrain & power',
       icon: Hammer,
-      color: '#006AA7',
-      bg: 'bg-sky-50 text-[#006AA7] border-sky-200',
-      dotColor: 'bg-[#006AA7]',
+      color: '#013A63',
+      hoverCardClass: 'hover:bg-[#013A63] hover:border-[#013A63] hover:shadow-[0_14px_30px_rgba(1,58,99,0.28)]',
+      hoverStepClass: 'group-hover:text-[#FFCD00]',
+      hoverTitleClass: 'group-hover:text-white',
+      hoverSubClass: 'group-hover:text-sky-100',
+      hoverDetailClass: 'group-hover:text-white/90',
+      hoverIconBoxClass: 'group-hover:bg-white group-hover:text-[#013A63]',
+      hoverCtaClass: 'group-hover:text-white group-hover:border-white/20',
     },
     {
       step: '03',
@@ -43,9 +58,14 @@ export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({ onNaviga
       subtitle: 'Speed & turning',
       detail: 'Stability & control accuracy',
       icon: Gauge,
-      color: '#006AA7',
-      bg: 'bg-sky-50 text-[#006AA7] border-sky-200',
-      dotColor: 'bg-[#006AA7]',
+      color: '#0284C7',
+      hoverCardClass: 'hover:bg-[#0284C7] hover:border-[#0284C7] hover:shadow-[0_14px_30px_rgba(2,132,199,0.28)]',
+      hoverStepClass: 'group-hover:text-[#FFCD00]',
+      hoverTitleClass: 'group-hover:text-white',
+      hoverSubClass: 'group-hover:text-cyan-100',
+      hoverDetailClass: 'group-hover:text-white/90',
+      hoverIconBoxClass: 'group-hover:bg-white group-hover:text-[#0284C7]',
+      hoverCtaClass: 'group-hover:text-white group-hover:border-white/20',
     },
     {
       step: '04',
@@ -54,8 +74,13 @@ export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({ onNaviga
       detail: 'Iterate based on test trials',
       icon: RotateCw,
       color: '#EA580C',
-      bg: 'bg-orange-50 text-[#EA580C] border-orange-200',
-      dotColor: 'bg-[#EA580C]',
+      hoverCardClass: 'hover:bg-[#EA580C] hover:border-[#EA580C] hover:shadow-[0_14px_30px_rgba(234,88,12,0.28)]',
+      hoverStepClass: 'group-hover:text-[#FFCD00]',
+      hoverTitleClass: 'group-hover:text-white',
+      hoverSubClass: 'group-hover:text-orange-100',
+      hoverDetailClass: 'group-hover:text-white/90',
+      hoverIconBoxClass: 'group-hover:bg-white group-hover:text-[#EA580C]',
+      hoverCtaClass: 'group-hover:text-white group-hover:border-white/20',
     },
     {
       step: '05',
@@ -63,9 +88,14 @@ export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({ onNaviga
       subtitle: 'In-school heats',
       detail: 'Friendly qualifier matches',
       icon: Trophy,
-      color: '#EA580C',
-      bg: 'bg-orange-50 text-[#EA580C] border-orange-200',
-      dotColor: 'bg-[#EA580C]',
+      color: '#D97706',
+      hoverCardClass: 'hover:bg-[#D97706] hover:border-[#D97706] hover:shadow-[0_14px_30px_rgba(217,119,6,0.28)]',
+      hoverStepClass: 'group-hover:text-[#FFCD00]',
+      hoverTitleClass: 'group-hover:text-white',
+      hoverSubClass: 'group-hover:text-amber-100',
+      hoverDetailClass: 'group-hover:text-white/90',
+      hoverIconBoxClass: 'group-hover:bg-white group-hover:text-[#D97706]',
+      hoverCtaClass: 'group-hover:text-white group-hover:border-white/20',
     },
     {
       step: '06',
@@ -74,14 +104,19 @@ export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({ onNaviga
       detail: 'Championship live in Västerås',
       icon: Award,
       color: '#FFCD00',
-      bg: 'bg-[#0A1930] text-white border-slate-700',
-      dotColor: 'bg-[#FFCD00]',
       isFinal: true,
+      hoverCardClass: 'hover:bg-[#FFCD00] hover:border-[#FFCD00] hover:shadow-[0_14px_34px_rgba(255,205,0,0.38)]',
+      hoverStepClass: 'group-hover:text-[#0A1930]',
+      hoverTitleClass: 'group-hover:text-[#0A1930]',
+      hoverSubClass: 'group-hover:text-[#013A63]',
+      hoverDetailClass: 'group-hover:text-[#0A1930]/85',
+      hoverIconBoxClass: 'group-hover:bg-[#0A1930] group-hover:text-[#FFCD00]',
+      hoverCtaClass: 'group-hover:text-[#0A1930] group-hover:border-[#0A1930]/20',
     },
   ];
 
   return (
-    <section className="w-full bg-white text-[#0A1930] py-14 sm:py-18 px-4 sm:px-8 lg:px-12 border-b border-slate-200 select-none relative overflow-hidden">
+    <section className="w-full bg-white text-[#0A1930] py-14 sm:py-18 px-3 sm:px-6 border-b border-slate-200 select-none relative overflow-hidden">
       {/* Background blueprint grid */}
       <div className="absolute inset-0 pointer-events-none opacity-25">
         <div
@@ -94,14 +129,20 @@ export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({ onNaviga
         />
       </div>
 
-      <div className="max-w-[1440px] mx-auto space-y-8 relative z-10">
+      <div className="w-full space-y-8 relative z-10">
 
-        {/* ── HEADER ROW ── */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 pb-2">
+        {/* ── HEADER ROW WITH TRANSITIONS ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col md:flex-row md:items-end justify-between gap-5 pb-2"
+        >
           <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center gap-2 text-[#006AA7] text-[11px] font-mono-code font-bold tracking-[0.25em] uppercase">
               <GitBranch className="w-3.5 h-3.5" />
-              <span>STEM LEARNING PATHWAY // FROM PARTS TO CITY FINAL</span>
+              <span>STEM LEARNING PATHWAY</span>
             </div>
 
             <h2
@@ -112,7 +153,7 @@ export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({ onNaviga
             </h2>
 
             <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed">
-              RoboKidovation connects classroom engineering to the arena. Students explore mechanical components, build a working rover, iterate design flaws, and qualify for the city final.
+              Six steps from first parts to the city championship.
             </p>
           </div>
 
@@ -120,116 +161,219 @@ export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({ onNaviga
           <div className="flex items-center gap-3">
             <button
               onClick={() => onNavigate('workflow')}
-              className="group inline-flex items-center gap-2.5 px-5 py-3 rounded-full bg-[#0A1930] hover:bg-[#006AA7] text-white text-xs font-mono-code font-bold uppercase tracking-wider transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-[1.02] active:scale-[0.98]"
+              className="group inline-flex items-center gap-2.5 px-5 py-3 bg-[#0A1930] hover:bg-[#006AA7] text-white text-xs font-mono-code font-bold uppercase tracking-wider transition-all duration-300 shadow-sm hover:shadow-md transform hover:scale-[1.02] active:scale-[0.98]"
             >
               <span>VIEW FULL WORKFLOW</span>
-              <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+              <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
             </button>
           </div>
-        </div>
+        </motion.div>
 
-        {/* ── MIND MAP NODES TRACK ── */}
+        {/* ── MIND MAP NODES TRACK WITH ANIMATED PATHWAYS ── */}
         <div className="relative pt-6 pb-2">
 
-          {/* Horizontal Connecting Rail (Desktop) */}
-          <div className="hidden lg:block absolute top-[54px] left-[6%] right-[6%] h-[2px] bg-gradient-to-r from-sky-300 via-orange-300 to-[#FFCD00] z-0 opacity-60" />
+          {/* Continuous Animated Connecting SVG Rail (Desktop) */}
+          <div className="hidden lg:block absolute top-[52px] left-[5%] right-[5%] h-5 z-0 pointer-events-none overflow-visible">
+            <svg className="w-full h-full overflow-visible" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="pathwayGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#006AA7" stopOpacity="0.3" />
+                  <stop offset="50%" stopColor="#EA580C" stopOpacity="0.4" />
+                  <stop offset="100%" stopColor="#FFCD00" stopOpacity="0.7" />
+                </linearGradient>
+                <linearGradient id="activeBeam" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#006AA7" />
+                  <stop offset="50%" stopColor="#EA580C" />
+                  <stop offset="100%" stopColor="#FFCD00" />
+                </linearGradient>
+              </defs>
+              {/* Base track */}
+              <line
+                x1="0"
+                y1="2"
+                x2="100%"
+                y2="2"
+                stroke="url(#pathwayGrad)"
+                strokeWidth="2"
+                strokeDasharray="6 6"
+              />
+              {/* Animated energy pulse flowing left to right */}
+              <motion.line
+                x1="0"
+                y1="2"
+                x2="100%"
+                y2="2"
+                stroke="url(#activeBeam)"
+                strokeWidth="3.5"
+                strokeDasharray="24 160"
+                animate={{ strokeDashoffset: [368, 0] }}
+                transition={{ repeat: Infinity, duration: 2.4, ease: 'linear' }}
+              />
+            </svg>
+          </div>
 
           {/* 6 Connected Mind Map Node Boxes */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 relative z-10">
             {nodes.map((node, idx) => {
               const Icon = node.icon;
+              const isCardHovered = activeHover === idx;
+              const isNextCardHovered = activeHover === idx + 1;
 
               return (
-                <motion.div
-                  key={node.step}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: idx * 0.08 }}
-                  onClick={() => onNavigate('workflow')}
-                  className={`group relative rounded-2xl p-5 border cursor-pointer transition-all duration-300 flex flex-col justify-between space-y-4 hover:-translate-y-1.5 hover:shadow-lg ${
-                    node.isFinal
-                      ? 'bg-[#0A1930] text-white border-slate-800 hover:border-[#FFCD00]/50'
-                      : 'bg-white text-[#0A1930] border-slate-200 hover:border-[#006AA7]/40'
-                  }`}
-                >
-                  {/* Top: Step Badge & Node Pin */}
-                  <div className="flex items-center justify-between relative">
-                    <span
-                      className={`font-mono-code font-black text-lg ${
-                        node.isFinal ? 'text-[#FFCD00]' : 'text-[#006AA7]'
-                      }`}
-                    >
-                      {node.step}
-                    </span>
-
-                    {/* Central Mind Map Node Indicator */}
-                    <div
-                      className={`w-9 h-9 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110 shadow-xs ${
-                        node.isFinal
-                          ? 'bg-white/10 text-[#FFCD00]'
-                          : 'bg-slate-100 text-[#006AA7] group-hover:bg-[#006AA7] group-hover:text-white'
-                      }`}
-                    >
-                      <Icon className="w-4 h-4" />
-                    </div>
-                  </div>
-
-                  {/* Title & Subtitle */}
-                  <div className="space-y-1">
-                    <h3
-                      className={`font-headline font-black text-base uppercase tracking-tight ${
-                        node.isFinal ? 'text-white' : 'text-[#0A1930]'
-                      }`}
-                    >
-                      {node.title}
-                    </h3>
-                    <p
-                      className={`text-[11px] font-mono-code font-bold uppercase tracking-wider ${
-                        node.isFinal ? 'text-[#FFCD00]' : 'text-[#006AA7]'
-                      }`}
-                    >
-                      {node.subtitle}
-                    </p>
-                    <p
-                      className={`text-xs font-light leading-snug pt-1 ${
-                        node.isFinal ? 'text-slate-300' : 'text-slate-600'
-                      }`}
-                    >
-                      {node.detail}
-                    </p>
-                  </div>
-
-                  {/* Card Bottom CTA Hint */}
-                  <div
-                    className={`pt-2.5 border-t flex items-center justify-between text-[10px] font-mono-code font-bold uppercase ${
+                <div key={node.step} className="relative flex flex-col">
+                  <motion.div
+                    initial={{ opacity: 0, y: 28 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.15 }}
+                    transition={{
+                      duration: 0.55,
+                      delay: idx * 0.08,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                    onMouseEnter={() => setActiveHover(idx)}
+                    onMouseLeave={() => setActiveHover(null)}
+                    onClick={() => onNavigate('workflow')}
+                    className={`group relative p-5 border cursor-pointer flex-1 flex flex-col justify-between space-y-4 transition-all duration-300 ease-out hover:-translate-y-2 ${
                       node.isFinal
-                        ? 'border-white/10 text-[#FFCD00]'
-                        : 'border-slate-100 text-slate-400 group-hover:text-[#006AA7]'
-                    }`}
+                        ? 'bg-[#0A1930] text-white border-slate-800'
+                        : 'bg-white text-[#0A1930] border-slate-200'
+                    } ${node.hoverCardClass}`}
                   >
-                    <span>MORE DETAILS</span>
-                    <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
-                  </div>
-                </motion.div>
+                    {/* Top: Step Badge & Node Pin */}
+                    <div className="flex items-center justify-between relative">
+                      <span
+                        className={`font-mono-code font-black text-lg transition-colors duration-300 ${
+                          node.isFinal ? 'text-[#FFCD00]' : 'text-[#006AA7]'
+                        } ${node.hoverStepClass}`}
+                      >
+                        {node.step}
+                      </span>
+
+                      {/* Central Mind Map Node Indicator */}
+                      <div
+                        className={`w-9 h-9 flex items-center justify-center transition-all duration-300 shadow-xs group-hover:scale-110 ${
+                          node.isFinal
+                            ? 'bg-white/10 text-[#FFCD00]'
+                            : 'bg-slate-100 text-[#006AA7]'
+                        } ${node.hoverIconBoxClass}`}
+                      >
+                        <Icon className="w-4 h-4 transition-transform duration-300 group-hover:rotate-6" />
+                      </div>
+                    </div>
+
+                    {/* Title & Subtitle */}
+                    <div className="space-y-1">
+                      <h3
+                        className={`font-headline font-black text-base uppercase tracking-tight transition-colors duration-300 ${
+                          node.isFinal ? 'text-white' : 'text-[#0A1930]'
+                        } ${node.hoverTitleClass}`}
+                      >
+                        {node.title}
+                      </h3>
+                      <p
+                        className={`text-[11px] font-mono-code font-bold uppercase tracking-wider transition-colors duration-300 ${
+                          node.isFinal ? 'text-[#FFCD00]' : 'text-[#006AA7]'
+                        } ${node.hoverSubClass}`}
+                      >
+                        {node.subtitle}
+                      </p>
+                      <p
+                        className={`text-xs font-light leading-snug pt-1 transition-colors duration-300 ${
+                          node.isFinal ? 'text-slate-300' : 'text-slate-600'
+                        } ${node.hoverDetailClass}`}
+                      >
+                        {node.detail}
+                      </p>
+                    </div>
+
+                    {/* Card Bottom CTA Hint */}
+                    <div
+                      className={`pt-2.5 border-t flex items-center justify-end text-[10px] font-mono-code font-bold uppercase transition-all duration-300 ${
+                        node.isFinal
+                          ? 'border-white/10 text-[#FFCD00]'
+                          : 'border-slate-100 text-slate-400'
+                      } ${node.hoverCtaClass}`}
+                    >
+                      <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1.5" />
+                    </div>
+                  </motion.div>
+
+                  {/* ── INTER-CARD ANIMATED ARROW CONNECTORS (DESKTOP) ── */}
+                  {idx < nodes.length - 1 && (
+                    <div className="hidden lg:flex absolute -right-[13px] top-[26px] z-30 pointer-events-none items-center justify-center">
+                      <div
+                        className={`w-6 h-6 flex items-center justify-center border shadow-xs transition-all duration-300 ${
+                          isCardHovered || isNextCardHovered
+                            ? 'bg-[#FFCD00] text-[#0A1930] border-[#FFCD00] scale-110 shadow-md ring-2 ring-[#FFCD00]/40'
+                            : 'bg-white text-[#006AA7] border-slate-300'
+                        }`}
+                      >
+                        <motion.div
+                          animate={{ x: [0, 3, 0] }}
+                          transition={{
+                            repeat: Infinity,
+                            duration: 1.1,
+                            ease: 'easeInOut',
+                            delay: idx * 0.15,
+                          }}
+                        >
+                          <ChevronRight className="w-3.5 h-3.5 stroke-[2.5]" />
+                        </motion.div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ── INTER-CARD ANIMATED ARROW CONNECTORS (MOBILE & TABLET) ── */}
+                  {idx < nodes.length - 1 && (
+                    <div className="lg:hidden flex items-center justify-center py-2.5 relative z-20">
+                      <div
+                        className={`flex items-center gap-1.5 px-3 py-1 border text-[10px] font-mono-code font-bold uppercase tracking-wider transition-colors duration-300 ${
+                          isCardHovered || isNextCardHovered
+                            ? 'bg-[#FFCD00] text-[#0A1930] border-[#FFCD00] shadow-sm'
+                            : 'bg-sky-50 text-[#006AA7] border-sky-200'
+                        }`}
+                      >
+                        <span>STEP {nodes[idx + 1].step}</span>
+                        <motion.div
+                          animate={{ y: [0, 3, 0] }}
+                          transition={{
+                            repeat: Infinity,
+                            duration: 1,
+                            ease: 'easeInOut',
+                            delay: idx * 0.12,
+                          }}
+                        >
+                          <ArrowDown className="w-3 h-3" />
+                        </motion.div>
+                      </div>
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>
         </div>
 
-        {/* ── FOOTER RIBBON WITH DIRECT LINK ── */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-slate-100 text-[11px] font-mono-code text-slate-500">
-          <span className="font-medium">
-            COLLABORATION PROPOSAL · MDU C2 × IBK VÄSTERÅS × INIAC 2026
-          </span>
+        {/* ── FOOTER RIBBON WITH TRANSITIONS ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-slate-100 text-[11px] font-mono-code text-slate-500"
+        >
+          <div className="flex items-center gap-2 font-medium">
+            <Sparkles className="w-3.5 h-3.5 text-[#006AA7]" />
+            <span>IBK VÄSTERÅS × INIAC × SKILLSKOLAN 2026</span>
+          </div>
           <button
             onClick={() => onNavigate('workflow')}
-            className="text-[#006AA7] font-bold hover:underline inline-flex items-center gap-1 uppercase tracking-wider"
+            className="group text-[#006AA7] font-bold hover:underline inline-flex items-center gap-1.5 uppercase tracking-wider transition-colors"
           >
-            <span>LEARN ABOUT THE 20H CLASSROOM CURRICULUM</span>
-            <ArrowRight className="w-3 h-3" />
+            <span>VIEW FULL 20H CURRICULUM</span>
+            <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
           </button>
-        </div>
+        </motion.div>
 
       </div>
     </section>
