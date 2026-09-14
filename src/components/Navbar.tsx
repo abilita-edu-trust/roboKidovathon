@@ -55,39 +55,58 @@ export const Navbar: React.FC<NavbarProps> = ({
     }
   };
 
+  const isDarkHeader = activeTab === 'home' && !isScrolled;
+
   return (
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 select-none ${
-          isScrolled
-            ? 'bg-white/95 backdrop-blur-md border-b border-slate-200 py-3 text-[#0A1930] shadow-sm'
-            : 'bg-transparent border-b border-transparent py-4 sm:py-5 text-white'
+          isDarkHeader
+            ? 'bg-transparent border-b border-transparent py-4 sm:py-5 text-white'
+            : 'bg-white/95 backdrop-blur-md border-b border-slate-200 py-3 text-[#0A1930] shadow-sm'
         }`}
       >
         <div className="w-full px-4 sm:px-6 flex items-center justify-between gap-4">
 
-          {/* Brand Mark */}
-          <button
+          {/* Brand Mark Logo */}
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => handleLinkClick('home')}
-            className="text-left group focus:outline-none flex items-center"
+            className="text-left group focus:outline-none flex items-center gap-2.5"
           >
+            {/* Swedish Flag / STEM Mark */}
+            <div className="w-5 h-5 bg-[#006AA7] flex items-center justify-center relative overflow-hidden shadow-2xs flex-shrink-0">
+              <div className="absolute top-0 bottom-0 left-[35%] w-[22%] bg-[#FFCD00]" />
+              <div className="absolute left-0 right-0 top-[38%] h-[24%] bg-[#FFCD00]" />
+            </div>
+
             <span
-              className={`font-headline font-bold text-sm sm:text-base md:text-lg tracking-tight uppercase transition-colors duration-300 ${
-                isScrolled
-                  ? 'text-[#0A1930] group-hover:text-[#006AA7]'
-                  : 'text-white group-hover:text-[#FFCD00]'
+              className={`font-headline font-black text-sm sm:text-base md:text-lg tracking-tight uppercase transition-colors duration-300 ${
+                isDarkHeader
+                  ? 'text-white group-hover:text-[#FFCD00]'
+                  : 'text-[#0A1930] group-hover:text-[#006AA7]'
               }`}
             >
-              VÄSTERÅS FUTURE INNOVATORS <span className="font-light text-xs text-slate-400">2026</span>
+              VÄSTERÅS FUTURE INNOVATORS{' '}
+              <span
+                className={`font-mono-code font-bold text-xs px-1.5 py-0.5 ml-1 border transition-colors ${
+                  isDarkHeader
+                    ? 'text-[#FFCD00] bg-white/10 border-white/20'
+                    : 'text-[#006AA7] bg-slate-100 border-slate-200'
+                }`}
+              >
+                2026
+              </span>
             </span>
-          </button>
+          </motion.button>
 
           {/* Desktop Navigation Links */}
           <nav
             className={`hidden lg:flex items-center gap-1 p-1 transition-all duration-300 ${
-              isScrolled
-                ? 'bg-slate-100 border border-slate-200'
-                : 'bg-black/20 border border-white/20 backdrop-blur-sm'
+              isDarkHeader
+                ? 'bg-black/30 border border-white/20 backdrop-blur-sm'
+                : 'bg-slate-100 border border-slate-200'
             }`}
           >
             {navLinks.map((item) => {
@@ -96,17 +115,26 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   key={item.id}
                   onClick={() => handleLinkClick(item.id)}
-                  className={`px-3.5 py-1.5 text-xs font-display font-medium tracking-wide transition-all duration-200 ${
-                    isScrolled
+                  className={`relative px-3.5 py-1.5 text-xs font-display font-medium tracking-wide transition-all duration-200 ${
+                    isDarkHeader
                       ? isActive
-                        ? 'bg-[#006AA7] text-white font-bold'
-                        : 'text-slate-600 hover:text-[#0A1930] hover:bg-slate-200/60'
+                        ? 'text-[#0A1930] font-bold'
+                        : 'text-white/90 hover:text-white hover:bg-white/15'
                       : isActive
-                      ? 'bg-[#FFCD00] text-[#0A1930] font-bold'
-                      : 'text-white/90 hover:text-white hover:bg-white/15'
+                      ? 'text-white font-bold'
+                      : 'text-slate-700 hover:text-[#0A1930] hover:bg-slate-200/60'
                   }`}
                 >
-                  {item.label}
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeNavIndicator"
+                      transition={{ type: 'spring', stiffness: 450, damping: 30 }}
+                      className={`absolute inset-0 ${
+                        isDarkHeader ? 'bg-[#FFCD00]' : 'bg-[#006AA7]'
+                      }`}
+                    />
+                  )}
+                  <span className="relative z-10">{item.label}</span>
                 </button>
               );
             })}
@@ -114,20 +142,22 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Action Button (Right) */}
           <div className="hidden sm:flex items-center gap-3">
-            <button
+            <motion.button
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
               onClick={onOpenRegister}
-              className="btn-pill-lime text-xs font-black py-2.5 px-5 transition-all duration-200 shadow-md flex items-center gap-2"
+              className="btn-pill-lime text-xs font-black py-2.5 px-5 transition-all duration-200 shadow-md flex items-center gap-2 group relative overflow-hidden"
             >
               <span>REGISTER SCHOOL / TEAM</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
+              <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+            </motion.button>
           </div>
 
           {/* Mobile Hamburger Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className={`lg:hidden p-2 rounded-lg focus:outline-none transition-colors ${
-              isScrolled ? 'text-[#0A1930] hover:bg-slate-100' : 'text-white hover:bg-white/10'
+              isDarkHeader ? 'text-white hover:bg-white/10' : 'text-[#0A1930] hover:bg-slate-100'
             }`}
             aria-label="Toggle navigation menu"
           >

@@ -13,6 +13,7 @@ import {
   GitBranch,
   Sparkles,
 } from 'lucide-react';
+import { Interactive3DTilt } from './Interactive3DTilt';
 
 interface RefWorkflowMindMapProps {
   onNavigate: (route: string) => void;
@@ -116,7 +117,11 @@ export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({ onNaviga
   ];
 
   return (
-    <section className="w-full bg-white text-[#0A1930] py-14 sm:py-18 px-3 sm:px-6 border-b border-slate-200 select-none relative overflow-hidden">
+    <section className="w-full bg-gradient-to-b from-[#F6FAFD] via-[#EEF5FB] to-[#E5EFF8] text-[#0A1930] py-14 sm:py-18 px-3 sm:px-6 border-b border-slate-200 select-none relative overflow-hidden">
+      {/* Ambient Gradient Glows */}
+      <div className="absolute -top-32 -left-32 w-96 h-96 bg-gradient-to-br from-sky-400/15 via-blue-500/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-gradient-to-tl from-[#FFCD00]/15 via-amber-400/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+
       {/* Background blueprint grid */}
       <div className="absolute inset-0 pointer-events-none opacity-25">
         <div
@@ -220,83 +225,91 @@ export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({ onNaviga
               const isNextCardHovered = activeHover === idx + 1;
 
               return (
-                <div key={node.step} className="relative flex flex-col">
-                  <motion.div
-                    initial={{ opacity: 0, y: 28 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.15 }}
-                    transition={{
-                      duration: 0.55,
-                      delay: idx * 0.08,
-                      ease: [0.16, 1, 0.3, 1],
-                    }}
-                    onMouseEnter={() => setActiveHover(idx)}
-                    onMouseLeave={() => setActiveHover(null)}
-                    onClick={() => onNavigate('workflow')}
-                    className={`group relative p-5 border cursor-pointer flex-1 flex flex-col justify-between space-y-4 transition-all duration-300 ease-out hover:-translate-y-2 ${
-                      node.isFinal
-                        ? 'bg-[#0A1930] text-white border-slate-800'
-                        : 'bg-white text-[#0A1930] border-slate-200'
-                    } ${node.hoverCardClass}`}
+                <div key={node.step} className="relative flex flex-col h-full">
+                  <Interactive3DTilt
+                    maxTilt={8}
+                    glareOpacity={node.isFinal ? 0.22 : 0.14}
+                    className="h-full flex-1 flex flex-col"
                   >
-                    {/* Top: Step Badge & Node Pin */}
-                    <div className="flex items-center justify-between relative">
-                      <span
-                        className={`font-mono-code font-black text-lg transition-colors duration-300 ${
-                          node.isFinal ? 'text-[#FFCD00]' : 'text-[#006AA7]'
-                        } ${node.hoverStepClass}`}
-                      >
-                        {node.step}
-                      </span>
-
-                      {/* Central Mind Map Node Indicator */}
-                      <div
-                        className={`w-9 h-9 flex items-center justify-center transition-all duration-300 shadow-xs group-hover:scale-110 ${
-                          node.isFinal
-                            ? 'bg-white/10 text-[#FFCD00]'
-                            : 'bg-slate-100 text-[#006AA7]'
-                        } ${node.hoverIconBoxClass}`}
-                      >
-                        <Icon className="w-4 h-4 transition-transform duration-300 group-hover:rotate-6" />
-                      </div>
-                    </div>
-
-                    {/* Title & Subtitle */}
-                    <div className="space-y-1">
-                      <h3
-                        className={`font-headline font-black text-base uppercase tracking-tight transition-colors duration-300 ${
-                          node.isFinal ? 'text-white' : 'text-[#0A1930]'
-                        } ${node.hoverTitleClass}`}
-                      >
-                        {node.title}
-                      </h3>
-                      <p
-                        className={`text-[11px] font-mono-code font-bold uppercase tracking-wider transition-colors duration-300 ${
-                          node.isFinal ? 'text-[#FFCD00]' : 'text-[#006AA7]'
-                        } ${node.hoverSubClass}`}
-                      >
-                        {node.subtitle}
-                      </p>
-                      <p
-                        className={`text-xs font-light leading-snug pt-1 transition-colors duration-300 ${
-                          node.isFinal ? 'text-slate-300' : 'text-slate-600'
-                        } ${node.hoverDetailClass}`}
-                      >
-                        {node.detail}
-                      </p>
-                    </div>
-
-                    {/* Card Bottom CTA Hint */}
-                    <div
-                      className={`pt-2.5 border-t flex items-center justify-end text-[10px] font-mono-code font-bold uppercase transition-all duration-300 ${
+                    <motion.div
+                      initial={{ opacity: 0, y: 28 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, amount: 0.15 }}
+                      transition={{
+                        duration: 0.55,
+                        delay: idx * 0.08,
+                        ease: [0.16, 1, 0.3, 1],
+                      }}
+                      onMouseEnter={() => setActiveHover(idx)}
+                      onMouseLeave={() => setActiveHover(null)}
+                      onClick={() => onNavigate('workflow')}
+                      className={`group relative p-5 border cursor-pointer flex-1 flex flex-col justify-between space-y-4 transition-all duration-300 ease-out ${
                         node.isFinal
-                          ? 'border-white/10 text-[#FFCD00]'
-                          : 'border-slate-100 text-slate-400'
-                      } ${node.hoverCtaClass}`}
+                          ? 'bg-[#0A1930] text-white border-slate-800'
+                          : 'bg-white text-[#0A1930] border-slate-200'
+                      } ${node.hoverCardClass}`}
+                      style={{ transformStyle: 'preserve-3d' }}
                     >
-                      <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1.5" />
-                    </div>
-                  </motion.div>
+                      {/* Top: Step Badge & Node Pin */}
+                      <div className="flex items-center justify-between relative" style={{ transform: 'translateZ(12px)' }}>
+                        <span
+                          className={`font-mono-code font-black text-lg transition-colors duration-300 ${
+                            node.isFinal ? 'text-[#FFCD00]' : 'text-[#006AA7]'
+                          } ${node.hoverStepClass}`}
+                        >
+                          {node.step}
+                        </span>
+
+                        {/* Central Mind Map Node Indicator */}
+                        <div
+                          className={`w-9 h-9 flex items-center justify-center transition-all duration-300 shadow-xs group-hover:scale-110 ${
+                            node.isFinal
+                              ? 'bg-white/10 text-[#FFCD00]'
+                              : 'bg-slate-100 text-[#006AA7]'
+                          } ${node.hoverIconBoxClass}`}
+                        >
+                          <Icon className="w-4 h-4 transition-transform duration-300 group-hover:rotate-6" />
+                        </div>
+                      </div>
+
+                      {/* Title & Subtitle */}
+                      <div className="space-y-1" style={{ transform: 'translateZ(10px)' }}>
+                        <h3
+                          className={`font-headline font-black text-base uppercase tracking-tight transition-colors duration-300 ${
+                            node.isFinal ? 'text-white' : 'text-[#0A1930]'
+                          } ${node.hoverTitleClass}`}
+                        >
+                          {node.title}
+                        </h3>
+                        <p
+                          className={`text-[11px] font-mono-code font-bold uppercase tracking-wider transition-colors duration-300 ${
+                            node.isFinal ? 'text-[#FFCD00]' : 'text-[#006AA7]'
+                          } ${node.hoverSubClass}`}
+                        >
+                          {node.subtitle}
+                        </p>
+                        <p
+                          className={`text-xs font-light leading-snug pt-1 transition-colors duration-300 ${
+                            node.isFinal ? 'text-slate-300' : 'text-slate-600'
+                          } ${node.hoverDetailClass}`}
+                        >
+                          {node.detail}
+                        </p>
+                      </div>
+
+                      {/* Card Bottom CTA Hint */}
+                      <div
+                        className={`pt-2.5 border-t flex items-center justify-end text-[10px] font-mono-code font-bold uppercase transition-all duration-300 ${
+                          node.isFinal
+                            ? 'border-white/10 text-[#FFCD00]'
+                            : 'border-slate-100 text-slate-400'
+                        } ${node.hoverCtaClass}`}
+                        style={{ transform: 'translateZ(8px)' }}
+                      >
+                        <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1.5" />
+                      </div>
+                    </motion.div>
+                  </Interactive3DTilt>
 
                   {/* ── INTER-CARD ANIMATED ARROW CONNECTORS (DESKTOP) ── */}
                   {idx < nodes.length - 1 && (

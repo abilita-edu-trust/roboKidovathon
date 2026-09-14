@@ -5,6 +5,7 @@ import {
   Bot,
   Lightbulb,
 } from 'lucide-react';
+import { Interactive3DTilt } from './Interactive3DTilt';
 
 interface RefTheExperienceProps {
   onNavigate: (route: string) => void;
@@ -65,8 +66,12 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
   return (
     <section
       id="choose-experience"
-      className="w-full bg-white text-[#0A1930] py-12 sm:py-16 px-3 sm:px-5 lg:px-6 select-none relative overflow-hidden border-t border-slate-200"
+      className="w-full bg-gradient-to-b from-[#F0F6FC] via-[#E8F1F9] to-[#F8FAFC] text-[#0A1930] py-14 sm:py-20 px-3 sm:px-5 lg:px-6 select-none relative overflow-hidden border-t border-slate-200"
     >
+      {/* Dynamic Ambient Gradient Orbs */}
+      <div className="absolute top-10 left-1/4 w-96 h-96 bg-gradient-to-tr from-[#006AA7]/15 via-sky-300/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-gradient-to-br from-teal-400/15 via-[#FFCD00]/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+
       {/* Technical Blueprint Grid Accent */}
       <div className="absolute inset-0 pointer-events-none opacity-25">
         <div
@@ -103,21 +108,35 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
           </div>
         </div>
 
-        {/* ── 02. TWO PRIMARY EXPERIENCE CARDS (SIDE-BY-SIDE) ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 items-stretch">
+        {/* ── 02. TWO PRIMARY EXPERIENCE CARDS (3D INTERACTIVE TILT) ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-7 items-stretch">
           {experiences.map((exp, idx) => {
             const Icon = exp.icon;
             return (
-              <motion.div
+              <Interactive3DTilt
                 key={exp.id}
-                initial={{ opacity: 0, y: 28 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: idx * 0.15 }}
-                className={`p-7 sm:p-8 text-white border-2 shadow-xl flex flex-col justify-between space-y-6 transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group ${exp.gradient} ${exp.border} ${exp.glow}`}
+                maxTilt={8}
+                glareOpacity={0.25}
+                className="h-full"
               >
-                {/* Ambient Radial Accent */}
-                <div className="absolute -top-24 -right-24 w-80 h-80 bg-white/10 blur-3xl pointer-events-none" />
+                <motion.div
+                  initial={{ opacity: 0, y: 28 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{
+                    duration: 0.5,
+                    delay: idx * 0.12,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                  className={`p-7 sm:p-8 text-white border-2 shadow-xl flex flex-col justify-between space-y-6 relative overflow-hidden group cursor-pointer h-full ${exp.gradient} ${exp.border} ${exp.glow}`}
+                  style={{ transformStyle: 'preserve-3d' }}
+                >
+                {/* Ambient Radial Accent with subtle animation */}
+                <motion.div
+                  animate={{ scale: [1, 1.15, 1], opacity: [0.1, 0.2, 0.1] }}
+                  transition={{ repeat: Infinity, duration: 6, ease: 'easeInOut' }}
+                  className="absolute -top-24 -right-24 w-80 h-80 bg-white/20 blur-3xl pointer-events-none"
+                />
                 <div className="absolute -bottom-24 -left-24 w-80 h-80 bg-black/10 blur-3xl pointer-events-none" />
 
                 {/* Card Top: Date & Category Icon */}
@@ -127,9 +146,22 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
                       {exp.date}
                     </span>
 
-                    <div className="w-10 h-10 bg-white/15 border border-white/20 flex items-center justify-center text-white shadow-sm transition-transform duration-300 group-hover:scale-110">
-                      <Icon className="w-5 h-5" />
-                    </div>
+                    <motion.div
+                      whileHover={{ rotate: 12, scale: 1.15 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+                      className="w-10 h-10 bg-white/15 border border-white/25 flex items-center justify-center text-white shadow-sm"
+                    >
+                      <motion.div
+                        animate={
+                          exp.id === 'robokidovation'
+                            ? { rotate: [-4, 4, -4] }
+                            : { scale: [1, 1.12, 1] }
+                        }
+                        transition={{ repeat: Infinity, duration: 2.8, ease: 'easeInOut' }}
+                      >
+                        <Icon className="w-5 h-5" />
+                      </motion.div>
+                    </motion.div>
                   </div>
 
                   {/* Title & Description */}
@@ -142,28 +174,33 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
                     </p>
                   </div>
 
-                  {/* Tag Cloud */}
+                  {/* Tag Cloud with playful hover pop */}
                   <div className="flex flex-wrap gap-2 pt-2">
                     {exp.tags.map((tag) => (
-                      <span
+                      <motion.span
                         key={tag}
-                        className="text-xs font-mono-code font-semibold px-3 py-1.5 border border-white/20 bg-white/10 text-white"
+                        whileHover={{ scale: 1.08, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                        transition={{ type: 'spring', stiffness: 500, damping: 20 }}
+                        className="text-xs font-mono-code font-semibold px-3 py-1.5 border border-white/20 bg-white/10 hover:bg-white/25 text-white transition-colors duration-200 cursor-default shadow-2xs"
                       >
                         {tag}
-                      </span>
+                      </motion.span>
                     ))}
                   </div>
                 </div>
 
                 {/* Card Bottom: CTA Button */}
                 <div className="pt-6 border-t border-white/15 relative z-10 flex flex-wrap items-center justify-between gap-3">
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.96 }}
                     onClick={() => onNavigate(exp.route)}
                     className={`font-bold text-xs sm:text-sm py-3.5 px-7 inline-flex items-center gap-2.5 transition-all duration-300 shadow-md ${exp.buttonBg}`}
                   >
                     <span>{exp.cta}</span>
-                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                  </button>
+                    <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1.5" />
+                  </motion.button>
 
                   <div className="flex items-center gap-4">
                     {onOpenRegister && (
@@ -180,8 +217,9 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
                   </div>
                 </div>
               </motion.div>
-            );
-          })}
+            </Interactive3DTilt>
+          );
+        })}
         </div>
 
       </div>

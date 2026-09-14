@@ -12,6 +12,7 @@ import {
   bannerRoboSprintAdvanced,
   bannerRoboTrials,
 } from '../assets/images';
+import { Interactive3DTilt } from './Interactive3DTilt';
 
 interface RefTrackComparisonProps {
   onNavigate: (route: string) => void;
@@ -90,8 +91,13 @@ export const RefTrackComparison: React.FC<RefTrackComparisonProps> = ({
   ];
 
   return (
-    <section id="competition-tracks" className="w-full bg-[#F4F8FB] text-[#0A1930] py-16 sm:py-20 px-3 sm:px-6 select-none relative overflow-hidden">
+    <section id="competition-tracks" className="w-full bg-gradient-to-b from-[#EBF3FA] via-[#F4F8FB] to-[#EEF5FB] text-[#0A1930] py-16 sm:py-20 px-3 sm:px-6 select-none relative overflow-hidden">
       
+      {/* ── AMBIENT GRADIENT GLOW ORBS ── */}
+      <div className="absolute top-20 left-[10%] w-80 h-80 bg-sky-400/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-40 left-[45%] w-80 h-80 bg-orange-400/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-20 right-[10%] w-80 h-80 bg-purple-400/15 rounded-full blur-3xl pointer-events-none" />
+
       {/* ── TECHNICAL BLUEPRINT GRID BACKGROUND ── */}
       <div className="absolute inset-0 pointer-events-none opacity-30">
         <div
@@ -123,8 +129,14 @@ export const RefTrackComparison: React.FC<RefTrackComparisonProps> = ({
                 CHOOSE YOUR{' '}
                 <span className="text-[#006AA7] relative inline-block">
                   DISCIPLINE.
-                  {/* Hand-drawn Orange Sparkle */}
-                  <span className="absolute -top-3 -right-6 text-[#F97316] text-xl font-bold">✦</span>
+                  {/* Hand-drawn Orange Sparkle with playful rotation and pulse */}
+                  <motion.span
+                    animate={{ rotate: [0, 20, 0], scale: [1, 1.25, 1] }}
+                    transition={{ repeat: Infinity, duration: 3.2, ease: 'easeInOut' }}
+                    className="absolute -top-3 -right-6 text-[#F97316] text-xl font-bold inline-block"
+                  >
+                    ✦
+                  </motion.span>
                   {/* Hand-drawn Blue Underline */}
                   <svg
                     className="absolute left-0 -bottom-3 w-full h-3.5 text-[#006AA7]"
@@ -150,38 +162,64 @@ export const RefTrackComparison: React.FC<RefTrackComparisonProps> = ({
 
           {/* Right Column: CTA Action */}
           <div className="flex items-center self-start lg:self-end">
-            <button
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => onNavigate('challenges')}
-              className="bg-white hover:bg-slate-50 text-[#0A1930] border border-slate-300 text-xs font-bold py-3 px-6 shadow-xs flex items-center gap-2 transition-transform hover:scale-105"
+              className="bg-white hover:bg-slate-50 text-[#0A1930] border border-slate-300 text-xs font-bold py-3 px-6 shadow-xs flex items-center gap-2 transition-colors"
             >
               <span>VIEW FULL RULEBOOK</span>
               <ArrowRight className="w-3.5 h-3.5" />
-            </button>
+            </motion.button>
           </div>
         </div>
 
-        {/* ── 3 VIBRANT DISCIPLINE CARDS WITH CLEAN UNBLEMISHED ARTWORK ── */}
+        {/* ── 3 VIBRANT DISCIPLINE CARDS WITH 3D INTERACTIVE TILT ── */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
           {tracks.map((track, idx) => {
             const CornerIcon = track.cornerIcon;
 
             return (
-              <motion.div
+              <Interactive3DTilt
                 key={track.id}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: idx * 0.12 }}
-                className={`overflow-hidden bg-white border-2 shadow-xl flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 group ${track.borderColor} ${track.glowShadow}`}
+                maxTilt={9}
+                glareOpacity={0.2}
+                className="h-full"
               >
+                <motion.div
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{
+                    duration: 0.5,
+                    delay: idx * 0.1,
+                    type: 'spring',
+                    stiffness: 300,
+                    damping: 22,
+                  }}
+                  className={`overflow-hidden bg-white border-2 shadow-xl flex flex-col justify-between group cursor-pointer h-full ${track.borderColor} ${track.glowShadow}`}
+                  style={{ transformStyle: 'preserve-3d' }}
+                >
                 
                 {/* ════ TOP HALF: 100% CLEAN ARTWORK (NO BLACK OVERLAY, NO OVERLAPPING TEXT) ════ */}
                 <div className="relative aspect-[16/10.5] w-full overflow-hidden select-none bg-slate-900">
                   <img
                     src={track.bannerImage}
                     alt={track.title}
-                    className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-108"
                   />
+
+                  {/* Playful Viewfinder Corner Accents on Card Hover */}
+                  <div className="absolute inset-2 border border-white/0 group-hover:border-white/30 transition-colors duration-300 pointer-events-none z-10 flex flex-col justify-between p-1.5">
+                    <div className="flex justify-between">
+                      <span className="w-2.5 h-2.5 border-t-2 border-l-2 border-white/0 group-hover:border-white/80 transition-all duration-300" />
+                      <span className="w-2.5 h-2.5 border-t-2 border-r-2 border-white/0 group-hover:border-white/80 transition-all duration-300" />
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="w-2.5 h-2.5 border-b-2 border-l-2 border-white/0 group-hover:border-white/80 transition-all duration-300" />
+                      <span className="w-2.5 h-2.5 border-b-2 border-r-2 border-white/0 group-hover:border-white/80 transition-all duration-300" />
+                    </div>
+                  </div>
 
                   {/* Top Corner Floating Badges (Clean & Out of the Way) */}
                   <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between z-10 pointer-events-none">
@@ -193,9 +231,13 @@ export const RefTrackComparison: React.FC<RefTrackComparisonProps> = ({
                       <span />
                     )}
 
-                    <div className={`w-9 h-9 ${track.cornerBg} flex items-center justify-center shadow-md transition-transform group-hover:scale-110 ml-auto`}>
+                    <motion.div
+                      whileHover={{ rotate: 20, scale: 1.2 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+                      className={`w-9 h-9 ${track.cornerBg} flex items-center justify-center shadow-md transition-transform group-hover:scale-110 ml-auto`}
+                    >
                       <CornerIcon className="w-4 h-4" />
-                    </div>
+                    </motion.div>
                   </div>
                 </div>
 
@@ -212,32 +254,37 @@ export const RefTrackComparison: React.FC<RefTrackComparisonProps> = ({
                     </p>
                   </div>
 
-                  {/* Skills as compact tag pills */}
+                  {/* Skills as compact tag pills with playful micro-bounce */}
                   <div className="flex flex-wrap gap-1.5 pb-1">
                     {track.skills.map((skill, sIdx) => (
-                      <span
+                      <motion.span
                         key={sIdx}
-                        className={`inline-flex items-center gap-1.5 text-[11px] font-mono-code font-bold px-2.5 py-1 border ${track.subtitleColor} border-current/20 bg-current/5`}
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                        className={`inline-flex items-center gap-1.5 text-[11px] font-mono-code font-bold px-2.5 py-1 border ${track.subtitleColor} border-current/20 bg-current/5 cursor-default transition-colors`}
                       >
-                        <CheckCircle2 className={`w-3 h-3 ${track.checkColor}`} />
+                        <CheckCircle2 className={`w-3 h-3 ${track.checkColor} transition-transform group-hover:rotate-12`} />
                         {skill}
-                      </span>
+                      </motion.span>
                     ))}
                   </div>
 
                   {/* Register CTA */}
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     onClick={onOpenRegister}
-                    className="w-full bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] font-black text-xs sm:text-sm py-3.5 px-6 flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] uppercase tracking-wider"
+                    className="w-full bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] font-black text-xs sm:text-sm py-3.5 px-6 flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-colors uppercase tracking-wider group/btn"
                   >
                     <span>{track.registerLabel}</span>
-                  </button>
+                    <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
+                  </motion.button>
 
                 </div>
-
               </motion.div>
-            );
-          })}
+            </Interactive3DTilt>
+          );
+        })}
         </div>
 
         {/* ── SECTION FOOTER RIBBON ── */}
