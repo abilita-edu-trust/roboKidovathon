@@ -6,6 +6,7 @@ import {
   roboSprintTopDown,
   roboPrecisionArenaEmpty,
 } from '../assets/images';
+import { Interactive3DTilt } from './Interactive3DTilt';
 
 interface RefCompetitionFlowProps {
   onOpenRegister?: () => void;
@@ -79,8 +80,12 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
   return (
     <section
       id="competition-flow"
-      className="w-full bg-[#F4F8FB] text-[#0A1930] py-16 sm:py-20 px-3 sm:px-6 border-t border-slate-200 select-none relative overflow-hidden"
+      className="w-full bg-gradient-to-b from-[#F2F7FB] via-[#E8F2FA] to-[#F8FAFC] text-[#0A1930] py-16 sm:py-20 px-3 sm:px-6 border-t border-slate-200 select-none relative overflow-hidden"
     >
+      {/* ── AMBIENT GRADIENT GLOWS ── */}
+      <div className="absolute top-10 left-[15%] w-96 h-96 bg-sky-400/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-10 right-[15%] w-96 h-96 bg-amber-300/10 rounded-full blur-3xl pointer-events-none" />
+
       <div className="w-full space-y-12 relative z-10">
 
         {/* ── SECTION HEADER ── */}
@@ -124,30 +129,70 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
           </div>
         </div>
 
-        {/* ── 3-STAGE PROGRESSION TIMELINE ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch relative">
+        {/* ── 3-STAGE PROGRESSION TIMELINE (3D INTERACTIVE TILT) ── */}
+        <div className="relative">
+          {/* Connecting SVG Rail (Desktop) */}
+          <div className="hidden lg:block absolute top-[52px] left-[10%] right-[10%] h-4 z-0 pointer-events-none overflow-visible">
+            <svg className="w-full h-full overflow-visible" preserveAspectRatio="none">
+              <line
+                x1="0"
+                y1="2"
+                x2="100%"
+                y2="2"
+                stroke="#006AA7"
+                strokeOpacity="0.2"
+                strokeWidth="2"
+                strokeDasharray="6 6"
+              />
+              <motion.line
+                x1="0"
+                y1="2"
+                x2="100%"
+                y2="2"
+                stroke="#FFCD00"
+                strokeWidth="3.5"
+                strokeDasharray="24 140"
+                animate={{ strokeDashoffset: [328, 0] }}
+                transition={{ repeat: Infinity, duration: 2.2, ease: 'linear' }}
+              />
+            </svg>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch relative z-10">
           {stages.map((stage, idx) => {
             const Icon = stage.icon;
 
             return (
-              <motion.div
+              <Interactive3DTilt
                 key={stage.num}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: idx * 0.12 }}
-                className={`p-6 sm:p-8 flex flex-col justify-between space-y-6 transition-all duration-300 relative ${
-                  stage.isDark
-                    ? 'bg-[#0A1930] text-white border border-slate-800 shadow-xl'
-                    : 'bg-white text-[#0A1930] border border-slate-200/90 shadow-md hover:shadow-xl'
-                }`}
+                maxTilt={8}
+                glareOpacity={0.18}
+                className="h-full"
               >
+                <motion.div
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{
+                    duration: 0.5,
+                    delay: idx * 0.1,
+                    type: 'spring',
+                    stiffness: 320,
+                    damping: 22,
+                  }}
+                  className={`p-6 sm:p-8 flex flex-col justify-between space-y-6 relative group cursor-pointer h-full ${
+                    stage.isDark
+                      ? 'bg-[#0A1930] text-white border border-slate-800 shadow-xl hover:shadow-[0_20px_50px_rgba(255,205,0,0.18)] hover:border-[#FFCD00]/50'
+                      : 'bg-white text-[#0A1930] border border-slate-200/90 shadow-md hover:shadow-xl hover:border-[#006AA7]/40'
+                  }`}
+                  style={{ transformStyle: 'preserve-3d' }}
+                >
                 <div className="space-y-5">
                   {/* Top Bar: Stage Number + Clean Tag */}
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <span
-                        className={`font-mono-code font-black text-2xl sm:text-3xl ${
+                        className={`font-mono-code font-black text-2xl sm:text-3xl transition-colors duration-300 ${
                           stage.isDark ? 'text-[#FFCD00]' : 'text-[#006AA7]'
                         }`}
                       >
@@ -164,13 +209,24 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
                       </span>
                     </div>
 
-                    <div
-                      className={`w-9 h-9 flex items-center justify-center ${
+                    <motion.div
+                      whileHover={{ scale: 1.2, rotate: 12 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+                      className={`w-9 h-9 flex items-center justify-center transition-transform ${
                         stage.isDark ? 'bg-white/10 text-[#FFCD00]' : 'bg-slate-100 text-[#006AA7]'
                       }`}
                     >
-                      <Icon className="w-4 h-4" />
-                    </div>
+                      {stage.isDark ? (
+                        <motion.div
+                          animate={{ rotate: [-6, 6, -6], scale: [1, 1.08, 1] }}
+                          transition={{ repeat: Infinity, duration: 2.8, ease: 'easeInOut' }}
+                        >
+                          <Icon className="w-4 h-4" />
+                        </motion.div>
+                      ) : (
+                        <Icon className="w-4 h-4 transition-transform group-hover:rotate-6" />
+                      )}
+                    </motion.div>
                   </div>
 
                   {/* Stage Title & Tagline */}
@@ -246,8 +302,10 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
                   </div>
                 </div>
               </motion.div>
-            );
-          })}
+            </Interactive3DTilt>
+          );
+        })}
+          </div>
         </div>
 
         {/* ── SECTION FOOTER ── */}

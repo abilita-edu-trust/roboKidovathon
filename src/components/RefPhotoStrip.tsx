@@ -94,36 +94,55 @@ export const RefPhotoStrip: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {highlights.map((item, idx) => {
             const Icon = item.icon;
+            const idleRotation = idx === 0 ? -0.5 : idx === 1 ? 0.6 : idx === 2 ? 0.5 : -0.6;
+
             return (
               <motion.div
                 key={item.id}
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 40, rotate: idleRotation }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.7, delay: idx * 0.12, ease: [0.16, 1, 0.3, 1] }}
-                whileHover={{ y: -6, borderColor: 'rgba(0, 106, 167, 0.45)' }}
+                whileHover={{
+                  y: -8,
+                  rotate: 0,
+                  scale: 1.01,
+                  borderColor: 'rgba(0, 106, 167, 0.65)',
+                }}
                 onClick={() => setSelectedPhoto(item.fullItem)}
-                className={`relative overflow-hidden border border-slate-200 bg-[#0A1930] shadow-md group cursor-pointer min-h-[340px] sm:min-h-[420px] flex flex-col justify-end p-6 sm:p-8 ${item.span}`}
+                className={`relative overflow-hidden border border-slate-200 bg-[#0A1930] shadow-md hover:shadow-2xl group cursor-pointer min-h-[340px] sm:min-h-[420px] flex flex-col justify-end p-6 sm:p-8 ${item.span}`}
               >
                 {/* Background Image */}
                 <img
                   src={item.image}
                   alt={item.title}
-                  className="absolute inset-0 w-full h-full object-cover opacity-75 group-hover:opacity-95 transition-all duration-700 group-hover:scale-105"
+                  className="absolute inset-0 w-full h-full object-cover opacity-75 group-hover:opacity-95 transition-all duration-700 group-hover:scale-106"
                 />
 
+                {/* Playful Camera Flash Effect */}
+                <div className="absolute inset-0 bg-white/25 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10" />
+
                 {/* Dark Gradient Overlay for Readability */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A1930] via-[#0A1930]/70 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0A1930] via-[#0A1930]/75 to-transparent pointer-events-none z-10" />
 
                 {/* Enlarge Indicator */}
-                <div className="absolute top-5 right-5 w-9 h-9 bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                <motion.div
+                  whileHover={{ scale: 1.2, rotate: 90 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+                  className="absolute top-5 right-5 w-9 h-9 bg-black/50 backdrop-blur-md border border-white/25 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity z-20 shadow-md"
+                >
                   <Maximize2 className="w-4 h-4" />
-                </div>
+                </motion.div>
 
                 {/* Content */}
-                <div className="relative space-y-2.5">
+                <div className="relative space-y-2.5 z-20">
                   <div className="flex items-center gap-2 text-[10px] font-mono-code font-bold text-[#FFCD00] uppercase tracking-wider">
-                    <Icon className="w-3.5 h-3.5" />
+                    <motion.div
+                      whileHover={{ rotate: 15, scale: 1.2 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+                    >
+                      <Icon className="w-3.5 h-3.5" />
+                    </motion.div>
                     <span>{item.tag}</span>
                   </div>
 

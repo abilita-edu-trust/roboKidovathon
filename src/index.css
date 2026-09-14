@@ -44,6 +44,13 @@ body {
   font-family: 'Poppins', 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
+@media (hover: hover) and (pointer: fine) {
+  body.robot-cursor-active,
+  body.robot-cursor-active * {
+    cursor: none !important;
+  }
+}
+
 ::selection {
   background: #FFCD00;
   color: #0A1930;

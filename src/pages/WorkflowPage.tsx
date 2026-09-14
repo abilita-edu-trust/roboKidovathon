@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   ArrowLeft,
   ArrowRight,
+  ArrowDown,
+  ChevronRight,
   CheckCircle2,
   Compass,
   Hammer,
@@ -12,7 +14,9 @@ import {
   Award,
   School,
   FileText,
+  GitBranch,
 } from 'lucide-react';
+import { Interactive3DTilt } from '../components/Interactive3DTilt';
 
 interface WorkflowPageProps {
   onNavigateHome: () => void;
@@ -25,6 +29,7 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
   onOpenRegister,
   onOpenDeckModal,
 }) => {
+  const [activeHover, setActiveHover] = useState<number | null>(null);
   const pathwayPillars = [
     {
       title: 'Hands-on STEM',
@@ -44,63 +49,108 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
     {
       step: '01',
       title: 'Explore',
+      subtitle: 'Understand parts',
       icon: Compass,
       desc: 'Understand wheels, axles, gears, structural parts, motors and control components.',
       tag: 'COMPONENTS & MECHANICS',
-      accent: 'text-[#006AA7]',
-      accentBg: 'bg-sky-50 border-sky-200',
+      color: '#006AA7',
+      hoverCardClass: 'hover:bg-[#006AA7] hover:border-[#006AA7] hover:shadow-[0_14px_30px_rgba(0,106,167,0.28)]',
+      hoverStepClass: 'group-hover:text-[#FFCD00]',
+      hoverTitleClass: 'group-hover:text-white',
+      hoverSubClass: 'group-hover:text-sky-100',
+      hoverDetailClass: 'group-hover:text-white/90',
+      hoverIconBoxClass: 'group-hover:bg-white group-hover:text-[#006AA7]',
+      hoverCtaClass: 'group-hover:text-white group-hover:border-white/20',
     },
     {
       step: '02',
       title: 'Build',
+      subtitle: 'Stable chassis',
       icon: Hammer,
       desc: 'Create a stable chassis and make the robot move reliably.',
       tag: 'STRUCTURAL ASSEMBLY',
-      accent: 'text-[#006AA7]',
-      accentBg: 'bg-sky-50 border-sky-200',
+      color: '#013A63',
+      hoverCardClass: 'hover:bg-[#013A63] hover:border-[#013A63] hover:shadow-[0_14px_30px_rgba(1,58,99,0.28)]',
+      hoverStepClass: 'group-hover:text-[#FFCD00]',
+      hoverTitleClass: 'group-hover:text-white',
+      hoverSubClass: 'group-hover:text-sky-100',
+      hoverDetailClass: 'group-hover:text-white/90',
+      hoverIconBoxClass: 'group-hover:bg-white group-hover:text-[#013A63]',
+      hoverCtaClass: 'group-hover:text-white group-hover:border-white/20',
     },
     {
       step: '03',
       title: 'Test',
+      subtitle: 'Drive dynamics',
       icon: Gauge,
       desc: 'Experiment with speed, turning, stability, control accuracy and pushing ability.',
       tag: 'DRIVE DYNAMICS',
-      accent: 'text-[#006AA7]',
-      accentBg: 'bg-sky-50 border-sky-200',
+      color: '#0284C7',
+      hoverCardClass: 'hover:bg-[#0284C7] hover:border-[#0284C7] hover:shadow-[0_14px_30px_rgba(2,132,199,0.28)]',
+      hoverStepClass: 'group-hover:text-[#FFCD00]',
+      hoverTitleClass: 'group-hover:text-white',
+      hoverSubClass: 'group-hover:text-cyan-100',
+      hoverDetailClass: 'group-hover:text-white/90',
+      hoverIconBoxClass: 'group-hover:bg-white group-hover:text-[#0284C7]',
+      hoverCtaClass: 'group-hover:text-white group-hover:border-white/20',
     },
     {
       step: '04',
       title: 'Improve',
+      subtitle: 'Design loops',
       icon: RotateCw,
       desc: 'Change the design based on what works, what fails and what can be better.',
       tag: 'DESIGN ITERATION',
-      accent: 'text-[#EA580C]',
-      accentBg: 'bg-orange-50 border-orange-200',
+      color: '#EA580C',
+      hoverCardClass: 'hover:bg-[#EA580C] hover:border-[#EA580C] hover:shadow-[0_14px_30px_rgba(234,88,12,0.28)]',
+      hoverStepClass: 'group-hover:text-[#FFCD00]',
+      hoverTitleClass: 'group-hover:text-white',
+      hoverSubClass: 'group-hover:text-orange-100',
+      hoverDetailClass: 'group-hover:text-white/90',
+      hoverIconBoxClass: 'group-hover:bg-white group-hover:text-[#EA580C]',
+      hoverCtaClass: 'group-hover:text-white group-hover:border-white/20',
     },
     {
       step: '05',
       title: 'School Sprint',
+      subtitle: 'Local qualifiers',
       icon: Trophy,
       desc: 'Teams apply their learning in a friendly school-level Robo-Sprint competition.',
       tag: 'LOCAL QUALIFIERS',
-      accent: 'text-[#EA580C]',
-      accentBg: 'bg-orange-50 border-orange-200',
+      color: '#D97706',
+      hoverCardClass: 'hover:bg-[#D97706] hover:border-[#D97706] hover:shadow-[0_14px_30px_rgba(217,119,6,0.28)]',
+      hoverStepClass: 'group-hover:text-[#FFCD00]',
+      hoverTitleClass: 'group-hover:text-white',
+      hoverSubClass: 'group-hover:text-amber-100',
+      hoverDetailClass: 'group-hover:text-white/90',
+      hoverIconBoxClass: 'group-hover:bg-white group-hover:text-[#D97706]',
+      hoverCtaClass: 'group-hover:text-white group-hover:border-white/20',
     },
     {
       step: '06',
       title: 'City Final',
+      subtitle: 'Dec 4 & 5 Grand Finale',
       icon: Award,
       desc: 'Selected teams represent their school and meet students from other schools in Västerås.',
       tag: 'DECEMBER 4 & 5 GRAND FINALE',
-      accent: 'text-[#FFCD00]',
-      accentBg: 'bg-[#0A1930] text-white border-slate-700',
-      isDark: true,
+      color: '#FFCD00',
+      isFinal: true,
+      hoverCardClass: 'hover:bg-[#FFCD00] hover:border-[#FFCD00] hover:shadow-[0_14px_34px_rgba(255,205,0,0.38)]',
+      hoverStepClass: 'group-hover:text-[#0A1930]',
+      hoverTitleClass: 'group-hover:text-[#0A1930]',
+      hoverSubClass: 'group-hover:text-[#013A63]',
+      hoverDetailClass: 'group-hover:text-[#0A1930]/85',
+      hoverIconBoxClass: 'group-hover:bg-[#0A1930] group-hover:text-[#FFCD00]',
+      hoverCtaClass: 'group-hover:text-[#0A1930] group-hover:border-[#0A1930]/20',
     },
   ];
 
   return (
-    <div className="w-full min-h-screen bg-white text-[#0A1930] pt-28 pb-24 px-3 sm:px-6 select-none">
-      <div className="w-full space-y-16">
+    <div className="w-full min-h-screen bg-gradient-to-b from-[#F6FAFD] via-[#EEF5FB] to-[#E5EFF8] text-[#0A1930] pt-28 pb-24 px-3 sm:px-6 select-none relative overflow-hidden">
+      {/* Ambient Gradient Lighting */}
+      <div className="absolute top-20 -left-40 w-96 h-96 bg-gradient-to-br from-sky-400/15 to-transparent rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-96 -right-40 w-96 h-96 bg-gradient-to-tl from-[#FFCD00]/15 to-transparent rounded-full blur-3xl pointer-events-none" />
+      <div className="w-full space-y-16 relative z-10">
 
         {/* ── TOP BREADCRUMB & PROPOSAL CONTEXT ── */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
@@ -321,13 +371,26 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="space-y-8"
+          className="space-y-8 relative overflow-hidden border border-slate-200/60 p-6 sm:p-8 bg-white"
         >
+          {/* Background blueprint grid */}
+          <div className="absolute inset-0 pointer-events-none opacity-25">
+            <div
+              className="w-full h-full"
+              style={{
+                backgroundImage:
+                  'linear-gradient(to right, #006AA70F 1px, transparent 1px), linear-gradient(to bottom, #006AA70F 1px, transparent 1px)',
+                backgroundSize: '40px 40px',
+              }}
+            />
+          </div>
+
           {/* Header */}
-          <div className="space-y-2 max-w-2xl">
-            <span className="text-xs font-mono-code font-bold tracking-[0.25em] text-[#006AA7] uppercase block">
-              WORKFLOW // FROM PARTS TO CITY FINAL
-            </span>
+          <div className="space-y-2 max-w-2xl relative z-10">
+            <div className="inline-flex items-center gap-2 text-[#006AA7] text-xs font-mono-code font-bold tracking-[0.25em] uppercase">
+              <GitBranch className="w-3.5 h-3.5" />
+              <span>WORKFLOW // FROM PARTS TO CITY FINAL</span>
+            </div>
             <h2 className="font-headline font-black text-2xl sm:text-3xl md:text-4xl uppercase tracking-tight text-[#0A1930]">
               From parts to city final
             </h2>
@@ -337,73 +400,194 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
             </p>
           </div>
 
-          {/* 6 Connected Workflow Steps */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 items-stretch">
-            {workflowSteps.map((ws, idx) => {
-              const Icon = ws.icon;
-              return (
-                <div
-                  key={ws.step}
-                  className={`p-5 flex flex-col justify-between space-y-4 border transition-all duration-300 hover:-translate-y-1 shadow-xs hover:shadow-md ${
-                    ws.isDark
-                      ? 'bg-[#0A1930] text-white border-slate-800'
-                      : 'bg-white text-[#0A1930] border-slate-200'
-                  }`}
-                >
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span
-                        className={`font-mono-code font-black text-xl ${
-                          ws.isDark ? 'text-[#FFCD00]' : 'text-[#006AA7]'
-                        }`}
-                      >
-                        {ws.step}
-                      </span>
-                      <div
-                        className={`w-8 h-8 flex items-center justify-center ${
-                          ws.isDark ? 'bg-white/10 text-[#FFCD00]' : 'bg-slate-100 text-[#006AA7]'
-                        }`}
-                      >
-                        <Icon className="w-4 h-4" />
-                      </div>
-                    </div>
+          {/* ── MIND MAP NODES TRACK WITH ANIMATED PATHWAYS ── */}
+          <div className="relative pt-6 pb-2 z-10">
+            {/* Continuous Animated Connecting SVG Rail (Desktop) */}
+            <div className="hidden lg:block absolute top-[52px] left-[5%] right-[5%] h-5 z-0 pointer-events-none overflow-visible">
+              <svg className="w-full h-full overflow-visible" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="workflowPathwayGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#006AA7" stopOpacity="0.3" />
+                    <stop offset="50%" stopColor="#EA580C" stopOpacity="0.4" />
+                    <stop offset="100%" stopColor="#FFCD00" stopOpacity="0.7" />
+                  </linearGradient>
+                  <linearGradient id="workflowActiveBeam" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#006AA7" />
+                    <stop offset="50%" stopColor="#EA580C" />
+                    <stop offset="100%" stopColor="#FFCD00" />
+                  </linearGradient>
+                </defs>
+                {/* Base track */}
+                <line
+                  x1="0"
+                  y1="2"
+                  x2="100%"
+                  y2="2"
+                  stroke="url(#workflowPathwayGrad)"
+                  strokeWidth="2"
+                  strokeDasharray="6 6"
+                />
+                {/* Animated energy pulse flowing left to right */}
+                <motion.line
+                  x1="0"
+                  y1="2"
+                  x2="100%"
+                  y2="2"
+                  stroke="url(#workflowActiveBeam)"
+                  strokeWidth="3.5"
+                  strokeDasharray="24 160"
+                  animate={{ strokeDashoffset: [368, 0] }}
+                  transition={{ repeat: Infinity, duration: 2.4, ease: 'linear' }}
+                />
+              </svg>
+            </div>
 
-                    <div>
-                      <h3
-                        className={`font-headline font-black text-base uppercase tracking-tight ${
-                          ws.isDark ? 'text-white' : 'text-[#0A1930]'
-                        }`}
-                      >
-                        {ws.title}
-                      </h3>
-                      <span
-                        className={`text-[9px] font-mono-code font-bold uppercase tracking-wider block mt-0.5 ${
-                          ws.isDark ? 'text-[#FFCD00]' : 'text-slate-400'
-                        }`}
-                      >
-                        {ws.tag}
-                      </span>
-                    </div>
+            {/* 6 Connected Workflow Steps */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 relative z-10">
+              {workflowSteps.map((ws, idx) => {
+                const Icon = ws.icon;
+                const isCardHovered = activeHover === idx;
+                const isNextCardHovered = activeHover === idx + 1;
 
-                    <p
-                      className={`text-xs font-light leading-relaxed ${
-                        ws.isDark ? 'text-slate-300' : 'text-slate-600'
-                      }`}
-                    >
-                      {ws.desc}
-                    </p>
-                  </div>
-
-                  <div
-                    className={`pt-2 border-t text-[10px] font-mono-code font-bold uppercase ${
-                      ws.isDark ? 'border-white/10 text-[#FFCD00]' : 'border-slate-100 text-slate-400'
-                    }`}
+                return (
+                <div key={ws.step} className="relative flex flex-col h-full">
+                  <Interactive3DTilt
+                    maxTilt={8}
+                    glareOpacity={ws.isFinal ? 0.22 : 0.14}
+                    className="h-full flex-1 flex flex-col"
                   >
-                    STEP {idx + 1} OF 6
+                    <motion.div
+                      initial={{ opacity: 0, y: 28 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, amount: 0.15 }}
+                      transition={{
+                        duration: 0.55,
+                        delay: idx * 0.08,
+                        ease: [0.16, 1, 0.3, 1],
+                      }}
+                      onMouseEnter={() => setActiveHover(idx)}
+                      onMouseLeave={() => setActiveHover(null)}
+                      className={`group relative p-5 border flex-1 flex flex-col justify-between space-y-4 transition-all duration-300 ease-out cursor-pointer ${
+                        ws.isFinal
+                          ? 'bg-[#0A1930] text-white border-slate-800'
+                          : 'bg-white text-[#0A1930] border-slate-200'
+                      } ${ws.hoverCardClass}`}
+                      style={{ transformStyle: 'preserve-3d' }}
+                    >
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between relative" style={{ transform: 'translateZ(12px)' }}>
+                          <span
+                            className={`font-mono-code font-black text-xl transition-colors duration-300 ${
+                              ws.isFinal ? 'text-[#FFCD00]' : 'text-[#006AA7]'
+                            } ${ws.hoverStepClass}`}
+                          >
+                            {ws.step}
+                          </span>
+                          <div
+                            className={`w-9 h-9 flex items-center justify-center transition-all duration-300 shadow-xs group-hover:scale-110 ${
+                              ws.isFinal
+                                ? 'bg-white/10 text-[#FFCD00]'
+                                : 'bg-slate-100 text-[#006AA7]'
+                            } ${ws.hoverIconBoxClass}`}
+                          >
+                            <Icon className="w-4 h-4 transition-transform duration-300 group-hover:rotate-6" />
+                          </div>
+                        </div>
+
+                        <div style={{ transform: 'translateZ(10px)' }}>
+                          <h3
+                            className={`font-headline font-black text-base uppercase tracking-tight transition-colors duration-300 ${
+                              ws.isFinal ? 'text-white' : 'text-[#0A1930]'
+                            } ${ws.hoverTitleClass}`}
+                          >
+                            {ws.title}
+                          </h3>
+                          <span
+                            className={`text-[9px] font-mono-code font-bold uppercase tracking-wider block mt-0.5 transition-colors duration-300 ${
+                              ws.isFinal ? 'text-[#013A63]' : 'text-slate-400'
+                            } ${ws.hoverSubClass}`}
+                          >
+                            {ws.tag}
+                          </span>
+                        </div>
+
+                        <p
+                          className={`text-xs font-light leading-relaxed transition-colors duration-300 ${
+                            ws.isFinal ? 'text-slate-300' : 'text-slate-600'
+                          } ${ws.hoverDetailClass}`}
+                        >
+                          {ws.desc}
+                        </p>
+                      </div>
+
+                      <div
+                        className={`pt-2.5 border-t flex items-center justify-between text-[10px] font-mono-code font-bold uppercase transition-all duration-300 ${
+                          ws.isFinal
+                            ? 'border-white/10 text-[#FFCD00]'
+                            : 'border-slate-100 text-slate-400'
+                        } ${ws.hoverCtaClass}`}
+                        style={{ transform: 'translateZ(8px)' }}
+                      >
+                        <span>STEP {idx + 1} OF 6</span>
+                        <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1.5" />
+                      </div>
+                    </motion.div>
+                  </Interactive3DTilt>
+
+                    {/* Desktop Inter-Card Animated Arrow Connector */}
+                    {idx < workflowSteps.length - 1 && (
+                      <div className="hidden lg:flex absolute -right-[13px] top-[26px] z-30 pointer-events-none items-center justify-center">
+                        <div
+                          className={`w-6 h-6 flex items-center justify-center border shadow-xs transition-all duration-300 ${
+                            isCardHovered || isNextCardHovered
+                              ? 'bg-[#FFCD00] text-[#0A1930] border-[#FFCD00] scale-110 shadow-md ring-2 ring-[#FFCD00]/40'
+                              : 'bg-white text-[#006AA7] border-slate-300'
+                          }`}
+                        >
+                          <motion.div
+                            animate={{ x: [0, 3, 0] }}
+                            transition={{
+                              repeat: Infinity,
+                              duration: 1.1,
+                              ease: 'easeInOut',
+                              delay: idx * 0.15,
+                            }}
+                          >
+                            <ChevronRight className="w-3.5 h-3.5 stroke-[2.5]" />
+                          </motion.div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Mobile & Tablet Inter-Card Animated Arrow Connector */}
+                    {idx < workflowSteps.length - 1 && (
+                      <div className="lg:hidden flex items-center justify-center py-2.5 relative z-20">
+                        <div
+                          className={`flex items-center gap-1.5 px-3 py-1 border text-[10px] font-mono-code font-bold uppercase tracking-wider transition-colors duration-300 ${
+                            isCardHovered || isNextCardHovered
+                              ? 'bg-[#FFCD00] text-[#0A1930] border-[#FFCD00] shadow-sm'
+                              : 'bg-sky-50 text-[#006AA7] border-sky-200'
+                          }`}
+                        >
+                          <span>STEP {workflowSteps[idx + 1].step}</span>
+                          <motion.div
+                            animate={{ y: [0, 3, 0] }}
+                            transition={{
+                              repeat: Infinity,
+                              duration: 1,
+                              ease: 'easeInOut',
+                              delay: idx * 0.12,
+                            }}
+                          >
+                            <ArrowDown className="w-3 h-3" />
+                          </motion.div>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </motion.div>
 
