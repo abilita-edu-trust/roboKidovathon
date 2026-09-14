@@ -1,6 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Wrench, Target, Trophy, Calendar } from 'lucide-react';
+import {
+  roboSprintObstacleClose,
+  roboSprintTopDown,
+  roboPrecisionArenaEmpty,
+} from '../assets/images';
 
 interface RefCompetitionFlowProps {
   onOpenRegister?: () => void;
@@ -19,8 +24,11 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
       tagline: 'Build the foundation.',
       timing: 'OCTOBER · 20H STEM',
       icon: Wrench,
+      image: roboSprintObstacleClose,
+      imageTag: 'MECHANICAL ASSEMBLY',
+      imageCaption: 'Classroom rover build & hurdle obstacle testing',
       description:
-        'Hands-on robotics curriculum delivered directly to school classrooms. Every student builds, wires, and drives a working competition rover from turnkey mechanical kits.',
+        'Students build, wire, and drive a working competition rover from turnkey mechanical kits — delivered directly to your classroom.',
       specs: [
         { label: 'DELIVERY', value: 'Turnkey 6V DC Kits' },
         { label: 'COHORTS', value: 'Grades 3–6 & 7–9' },
@@ -35,8 +43,11 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
       tagline: 'Put the skills to the test.',
       timing: 'NOVEMBER · SCHOOL ARENA',
       icon: Target,
+      image: roboSprintTopDown,
+      imageTag: 'TACTICAL MATCH COURT',
+      imageCaption: 'Standardized 2.44 × 1.22 m 1 vs 1 competition mat',
       description:
-        'Fast-paced 1 vs 1 match heats on the standardized 2.44 × 1.22 m Dual Court. Students navigate obstacles, clear ball transfer hurdles, and battle for the school slot.',
+        'Fast-paced 1 vs 1 heats on a standardized dual court. Navigate obstacles, clear hurdles, and battle for the school slot.',
       specs: [
         { label: 'ARENA', value: '2.44 × 1.22 m Mat' },
         { label: 'MATCH DURATION', value: '03:00 (1 vs 1)' },
@@ -51,8 +62,11 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
       tagline: 'Compete at the highest level.',
       timing: 'DECEMBER 4 & 5, 2026',
       icon: Trophy,
+      image: roboPrecisionArenaEmpty,
+      imageTag: 'CHAMPIONSHIP VENUE',
+      imageCaption: 'Live tournament floor setup in Västerås',
       description:
-        'The championship showdown in Västerås. Qualifying school cohorts battle live before teachers, parents, and industry judges for medals, trophies, and the grand title.',
+        'Qualifying school cohorts battle live in Västerås for medals, trophies, and the grand title.',
       specs: [
         { label: 'VENUE', value: 'Västerås Arena' },
         { label: 'PRIZE POOL', value: 'SEK 3,000' },
@@ -73,7 +87,7 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-4">
           <div className="space-y-3 max-w-2xl">
             <span className="text-xs font-mono-code font-bold tracking-[0.25em] text-[#006AA7] uppercase block">
-              COMPETITION JOURNEY // VÄSTERÅS 2026
+              COMPETITION JOURNEY
             </span>
 
             <h2
@@ -84,8 +98,8 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
               <span className="text-[#006AA7]">TO THE ARENA FINALS</span>
             </h2>
 
-            <p className="text-sm sm:text-base text-slate-600 font-light leading-relaxed max-w-xl pt-1">
-              A structured three-phase competition journey designed for Swedish schools. Students engineer rovers in the classroom, qualify locally, and compete on the championship stage.
+            <p className="text-sm text-slate-500 font-light leading-relaxed max-w-md pt-1">
+              Three phases. One structured journey from classroom to championship.
             </p>
           </div>
 

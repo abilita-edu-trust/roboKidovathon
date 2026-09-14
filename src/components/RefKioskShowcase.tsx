@@ -52,7 +52,7 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
             {/* Left Column: Heading & Description */}
             <div className="space-y-3 max-w-2xl relative z-10">
               <span className="text-[11px] sm:text-xs font-mono-code font-bold tracking-[0.25em] text-[#006AA7] uppercase block">
-                ROBOTICS ECOSYSTEM // FROM CLASSROOM TO ARENA
+              ROBOTICS ECOSYSTEM
               </span>
 
               <div className="relative inline-block">
@@ -63,8 +63,8 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
                 <span className="absolute -top-3 -right-6 text-[#FFCD00] text-2xl font-black">✦</span>
               </div>
 
-              <p className="text-sm sm:text-base text-slate-600 font-light leading-relaxed max-w-xl">
-                Turnkey classroom delivery and tournament equipment. Reusable hardware kits paired with the official roll-out competition arena.
+              <p className="text-sm text-slate-500 font-light leading-relaxed max-w-md">
+                Reusable classroom kits paired with the official roll-out competition arena.
               </p>
             </div>
 
@@ -101,7 +101,7 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
               {/* Header: Clean Tag + Card Number */}
               <div className="flex items-center justify-between">
                 <span className="text-[10px] sm:text-[11px] font-mono-code font-bold text-[#006AA7] uppercase tracking-wider block">
-                  PHASE 01: BUILD // CLASSROOM HARDWARE KIT
+                  PHASE 01: BUILD
                 </span>
                 <span className="text-xs font-mono-code text-slate-400 font-bold tracking-wider">
                   CARD 01
@@ -134,7 +134,7 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
 
               {/* Description */}
               <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed">
-                Mentors arrive directly at your school with official mechanical kits, gearboxes, wired controllers, and battery packs. Every student cohort builds, tests, and refines a working competition robot.
+                Mentors deliver official kits to your school — motors, chassis, and batteries included.
               </p>
 
               {/* 2-Column Inside Layout: Feature Chips (Left) + High-End Rover (Right) */}
@@ -150,7 +150,7 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
                     </div>
                     <div>
                       <h4 className="text-xs font-bold text-[#0A1930]">Classroom Footprint</h4>
-                      <p className="text-[11px] text-slate-500 leading-snug">Fits standard school tables or a small floor area.</p>
+                      <p className="text-[11px] text-slate-500 leading-snug">Fits any school table or small floor area.</p>
                     </div>
                   </div>
 
@@ -161,7 +161,7 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
                     </div>
                     <div>
                       <h4 className="text-xs font-bold text-[#0A1930]">Zero Lab Budget</h4>
-                      <p className="text-[11px] text-slate-500 leading-snug">All motors, chassis, controllers &amp; batteries provided.</p>
+                      <p className="text-[11px] text-slate-500 leading-snug">All motors, chassis &amp; batteries provided.</p>
                     </div>
                   </div>
 
@@ -172,7 +172,7 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
                     </div>
                     <div>
                       <h4 className="text-xs font-bold text-[#0A1930]">Low-Voltage Safe</h4>
-                      <p className="text-[11px] text-slate-500 leading-snug">Operates entirely on safe 6V DC power — zero soldering.</p>
+                      <p className="text-[11px] text-slate-500 leading-snug">Safe 6V DC — zero soldering required.</p>
                     </div>
                   </div>
 
@@ -245,7 +245,7 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
               {/* Header: Eyebrow + Card Number */}
               <div className="flex items-center justify-between">
                 <span className="text-[10px] sm:text-[11px] font-mono-code font-bold tracking-widest text-[#FFCD00] uppercase">
-                  PHASE 02: COMPETE // OFFICIAL TOURNAMENT ARENA
+                  PHASE 02: COMPETE
                 </span>
                 <span className="text-xs font-mono-code text-slate-400 font-bold tracking-wider">
                   CARD 02

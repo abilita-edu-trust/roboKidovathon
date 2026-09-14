@@ -29,6 +29,7 @@ import bannerRoboSprintJunior from './banner_robo_sprint_junior.jpg';
 import bannerRoboSprintAdvanced from './banner_robo_sprint_advanced.jpg';
 import bannerRoboSprintSenior from './banner_robo_sprint_senior.jpg';
 import bannerRoboQuiz from './banner_robo_quiz.jpg';
+import bannerRoboTrials from './banner_robo_trials.jpg';
 import bannerActionStripCollage from './banner_action_strip_collage.jpg';
 import cardRoverSprint from './card_rover_sprint.jpg';
 import cardRoverAdvanced from './card_rover_advanced.jpg';
@@ -51,6 +52,7 @@ export {
   bannerRoboSprintAdvanced,
   bannerRoboSprintSenior,
   bannerRoboQuiz,
+  bannerRoboTrials,
   bannerActionStripCollage,
 
   // 3D Illustration Mascot & Rover Assets

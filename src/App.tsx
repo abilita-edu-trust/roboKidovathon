@@ -64,7 +64,7 @@ export function App() {
             {/* 04. Workflow Mind Map: From Parts to City Final */}
             <RefWorkflowMindMap onNavigate={handleNavigate} />
 
-            {/* 04. Top Three Cards: Robo Sprint / Robo Sprint Advanced / Robo Quiz */}
+            {/* 04. Top Three Cards: Robo Sprint / Robo Sprint Advanced / Robo Trials */}
             <RefTrackComparison
               onNavigate={handleNavigate}
               onOpenRegister={() => setIsRegisterOpen(true)}

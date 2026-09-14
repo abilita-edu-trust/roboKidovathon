@@ -85,7 +85,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-2">
           <div className="space-y-2 max-w-2xl">
             <span className="text-xs font-mono-code font-bold tracking-[0.25em] text-[#006AA7] uppercase block">
-              EVENT PATHWAYS // VÄSTERÅS 2026
+              EVENT PATHWAYS
             </span>
 
             <div className="relative inline-block">
@@ -96,11 +96,11 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
                 CHOOSE YOUR <span className="text-[#006AA7]">EXPERIENCE</span>
               </h2>
             </div>
-          </div>
 
-          <p className="text-sm sm:text-base text-slate-600 font-light leading-relaxed max-w-md self-start lg:self-end">
-            One event identity, two clear choices. Each card opens its own focused experience.
-          </p>
+            <p className="text-sm text-slate-600 font-light leading-relaxed max-w-md pt-1">
+              Two paths, one championship. Pick the experience that suits your school.
+            </p>
+          </div>
         </div>
 
         {/* ── 02. TWO PRIMARY EXPERIENCE CARDS (SIDE-BY-SIDE) ── */}
@@ -114,7 +114,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: idx * 0.15 }}
-                className={`p-8 sm:p-10 lg:p-12 text-white border-2 shadow-xl flex flex-col justify-between space-y-8 transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group ${exp.gradient} ${exp.border} ${exp.glow}`}
+                className={`p-7 sm:p-8 text-white border-2 shadow-xl flex flex-col justify-between space-y-6 transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group ${exp.gradient} ${exp.border} ${exp.glow}`}
               >
                 {/* Ambient Radial Accent */}
                 <div className="absolute -top-24 -right-24 w-80 h-80 bg-white/10 blur-3xl pointer-events-none" />

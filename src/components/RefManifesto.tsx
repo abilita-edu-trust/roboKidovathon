@@ -13,7 +13,7 @@ export const RefManifesto: React.FC<RefManifestoProps> = ({ onNavigate }) => {
       icon: Cpu,
       title: '20-Hour STEM Project',
       badge: 'GRADES 3–6 & 7–9',
-      desc: 'A structured ten-session project delivered directly in your classroom. Mentors bring the official Robo-Sprint kits, gearboxes, and test mats so every student builds a functioning robot.',
+      desc: 'Ten sessions, delivered in your classroom. Mentors bring official Robo-Sprint kits so every student builds a functioning robot.',
       action: 'STEM Programme',
       route: 'how-it-works',
     },
@@ -21,7 +21,7 @@ export const RefManifesto: React.FC<RefManifestoProps> = ({ onNavigate }) => {
       icon: ShieldCheck,
       title: 'Lgr22-Linked Learning',
       badge: 'CURRICULUM FIT',
-      desc: 'Practical learning opportunities connected to Teknik, Matematik, and NO/Fysik in Lgr22. Students produce real documentation, reflections, and measurements usable in ordinary teacher assessment.',
+      desc: 'Practical learning linked to Teknik, Matematik & Fysik in Lgr22 — with real documentation students can use in teacher assessment.',
       action: 'Lgr22 Alignment',
       route: 'lgr22',
     },
@@ -29,7 +29,7 @@ export const RefManifesto: React.FC<RefManifestoProps> = ({ onNavigate }) => {
       icon: Trophy,
       title: 'Grand Finale, Dec 4 & 5',
       badge: 'CITY FINAL · SEK 3,000',
-      desc: 'School qualifier champions advance to compete live in Västerås for SEK 3,000 in prizes, official trophies, and certificates before an audience of peers, teachers, and partners.',
+      desc: 'School qualifier champions compete live in Västerås for SEK 3,000 in prizes, trophies, and certificates.',
       action: 'Event Details',
       route: 'events',
     },
@@ -42,9 +42,9 @@ export const RefManifesto: React.FC<RefManifestoProps> = ({ onNavigate }) => {
         {/* ── MANIFESTO HEADLINE & INTRO ── */}
         <div className="text-center max-w-4xl mx-auto space-y-6">
 
-          <div className="inline-flex items-center gap-2 text-[#006AA7] text-xs font-mono-code font-bold uppercase tracking-widest mx-auto">
+        <div className="inline-flex items-center gap-2 text-[#006AA7] text-xs font-mono-code font-bold uppercase tracking-widest mx-auto">
             <Sparkles className="w-4 h-4" />
-            <span>THE VÄSTERÅS FUTURE INNOVATORS PHILOSOPHY</span>
+            <span>VÄSTERÅS FUTURE INNOVATORS 2026</span>
           </div>
 
           <motion.h2
@@ -65,9 +65,9 @@ export const RefManifesto: React.FC<RefManifestoProps> = ({ onNavigate }) => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-sm sm:text-base text-slate-600 font-light leading-relaxed max-w-3xl mx-auto"
+            className="text-sm sm:text-base text-slate-600 font-light leading-relaxed max-w-2xl mx-auto"
           >
-            Västerås Future Innovators 2026 turns abstract STEM concepts into real, team-built machines. Students learn mechanical problem-solving with genuine motors, gearboxes, and chassis components — developing engineering intuition and collaborative confidence.
+            Real motors, gearboxes, and chassis — building engineering intuition and team confidence.
           </motion.p>
 
           <motion.div

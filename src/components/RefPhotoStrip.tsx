@@ -3,41 +3,35 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldCheck, Sparkles, Trophy, Landmark, X, Maximize2, Layers } from 'lucide-react';
 import {
   bannerActionStripCollage,
-  roboSprintActionWide,
   roboSprintDuel,
-  roboPrecisionTowerBot,
   roboPrecisionActionWide,
   roboPrecisionFacingDual,
-  roboSprintObstacleClose,
-  roboSprintTopDown,
-  roboPrecisionArenaEmpty,
   TOURNAMENT_GALLERY,
   CompetitionMediaItem,
 } from '../assets/images';
 
 export const RefPhotoStrip: React.FC = () => {
   const [selectedPhoto, setSelectedPhoto] = useState<CompetitionMediaItem | null>(null);
-  const [activeCategory, setActiveCategory] = useState<'all' | 'sprint' | 'precision'>('all');
 
   const highlights = [
     {
       id: 'sprint-duel',
       span: 'lg:col-span-8',
       image: roboSprintDuel,
-      tag: 'ROBO-SPRINT LEAGUE ARENA',
+      tag: 'ROBO-SPRINT ARENA',
       icon: Trophy,
       title: 'Live Hurdle-Passing & Speed Agility Duels',
-      desc: 'Student-built machines battle head-to-head across the central barrier, clearing obstacles and scoring ping pong balls in real match conditions.',
+      desc: 'Student robots clear obstacles, navigate turning gates, and score in authentic head-to-head match conditions.',
       fullItem: TOURNAMENT_GALLERY[3],
     },
     {
       id: 'action-strip',
       span: 'lg:col-span-4',
       image: bannerActionStripCollage,
-      tag: 'CLASSROOM TO ARENA // BLIX-A-THON',
+      tag: 'CLASSROOM TO ARENA',
       icon: Sparkles,
       title: 'Build, Navigate & Precision Stacking',
-      desc: 'Three-stage competition progression: tactical obstacle racing, hands-on chassis assembly, and arena podium cup stacking.',
+      desc: 'Hands-on chassis assembly, speed trials, and arena podium cup stacking.',
       fullItem: TOURNAMENT_GALLERY[0],
     },
     {
@@ -47,62 +41,20 @@ export const RefPhotoStrip: React.FC = () => {
       tag: 'GRAND FINALE ARENA',
       icon: Landmark,
       title: 'Inter-School Championship Showcase',
-      desc: 'Qualifying teams from schools compete surrounded by cheering peers, teachers, and technical referees.',
+      desc: 'Qualifying school teams compete surrounded by cheering peers, teachers, and technical referees.',
       fullItem: TOURNAMENT_GALLERY[2],
     },
     {
       id: 'precision-duel',
       span: 'lg:col-span-7',
       image: roboPrecisionFacingDual,
-      tag: 'INDIA ORIGIN · TECHFEST IIT BOMBAY',
+      tag: 'PROVEN HARDWARE & RULES',
       icon: ShieldCheck,
       title: 'Proven Across 2,000+ Students',
-      desc: 'Direct from Blix-A-Thon India at IIT Bombay Techfest — bringing authentic robotic hardware and high-stakes arena rules to Swedish classrooms.',
+      desc: 'Bringing authentic robotic hardware and high-stakes arena rules to Swedish classrooms.',
       fullItem: TOURNAMENT_GALLERY[5],
     },
   ];
-
-  const additionalPhotos = [
-    {
-      title: 'Agile Chassis Face-Off',
-      cat: 'sprint' as const,
-      src: roboSprintActionWide,
-      tag: 'ROBO-SPRINT',
-      item: TOURNAMENT_GALLERY[1],
-    },
-    {
-      title: 'Vertical Lifter Engineering',
-      cat: 'precision' as const,
-      src: roboPrecisionTowerBot,
-      tag: 'PRECISION',
-      item: TOURNAMENT_GALLERY[4],
-    },
-    {
-      title: 'Chassis Clearing Passage',
-      cat: 'sprint' as const,
-      src: roboSprintObstacleClose,
-      tag: 'MECHANISM',
-      item: TOURNAMENT_GALLERY[6],
-    },
-    {
-      title: 'Tactical Overhead Arena',
-      cat: 'sprint' as const,
-      src: roboSprintTopDown,
-      tag: 'OVERHEAD',
-      item: TOURNAMENT_GALLERY[7],
-    },
-    {
-      title: 'Tournament Floor Setup',
-      cat: 'precision' as const,
-      src: roboPrecisionArenaEmpty,
-      tag: 'ARENA',
-      item: TOURNAMENT_GALLERY[8],
-    },
-  ];
-
-  const filteredReel = activeCategory === 'all'
-    ? additionalPhotos
-    : additionalPhotos.filter((p) => p.cat === activeCategory);
 
   return (
     <section className="w-full bg-white text-[#0A1930] py-16 sm:py-20 px-3 sm:px-6 border-t border-slate-200 overflow-hidden select-none">
@@ -120,7 +72,7 @@ export const RefPhotoStrip: React.FC = () => {
             <div className="flex items-center gap-2 text-[#006AA7]">
               <Layers className="w-4 h-4" />
               <span className="text-[10px] font-mono-code font-bold uppercase tracking-[0.25em]">
-                AUTHENTIC COMPETITION FOOTAGE
+                COMPETITION HIGHLIGHTS
               </span>
             </div>
             <h2
@@ -135,39 +87,6 @@ export const RefPhotoStrip: React.FC = () => {
             <p className="text-xs sm:text-sm text-slate-500 font-light max-w-md leading-relaxed">
               Real hardware, real school matches, and live arena heats from Blix-A-Thon — now arriving across Västerås.
             </p>
-            {/* Filter Buttons */}
-            <div className="inline-flex items-center gap-1.5 p-1 bg-slate-100 border border-slate-200">
-              <button
-                onClick={() => setActiveCategory('all')}
-                className={`px-3 py-1 text-[10px] font-mono-code font-bold uppercase transition-all ${
-                  activeCategory === 'all'
-                    ? 'bg-[#0A1930] text-white shadow-sm'
-                    : 'text-slate-600 hover:text-[#0A1930]'
-                }`}
-              >
-                All Heats
-              </button>
-              <button
-                onClick={() => setActiveCategory('sprint')}
-                className={`px-3 py-1 text-[10px] font-mono-code font-bold uppercase transition-all ${
-                  activeCategory === 'sprint'
-                    ? 'bg-[#006AA7] text-white shadow-sm'
-                    : 'text-slate-600 hover:text-[#0A1930]'
-                }`}
-              >
-                Robo-Sprint
-              </button>
-              <button
-                onClick={() => setActiveCategory('precision')}
-                className={`px-3 py-1 text-[10px] font-mono-code font-bold uppercase transition-all ${
-                  activeCategory === 'precision'
-                    ? 'bg-[#FFCD00] text-[#0A1930] shadow-sm'
-                    : 'text-slate-600 hover:text-[#0A1930]'
-                }`}
-              >
-                Robo-Precision
-              </button>
-            </div>
           </div>
         </div>
 
@@ -219,45 +138,6 @@ export const RefPhotoStrip: React.FC = () => {
               </motion.div>
             );
           })}
-        </div>
-
-        {/* ── ADDITIONAL LIVE ACTION REEL ── */}
-        <div className="space-y-4 pt-4">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-mono-code font-bold text-slate-500 uppercase tracking-widest">
-              MORE ARENA ACTION &amp; HARDWARE PERSPECTIVES ({filteredReel.length})
-            </span>
-            <span className="text-[10px] font-mono-code text-slate-400">
-              CLICK ANY TILE TO ENLARGE
-            </span>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {filteredReel.map((tile) => (
-              <motion.div
-                key={tile.title}
-                whileHover={{ y: -4, scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setSelectedPhoto(tile.item)}
-                className="relative h-44 sm:h-52 overflow-hidden border border-slate-200 group cursor-pointer bg-[#0A1930] shadow-sm"
-              >
-                <img
-                  src={tile.src}
-                  alt={tile.title}
-                  className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none" />
-                <div className="absolute bottom-3 left-3 right-3 space-y-0.5">
-                  <span className="text-[9px] font-mono-code font-bold text-[#FFCD00] uppercase block">
-                    {tile.tag}
-                  </span>
-                  <span className="text-xs font-syne font-bold text-white uppercase truncate block">
-                    {tile.title}
-                  </span>
-                </div>
-              </motion.div>
-            ))}
-          </div>
         </div>
 
       </div>
