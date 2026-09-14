@@ -13,8 +13,8 @@ export const RefFooter: React.FC<RefFooterProps> = ({
   onOpenRegister,
 }) => {
   return (
-    <footer id="site-footer" className="w-full bg-[#013A63] text-white pt-16 pb-12 px-6 sm:px-10 border-t border-white/10 select-none scroll-mt-24">
-      <div className="max-w-[1440px] mx-auto space-y-12">
+    <footer id="site-footer" className="w-full bg-[#013A63] text-white pt-16 pb-12 px-3 sm:px-6 border-t border-white/10 select-none scroll-mt-24">
+      <div className="w-full space-y-12">
 
         {/* Main Footer Row */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-14">
@@ -102,7 +102,7 @@ export const RefFooter: React.FC<RefFooterProps> = ({
           {PARTNER_LOGOS.map((logo) => (
             <div
               key={logo.name}
-              className="bg-white rounded-xl px-4 py-2.5 flex items-center justify-center opacity-90 hover:opacity-100 transition-opacity"
+              className="bg-white px-4 py-2.5 flex items-center justify-center opacity-90 hover:opacity-100 transition-opacity"
             >
               <img
                 src={logo.file}

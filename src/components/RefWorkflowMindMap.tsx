@@ -81,7 +81,7 @@ export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({ onNaviga
   ];
 
   return (
-    <section className="w-full bg-white text-[#0A1930] py-14 sm:py-18 px-4 sm:px-8 lg:px-12 border-b border-slate-200 select-none relative overflow-hidden">
+    <section className="w-full bg-white text-[#0A1930] py-14 sm:py-18 px-3 sm:px-6 border-b border-slate-200 select-none relative overflow-hidden">
       {/* Background blueprint grid */}
       <div className="absolute inset-0 pointer-events-none opacity-25">
         <div
@@ -94,7 +94,7 @@ export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({ onNaviga
         />
       </div>
 
-      <div className="max-w-[1440px] mx-auto space-y-8 relative z-10">
+      <div className="w-full space-y-8 relative z-10">
 
         {/* ── HEADER ROW ── */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 pb-2">
@@ -120,7 +120,7 @@ export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({ onNaviga
           <div className="flex items-center gap-3">
             <button
               onClick={() => onNavigate('workflow')}
-              className="group inline-flex items-center gap-2.5 px-5 py-3 rounded-full bg-[#0A1930] hover:bg-[#006AA7] text-white text-xs font-mono-code font-bold uppercase tracking-wider transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-[1.02] active:scale-[0.98]"
+              className="group inline-flex items-center gap-2.5 px-5 py-3 bg-[#0A1930] hover:bg-[#006AA7] text-white text-xs font-mono-code font-bold uppercase tracking-wider transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-[1.02] active:scale-[0.98]"
             >
               <span>VIEW FULL WORKFLOW</span>
               <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
@@ -147,7 +147,7 @@ export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({ onNaviga
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: idx * 0.08 }}
                   onClick={() => onNavigate('workflow')}
-                  className={`group relative rounded-2xl p-5 border cursor-pointer transition-all duration-300 flex flex-col justify-between space-y-4 hover:-translate-y-1.5 hover:shadow-lg ${
+                  className={`group relative p-5 border cursor-pointer transition-all duration-300 flex flex-col justify-between space-y-4 hover:-translate-y-1.5 hover:shadow-lg ${
                     node.isFinal
                       ? 'bg-[#0A1930] text-white border-slate-800 hover:border-[#FFCD00]/50'
                       : 'bg-white text-[#0A1930] border-slate-200 hover:border-[#006AA7]/40'
@@ -165,7 +165,7 @@ export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({ onNaviga
 
                     {/* Central Mind Map Node Indicator */}
                     <div
-                      className={`w-9 h-9 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110 shadow-xs ${
+                      className={`w-9 h-9 flex items-center justify-center transition-transform group-hover:scale-110 shadow-xs ${
                         node.isFinal
                           ? 'bg-white/10 text-[#FFCD00]'
                           : 'bg-slate-100 text-[#006AA7] group-hover:bg-[#006AA7] group-hover:text-white'

@@ -29,7 +29,7 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
   return (
     <section
       id="design-build-compete"
-      className="w-full bg-[#F4F8FB] relative py-16 sm:py-20 px-4 sm:px-8 lg:px-12 border-t border-slate-200 overflow-hidden select-none"
+      className="w-full bg-[#F4F8FB] relative py-16 sm:py-20 px-3 sm:px-6 border-t border-slate-200 overflow-hidden select-none"
     >
       {/* ── TECHNICAL BACKGROUND GRID SYSTEM & AMBIENT ACCENTS ── */}
       <div className="absolute inset-0 pointer-events-none opacity-40">
@@ -43,7 +43,7 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
         />
       </div>
 
-      <div className="max-w-[1400px] mx-auto space-y-10 relative z-10">
+      <div className="w-full space-y-10 relative z-10">
 
         {/* ── SECTION HERO HEADER ── */}
         <div className="relative pb-4">
@@ -69,7 +69,7 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
             </div>
 
             {/* Right: Ecosystem 3-Step Progression Strip */}
-            <div className="hidden sm:flex items-center gap-2.5 px-4 py-2 rounded-full bg-white border border-slate-200 text-xs font-mono-code shadow-xs self-start lg:self-end">
+            <div className="hidden sm:flex items-center gap-2.5 px-4 py-2 bg-white border border-slate-200 text-xs font-mono-code shadow-xs self-start lg:self-end">
               <span className="text-[#006AA7] font-bold">01 BUILD</span>
               <span className="text-slate-300 font-bold">⟶</span>
               <span className="text-slate-600 font-bold">02 TEST</span>
@@ -91,16 +91,16 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="rounded-[32px] p-6 sm:p-8 bg-white border border-slate-200/90 shadow-xl hover:shadow-2xl flex flex-col justify-between space-y-6 transition-all duration-300 hover:-translate-y-1.5 relative overflow-hidden group"
+            className="p-6 sm:p-8 bg-white border border-slate-200/90 shadow-xl hover:shadow-2xl flex flex-col justify-between space-y-6 transition-all duration-300 hover:-translate-y-1.5 relative overflow-hidden group"
           >
             {/* Subtle card blueprint corner texture */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-radial from-sky-100/60 to-transparent pointer-events-none" />
 
             <div className="space-y-6 relative z-10">
               
-              {/* Header: Pill Tag + Card Number */}
+              {/* Header: Clean Tag + Card Number */}
               <div className="flex items-center justify-between">
-                <span className="text-[10px] sm:text-[11px] font-mono-code font-bold px-3 py-1 rounded-full bg-[#E0F2FE] text-[#006AA7] border border-[#BAE6FD] uppercase tracking-wider">
+                <span className="text-[10px] sm:text-[11px] font-mono-code font-bold text-[#006AA7] uppercase tracking-wider block">
                   PHASE 01: BUILD // CLASSROOM HARDWARE KIT
                 </span>
                 <span className="text-xs font-mono-code text-slate-400 font-bold tracking-wider">
@@ -144,8 +144,8 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
                 <div className="sm:col-span-7 space-y-3.5">
                   
                   {/* Feature 1 */}
-                  <div className="flex items-start gap-3 p-2.5 rounded-2xl bg-[#F8FAFC] border border-slate-100 transition-colors group-hover:border-sky-200">
-                    <div className="w-8 h-8 rounded-xl bg-[#006AA7]/10 text-[#006AA7] flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="flex items-start gap-3 p-2.5 bg-[#F8FAFC] border border-slate-100 transition-colors group-hover:border-sky-200">
+                    <div className="w-8 h-8 bg-[#006AA7]/10 text-[#006AA7] flex items-center justify-center shrink-0 mt-0.5">
                       <GraduationCap className="w-4 h-4" />
                     </div>
                     <div>
@@ -155,8 +155,8 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
                   </div>
 
                   {/* Feature 2 */}
-                  <div className="flex items-start gap-3 p-2.5 rounded-2xl bg-[#F8FAFC] border border-slate-100 transition-colors group-hover:border-sky-200">
-                    <div className="w-8 h-8 rounded-xl bg-[#006AA7]/10 text-[#006AA7] flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="flex items-start gap-3 p-2.5 bg-[#F8FAFC] border border-slate-100 transition-colors group-hover:border-sky-200">
+                    <div className="w-8 h-8 bg-[#006AA7]/10 text-[#006AA7] flex items-center justify-center shrink-0 mt-0.5">
                       <Package className="w-4 h-4" />
                     </div>
                     <div>
@@ -166,8 +166,8 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
                   </div>
 
                   {/* Feature 3 */}
-                  <div className="flex items-start gap-3 p-2.5 rounded-2xl bg-[#F8FAFC] border border-slate-100 transition-colors group-hover:border-sky-200">
-                    <div className="w-8 h-8 rounded-xl bg-[#006AA7]/10 text-[#006AA7] flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="flex items-start gap-3 p-2.5 bg-[#F8FAFC] border border-slate-100 transition-colors group-hover:border-sky-200">
+                    <div className="w-8 h-8 bg-[#006AA7]/10 text-[#006AA7] flex items-center justify-center shrink-0 mt-0.5">
                       <Zap className="w-4 h-4" />
                     </div>
                     <div>
@@ -198,14 +198,14 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
               <div className="flex flex-wrap items-center gap-2.5">
                 <button
                   onClick={() => onNavigate('for-schools')}
-                  className="bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] font-black text-xs sm:text-sm py-3 px-5 sm:px-6 rounded-full shadow-xs flex items-center gap-2 transition-transform hover:scale-105"
+                  className="bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] font-black text-xs sm:text-sm py-3 px-5 sm:px-6 shadow-xs flex items-center gap-2 transition-transform hover:scale-105"
                 >
                   <span>FOR SCHOOLS GUIDE</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
                 <button
                   onClick={onOpenRegister}
-                  className="bg-white hover:bg-slate-50 text-[#0A1930] border border-slate-300 font-bold text-xs sm:text-sm py-3 px-4 sm:px-5 rounded-full shadow-2xs transition-transform hover:scale-105"
+                  className="bg-white hover:bg-slate-50 text-[#0A1930] border border-slate-300 font-bold text-xs sm:text-sm py-3 px-4 sm:px-5 shadow-2xs transition-transform hover:scale-105"
                 >
                   <span>REQUEST KITS</span>
                 </button>
@@ -234,7 +234,7 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.15 }}
-            className="rounded-[32px] p-6 sm:p-8 bg-[#0A1930] text-white border border-slate-800 shadow-2xl flex flex-col justify-between space-y-6 transition-all duration-300 hover:-translate-y-1.5 relative overflow-hidden group"
+            className="p-6 sm:p-8 bg-[#0A1930] text-white border border-slate-800 shadow-2xl flex flex-col justify-between space-y-6 transition-all duration-300 hover:-translate-y-1.5 relative overflow-hidden group"
           >
             {/* Ambient Cyan Radial Lighting */}
             <div className="absolute -top-24 -right-24 w-72 h-72 bg-[#006AA7]/30 rounded-full blur-3xl pointer-events-none" />
@@ -280,7 +280,7 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
                 
                 {/* 3D Isometric CAD Arena Model - Clean, HD, No overlapping badges */}
-                <div className="sm:col-span-8 relative rounded-2xl overflow-hidden bg-[#0A1930] border border-white/10 p-1 group-hover:border-sky-500/40 transition-colors">
+                <div className="sm:col-span-8 relative overflow-hidden bg-[#0A1930] border border-white/10 p-1 group-hover:border-sky-500/40 transition-colors">
                   <img
                     src={arenaCourtReference}
                     alt="Official 244cm x 122cm Dual-Court Competition Arena"
@@ -290,19 +290,19 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
 
                 {/* Right: 4 High-Tech Spec Badges */}
                 <div className="sm:col-span-4 space-y-2">
-                  <div className="flex items-center gap-2 p-2 rounded-xl bg-white/5 border border-white/10 text-[11px] font-medium text-slate-200">
+                  <div className="flex items-center gap-2 p-2 bg-white/5 border border-white/10 text-[11px] font-medium text-slate-200">
                     <ShieldCheck className="w-3.5 h-3.5 text-sky-400 shrink-0" />
                     <span className="leading-tight">Official Tournament Arena</span>
                   </div>
-                  <div className="flex items-center gap-2 p-2 rounded-xl bg-white/5 border border-white/10 text-[11px] font-medium text-slate-200">
+                  <div className="flex items-center gap-2 p-2 bg-white/5 border border-white/10 text-[11px] font-medium text-slate-200">
                     <Layers className="w-3.5 h-3.5 text-sky-400 shrink-0" />
                     <span className="leading-tight">Modular &amp; Portable</span>
                   </div>
-                  <div className="flex items-center gap-2 p-2 rounded-xl bg-white/5 border border-white/10 text-[11px] font-medium text-slate-200">
+                  <div className="flex items-center gap-2 p-2 bg-white/5 border border-white/10 text-[11px] font-medium text-slate-200">
                     <Ruler className="w-3.5 h-3.5 text-sky-400 shrink-0" />
                     <span className="leading-tight">Standardized Dimensions</span>
                   </div>
-                  <div className="flex items-center gap-2 p-2 rounded-xl bg-white/5 border border-white/10 text-[11px] font-medium text-slate-200">
+                  <div className="flex items-center gap-2 p-2 bg-white/5 border border-white/10 text-[11px] font-medium text-slate-200">
                     <Trophy className="w-3.5 h-3.5 text-sky-400 shrink-0" />
                     <span className="leading-tight">School &amp; Final Rounds</span>
                   </div>
@@ -311,7 +311,7 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
               </div>
 
               {/* Bottom Technical Readout Box */}
-              <div className="p-3.5 rounded-2xl bg-[#061224] border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-mono-code text-xs">
+              <div className="p-3.5 bg-[#061224] border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-mono-code text-xs">
                 <div className="space-y-1 text-[11px]">
                   <div className="flex items-center gap-2">
                     <span className="text-slate-400">STATUS:</span>
@@ -328,7 +328,7 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
                 </div>
 
                 {/* High-Tech CAD Blueprint Diagram Frame */}
-                <div className="border border-white/15 rounded-lg p-1 bg-white/5 flex items-center justify-center self-end sm:self-center">
+                <div className="border border-white/15 p-1 bg-white/5 flex items-center justify-center self-end sm:self-center">
                   <img
                     src={cadBlueprintReference}
                     alt="Arena Technical Blueprint Floorplan"
@@ -344,14 +344,14 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
               <div className="flex flex-wrap items-center gap-2.5">
                 <button
                   onClick={onOpenRegister}
-                  className="bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] font-black text-xs sm:text-sm py-3 px-5 sm:px-6 rounded-full shadow-xs flex items-center gap-2 transition-transform hover:scale-105"
+                  className="bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] font-black text-xs sm:text-sm py-3 px-5 sm:px-6 shadow-xs flex items-center gap-2 transition-transform hover:scale-105"
                 >
                   <span>REGISTER COHORT</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
                 <button
                   onClick={() => onNavigate('challenges')}
-                  className="px-5 py-3 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 text-xs font-mono-code font-bold uppercase transition-transform hover:scale-105"
+                  className="px-5 py-3 bg-white/10 hover:bg-white/20 text-white border border-white/20 text-xs font-mono-code font-bold uppercase transition-transform hover:scale-105"
                 >
                   <span>ARENA RULES</span>
                 </button>

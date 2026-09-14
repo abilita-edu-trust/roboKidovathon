@@ -36,14 +36,14 @@ export const RefManifesto: React.FC<RefManifestoProps> = ({ onNavigate }) => {
   ];
 
   return (
-    <section className="w-full bg-white text-[#0A1930] py-14 sm:py-18 px-6 sm:px-10 border-t border-slate-200 overflow-hidden">
-      <div className="max-w-[1280px] mx-auto space-y-16">
+    <section className="w-full bg-white text-[#0A1930] py-14 sm:py-18 px-3 sm:px-6 border-t border-slate-200 overflow-hidden">
+      <div className="w-full mx-auto space-y-16">
 
         {/* ── MANIFESTO HEADLINE & INTRO ── */}
-        <div className="text-center max-w-3xl mx-auto space-y-6">
+        <div className="text-center max-w-4xl mx-auto space-y-6">
 
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#006AA7]/10 text-[#006AA7] text-[10px] font-mono-code font-bold uppercase tracking-widest mx-auto">
-            <Sparkles className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-2 text-[#006AA7] text-xs font-mono-code font-bold uppercase tracking-widest mx-auto">
+            <Sparkles className="w-4 h-4" />
             <span>THE VÄSTERÅS FUTURE INNOVATORS PHILOSOPHY</span>
           </div>
 
@@ -65,7 +65,7 @@ export const RefManifesto: React.FC<RefManifestoProps> = ({ onNavigate }) => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-sm sm:text-base text-slate-600 font-light leading-relaxed max-w-2xl mx-auto"
+            className="text-sm sm:text-base text-slate-600 font-light leading-relaxed max-w-3xl mx-auto"
           >
             Västerås Future Innovators 2026 turns abstract STEM concepts into real, team-built machines. Students learn mechanical problem-solving with genuine motors, gearboxes, and chassis components — developing engineering intuition and collaborative confidence.
           </motion.p>
@@ -105,14 +105,14 @@ export const RefManifesto: React.FC<RefManifestoProps> = ({ onNavigate }) => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
                 whileHover={{ y: -6, borderColor: 'rgba(0, 106, 167, 0.3)' }}
-                className="p-8 rounded-3xl bg-[#F8FAFC] border border-slate-200 space-y-4 flex flex-col justify-between hover:border-[#006AA7]/30 transition-all shadow-sm"
+                className="p-8 bg-[#F8FAFC] border border-slate-200 space-y-4 flex flex-col justify-between hover:border-[#006AA7]/30 transition-all shadow-sm"
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <div className="w-12 h-12 rounded-2xl bg-[#006AA7]/10 border border-[#006AA7]/20 flex items-center justify-center text-[#006AA7]">
+                    <div className="w-12 h-12 bg-[#006AA7]/10 border border-[#006AA7]/20 flex items-center justify-center text-[#006AA7]">
                       <Icon className="w-6 h-6" />
                     </div>
-                    <span className="text-[10px] font-mono-code font-bold text-slate-500 bg-white border border-slate-200 px-2.5 py-1 rounded-full uppercase tracking-wider">
+                    <span className="text-[10px] font-mono-code font-bold text-slate-500 bg-white border border-slate-200 px-2.5 py-1 uppercase tracking-wider">
                       {pillar.badge}
                     </span>
                   </div>

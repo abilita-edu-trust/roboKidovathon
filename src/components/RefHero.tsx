@@ -58,7 +58,7 @@ export const RefHero: React.FC<RefHeroProps> = ({
       </div>
 
       {/* ── CONTENT: pinned to bottom of screen ── */}
-      <div className="relative z-10 w-full max-w-[1600px] mx-auto pl-4 sm:pl-8 lg:pl-10 pr-6 sm:pr-10 lg:pr-12 pb-16 sm:pb-20 pt-28">
+      <div className="relative z-10 w-full pl-3 pr-3 sm:pl-6 sm:pr-6 pb-16 sm:pb-20 pt-28">
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-end">
 
@@ -94,7 +94,7 @@ export const RefHero: React.FC<RefHeroProps> = ({
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 sm:gap-4 pt-2">
               <button
                 onClick={onOpenRegister}
-                className="px-7 py-4 rounded-full bg-[#FFCD00] hover:bg-[#E6B800] text-[#0A1930] font-syne font-black text-xs sm:text-sm tracking-wider uppercase transition-all shadow-xl flex items-center justify-center gap-2"
+                className="px-7 py-4 bg-[#FFCD00] hover:bg-[#E6B800] text-[#0A1930] font-syne font-black text-xs sm:text-sm tracking-wider uppercase transition-all shadow-xl flex items-center justify-center gap-2"
               >
                 <span>REGISTER SCHOOL / TEAM</span>
                 <ArrowRight className="w-4 h-4" />
@@ -102,7 +102,7 @@ export const RefHero: React.FC<RefHeroProps> = ({
 
               <button
                 onClick={() => onNavigate('events')}
-                className="px-7 py-4 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/25 font-syne font-bold text-xs sm:text-sm tracking-wider uppercase transition-all backdrop-blur-sm flex items-center justify-center gap-2"
+                className="px-7 py-4 bg-white/10 hover:bg-white/20 text-white border border-white/25 font-syne font-bold text-xs sm:text-sm tracking-wider uppercase transition-all backdrop-blur-sm flex items-center justify-center gap-2"
               >
                 <span>EXPLORE EVENTS</span>
               </button>
@@ -126,7 +126,7 @@ export const RefHero: React.FC<RefHeroProps> = ({
             ].map((fact) => (
               <div
                 key={fact.label}
-                className="flex flex-col gap-0.5 px-4 py-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 text-white"
+                className="flex flex-col gap-0.5 px-4 py-3 bg-white/10 backdrop-blur-md border border-white/15 text-white"
               >
                 <span className="font-mono-code font-bold text-[9px] sm:text-[10px] text-white/50 uppercase tracking-widest">
                   {fact.label}

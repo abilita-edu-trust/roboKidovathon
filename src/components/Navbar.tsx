@@ -64,7 +64,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             : 'bg-black/40 backdrop-blur-sm border-b border-white/10 py-4 text-white'
         }`}
       >
-        <div className="max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-10 flex items-center justify-between gap-4">
+        <div className="w-full px-4 sm:px-6 flex items-center justify-between gap-4">
 
           {/* Brand Mark */}
           <button
@@ -84,7 +84,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Desktop Navigation Links */}
           <nav
-            className={`hidden lg:flex items-center gap-1 p-1 rounded-full transition-all duration-300 ${
+            className={`hidden lg:flex items-center gap-1 p-1 transition-all duration-300 ${
               isScrolled
                 ? 'bg-slate-100 border border-slate-200'
                 : 'bg-black/30 border border-white/15 backdrop-blur-md'
@@ -96,14 +96,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   key={item.id}
                   onClick={() => handleLinkClick(item.id)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-display font-medium tracking-wide transition-all duration-200 ${
+                  className={`px-3.5 py-1.5 text-xs font-display font-medium tracking-wide transition-all duration-200 ${
                     isScrolled
                       ? isActive
-                        ? 'text-[#006AA7] bg-white font-bold border border-slate-200 shadow-sm'
-                        : 'text-slate-600 hover:text-[#0A1930] hover:bg-white/80'
+                        ? 'bg-[#006AA7] text-white font-bold'
+                        : 'text-slate-600 hover:text-[#0A1930] hover:bg-slate-200/60'
                       : isActive
-                      ? 'text-white bg-white/20 font-bold border border-white/20 shadow-sm'
-                      : 'text-slate-300 hover:text-white hover:bg-white/10'
+                      ? 'bg-[#FFCD00] text-[#0A1930] font-bold'
+                      : 'text-white/90 hover:text-white hover:bg-white/15'
                   }`}
                 >
                   {item.label}

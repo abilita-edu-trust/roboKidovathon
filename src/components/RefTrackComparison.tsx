@@ -105,7 +105,7 @@ export const RefTrackComparison: React.FC<RefTrackComparisonProps> = ({
   ];
 
   return (
-    <section id="competition-tracks" className="w-full bg-[#F4F8FB] text-[#0A1930] py-16 sm:py-20 px-4 sm:px-8 lg:px-12 select-none relative overflow-hidden">
+    <section id="competition-tracks" className="w-full bg-[#F4F8FB] text-[#0A1930] py-16 sm:py-20 px-3 sm:px-6 select-none relative overflow-hidden">
       
       {/* ── TECHNICAL BLUEPRINT GRID BACKGROUND ── */}
       <div className="absolute inset-0 pointer-events-none opacity-30">
@@ -119,7 +119,7 @@ export const RefTrackComparison: React.FC<RefTrackComparisonProps> = ({
         />
       </div>
 
-      <div className="max-w-[1440px] mx-auto space-y-10 relative z-10">
+      <div className="w-full space-y-10 relative z-10">
 
         {/* ── SECTION HEADER ── */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 pb-4">
@@ -167,7 +167,7 @@ export const RefTrackComparison: React.FC<RefTrackComparisonProps> = ({
           <div className="flex items-center self-start lg:self-end">
             <button
               onClick={() => onNavigate('challenges')}
-              className="bg-white hover:bg-slate-50 text-[#0A1930] border border-slate-300 text-xs font-bold py-3 px-6 rounded-full shadow-xs flex items-center gap-2 transition-transform hover:scale-105"
+              className="bg-white hover:bg-slate-50 text-[#0A1930] border border-slate-300 text-xs font-bold py-3 px-6 shadow-xs flex items-center gap-2 transition-transform hover:scale-105"
             >
               <span>VIEW FULL RULEBOOK</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -187,11 +187,11 @@ export const RefTrackComparison: React.FC<RefTrackComparisonProps> = ({
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: idx * 0.12 }}
-                className={`rounded-[32px] overflow-hidden bg-white border-2 shadow-xl flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 group ${track.borderColor} ${track.glowShadow}`}
+                className={`overflow-hidden bg-white border-2 shadow-xl flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 group ${track.borderColor} ${track.glowShadow}`}
               >
                 
                 {/* ════ TOP HALF: 100% CLEAN ARTWORK (NO BLACK OVERLAY, NO OVERLAPPING TEXT) ════ */}
-                <div className="relative h-[230px] sm:h-[250px] w-full overflow-hidden select-none bg-slate-900">
+                <div className="relative aspect-[16/10.5] w-full overflow-hidden select-none bg-slate-900">
                   <img
                     src={track.bannerImage}
                     alt={track.title}
@@ -200,11 +200,15 @@ export const RefTrackComparison: React.FC<RefTrackComparisonProps> = ({
 
                   {/* Top Corner Floating Badges (Clean & Out of the Way) */}
                   <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between z-10 pointer-events-none">
-                    <span className="bg-white/95 backdrop-blur-xs text-[#0A1930] text-[11px] font-mono-code font-black px-3.5 py-1.5 rounded-full shadow-md tracking-wider uppercase border border-slate-100">
-                      {track.badge}
-                    </span>
+                    {track.id === 'robo-quiz' ? (
+                      <span className="bg-white/95 backdrop-blur-xs text-[#0A1930] text-[11px] font-mono-code font-black px-3.5 py-1.5 shadow-md tracking-wider uppercase border border-slate-100">
+                        {track.badge}
+                      </span>
+                    ) : (
+                      <span />
+                    )}
 
-                    <div className={`w-9 h-9 rounded-full ${track.cornerBg} flex items-center justify-center shadow-md transition-transform group-hover:scale-110`}>
+                    <div className={`w-9 h-9 ${track.cornerBg} flex items-center justify-center shadow-md transition-transform group-hover:scale-110 ml-auto`}>
                       <CornerIcon className="w-4 h-4" />
                     </div>
                   </div>
@@ -297,7 +301,7 @@ export const RefTrackComparison: React.FC<RefTrackComparisonProps> = ({
                   <div className="pt-2 space-y-2.5">
                     <button
                       onClick={onOpenRegister}
-                      className="w-full bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] font-black text-xs sm:text-sm py-3.5 px-6 rounded-full flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] uppercase tracking-wider"
+                      className="w-full bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] font-black text-xs sm:text-sm py-3.5 px-6 flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] uppercase tracking-wider"
                     >
                       <span>{track.registerLabel}</span>
                     </button>

@@ -3,6 +3,17 @@ import { type Config } from 'tailwindcss'
 const config: Config = {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
+    borderRadius: {
+      none: '0',
+      DEFAULT: '0',
+      sm: '0',
+      md: '0',
+      lg: '0',
+      xl: '0',
+      '2xl': '0',
+      '3xl': '0',
+      full: '0',
+    },
     extend: {
       colors: {
         'robo-navy': '#0A1930',
@@ -15,10 +26,17 @@ const config: Config = {
         'robo-slate': '#55677C',
       },
       fontFamily: {
-        display: ['Space Grotesk', 'Outfit', 'Inter', 'sans-serif'],
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Poppins', 'Outfit', 'system-ui', '-apple-system', 'sans-serif'],
+        secondary: ['Prompt', 'sans-serif'],
+        prompt: ['Prompt', 'sans-serif'],
+        display: ['Prompt', 'Outfit', 'Space Grotesk', 'sans-serif'],
+        poppins: ['Poppins', 'sans-serif'],
+        outfit: ['Outfit', 'sans-serif'],
+        canon: ['"IM Fell French Canon"', 'serif'],
+        imperial: ['"Imperial Script"', 'cursive'],
+        quintessential: ['Quintessential', 'cursive'],
         mono: ['JetBrains Mono', 'monospace'],
-        handwriting: ['Caveat', 'Kalam', 'cursive'],
+        handwriting: ['"Imperial Script"', 'Caveat', 'Kalam', 'cursive'],
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

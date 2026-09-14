@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldCheck, Sparkles, Trophy, Landmark, X, Maximize2, Layers } from 'lucide-react';
 import {
+  bannerActionStripCollage,
   roboSprintActionWide,
   roboSprintDuel,
   roboPrecisionTowerBot,
@@ -27,17 +28,17 @@ export const RefPhotoStrip: React.FC = () => {
       icon: Trophy,
       title: 'Live Hurdle-Passing & Speed Agility Duels',
       desc: 'Student-built machines battle head-to-head across the central barrier, clearing obstacles and scoring ping pong balls in real match conditions.',
-      fullItem: TOURNAMENT_GALLERY[2],
+      fullItem: TOURNAMENT_GALLERY[3],
     },
     {
-      id: 'precision-tower',
+      id: 'action-strip',
       span: 'lg:col-span-4',
-      image: roboPrecisionTowerBot,
-      tag: 'PRECISION CUP STACKING',
+      image: bannerActionStripCollage,
+      tag: 'CLASSROOM TO ARENA // BLIX-A-THON',
       icon: Sparkles,
-      title: 'Vertical Rack & Pinion Engineering',
-      desc: 'Custom-built vertical scissor lift bots hoisting numbered scoring cups onto elevated podium targets.',
-      fullItem: TOURNAMENT_GALLERY[3],
+      title: 'Build, Navigate & Precision Stacking',
+      desc: 'Three-stage competition progression: tactical obstacle racing, hands-on chassis assembly, and arena podium cup stacking.',
+      fullItem: TOURNAMENT_GALLERY[0],
     },
     {
       id: 'precision-crowd',
@@ -47,7 +48,7 @@ export const RefPhotoStrip: React.FC = () => {
       icon: Landmark,
       title: 'Inter-School Championship Showcase',
       desc: 'Qualifying teams from schools compete surrounded by cheering peers, teachers, and technical referees.',
-      fullItem: TOURNAMENT_GALLERY[1],
+      fullItem: TOURNAMENT_GALLERY[2],
     },
     {
       id: 'precision-duel',
@@ -57,7 +58,7 @@ export const RefPhotoStrip: React.FC = () => {
       icon: ShieldCheck,
       title: 'Proven Across 2,000+ Students',
       desc: 'Direct from Blix-A-Thon India at IIT Bombay Techfest — bringing authentic robotic hardware and high-stakes arena rules to Swedish classrooms.',
-      fullItem: TOURNAMENT_GALLERY[4],
+      fullItem: TOURNAMENT_GALLERY[5],
     },
   ];
 
@@ -67,28 +68,35 @@ export const RefPhotoStrip: React.FC = () => {
       cat: 'sprint' as const,
       src: roboSprintActionWide,
       tag: 'ROBO-SPRINT',
-      item: TOURNAMENT_GALLERY[0],
+      item: TOURNAMENT_GALLERY[1],
+    },
+    {
+      title: 'Vertical Lifter Engineering',
+      cat: 'precision' as const,
+      src: roboPrecisionTowerBot,
+      tag: 'PRECISION',
+      item: TOURNAMENT_GALLERY[4],
     },
     {
       title: 'Chassis Clearing Passage',
       cat: 'sprint' as const,
       src: roboSprintObstacleClose,
       tag: 'MECHANISM',
-      item: TOURNAMENT_GALLERY[5],
+      item: TOURNAMENT_GALLERY[6],
     },
     {
       title: 'Tactical Overhead Arena',
       cat: 'sprint' as const,
       src: roboSprintTopDown,
       tag: 'OVERHEAD',
-      item: TOURNAMENT_GALLERY[6],
+      item: TOURNAMENT_GALLERY[7],
     },
     {
       title: 'Tournament Floor Setup',
       cat: 'precision' as const,
       src: roboPrecisionArenaEmpty,
       tag: 'ARENA',
-      item: TOURNAMENT_GALLERY[7],
+      item: TOURNAMENT_GALLERY[8],
     },
   ];
 
@@ -97,8 +105,8 @@ export const RefPhotoStrip: React.FC = () => {
     : additionalPhotos.filter((p) => p.cat === activeCategory);
 
   return (
-    <section className="w-full bg-white text-[#0A1930] py-16 sm:py-20 px-4 sm:px-8 lg:px-12 border-t border-slate-200 overflow-hidden select-none">
-      <div className="max-w-[1440px] mx-auto space-y-10">
+    <section className="w-full bg-white text-[#0A1930] py-16 sm:py-20 px-3 sm:px-6 border-t border-slate-200 overflow-hidden select-none">
+      <div className="w-full space-y-10">
 
         {/* ── SECTION HEADER ── */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2">
@@ -127,11 +135,11 @@ export const RefPhotoStrip: React.FC = () => {
             <p className="text-xs sm:text-sm text-slate-500 font-light max-w-md leading-relaxed">
               Real hardware, real school matches, and live arena heats from Blix-A-Thon — now arriving across Västerås.
             </p>
-            {/* Filter Pills */}
-            <div className="inline-flex items-center gap-1.5 p-1 rounded-full bg-slate-100 border border-slate-200">
+            {/* Filter Buttons */}
+            <div className="inline-flex items-center gap-1.5 p-1 bg-slate-100 border border-slate-200">
               <button
                 onClick={() => setActiveCategory('all')}
-                className={`px-3 py-1 rounded-full text-[10px] font-mono-code font-bold uppercase transition-all ${
+                className={`px-3 py-1 text-[10px] font-mono-code font-bold uppercase transition-all ${
                   activeCategory === 'all'
                     ? 'bg-[#0A1930] text-white shadow-sm'
                     : 'text-slate-600 hover:text-[#0A1930]'
@@ -141,7 +149,7 @@ export const RefPhotoStrip: React.FC = () => {
               </button>
               <button
                 onClick={() => setActiveCategory('sprint')}
-                className={`px-3 py-1 rounded-full text-[10px] font-mono-code font-bold uppercase transition-all ${
+                className={`px-3 py-1 text-[10px] font-mono-code font-bold uppercase transition-all ${
                   activeCategory === 'sprint'
                     ? 'bg-[#006AA7] text-white shadow-sm'
                     : 'text-slate-600 hover:text-[#0A1930]'
@@ -151,7 +159,7 @@ export const RefPhotoStrip: React.FC = () => {
               </button>
               <button
                 onClick={() => setActiveCategory('precision')}
-                className={`px-3 py-1 rounded-full text-[10px] font-mono-code font-bold uppercase transition-all ${
+                className={`px-3 py-1 text-[10px] font-mono-code font-bold uppercase transition-all ${
                   activeCategory === 'precision'
                     ? 'bg-[#FFCD00] text-[#0A1930] shadow-sm'
                     : 'text-slate-600 hover:text-[#0A1930]'
@@ -176,7 +184,7 @@ export const RefPhotoStrip: React.FC = () => {
                 transition={{ duration: 0.7, delay: idx * 0.12, ease: [0.16, 1, 0.3, 1] }}
                 whileHover={{ y: -6, borderColor: 'rgba(0, 106, 167, 0.45)' }}
                 onClick={() => setSelectedPhoto(item.fullItem)}
-                className={`relative overflow-hidden rounded-3xl border border-slate-200 bg-[#0A1930] shadow-md group cursor-pointer min-h-[340px] sm:min-h-[420px] flex flex-col justify-end p-6 sm:p-8 ${item.span}`}
+                className={`relative overflow-hidden border border-slate-200 bg-[#0A1930] shadow-md group cursor-pointer min-h-[340px] sm:min-h-[420px] flex flex-col justify-end p-6 sm:p-8 ${item.span}`}
               >
                 {/* Background Image */}
                 <img
@@ -189,7 +197,7 @@ export const RefPhotoStrip: React.FC = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0A1930] via-[#0A1930]/70 to-transparent pointer-events-none" />
 
                 {/* Enlarge Indicator */}
-                <div className="absolute top-5 right-5 w-9 h-9 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute top-5 right-5 w-9 h-9 bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity">
                   <Maximize2 className="w-4 h-4" />
                 </div>
 
@@ -231,7 +239,7 @@ export const RefPhotoStrip: React.FC = () => {
                 whileHover={{ y: -4, scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setSelectedPhoto(tile.item)}
-                className="relative h-44 sm:h-52 rounded-2xl overflow-hidden border border-slate-200 group cursor-pointer bg-[#0A1930] shadow-sm"
+                className="relative h-44 sm:h-52 overflow-hidden border border-slate-200 group cursor-pointer bg-[#0A1930] shadow-sm"
               >
                 <img
                   src={tile.src}
@@ -271,7 +279,7 @@ export const RefPhotoStrip: React.FC = () => {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
               transition={{ duration: 0.2 }}
-              className="relative max-w-4xl w-full max-h-[90vh] bg-[#0A1930] border border-white/20 rounded-3xl overflow-hidden shadow-2xl z-10 flex flex-col"
+              className="relative max-w-4xl w-full max-h-[90vh] bg-[#0A1930] border border-white/20 overflow-hidden shadow-2xl z-10 flex flex-col"
             >
               {/* Top Bar */}
               <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/10 bg-[#070709]">
@@ -285,7 +293,7 @@ export const RefPhotoStrip: React.FC = () => {
                 </div>
                 <button
                   onClick={() => setSelectedPhoto(null)}
-                  className="p-2 rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+                  className="p-2 text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
                   aria-label="Close photo view"
                 >
                   <X className="w-5 h-5" />
@@ -297,7 +305,7 @@ export const RefPhotoStrip: React.FC = () => {
                 <img
                   src={selectedPhoto.src}
                   alt={selectedPhoto.title}
-                  className="max-h-full max-w-full object-contain rounded-xl"
+                  className="max-h-full max-w-full object-contain"
                 />
               </div>
 
@@ -308,7 +316,7 @@ export const RefPhotoStrip: React.FC = () => {
                 </p>
                 <button
                   onClick={() => setSelectedPhoto(null)}
-                  className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white font-mono-code text-xs uppercase tracking-wider transition-colors shrink-0 self-start sm:self-auto"
+                  className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white font-mono-code text-xs uppercase tracking-wider transition-colors shrink-0 self-start sm:self-auto"
                 >
                   CLOSE VIEW
                 </button>

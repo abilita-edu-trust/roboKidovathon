@@ -1,6 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Cpu, Zap, Trophy } from 'lucide-react';
+import {
+  ArrowRight,
+  Bot,
+  Lightbulb,
+} from 'lucide-react';
 
 interface RefTheExperienceProps {
   onNavigate: (route: string) => void;
@@ -9,101 +13,171 @@ interface RefTheExperienceProps {
 
 export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
   onNavigate,
+  onOpenRegister,
 }) => {
-  const cards = [
+  const experiences = [
     {
-      id: '01',
-      title: 'REAL BUILD KIT',
-      desc: 'No screens-only simulators. Every team builds with a genuine Robo-Sprint kit — gearboxes, wheels, chassis parts, and a wired transmitter.',
-      icon: Cpu,
-      span: 'lg:col-span-4',
+      id: 'robokidovation',
+      date: 'FRIDAY · 13 NOVEMBER',
+      subdate: 'DAY 01 // HANDS-ON ROBOTICS',
+      title: 'RoboKidovation',
+      subtitle: 'Robot Building & Arena Competition',
+      description:
+        'Learn STEM by building, testing and improving a working robot, then apply the learning in the Robo-Sprint challenge.',
+      gradient:
+        'bg-gradient-to-br from-[#005B94] via-[#006AA7] to-[#0284C7]',
+      border: 'border-[#38BDF8]/30 hover:border-[#38BDF8]/60',
+      glow: 'hover:shadow-[0_25px_60px_rgba(0,106,167,0.35)]',
+      badgeBg: 'bg-white/15 text-white border-white/20',
+      tagBg: 'bg-white/12 hover:bg-white/20 text-white border-white/20',
+      buttonBg:
+        'bg-white text-[#0A1930] hover:bg-[#FFCD00] hover:text-[#0A1930]',
+      icon: Bot,
+      iconColor: 'text-[#38BDF8]',
+      tags: ['Grades 4–6', 'Grades 7–9', 'Robo-Sprint', 'Lgr22 connections'],
+      cta: 'Explore RoboKidovation',
+      route: 'challenges',
     },
     {
-      id: '02',
-      title: 'LIVE ARENA MATCHES',
-      desc: 'Arena ball-transfer Robo-Sprint heats — 3-minute matches for both the Explorer and Advanced leagues — refereed live on the divided arena mat.',
-      icon: Trophy,
-      span: 'lg:col-span-4',
-    },
-    {
-      id: '03',
-      title: 'SCHOOL-FIRST DELIVERY',
-      desc: 'It starts with a 20-hour, ten-session in-school STEM project. Mentors bring the kit, arena mat, and team guidance directly to your classroom.',
-      icon: Zap,
-      span: 'lg:col-span-4',
+      id: 'hackathon',
+      date: 'SATURDAY · 14 NOVEMBER',
+      subdate: 'DAY 02 // OPEN INNOVATION',
+      title: 'Young Innovators Hackathon',
+      subtitle: 'Real-World STEM Innovation Challenge',
+      description:
+        'A one-day innovation challenge where teams identify a real-world problem, develop a concept or prototype, and pitch their solution.',
+      gradient:
+        'bg-gradient-to-br from-[#047857] via-[#0D9488] to-[#059669]',
+      border: 'border-[#34D399]/30 hover:border-[#34D399]/60',
+      glow: 'hover:shadow-[0_25px_60px_rgba(13,148,136,0.35)]',
+      badgeBg: 'bg-white/15 text-white border-white/20',
+      tagBg: 'bg-white/12 hover:bg-white/20 text-white border-white/20',
+      buttonBg:
+        'bg-white text-[#0A1930] hover:bg-[#FFCD00] hover:text-[#0A1930]',
+      icon: Lightbulb,
+      iconColor: 'text-[#34D399]',
+      tags: ['Science', 'Technology', 'Sustainability', 'Entrepreneurship'],
+      cta: 'Explore the Hackathon',
+      route: 'workflow',
     },
   ];
 
   return (
-    <section className="w-full bg-white text-[#0A1930] py-28 px-6 sm:px-10 border-t border-slate-200 overflow-hidden">
-      <div className="max-w-[1440px] mx-auto space-y-16">
+    <section
+      id="choose-experience"
+      className="w-full bg-white text-[#0A1930] py-12 sm:py-16 px-3 sm:px-5 lg:px-6 select-none relative overflow-hidden border-t border-slate-200"
+    >
+      {/* Technical Blueprint Grid Accent */}
+      <div className="absolute inset-0 pointer-events-none opacity-25">
+        <div
+          className="w-full h-full"
+          style={{
+            backgroundImage:
+              'linear-gradient(to right, #006AA70F 1px, transparent 1px), linear-gradient(to bottom, #006AA70F 1px, transparent 1px)',
+            backgroundSize: '48px 48px',
+          }}
+        />
+      </div>
 
-        {/* ── TOP HEADLINE: THE (Outline) EXPERIENCE (Solid) ── */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <h2
-              className="font-headline font-black uppercase tracking-tight leading-[1.02]"
-              style={{ fontSize: 'clamp(3.5rem, 8vw, 7.5rem)' }}
-            >
-              <span className="text-stroke block">THE</span>
-              <span className="text-[#0A1930] block">EXPERIENCE</span>
-            </h2>
-          </motion.div>
+      <div className="w-full mx-auto space-y-12 relative z-10">
 
-          <p className="text-sm sm:text-base text-slate-600 font-light max-w-md leading-relaxed pb-2">
-            INIAC's STEM programme for the Swedish school environment — real teamwork, real hardware, real matches.
+        {/* ── 01. SECTION HEADER ── */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-2">
+          <div className="space-y-2 max-w-2xl">
+            <span className="text-xs font-mono-code font-bold tracking-[0.25em] text-[#006AA7] uppercase block">
+              EVENT PATHWAYS // VÄSTERÅS 2026
+            </span>
+
+            <div className="relative inline-block">
+              <h2
+                className="font-headline font-black uppercase tracking-tight text-[#0A1930] leading-[1.02]"
+                style={{ fontSize: 'clamp(2.4rem, 5.2vw, 4.4rem)' }}
+              >
+                CHOOSE YOUR <span className="text-[#006AA7]">EXPERIENCE</span>
+              </h2>
+            </div>
+          </div>
+
+          <p className="text-sm sm:text-base text-slate-600 font-light leading-relaxed max-w-md self-start lg:self-end">
+            One event identity, two clear choices. Each card opens its own focused experience.
           </p>
         </div>
 
-        {/* ── 3-COLUMN BENTO GRID WITH MOTION ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {cards.map((card, i) => {
-            const Icon = card.icon;
+        {/* ── 02. TWO PRIMARY EXPERIENCE CARDS (SIDE-BY-SIDE) ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 items-stretch">
+          {experiences.map((exp, idx) => {
+            const Icon = exp.icon;
             return (
               <motion.div
-                key={card.id}
-                initial={{ opacity: 0, y: 40 }}
+                key={exp.id}
+                initial={{ opacity: 0, y: 28 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.7, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] }}
-                whileHover={{ y: -8, scale: 1.02, borderColor: 'rgba(0, 106, 167, 0.35)' }}
-                className={`rounded-3xl p-8 bg-[#F8FAFC] border border-slate-200 space-y-6 flex flex-col justify-between hover:border-[#006AA7]/30 transition-all shadow-sm ${card.span}`}
+                transition={{ duration: 0.6, delay: idx * 0.15 }}
+                className={`p-8 sm:p-10 lg:p-12 text-white border-2 shadow-xl flex flex-col justify-between space-y-8 transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group ${exp.gradient} ${exp.border} ${exp.glow}`}
               >
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono-code text-xs font-bold text-slate-400">
-                      // {card.id}
+                {/* Ambient Radial Accent */}
+                <div className="absolute -top-24 -right-24 w-80 h-80 bg-white/10 blur-3xl pointer-events-none" />
+                <div className="absolute -bottom-24 -left-24 w-80 h-80 bg-black/10 blur-3xl pointer-events-none" />
+
+                {/* Card Top: Date & Category Icon */}
+                <div className="space-y-6 relative z-10">
+                  <div className="flex items-center justify-between gap-3 border-b border-white/15 pb-4">
+                    <span className="text-xs sm:text-sm font-mono-code font-black uppercase tracking-wider text-white border-l-2 border-[#FFCD00] pl-2.5 inline-block">
+                      {exp.date}
                     </span>
-                    <div className="w-10 h-10 rounded-2xl bg-[#006AA7]/10 flex items-center justify-center text-[#006AA7]">
+
+                    <div className="w-10 h-10 bg-white/15 border border-white/20 flex items-center justify-center text-white shadow-sm transition-transform duration-300 group-hover:scale-110">
                       <Icon className="w-5 h-5" />
                     </div>
                   </div>
 
-                  <h3 className="font-headline font-bold text-2xl uppercase tracking-wide text-[#0A1930]">
-                    {card.title}
-                  </h3>
+                  {/* Title & Description */}
+                  <div className="space-y-3">
+                    <h3 className="font-headline font-black text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight leading-[1.05]">
+                      {exp.title}
+                    </h3>
+                    <p className="text-sm sm:text-base text-white/90 font-light leading-relaxed max-w-xl">
+                      {exp.description}
+                    </p>
+                  </div>
 
-                  <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed">
-                    {card.desc}
-                  </p>
+                  {/* Tag Cloud */}
+                  <div className="flex flex-wrap gap-2 pt-2">
+                    {exp.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-xs font-mono-code font-semibold px-3 py-1.5 border border-white/20 bg-white/10 text-white"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
 
-                <div className="pt-4 border-t border-slate-200 flex items-center justify-between">
-                  <span className="font-headline font-bold text-xs uppercase tracking-wider text-slate-500">
-                    VÄSTERÅS 2026
-                  </span>
+                {/* Card Bottom: CTA Button */}
+                <div className="pt-6 border-t border-white/15 relative z-10 flex flex-wrap items-center justify-between gap-3">
                   <button
-                    onClick={() => onNavigate('challenges')}
-                    className="text-xs font-bold text-[#006AA7] hover:text-[#0A1930] flex items-center gap-1 transition-colors"
+                    onClick={() => onNavigate(exp.route)}
+                    className={`font-bold text-xs sm:text-sm py-3.5 px-7 inline-flex items-center gap-2.5 transition-all duration-300 shadow-md ${exp.buttonBg}`}
                   >
-                    <span>DETAILS</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <span>{exp.cta}</span>
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                   </button>
+
+                  <div className="flex items-center gap-4">
+                    {onOpenRegister && (
+                      <button
+                        onClick={onOpenRegister}
+                        className="text-xs font-mono-code font-bold uppercase tracking-wider text-white/80 hover:text-white underline underline-offset-4 transition-colors"
+                      >
+                        Register Team
+                      </button>
+                    )}
+                    <span className="text-[11px] font-mono-code uppercase text-white/70 font-semibold tracking-wider hidden md:inline-block">
+                      {exp.subdate}
+                    </span>
+                  </div>
                 </div>
               </motion.div>
             );
