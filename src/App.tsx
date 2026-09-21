@@ -22,8 +22,10 @@ import { EventsPage } from './pages/EventsPage';
 import { RegisterModal } from './components/RegisterModal';
 import { EventDeckModal } from './components/EventDeckModal';
 import { RoboCursor } from './components/RoboCursor';
+import { useLanguage } from './context/LanguageContext';
 
 export function App() {
+  const { language } = useLanguage();
   const [currentRoute, setCurrentRoute] = useState<string>('home');
   const [isRegisterOpen, setIsRegisterOpen] = useState<boolean>(false);
   const [isDeckOpen, setIsDeckOpen] = useState<boolean>(false);
@@ -34,7 +36,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-[#0A1930] font-sans selection:bg-[#FFCD00] selection:text-[#0A1930] relative overflow-x-hidden">
+    <div key={language} className="min-h-screen bg-white text-[#0A1930] font-sans selection:bg-[#FFCD00] selection:text-[#0A1930] relative overflow-x-hidden">
       {/* ── Custom Animated Robot Cursor ── */}
       <RoboCursor />
       
