@@ -70,7 +70,7 @@ export const Lgr22Page: React.FC<Lgr22PageProps> = ({
           <div className="pt-6 flex flex-wrap items-center gap-4">
             <button
               onClick={onOpenRegister}
-              className="btn-pill-lime text-xs font-black py-3.5 px-7 shadow-md flex items-center gap-2"
+              className="bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] font-syne font-black text-xs uppercase tracking-wider py-3.5 px-7 shadow-md flex items-center gap-2 transition-all active:scale-95"
             >
               <span>REQUEST CURRICULUM GUIDE</span>
               <ArrowRight className="w-4 h-4" />
@@ -250,7 +250,7 @@ export const Lgr22Page: React.FC<Lgr22PageProps> = ({
           <div className="pt-4 flex flex-wrap items-center gap-4">
             <button
               onClick={onOpenRegister}
-              className="btn-pill-lime text-xs sm:text-sm font-black py-3.5 px-8 flex items-center gap-2"
+              className="bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] font-syne font-black text-xs sm:text-sm uppercase tracking-wider py-3.5 px-8 flex items-center gap-2 shadow-md transition-all active:scale-95"
             >
               <span>PLAN A SCHOOL PROGRAMME</span>
               <ArrowRight className="w-4 h-4" />

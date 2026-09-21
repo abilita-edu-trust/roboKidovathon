@@ -308,6 +308,39 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
           </div>
         </div>
 
+        {/* ── ALTERNATIVE CTA: 3-STAGE QUALIFIER INTAKE ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="bg-white border-2 border-[#006AA7]/20 p-6 sm:p-8 shadow-lg flex flex-col lg:flex-row items-center justify-between gap-5 my-4"
+        >
+          <div className="space-y-1.5 text-center lg:text-left">
+            <span className="text-[10px] font-mono-code font-bold tracking-widest text-[#006AA7] uppercase block">
+              STAGE 01 · OCTOBER 2026 QUALIFIERS
+            </span>
+            <h4 className="font-headline font-black text-xl sm:text-2xl uppercase tracking-tight text-[#0A1930]">
+              Secure your school's slot in the 2026 tournament heats
+            </h4>
+            <p className="text-xs sm:text-sm text-slate-600 font-light max-w-xl">
+              Limited to participating schools in Västerås. Top 4 teams from each school qualify directly for the Grand Finale at Västerås Arena.
+            </p>
+          </div>
+
+          <div className="shrink-0 w-full lg:w-auto">
+            {onOpenRegister && (
+              <button
+                onClick={onOpenRegister}
+                className="w-full sm:w-auto px-7 py-4 bg-[#006AA7] hover:bg-[#005587] text-white font-syne font-black text-xs sm:text-sm uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 group active:scale-95"
+              >
+                <span>SECURE YOUR QUALIFIER SPOT</span>
+                <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </button>
+            )}
+          </div>
+        </motion.div>
+
         {/* ── SECTION FOOTER ── */}
         <div className="pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-slate-500 text-xs font-mono-code uppercase font-semibold">
           <span>PATHWAY: CLASSROOM (20H) ⟶ LOCAL QUALIFIER ⟶ VÄSTERÅS FINALS</span>

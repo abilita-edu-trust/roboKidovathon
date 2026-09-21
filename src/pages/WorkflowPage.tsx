@@ -213,6 +213,19 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
             <span className="text-[#FFCD00]">⟶</span>
             <span className="text-[#FFCD00]">CITY FINAL</span>
           </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-200">
+            <span className="text-xs text-slate-500 font-mono-code font-bold uppercase tracking-wider">
+              READY TO BRING THIS CURRICULUM TO YOUR CLASSROOM?
+            </span>
+            <button
+              onClick={onOpenRegister}
+              className="w-full sm:w-auto px-6 py-3 bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] font-syne font-black text-xs uppercase tracking-wider transition-all shadow-sm flex items-center justify-center gap-2 group active:scale-95"
+            >
+              <span>ENROL SCHOOL IN 20H WORKFLOW</span>
+              <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+            </button>
+          </div>
         </motion.div>
 
         {/* ── SECTION 1: DUAL LEARNING LEVELS (EXPLORER & ADVANCED) ── */}

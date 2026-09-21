@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, CheckCircle2, ChevronDown } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckCircle2, ChevronDown } from 'lucide-react';
 import {
   LEARNING_BLOCKS,
   LearningBlock,
@@ -169,6 +169,31 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
                 </div>
               </motion.div>
             ))}
+          </div>
+        </div>
+
+        {/* ── ALTERNATIVE CTA: JOURNEY INTAKE ── */}
+        <div className="bg-[#0A1930] text-white p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-5 border border-slate-800 shadow-xl">
+          <div className="space-y-1.5 text-center sm:text-left">
+            <span className="text-[10px] font-mono-code font-bold tracking-widest text-[#FFCD00] uppercase block">
+              STEP 01 IS REGISTRATION
+            </span>
+            <h3 className="font-headline font-black text-xl sm:text-2xl uppercase tracking-tight text-white">
+              Ready to embark on this 6-step journey?
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-300 font-light max-w-xl">
+              From free workshop kits delivered to your classroom to the live December 4 &amp; 5 finals in Västerås.
+            </p>
+          </div>
+
+          <div className="shrink-0 w-full sm:w-auto">
+            <button
+              onClick={onOpenRegister}
+              className="w-full sm:w-auto px-7 py-4 bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] font-syne font-black text-xs sm:text-sm uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 group active:scale-95"
+            >
+              <span>REGISTER FOR AUTUMN INTAKE</span>
+              <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+            </button>
           </div>
         </div>
 

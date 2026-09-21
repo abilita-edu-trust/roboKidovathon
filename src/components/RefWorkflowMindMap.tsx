@@ -17,9 +17,13 @@ import { Interactive3DTilt } from './Interactive3DTilt';
 
 interface RefWorkflowMindMapProps {
   onNavigate: (route: string) => void;
+  onOpenRegister?: () => void;
 }
 
-export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({ onNavigate }) => {
+export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({
+  onNavigate,
+  onOpenRegister,
+}) => {
   const [activeHover, setActiveHover] = useState<number | null>(null);
 
   const nodes = [
@@ -366,6 +370,39 @@ export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({ onNaviga
             })}
           </div>
         </div>
+
+        {/* ── ALTERNATIVE CTA: 20H STEM WORKFLOW INTAKE ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="bg-[#0A1930] text-white p-6 sm:p-8 border border-slate-800 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-5 my-6"
+        >
+          <div className="space-y-1.5 text-center sm:text-left">
+            <span className="text-[10px] font-mono-code font-bold tracking-widest text-[#FFCD00] uppercase block">
+              STEPS 01 TO 06 · IN-CLASS CURRICULUM
+            </span>
+            <h4 className="font-headline font-black text-xl sm:text-2xl uppercase tracking-tight text-white">
+              Ready to introduce this 20-hour workflow at your school?
+            </h4>
+            <p className="text-xs sm:text-sm text-slate-300 font-light max-w-xl">
+              All physical kits, lesson blueprints, and arena mats delivered directly to your classroom. No lab prerequisites.
+            </p>
+          </div>
+
+          <div className="shrink-0 w-full sm:w-auto flex flex-col sm:flex-row items-center gap-3">
+            {onOpenRegister && (
+              <button
+                onClick={onOpenRegister}
+                className="w-full sm:w-auto px-7 py-4 bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] font-syne font-black text-xs sm:text-sm uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 group active:scale-95"
+              >
+                <span>BOOK IN-CLASS WORKSHOP</span>
+                <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </button>
+            )}
+          </div>
+        </motion.div>
 
         {/* ── FOOTER RIBBON WITH TRANSITIONS ── */}
         <motion.div

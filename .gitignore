@@ -35,3 +35,6 @@ env.*
 src/assets/*.webm
 src/assets/*.mp4
 public/uhd_25fps.mp4
+
+# Supabase CLI temp files
+supabase/.temp/

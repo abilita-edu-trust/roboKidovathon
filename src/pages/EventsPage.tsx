@@ -154,7 +154,7 @@ export const EventsPage: React.FC<EventsPageProps> = ({
 
                   <button
                     onClick={onOpenRegister}
-                    className="btn-pill-lime text-xs font-black py-3 px-6 shadow-md flex items-center gap-2"
+                    className="bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] font-syne font-black text-xs uppercase tracking-wider py-3.5 px-6 shadow-md flex items-center gap-2 transition-all active:scale-95"
                   >
                     <span>{event.cta}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -176,7 +176,7 @@ export const EventsPage: React.FC<EventsPageProps> = ({
           <div className="pt-2">
             <button
               onClick={onOpenRegister}
-              className="btn-pill-lime text-xs sm:text-sm font-black py-3.5 px-8"
+              className="bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] font-syne font-black text-xs sm:text-sm uppercase tracking-wider py-3.5 px-8 shadow-md transition-all active:scale-95"
             >
               <span>REGISTER FOR AUTUMN 2026</span>
             </button>

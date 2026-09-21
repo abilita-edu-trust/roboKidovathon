@@ -88,7 +88,7 @@ export const RefFooter: React.FC<RefFooterProps> = ({
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.98 }}
               onClick={onOpenRegister}
-              className="btn-pill-lime text-xs font-black py-3 px-6 flex items-center gap-2 shadow-md"
+              className="bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] text-xs font-syne font-black py-3.5 px-6 flex items-center justify-center gap-2 shadow-md uppercase tracking-wider transition-all"
             >
               <span>REGISTER SCHOOL / TEAM</span>
               <ArrowRight className="w-3.5 h-3.5" />

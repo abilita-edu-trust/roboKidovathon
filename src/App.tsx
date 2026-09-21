@@ -65,7 +65,10 @@ export function App() {
             />
 
             {/* 04. Workflow Mind Map: From Parts to City Final */}
-            <RefWorkflowMindMap onNavigate={handleNavigate} />
+            <RefWorkflowMindMap
+              onNavigate={handleNavigate}
+              onOpenRegister={() => setIsRegisterOpen(true)}
+            />
 
             {/* 04. Top Three Cards: Robo Sprint / Robo Sprint Advanced / Robo Trials */}
             <RefTrackComparison
@@ -86,7 +89,10 @@ export function App() {
             />
 
             {/* 06. Tournament Highlights Photo Reel */}
-            <RefPhotoStrip />
+            <RefPhotoStrip
+              onOpenRegister={() => setIsRegisterOpen(true)}
+              onNavigate={handleNavigate}
+            />
 
             {/* 07. Main Conversion Anchor: Bring Hands-On STEM to Your School */}
             <RefWorkshopTapeBanner

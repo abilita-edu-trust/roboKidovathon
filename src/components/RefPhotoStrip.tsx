@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShieldCheck, Sparkles, Trophy, Landmark, X, Maximize2, Layers } from 'lucide-react';
+import { ShieldCheck, Sparkles, Trophy, Landmark, X, Maximize2, Layers, ArrowRight } from 'lucide-react';
 import {
   bannerActionStripCollage,
   roboSprintDuel,
@@ -10,7 +10,14 @@ import {
   CompetitionMediaItem,
 } from '../assets/images';
 
-export const RefPhotoStrip: React.FC = () => {
+interface RefPhotoStripProps {
+  onOpenRegister?: () => void;
+  onNavigate?: (route: string) => void;
+}
+
+export const RefPhotoStrip: React.FC<RefPhotoStripProps> = ({
+  onOpenRegister,
+}) => {
   const [selectedPhoto, setSelectedPhoto] = useState<CompetitionMediaItem | null>(null);
 
   const highlights = [
@@ -158,6 +165,42 @@ export const RefPhotoStrip: React.FC = () => {
             );
           })}
         </div>
+
+        {/* ── ALTERNATIVE CTA: ARENA HIGHLIGHTS TO REAL ENTRY ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="bg-gradient-to-r from-[#013A63] via-[#006AA7] to-[#013A63] text-white p-6 sm:p-8 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-5 border border-sky-600/30 my-4"
+        >
+          <div className="space-y-1.5 text-center sm:text-left">
+            <div className="flex items-center justify-center sm:justify-start gap-2 text-[#FFCD00]">
+              <Trophy className="w-4 h-4" />
+              <span className="text-[10px] font-mono-code font-bold uppercase tracking-widest">
+                2,000+ STUDENTS EMPOWERED ACROSS SWEDEN
+              </span>
+            </div>
+            <h4 className="font-headline font-black text-xl sm:text-2xl uppercase tracking-tight text-white">
+              Put your students on the official arena scoreboard
+            </h4>
+            <p className="text-xs sm:text-sm text-slate-200 font-light max-w-xl">
+              Turnkey materials, full mentor backing, and official scoring sheets provided. No prior robotics background needed.
+            </p>
+          </div>
+
+          <div className="shrink-0 w-full sm:w-auto">
+            {onOpenRegister && (
+              <button
+                onClick={onOpenRegister}
+                className="w-full sm:w-auto px-7 py-4 bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] font-syne font-black text-xs sm:text-sm uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 group active:scale-95"
+              >
+                <span>REGISTER SQUAD OR SCHOOL</span>
+                <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+              </button>
+            )}
+          </div>
+        </motion.div>
 
       </div>
 
