@@ -20,6 +20,7 @@ import {
   UserPlus,
   GraduationCap,
 } from 'lucide-react';
+import { VenueBanner } from './VenueBanner';
 
 interface RefTheExperienceProps {
   onNavigate: (route: string) => void;
@@ -494,6 +495,9 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
             VÄSTERÅS | 5 DECEMBER 2026
           </span>
         </div>
+
+        {/* ── 06. FINAL VENUE ── */}
+        <VenueBanner />
 
       </div>
     </section>
