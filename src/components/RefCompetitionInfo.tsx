@@ -305,7 +305,7 @@ export const RefCompetitionInfo: React.FC<RefCompetitionInfoProps> = ({
                 </div>
                 <div className="flex items-start gap-2">
                   <CheckCircle2 className="w-4 h-4 text-[#D97706] shrink-0 mt-0.5" />
-                  <span>Live interactive scoring with instant leaderboard at the December 4 &amp; 5 championship.</span>
+                  <span>Live interactive scoring with instant leaderboard at the December 5 championship.</span>
                 </div>
               </div>
             </div>

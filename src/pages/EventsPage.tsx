@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight, MapPin, Calendar } from 'lucide-react';
 import { UPCOMING_EVENTS, UpcomingEvent } from '../data/roboData';
+import { VenueBanner } from '../components/VenueBanner';
 
 interface EventsPageProps {
   onNavigateHome: () => void;
@@ -47,7 +48,7 @@ export const EventsPage: React.FC<EventsPageProps> = ({
           </h1>
 
           <p className="mt-4 text-sm sm:text-base text-slate-600 font-light max-w-2xl leading-relaxed">
-            A clear timeline of the autumn season in Västerås: in-school qualifiers in October, the official Robo-Sprint City Final on December 4 &amp; 5, and the Saturday innovation hackathon.
+            A clear timeline of the autumn season in Västerås: in-school qualifiers in October, then the Robo-Sprint City Final and the Young Innovators Hackathon together on December 5, 2026 at Mälardalen International School.
           </p>
         </motion.div>
 
@@ -164,6 +165,9 @@ export const EventsPage: React.FC<EventsPageProps> = ({
             </motion.div>
           ))}
         </div>
+
+        {/* ── FINAL VENUE ── */}
+        <VenueBanner />
 
         {/* ── BOTTOM FAQ BANNER ── */}
         <div className="p-8 sm:p-12 bg-[#013A63] text-white text-center space-y-4">

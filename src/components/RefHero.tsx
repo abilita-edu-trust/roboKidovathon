@@ -79,7 +79,7 @@ export const RefHero: React.FC<RefHeroProps> = ({
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FFCD00] opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FFCD00]"></span>
               </span>
-              <span>4–5 DECEMBER 2026 · VÄSTERÅS, SWEDEN</span>
+              <span>5 DECEMBER 2026 · VÄSTERÅS, SWEDEN</span>
             </motion.div>
 
             {/* Main headline - refined & compact */}
@@ -136,7 +136,7 @@ export const RefHero: React.FC<RefHeroProps> = ({
               { label: 'PROGRAMME', value: '20H STEM' },
               { label: 'LGR22', value: 'CURRICULUM FIT' },
               { label: 'ARENA', value: '244 × 122 CM' },
-              { label: 'FINAL DATE', value: 'DEC 4 & 5, 2026' },
+              { label: 'FINAL DATE', value: 'DEC 5, 2026' },
             ].map((fact) => (
               <motion.div
                 key={fact.label}

@@ -82,7 +82,7 @@ export const RefFooter: React.FC<RefFooterProps> = ({
               ENROL COHORT
             </span>
             <p className="text-xs text-slate-300 font-light leading-relaxed">
-              Registrations for Västerås schools and student cohorts are open ahead of the October qualifiers and December 4 & 5, 2026 Grand Finale.
+              Registrations for Västerås schools and student cohorts are open ahead of the October qualifiers and December 5, 2026 Grand Finale.
             </p>
             <motion.button
               whileHover={{ scale: 1.03 }}

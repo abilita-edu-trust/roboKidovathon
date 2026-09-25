@@ -49,7 +49,7 @@ export const RefTapeBanner: React.FC<RefTapeBannerProps> = ({
 
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pt-6 border-t border-white/15">
             <span className="font-headline font-black text-xl sm:text-2xl tracking-wider text-slate-300 uppercase">
-              VÄSTERÅS GRAND FINALE · DECEMBER 4 & 5, 2026
+              VÄSTERÅS GRAND FINALE · DECEMBER 5, 2026
             </span>
 
             <div className="flex flex-wrap items-center gap-3">

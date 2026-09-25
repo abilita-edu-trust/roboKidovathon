@@ -125,7 +125,7 @@ export const STATS_DATA = [
   { value: '4', label: 'HOST PARTNERS', sub: 'IBK · INIAC · SKILLSKOLAN · BLIX', accent: 'text-[#006AA7]' },
   { value: '20H', label: 'STEM PROJECT', sub: '10 SESSIONS · BUILD TO COMPETE', accent: 'text-[#0A1930]' },
   { value: 'SEK 3,000', label: 'PRIZE POOL', sub: '1,200 EXPLORER + 1,800 ADVANCED', accent: 'text-[#006AA7]' },
-  { value: 'DEC 4 & 5', label: 'GRAND FINALE', sub: 'VÄSTERÅS, SWEDEN · 2026', accent: 'text-[#0A1930]' },
+  { value: 'DEC 5', label: 'GRAND FINALE', sub: 'VÄSTERÅS, SWEDEN · 2026', accent: 'text-[#0A1930]' },
 ];
 
 export const PARTNER_LOGOS: PartnerLogo[] = [
@@ -318,7 +318,7 @@ export const ROADMAP_STEPS: RoadmapStep[] = [
     tag: 'STAGE 05 // CELEBRATE',
     title: 'CELEBRATE',
     subtitle: 'Västerås Future Innovators — Robo-Sprint City Final',
-    description: 'Qualifying teams face off at the Robo-Sprint City Final on December 4 & 5, 2026 — an inter-school competition and innovation showcase with SEK 3,000 in prizes, trophies, and certificates.',
+    description: 'Qualifying teams face off at the Robo-Sprint City Final on December 5, 2026 — an inter-school competition and innovation showcase with SEK 3,000 in prizes, trophies, and certificates.',
     isMilestone: true,
     badge: 'GRAND FINALE'
   }
@@ -341,8 +341,8 @@ export const CHAMPIONSHIP_STAGES: ChampionshipStage[] = [
     stageCode: 'STAGE 02',
     title: 'VÄSTERÅS FUTURE INNOVATORS ROBO-SPRINT CITY FINAL',
     subtitle: 'INTER-SCHOOL COMPETITION & SHOWCASE',
-    date: 'DECEMBER 4 & 5, 2026',
-    location: 'VÄSTERÅS, SWEDEN',
+    date: 'DECEMBER 5, 2026',
+    location: 'MÄLARDALEN INTERNATIONAL SCHOOL, VÄSTERÅS',
     description: 'Winning school teams compete live in the Robo-Sprint arena for cash prizes, trophies, and certificates, alongside an innovation and robotics showcase.',
     advancement: 'SEK 3,000 AWARDED — 1,200 EXPLORER + 1,800 ADVANCED',
     active: true
@@ -352,11 +352,11 @@ export const CHAMPIONSHIP_STAGES: ChampionshipStage[] = [
 export const UPCOMING_EVENTS: UpcomingEvent[] = [
   {
     id: 'robokidovation-final',
-    date: 'DECEMBER 4 & 5, 2026',
-    day: 'DECEMBER 4 & 5',
+    date: 'DECEMBER 5, 2026',
+    day: 'SATURDAY · DEC 5',
     title: 'Västerås Future Innovators — Robo-Sprint City Final',
     subtitle: 'Explorer (Grades 3–6) & Advanced (Grades 7–9) Championships',
-    location: 'Västerås, Sweden',
+    location: 'Mälardalen International School, Västerås',
     description: 'School champions from the autumn STEM project compete live in the Robo-Sprint arena, judged across match performance, engineering design, teamwork and technical explanation.',
     categories: ['Grades 3–6', 'Grades 7–9'],
     cta: 'REGISTER YOUR SCHOOL',
@@ -367,8 +367,8 @@ export const UPCOMING_EVENTS: UpcomingEvent[] = [
     date: 'DECEMBER 5, 2026',
     day: 'SATURDAY · DEC 5',
     title: 'Young Innovators Hackathon',
-    subtitle: 'Proposed at Mälardalen University (MDU), Västerås',
-    location: 'Mälardalen University, Västerås',
+    subtitle: 'At Mälardalen International School, Västerås',
+    location: 'Mälardalen International School, Västerås',
     description: 'A one-day interdisciplinary innovation challenge where student teams tackle a real-world problem — sustainable cities, climate and environment, future schools, energy, accessibility, health, AI or technology for society — and present a concept, model, prototype or digital solution to a jury. Unlike the robotics track, no previous robotics experience is required, so students interested in science, technology, design, creativity or entrepreneurship can take part.',
     curriculumNote: 'For grundskolan, the hackathon supports the broader intentions of Lgr22 by giving students opportunities to use creativity, curiosity, initiative, problem-solving and collaboration in a practical context, following the technology-development process from identifying a need through construction, testing and evaluation. For gymnasium students, it can complement Gy25 through project-based problem-solving, technical development, programming and interdisciplinary work — fitting well with the Technology Programme, where technical processes and links between technology and societal development are important elements.',
     cta: 'ASK ABOUT THE HACKATHON',
@@ -405,7 +405,7 @@ export const WHY_SCHOOLS_PARTICIPATE: WhyParticipateReason[] = [
   {
     title: 'School-To-City Pathway',
     desc: 'Students can represent their school beyond the classroom.',
-    detail: 'Winning Explorer and Advanced teams from each school\'s Robo-Sprint qualifiers advance directly to the Västerås Future Innovators Robo-Sprint City Final on December 4 & 5, 2026.',
+    detail: 'Winning Explorer and Advanced teams from each school\'s Robo-Sprint qualifiers advance directly to the Västerås Future Innovators Robo-Sprint City Final on December 5, 2026.',
   },
 ];
 
@@ -509,7 +509,7 @@ export const LEARNING_BLOCKS: LearningBlock[] = [
   {
     tag: 'COMPETE',
     desc: 'Apply the learning through Västerås Future Innovators',
-    detail: 'Sessions 9–10 close with documentation and presentation prep, then School Robo-Sprint qualifiers — winning teams represent their school at the Robo-Sprint City Final on December 4 & 5, 2026.',
+    detail: 'Sessions 9–10 close with documentation and presentation prep, then School Robo-Sprint qualifiers — winning teams represent their school at the Robo-Sprint City Final on December 5, 2026.',
   },
 ];
 
@@ -541,7 +541,7 @@ export const FAQ_ITEMS: FAQItem[] = [
   {
     id: 'faq-5',
     question: 'What is the competition structure?',
-    answer: 'Stage 1 is the RoboSkolan Robo League qualifiers, held within each school across the 20-hour STEM project in October 2026. One winning Explorer team and one winning Advanced team from each school advance directly to the Västerås Future Innovators Robo-Sprint City Final on December 4 & 5, 2026.',
+    answer: 'Stage 1 is the RoboSkolan Robo League qualifiers, held within each school across the 20-hour STEM project in October 2026. One winning Explorer team and one winning Advanced team from each school advance directly to the Västerås Future Innovators Robo-Sprint City Final on December 5, 2026.',
     category: 'Schools & Fees'
   },
   {

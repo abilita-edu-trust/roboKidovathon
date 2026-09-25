@@ -22,7 +22,7 @@ const WHY_SCHOOLS_PARTICIPATE = [
   },
   {
     title: 'School-to-City Pathway',
-    desc: 'School qualifiers feed directly into the Västerås City Final on December 4 & 5, 2026.',
+    desc: 'School qualifiers feed directly into the Västerås City Final on December 5, 2026.',
     detail: 'Winning Explorer (Grades 3–6) and Advanced (Grades 7–9) teams represent their school in a high-stakes municipal showdown with SEK 3,000 in prizes and certificates.',
   },
 ];
@@ -95,7 +95,7 @@ export const ForSchoolsPage: React.FC<ForSchoolsPageProps> = ({
     {
       num: '03',
       title: 'RUN PROJECT & QUALIFY',
-      desc: 'Students complete the 10-session project, run in-school qualifiers in October, and top teams advance to the December 4 & 5 Final.',
+      desc: 'Students complete the 10-session project, run in-school qualifiers in October, and top teams advance to the December 5 Final.',
     },
   ];
 
@@ -371,7 +371,7 @@ export const ForSchoolsPage: React.FC<ForSchoolsPageProps> = ({
               REGISTER YOUR SCHOOL COHORT
             </h3>
             <p className="text-xs sm:text-sm text-[#0A1930]/80 font-medium max-w-lg">
-              Intake for schools in Västerås is open for the 2026 season ahead of the October in-school qualifiers and December 4 & 5 City Final.
+              Intake for schools in Västerås is open for the 2026 season ahead of the October in-school qualifiers and December 5 City Final.
             </p>
           </div>
 

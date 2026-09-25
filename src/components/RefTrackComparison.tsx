@@ -290,7 +290,7 @@ export const RefTrackComparison: React.FC<RefTrackComparisonProps> = ({
         {/* ── SECTION FOOTER RIBBON ── */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-slate-200 text-[11px] font-mono-code text-slate-500 font-bold uppercase tracking-widest">
           <span>VÄSTERÅS FUTURE INNOVATORS 2026 · OFFICIAL COMPETITION LEAGUE</span>
-          <span className="hidden sm:inline">DECEMBER 4 & 5, 2026 · STANDARDIZED LGR22 FORMAT</span>
+          <span className="hidden sm:inline">DECEMBER 5, 2026 · STANDARDIZED LGR22 FORMAT</span>
         </div>
 
       </div>

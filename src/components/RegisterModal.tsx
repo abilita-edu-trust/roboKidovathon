@@ -306,8 +306,8 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose })
                         <option value="16 – 27 November 2026 (Selection of 4 Teams)">
                           16 – 27 November 2026 (Team Selection)
                         </option>
-                        <option value="4 December 2026 (Västerås RoboKidovation Final)">
-                          4 December 2026 (RoboKidovation Final)
+                        <option value="5 December 2026 (Västerås RoboKidovation Final)">
+                          5 December 2026 (RoboKidovation Final)
                         </option>
                         <option value="5 December 2026 (Young Innovators Hackathon Final)">
                           5 December 2026 (Hackathon Final)

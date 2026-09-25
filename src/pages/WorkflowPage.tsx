@@ -129,10 +129,10 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
     {
       step: '06',
       title: 'City Final',
-      subtitle: 'Dec 4 & 5 Grand Finale',
+      subtitle: 'Dec 5 Grand Finale',
       icon: Award,
       desc: 'Selected teams represent their school and meet students from other schools in Västerås.',
-      tag: 'DECEMBER 4 & 5 GRAND FINALE',
+      tag: 'DECEMBER 5 GRAND FINALE',
       color: '#FFCD00',
       isFinal: true,
       hoverCardClass: 'hover:bg-[#FFCD00] hover:border-[#FFCD00] hover:shadow-[0_14px_34px_rgba(255,205,0,0.38)]',
@@ -240,7 +240,7 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
           <div className="flex items-center justify-between flex-wrap gap-3 pb-6 border-b border-slate-100">
             <div className="inline-flex items-center gap-3">
               <span className="bg-[#0A1930] text-white px-4 py-2 text-xs sm:text-sm font-mono-code font-black tracking-wider uppercase">
-                4 DECEMBER 2026
+                5 DECEMBER 2026
               </span>
               <span className="bg-[#FFCD00] text-[#0A1930] px-4 py-2 text-xs sm:text-sm font-mono-code font-black tracking-wider uppercase">
                 ROBOKIDOVATION

@@ -61,7 +61,7 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
       badge: 'STAGE 03 · FINALS',
       title: 'GRAND FINALE',
       tagline: 'Compete at the highest level.',
-      timing: 'DECEMBER 4 & 5, 2026',
+      timing: 'DECEMBER 5, 2026',
       icon: Trophy,
       image: roboPrecisionArenaEmpty,
       imageTag: 'CHAMPIONSHIP VENUE',
@@ -69,7 +69,7 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
       description:
         'Qualifying school cohorts battle live in Västerås for medals, trophies, and the grand title.',
       specs: [
-        { label: 'VENUE', value: 'Västerås Arena' },
+        { label: 'VENUE', value: 'Mälardalen International School' },
         { label: 'PRIZE POOL', value: 'SEK 3,000' },
         { label: 'SHOWCASE', value: 'Live Audience Heats' },
       ],
@@ -271,7 +271,7 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
                         <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider block">
                           {spec.label}
                         </span>
-                        <span className="text-[11px] font-bold block truncate">
+                        <span className="text-[11px] font-bold block truncate" title={spec.value}>
                           {spec.value}
                         </span>
                       </div>
@@ -324,7 +324,7 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
               Secure your school's slot in the 2026 tournament heats
             </h4>
             <p className="text-xs sm:text-sm text-slate-600 font-light max-w-xl">
-              Limited to participating schools in Västerås. Top 4 teams from each school qualify directly for the Grand Finale at Västerås Arena.
+              Limited to participating schools in Västerås. Top 4 teams from each school qualify directly for the Grand Finale at Mälardalen International School.
             </p>
           </div>
 
@@ -344,7 +344,7 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
         {/* ── SECTION FOOTER ── */}
         <div className="pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-slate-500 text-xs font-mono-code uppercase font-semibold">
           <span>PATHWAY: CLASSROOM (20H) ⟶ LOCAL QUALIFIER ⟶ VÄSTERÅS FINALS</span>
-          <span>DECEMBER 4 & 5, 2026 · LIVE AUDIENCE EVENT</span>
+          <span>DECEMBER 5, 2026 · LIVE AUDIENCE EVENT</span>
         </div>
 
       </div>

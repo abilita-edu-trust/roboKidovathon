@@ -7,6 +7,7 @@ import { RefWorkflowMindMap } from './components/RefWorkflowMindMap';
 import { RefTrackComparison } from './components/RefTrackComparison';
 import { RefKioskShowcase } from './components/RefKioskShowcase';
 import { RefCompetitionFlow } from './components/RefCompetitionFlow';
+import { VenueBanner } from './components/VenueBanner';
 import { RefPhotoStrip } from './components/RefPhotoStrip';
 import { RefWorkshopTapeBanner } from './components/RefWorkshopTapeBanner';
 import { RefFooter } from './components/RefFooter';
@@ -87,6 +88,13 @@ export function App() {
               onOpenRegister={() => setIsRegisterOpen(true)}
               onNavigate={handleNavigate}
             />
+
+            {/* 05b. Final Venue */}
+            <section className="w-full bg-white text-[#0A1930] py-16 sm:py-20 px-3 sm:px-6 border-t border-slate-200">
+              <div className="max-w-[1440px] mx-auto">
+                <VenueBanner />
+              </div>
+            </section>
 
             {/* 06. Tournament Highlights Photo Reel */}
             <RefPhotoStrip

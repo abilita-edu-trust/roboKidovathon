@@ -89,7 +89,7 @@ export const RoboFooter: React.FC<RoboFooterProps> = ({ onNavigate, onOpenFaq })
                 </button>
               </li>
               <li>
-                <span className="text-slate-500">CITY FINALS (ABB VENUE)</span>
+                <span className="text-slate-500">CITY FINALS (MÄLARDALEN INTERNATIONAL SCHOOL)</span>
               </li>
               <li>
                 <span className="text-slate-500">STOCKHOLM SHOWDOWN</span>

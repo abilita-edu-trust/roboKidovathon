@@ -105,7 +105,7 @@ export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({
     {
       step: '06',
       title: 'City Final',
-      subtitle: 'Dec 4 & 5, 2026',
+      subtitle: 'Dec 5, 2026',
       detail: 'Championship live in Västerås',
       icon: Award,
       color: '#FFCD00',

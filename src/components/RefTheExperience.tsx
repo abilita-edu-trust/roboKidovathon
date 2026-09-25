@@ -30,88 +30,90 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
   onNavigate,
   onOpenRegister,
 }) => {
-  // Step definitions for RoboKidovation (Blue)
+  // Step definitions for RoboKidovation (Blue) — matches the official Västerås Future
+  // Innovators Robokidovation 2026 timeline flyer (School Demo → Final)
   const roboSteps = [
     {
       num: 1,
       title: 'School Demo',
-      subtitle: 'Intro session at your school',
+      subtitle: 'See the robots, try simple challenges',
       date: '7 – 25 September 2026',
       icon: Presentation,
       highlight: false,
     },
     {
       num: 2,
-      title: 'Workshop',
-      subtitle: 'Hands-on robotics workshop',
+      title: 'Hands-On Workshop',
+      subtitle: 'Learn and build with real robots',
       date: '1 – 9 October 2026',
       icon: Cpu,
       highlight: false,
     },
     {
       num: 3,
-      title: 'Build & Practice',
-      subtitle: 'Test, improve and learn',
+      title: 'Team Formation',
+      subtitle: 'Form teams and start practising',
       date: '12 – 30 October 2026',
-      icon: Wrench,
-      highlight: false,
-    },
-    {
-      num: 4,
-      title: 'School Finals',
-      subtitle: 'Internal school competition',
-      date: '2 – 13 November 2026',
       icon: Users,
       highlight: false,
     },
     {
-      num: 5,
-      title: 'Select 4 Teams',
-      subtitle: 'Top teams qualify for Västerås Final',
-      date: '16 – 27 November 2026',
+      num: 4,
+      title: 'School Qualification',
+      subtitle: 'Internal challenge to select best teams',
+      date: '2 – 13 November 2026',
       icon: Award,
       highlight: false,
     },
     {
+      num: 5,
+      title: 'Final Preparation',
+      subtitle: 'Practise and get final-ready',
+      date: '16 November – 4 December 2026',
+      icon: Wrench,
+      highlight: false,
+    },
+    {
       num: 6,
-      title: 'Västerås Final',
-      subtitle: 'Compete at Future Innovators',
-      date: '4 December 2026',
+      title: 'Västerås Future Innovators Final',
+      subtitle: 'Compete, showcase & celebrate innovation',
+      date: '5 December 2026',
       icon: Trophy,
       highlight: true,
     },
   ];
 
-  // Step definitions for Young Innovators Hackathon (Green)
+  // Step definitions for Young Innovators Hackathon (Green) — matches the official
+  // Track 2 Young Innovators Hackathon flyer (Listen → Select → Connect → Build → Demonstrate)
   const hackathonSteps = [
     {
       num: 1,
-      title: 'Discover',
-      subtitle: 'Explore real-world challenges',
+      title: 'Listen',
+      subtitle: 'Collect ideas from schools',
       date: '7 – 25 September 2026',
       icon: Compass,
       highlight: false,
     },
     {
       num: 2,
-      title: 'Form Teams',
-      subtitle: 'Build teams and choose themes',
+      title: 'Select',
+      subtitle: 'Identify key challenges',
       date: '1 – 16 October 2026',
-      icon: UserPlus,
-      highlight: false,
-    },
-    {
-      num: 3,
-      title: 'Define the Problem',
-      subtitle: 'Research and understand the need',
-      date: '19 – 30 October 2026',
       icon: Search,
       highlight: false,
     },
     {
+      num: 3,
+      title: 'Connect',
+      subtitle: 'Form mixed teams with mentors',
+      date: '19 – 30 October 2026',
+      icon: UserPlus,
+      highlight: false,
+    },
+    {
       num: 4,
-      title: 'Develop Idea',
-      subtitle: 'Create concept or prototype',
+      title: 'Build',
+      subtitle: 'Turn ideas into a prototype',
       date: '2 – 20 November 2026',
       icon: Layers,
       highlight: false,
@@ -119,15 +121,15 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
     {
       num: 5,
       title: 'Prepare Pitch',
-      subtitle: 'Refine solution and presentation',
-      date: '23 Nov – 3 Dec 2026',
+      subtitle: 'Refine your solution and pitch',
+      date: '23 November – 4 December 2026',
       icon: LineChart,
       highlight: false,
     },
     {
       num: 6,
-      title: 'Hackathon Day',
-      subtitle: 'Present to jury and win',
+      title: 'Demonstrate',
+      subtitle: 'Present to the jury and win',
       date: '5 December 2026',
       icon: Rocket,
       highlight: true,
@@ -282,7 +284,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
                     <Target className="w-5 h-5" />
                   </div>
                   <p className="text-xs sm:text-sm text-[#0A1930] leading-snug font-medium">
-                    From school workshops and internal competitions, we select <span className="font-bold text-[#006AA7]">4 teams</span> to represent each school at the Västerås RoboKidovation Final on <span className="font-bold text-[#006AA7]">4 December 2026</span>.
+                    From school workshops and internal competitions, we select <span className="font-bold text-[#006AA7]">4 teams</span> to represent each school at the Västerås RoboKidovation Final on <span className="font-bold text-[#006AA7]">5 December 2026</span>.
                   </p>
                 </div>
 
@@ -489,7 +491,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
           </div>
 
           <span className="font-bold text-[#006AA7] tracking-wider">
-            VÄSTERÅS | 4–5 DECEMBER 2026
+            VÄSTERÅS | 5 DECEMBER 2026
           </span>
         </div>
 

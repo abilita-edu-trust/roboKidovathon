@@ -142,9 +142,9 @@ export const AboutPage: React.FC<AboutPageProps> = ({
             <div className="p-4 bg-[#F8FAFC] border border-slate-200 flex items-center justify-between text-xs font-mono-code text-slate-500">
               <span className="flex items-center gap-1.5">
                 <MapPin className="w-4 h-4 text-[#006AA7]" />
-                <span>VÄSTERÅS, SWEDEN</span>
+                <span>MÄLARDALEN INTERNATIONAL SCHOOL, VÄSTERÅS</span>
               </span>
-              <span className="font-bold text-[#0A1930]">DECEMBER 4 &amp; 5, 2026</span>
+              <span className="font-bold text-[#0A1930]">DECEMBER 5, 2026</span>
             </div>
           </motion.div>
         </div>
@@ -173,11 +173,11 @@ export const AboutPage: React.FC<AboutPageProps> = ({
                     className="max-h-12 w-auto object-contain"
                   />
                 </div>
-                <div className="space-y-1">
-                  <h3 className="font-headline font-bold text-sm text-[#0A1930] uppercase">
+                <div className="space-y-1.5">
+                  <h3 className="font-headline font-bold text-base text-[#0A1930] uppercase">
                     {partner.name}
                   </h3>
-                  <span className="text-[11px] font-mono-code font-bold text-[#006AA7] block uppercase">
+                  <span className="text-xs font-mono-code font-bold text-[#006AA7] block uppercase">
                     {partner.role}
                   </span>
                 </div>

@@ -27,7 +27,7 @@ export const RefManifesto: React.FC<RefManifestoProps> = ({ onNavigate }) => {
     },
     {
       icon: Trophy,
-      title: 'Grand Finale, Dec 4 & 5',
+      title: 'Grand Finale, Dec 5',
       badge: 'CITY FINAL · SEK 3,000',
       desc: 'School qualifier champions compete live in Västerås for SEK 3,000 in prizes, trophies, and certificates.',
       action: 'Event Details',
@@ -163,7 +163,7 @@ export const RefManifesto: React.FC<RefManifestoProps> = ({ onNavigate }) => {
                   alt={logo.name}
                   className="h-9 sm:h-11 w-auto object-contain transition-all"
                 />
-                <span className="text-[9px] font-mono-code text-slate-500 uppercase tracking-wide">
+                <span className="text-[11px] font-mono-code text-slate-500 uppercase tracking-wide">
                   {logo.role}
                 </span>
               </motion.div>

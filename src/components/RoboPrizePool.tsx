@@ -16,7 +16,7 @@ export const RoboPrizePool: React.FC<RoboPrizePoolProps> = ({ onOpenRegister }) 
             08 / CHAMPIONSHIP ALLOCATIONS
           </span>
           <span className="text-[10px] font-mono-code text-slate-400 uppercase tracking-widest hidden sm:inline">
-            VÄSTERÅS CITY FINALS · ABB VENUE
+            VÄSTERÅS CITY FINALS · MÄLARDALEN INTERNATIONAL SCHOOL
           </span>
         </div>
 
