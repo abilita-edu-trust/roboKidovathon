@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ArrowRight, ShieldCheck, Mail, MapPin } from 'lucide-react';
+import { Menu, X, ArrowRight, ShieldCheck, Mail, MapPin, Globe } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 interface NavbarProps {
   activeTab: string;
@@ -17,6 +18,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [contactModalOpen, setContactModalOpen] = useState(false);
+  const { language, setLanguage, toggleLanguage } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,11 +41,11 @@ export const Navbar: React.FC<NavbarProps> = ({
   }, [mobileMenuOpen]);
 
   const navLinks = [
-    { id: 'challenges', label: 'Competition' },
-    { id: 'workflow', label: 'Workflow' },
-    { id: 'events', label: 'Events' },
-    { id: 'about', label: 'About' },
-    { id: 'contact', label: 'Contact' },
+    { id: 'challenges', label: language === 'sv' ? 'Tävling' : 'Competition' },
+    { id: 'workflow', label: language === 'sv' ? 'Arbetsflöde' : 'Workflow' },
+    { id: 'events', label: language === 'sv' ? 'Evenemang' : 'Events' },
+    { id: 'about', label: language === 'sv' ? 'Om oss' : 'About' },
+    { id: 'contact', label: language === 'sv' ? 'Kontakt' : 'Contact' },
   ];
 
   const handleLinkClick = (id: string) => {
@@ -140,29 +142,87 @@ export const Navbar: React.FC<NavbarProps> = ({
             })}
           </nav>
 
-          {/* Action Button (Right) */}
-          <div className="hidden sm:flex items-center gap-3">
+          {/* Action Button & Swedish Language Toggle (Right) */}
+          <div className="hidden sm:flex items-center gap-2.5">
+            {/* Swedish / English Language Switcher Pill */}
+            <div
+              className={`flex items-center p-0.5 transition-all duration-300 ${
+                isDarkHeader
+                  ? 'bg-black/40 border border-white/20 text-white backdrop-blur-sm'
+                  : 'bg-slate-100 border border-slate-200 text-[#0A1930]'
+              }`}
+            >
+              <button
+                type="button"
+                onClick={() => setLanguage('sv')}
+                className={`relative flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono-code font-bold transition-all ${
+                  language === 'sv'
+                    ? 'bg-[#006AA7] text-white shadow-xs'
+                    : isDarkHeader
+                    ? 'text-white/70 hover:text-white hover:bg-white/10'
+                    : 'text-slate-600 hover:text-[#0A1930] hover:bg-slate-200/60'
+                }`}
+                title="Växla hela webbplatsen till svenska"
+                aria-label="Byt språk till svenska"
+              >
+                <span className="text-xs leading-none">🇸🇪</span>
+                <span>SV</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setLanguage('en')}
+                className={`relative flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono-code font-bold transition-all ${
+                  language === 'en'
+                    ? 'bg-[#0A1930] text-white shadow-xs'
+                    : isDarkHeader
+                    ? 'text-white/70 hover:text-white hover:bg-white/10'
+                    : 'text-slate-600 hover:text-[#0A1930] hover:bg-slate-200/60'
+                }`}
+                title="Switch whole site to English"
+                aria-label="Switch language to English"
+              >
+                <span className="text-xs leading-none">🇬🇧</span>
+                <span>EN</span>
+              </button>
+            </div>
+
             <motion.button
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.96 }}
               onClick={onOpenRegister}
               className="btn-pill-lime text-xs font-black py-2.5 px-5 transition-all duration-200 shadow-md flex items-center gap-2 group relative overflow-hidden"
             >
-              <span>REGISTER SCHOOL / TEAM</span>
+              <span>{language === 'sv' ? 'REGISTRERA SKOLA / LAG' : 'REGISTER SCHOOL / TEAM'}</span>
               <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
             </motion.button>
           </div>
 
-          {/* Mobile Hamburger Button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className={`lg:hidden p-2 rounded-lg focus:outline-none transition-colors ${
-              isDarkHeader ? 'text-white hover:bg-white/10' : 'text-[#0A1930] hover:bg-slate-100'
-            }`}
-            aria-label="Toggle navigation menu"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          {/* Mobile Right Controls: Fast Language Button + Hamburger */}
+          <div className="flex sm:hidden items-center gap-2">
+            <button
+              type="button"
+              onClick={toggleLanguage}
+              className={`px-2.5 py-1.5 text-xs font-mono-code font-bold border flex items-center gap-1.5 transition-colors ${
+                isDarkHeader
+                  ? 'bg-black/30 border-white/20 text-white hover:bg-white/15'
+                  : 'bg-slate-100 border-slate-200 text-[#0A1930] hover:bg-slate-200'
+              }`}
+              title={language === 'sv' ? 'Byt till engelska' : 'Byt till svenska'}
+              aria-label="Växla språk"
+            >
+              <span>{language === 'sv' ? '🇸🇪 SV' : '🇬🇧 EN'}</span>
+            </button>
+
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className={`p-2 rounded-lg focus:outline-none transition-colors ${
+                isDarkHeader ? 'text-white hover:bg-white/10' : 'text-[#0A1930] hover:bg-slate-100'
+              }`}
+              aria-label="Toggle navigation menu"
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
 
         </div>
 
@@ -200,6 +260,38 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </div>
 
                 <div className="pt-2 border-t border-slate-100 space-y-3">
+                  {/* Mobile Language Selector Card */}
+                  <div className="p-3 bg-slate-50 border border-slate-200 flex items-center justify-between gap-2">
+                    <span className="text-xs font-display font-medium text-slate-700 flex items-center gap-1.5">
+                      <Globe className="w-3.5 h-3.5 text-[#006AA7]" />
+                      <span>{language === 'sv' ? 'Språk / Language' : 'Language / Språk'}:</span>
+                    </span>
+                    <div className="flex items-center p-0.5 bg-slate-200 border border-slate-300">
+                      <button
+                        type="button"
+                        onClick={() => setLanguage('sv')}
+                        className={`flex items-center gap-1 px-3 py-1 text-xs font-mono-code font-bold transition-all ${
+                          language === 'sv'
+                            ? 'bg-[#006AA7] text-white shadow-xs'
+                            : 'text-slate-700 hover:text-[#0A1930]'
+                        }`}
+                      >
+                        <span>🇸🇪 SV</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setLanguage('en')}
+                        className={`flex items-center gap-1 px-3 py-1 text-xs font-mono-code font-bold transition-all ${
+                          language === 'en'
+                            ? 'bg-[#0A1930] text-white shadow-xs'
+                            : 'text-slate-700 hover:text-[#0A1930]'
+                        }`}
+                      >
+                        <span>🇬🇧 EN</span>
+                      </button>
+                    </div>
+                  </div>
+
                   <button
                     onClick={() => {
                       setMobileMenuOpen(false);
@@ -207,12 +299,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                     }}
                     className="w-full btn-pill-lime py-3.5 text-xs font-black flex items-center justify-center gap-2 shadow-md"
                   >
-                    <span>REGISTER SCHOOL / TEAM</span>
+                    <span>{language === 'sv' ? 'REGISTRERA SKOLA / LAG' : 'REGISTER SCHOOL / TEAM'}</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
 
-                  <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-[11px] font-mono-code text-slate-500 text-center">
-                    Västerås, Sweden · Autumn 2026 Season
+                  <div className="p-3 bg-slate-50 border border-slate-200 text-[11px] font-mono-code text-slate-500 text-center">
+                    {language === 'sv'
+                      ? 'Västerås, Sverige · Höstterminen 2026'
+                      : 'Västerås, Sweden · Autumn 2026 Season'}
                   </div>
                 </div>
               </div>
