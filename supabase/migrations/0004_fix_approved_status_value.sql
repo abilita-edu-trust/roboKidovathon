@@ -5,7 +5,9 @@
 -- admin approves a registration, not 'approved'. The views from migration
 -- 0002 filtered on 'approved', so they never matched anything live.
 
-create or replace view approved_schools as
+-- Dropped first: 0005 adds columns, and CREATE OR REPLACE cannot remove them on a re-run.
+drop view if exists approved_schools;
+create view approved_schools as
   select distinct school_name
   from registrations
   where registration_type = 'school'
@@ -23,3 +25,5 @@ create or replace view registration_stats as
     ), 0) as students_count
   from registrations
   where status = 'confirmed';
+
+grant select on approved_schools to anon, authenticated;

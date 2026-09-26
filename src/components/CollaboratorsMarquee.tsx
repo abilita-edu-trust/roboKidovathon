@@ -1,7 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useInView } from 'framer-motion';
-import { School } from 'lucide-react';
+import { CalendarClock, School } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+
+interface ApprovedSchool {
+  school_name: string;
+  preferred_date?: string | null;
+  workshop_slot?: string | null;
+  time_range?: string | null;
+}
 
 interface RegistrationStats {
   schools_count: number;
@@ -46,19 +53,47 @@ const CountUpStat: React.FC<{ target: number; label: string; inView: boolean; ac
   );
 };
 
-const SchoolChip: React.FC<{ name: string }> = ({ name }) => (
-  <div className="flex-shrink-0 group flex items-center gap-3 px-6 py-3.5 sm:py-4 bg-[#0A1930] hover:bg-[#006AA7] border border-[#0A1930] shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5">
-    <div className="w-8 h-8 sm:w-9 sm:h-9 bg-white/10 flex items-center justify-center text-[#FFCD00] shrink-0">
-      <School className="w-4 h-4 sm:w-5 sm:h-5" />
+const SLOT_LABELS: Record<string, string> = {
+  morning: 'Morning',
+  afternoon: 'Afternoon',
+  custom: 'Custom time',
+};
+
+// Drops the trailing "(…)" note, e.g. "09:00–11:30 (2.5 hours)" → "09:00–11:30".
+const stripNote = (s?: string | null) => (s ? s.replace(/\s*\([^)]*\)\s*$/, '').trim() : '');
+
+const bookingLabel = (school: ApprovedSchool) => {
+  const date = stripNote(school.preferred_date);
+  const slot = school.workshop_slot ? SLOT_LABELS[school.workshop_slot] ?? school.workshop_slot : '';
+  const time = stripNote(school.time_range);
+  const slotText = slot && time ? `${slot} (${time})` : slot || time;
+  return [date, slotText].filter(Boolean).join(' · ');
+};
+
+const SchoolChip: React.FC<{ school: ApprovedSchool }> = ({ school }) => {
+  const booking = bookingLabel(school);
+  return (
+    <div className="flex-shrink-0 group flex items-center gap-3 px-6 py-3.5 sm:py-4 bg-[#0A1930] hover:bg-[#006AA7] border border-[#0A1930] shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5">
+      <div className="w-8 h-8 sm:w-9 sm:h-9 bg-white/10 flex items-center justify-center text-[#FFCD00] shrink-0">
+        <School className="w-4 h-4 sm:w-5 sm:h-5" />
+      </div>
+      <div className="flex flex-col">
+        <span className="font-headline font-black text-sm sm:text-base uppercase tracking-wide text-white whitespace-nowrap">
+          {school.school_name}
+        </span>
+        {booking && (
+          <span className="flex items-center gap-1.5 mt-0.5 text-[11px] sm:text-xs font-mono-code font-bold text-[#FFCD00] whitespace-nowrap">
+            <CalendarClock className="w-3 h-3 shrink-0" />
+            {booking}
+          </span>
+        )}
+      </div>
     </div>
-    <span className="font-headline font-black text-sm sm:text-base uppercase tracking-wide text-white whitespace-nowrap">
-      {name}
-    </span>
-  </div>
-);
+  );
+};
 
 export const CollaboratorsMarquee: React.FC = () => {
-  const [schools, setSchools] = useState<string[]>([]);
+  const [schools, setSchools] = useState<ApprovedSchool[]>([]);
   const [stats, setStats] = useState<RegistrationStats | null>(null);
   const [loaded, setLoaded] = useState(false);
 
@@ -70,18 +105,15 @@ export const CollaboratorsMarquee: React.FC = () => {
 
     (async () => {
       const [schoolsRes, statsRes] = await Promise.all([
-        supabase.from('approved_schools').select('school_name'),
+        // '*' so this still works before the booking-slot columns exist.
+        supabase.from('approved_schools').select('*'),
         supabase.from('registration_stats').select('*'),
       ]);
 
       if (cancelled) return;
 
       if (!schoolsRes.error && Array.isArray(schoolsRes.data)) {
-        setSchools(
-          schoolsRes.data
-            .map((row: { school_name: string }) => row.school_name)
-            .filter(Boolean)
-        );
+        setSchools(schoolsRes.data.filter((row: ApprovedSchool) => Boolean(row.school_name)));
       }
 
       if (!statsRes.error && Array.isArray(statsRes.data) && statsRes.data[0]) {
@@ -127,15 +159,15 @@ export const CollaboratorsMarquee: React.FC = () => {
           <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-20 bg-gradient-to-l from-white to-transparent pointer-events-none z-10" />
 
           <div className="animate-marquee-track group-hover:[animation-play-state:paused] flex items-center gap-4 sm:gap-5">
-            {marqueeItems.map((name, idx) => (
-              <SchoolChip key={`${name}-${idx}`} name={name} />
+            {marqueeItems.map((school, idx) => (
+              <SchoolChip key={`${school.school_name}-${idx}`} school={school} />
             ))}
           </div>
         </div>
       ) : schools.length > 0 ? (
         <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-5">
-          {schools.map((name) => (
-            <SchoolChip key={name} name={name} />
+          {schools.map((school, idx) => (
+            <SchoolChip key={`${school.school_name}-${idx}`} school={school} />
           ))}
         </div>
       ) : null}

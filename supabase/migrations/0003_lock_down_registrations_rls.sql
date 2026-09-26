@@ -11,14 +11,10 @@
 -- registration submission (INSERT for `anon`) is untouched.
 
 drop policy if exists "Anyone can view registrations" on registrations;
-create policy "Authenticated can view registrations"
-  on registrations for select
-  to authenticated
-  using (true);
-
+drop policy if exists "Authenticated can view registrations" on registrations;
 drop policy if exists "Authenticated can update registrations" on registrations;
-create policy "Authenticated can update registrations"
-  on registrations for update
-  to authenticated
-  using (true)
-  with check (true);
+
+-- Superseded: SELECT/UPDATE/DELETE are now admin/super_admin only, owned by
+-- the INIAC repo's 20260926130000_eu_skola_registrations.sql ("Admins can …"
+-- policies). This file only removes the old permissive policies so re-running
+-- the migration chain can never re-open registrant PII to every signed-in user.

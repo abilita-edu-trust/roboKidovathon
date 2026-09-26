@@ -2051,4 +2051,11 @@ export const svTranslations: Record<string, string> = {
   'EN': 'EN',
   'OF': 'AV',
   'en': 'en',
+  // EU Skola registration IDs + collaborators booking slot
+  'YOUR EU SKOLA REGISTRATION ID': 'DITT EU SKOLA-REGISTRERINGS-ID',
+  'Team name (optional)': 'Lagnamn (valfritt)',
+  'Leave empty if registering alone': 'Lämna tomt om du anmäler dig ensam',
+  'A confirmation email will be sent to': 'Ett bekräftelsemejl skickas till',
+  'once our coordinator confirms your registration.': 'när vår samordnare har bekräftat din registrering.',
+  'Custom time': 'Egen tid',
 };

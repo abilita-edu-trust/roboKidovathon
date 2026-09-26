@@ -19,6 +19,10 @@ const mockClient = {
     },
     select: async () => ({ data: [], error: null }),
   }),
+  rpc: async (_fn: string, _args: any) => {
+    console.log(`[Supabase Mock] RPC ${_fn}:`, _args);
+    return { data: 'EU-SWE-VAST-PREVIEW', error: null };
+  },
 };
 
 export const supabase: any = isSupabaseConfigured

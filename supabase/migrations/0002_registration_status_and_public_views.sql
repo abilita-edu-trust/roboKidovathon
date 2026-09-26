@@ -15,7 +15,9 @@ alter table registrations add column if not exists consent_agreed boolean not nu
 
 -- Public "Our Collaborators" marquee: only the school name of registrations
 -- an admin has approved. No contact/PII columns are ever exposed.
-create or replace view approved_schools as
+-- Dropped first: 0005 adds columns, and CREATE OR REPLACE cannot remove them on a re-run.
+drop view if exists approved_schools;
+create view approved_schools as
   select distinct school_name
   from registrations
   where registration_type = 'school'

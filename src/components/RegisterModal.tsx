@@ -63,8 +63,6 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose })
 
     setIsSubmitting(true);
 
-    const code = `RKV-2026-${Math.floor(1000 + Math.random() * 9000)}-${activeTab === 'school' ? 'SC' : 'ST'}`;
-
     // Format time range string
     let timeRange = '';
     if (activeTab === 'school') {
@@ -81,10 +79,15 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose })
         : dateRangeStart || dateRangeEnd || 'Custom Date Range';
     }
 
+    // The EU Skola ID (EU-SWE-VAST-…) is issued by the database; status is
+    // always 'pending' for public submissions. A student entry with a team
+    // name is a group (GROU-001), without one an individual (INDV-001).
     const payload = {
+      country_slug: 'sweden',
+      city_slug: 'vasteras',
       registration_type: activeTab,
       school_name: activeTab === 'school' ? schoolName : null,
-      team_name: activeTab === 'student' ? teamName : null,
+      team_name: activeTab === 'student' ? teamName.trim() || null : null,
       contact_name: contactName,
       email,
       phone,
@@ -96,12 +99,10 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose })
       workshop_slot: activeTab === 'school' ? workshopSlot : null,
       time_range: activeTab === 'school' ? timeRange : null,
       grade_group: activeTab === 'school' ? gradeGroup : null,
-      status: 'pending',
       consent_agreed: activeTab === 'school' ? consentAgreed : true,
-      confirmation_code: code,
     };
 
-    const { error } = await supabase.from('registrations').insert(payload);
+    const { data: publicId, error } = await supabase.rpc('submit_eu_skola_registration', { payload });
 
     setIsSubmitting(false);
 
@@ -112,7 +113,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose })
     }
 
     setIsSubmitted(true);
-    setConfirmationCode(code);
+    setConfirmationCode(publicId as string);
   };
 
   const handleReset = () => {
@@ -212,16 +213,16 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose })
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-headline font-bold tracking-wider text-slate-700 uppercase mb-1">
-                    {activeTab === 'school' ? 'School name *' : 'Team name *'}
+                    {activeTab === 'school' ? 'School name *' : 'Team name (optional)'}
                   </label>
                   <input
                     type="text"
-                    required
+                    required={activeTab === 'school'}
                     value={activeTab === 'school' ? schoolName : teamName}
                     onChange={(e) =>
                       activeTab === 'school' ? setSchoolName(e.target.value) : setTeamName(e.target.value)
                     }
-                    placeholder={activeTab === 'school' ? 'Example: Sundsvall School' : 'Example: Aros Tech Titans'}
+                    placeholder={activeTab === 'school' ? 'Example: Sundsvall School' : 'Leave empty if registering alone'}
                     className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 focus:border-[#006AA7] focus:bg-white focus:outline-none text-xs sm:text-sm text-[#0A1930] transition-colors"
                   />
                 </div>
@@ -640,14 +641,14 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose })
             </h3>
 
             <p className="mt-2 text-xs sm:text-sm text-slate-600 font-light max-w-md leading-relaxed">
-              We have dispatched booking verification and curriculum materials to{' '}
-              <strong className="text-[#0A1930] font-semibold">{email}</strong>.
+              A confirmation email will be sent to{' '}
+              <strong className="text-[#0A1930] font-semibold">{email}</strong> once our coordinator confirms your registration.
             </p>
 
             {/* Token Badge */}
             <div className="my-5 p-4 bg-slate-50 border border-slate-200 w-full max-w-md text-center">
               <span className="text-[10px] font-mono-code text-slate-500 uppercase block mb-1">
-                OFFICIAL REGISTRATION TOKEN
+                YOUR EU SKOLA REGISTRATION ID
               </span>
               <span className="font-mono-code font-bold text-lg sm:text-xl text-[#006AA7] tracking-wider block">
                 {confirmationCode}
