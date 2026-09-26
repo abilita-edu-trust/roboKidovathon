@@ -7,10 +7,11 @@ interface RegistrationStats {
   students_count: number;
 }
 
-const CountUpStat: React.FC<{ target: number; label: string; inView: boolean }> = ({
+const CountUpStat: React.FC<{ target: number; label: string; inView: boolean; accentClass: string }> = ({
   target,
   label,
   inView,
+  accentClass,
 }) => {
   const [value, setValue] = useState(0);
 
@@ -33,11 +34,11 @@ const CountUpStat: React.FC<{ target: number; label: string; inView: boolean }> 
   }, [inView, target]);
 
   return (
-    <div className="flex flex-col items-center text-center">
-      <span className="font-headline font-black text-3xl sm:text-4xl text-[#0A1930] tracking-tight leading-none">
+    <div className="px-8 sm:px-14 py-6 flex flex-col items-center text-center">
+      <span className={`font-headline font-black text-3xl sm:text-4xl tracking-tight leading-none ${accentClass}`}>
         {value}+
       </span>
-      <span className="text-[10px] sm:text-xs font-mono-code font-bold text-slate-500 uppercase tracking-widest mt-1">
+      <span className="text-[10px] sm:text-xs font-mono-code font-bold text-slate-500 uppercase tracking-widest mt-1.5">
         {label}
       </span>
     </div>
@@ -90,7 +91,12 @@ export const CollaboratorsMarquee: React.FC = () => {
   // Nothing approved yet — render nothing rather than a fake/empty section.
   if (loaded && !hasContent) return null;
 
-  const marqueeItems = schools.length > 0 ? [...schools, ...schools, ...schools] : [];
+  // A handful of names looping in an infinite marquee just repeats the same
+  // pill over and over — reads as broken, not lively. Only animate once
+  // there are enough collaborators for a marquee to actually feel continuous.
+  const MIN_SCHOOLS_FOR_MARQUEE = 6;
+  const useMarquee = schools.length >= MIN_SCHOOLS_FOR_MARQUEE;
+  const marqueeItems = useMarquee ? [...schools, ...schools, ...schools] : [];
 
   return (
     <div ref={sectionRef} className="pt-2 space-y-6 border-t border-slate-200">
@@ -98,7 +104,7 @@ export const CollaboratorsMarquee: React.FC = () => {
         Our Collaborators
       </span>
 
-      {marqueeItems.length > 0 && (
+      {useMarquee ? (
         <div className="w-full overflow-hidden relative group">
           <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-20 bg-gradient-to-r from-white to-transparent pointer-events-none z-10" />
           <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-20 bg-gradient-to-l from-white to-transparent pointer-events-none z-10" />
@@ -114,13 +120,39 @@ export const CollaboratorsMarquee: React.FC = () => {
             ))}
           </div>
         </div>
-      )}
+      ) : schools.length > 0 ? (
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+          {schools.map((name) => (
+            <span
+              key={name}
+              className="px-5 py-2.5 bg-[#F8FAFC] border border-slate-200 font-headline font-bold text-xs sm:text-sm uppercase tracking-wide text-[#0A1930] whitespace-nowrap"
+            >
+              {name}
+            </span>
+          ))}
+        </div>
+      ) : null}
 
       {(schoolsCount > 0 || studentsCount > 0) && (
-        <div className="flex items-center justify-center gap-10 sm:gap-16">
-          <CountUpStat target={studentsCount} label="Students Registered" inView={isInView} />
-          <CountUpStat target={schoolsCount} label="Schools Registered" inView={isInView} />
-        </div>
+        <>
+          <div className="border-t border-slate-200" />
+          <div className="flex justify-center">
+            <div className="inline-flex divide-x divide-slate-200 border border-slate-200 bg-white shadow-xs">
+              <CountUpStat
+                target={studentsCount}
+                label="Students Registered"
+                inView={isInView}
+                accentClass="text-[#006AA7]"
+              />
+              <CountUpStat
+                target={schoolsCount}
+                label="Schools Registered"
+                inView={isInView}
+                accentClass="text-[#0A1930]"
+              />
+            </div>
+          </div>
+        </>
       )}
     </div>
   );
