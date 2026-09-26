@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useInView } from 'framer-motion';
+import { School } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface RegistrationStats {
@@ -44,6 +45,17 @@ const CountUpStat: React.FC<{ target: number; label: string; inView: boolean; ac
     </div>
   );
 };
+
+const SchoolChip: React.FC<{ name: string }> = ({ name }) => (
+  <div className="flex-shrink-0 group flex items-center gap-3 px-6 py-3.5 sm:py-4 bg-[#0A1930] hover:bg-[#006AA7] border border-[#0A1930] shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5">
+    <div className="w-8 h-8 sm:w-9 sm:h-9 bg-white/10 flex items-center justify-center text-[#FFCD00] shrink-0">
+      <School className="w-4 h-4 sm:w-5 sm:h-5" />
+    </div>
+    <span className="font-headline font-black text-sm sm:text-base uppercase tracking-wide text-white whitespace-nowrap">
+      {name}
+    </span>
+  </div>
+);
 
 export const CollaboratorsMarquee: React.FC = () => {
   const [schools, setSchools] = useState<string[]>([]);
@@ -99,36 +111,31 @@ export const CollaboratorsMarquee: React.FC = () => {
   const marqueeItems = useMarquee ? [...schools, ...schools, ...schools] : [];
 
   return (
-    <div ref={sectionRef} className="pt-2 space-y-6 border-t border-slate-200">
-      <span className="block text-center text-[11px] font-mono-code font-bold tracking-[0.25em] text-[#006AA7] uppercase">
-        Our Collaborators
-      </span>
+    <div ref={sectionRef} className="pt-2 space-y-8 border-t border-slate-200">
+      <div className="text-center space-y-2">
+        <span className="block text-[11px] font-mono-code font-bold tracking-[0.25em] text-[#006AA7] uppercase">
+          Collaborative Ecosystem
+        </span>
+        <h2 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#0A1930]">
+          Our Collaborators
+        </h2>
+      </div>
 
       {useMarquee ? (
         <div className="w-full overflow-hidden relative group">
           <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-20 bg-gradient-to-r from-white to-transparent pointer-events-none z-10" />
           <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-20 bg-gradient-to-l from-white to-transparent pointer-events-none z-10" />
 
-          <div className="animate-marquee-track group-hover:[animation-play-state:paused] flex items-center gap-3 sm:gap-4">
+          <div className="animate-marquee-track group-hover:[animation-play-state:paused] flex items-center gap-4 sm:gap-5">
             {marqueeItems.map((name, idx) => (
-              <span
-                key={`${name}-${idx}`}
-                className="flex-shrink-0 px-5 py-2.5 bg-[#F8FAFC] border border-slate-200 font-headline font-bold text-xs sm:text-sm uppercase tracking-wide text-[#0A1930] whitespace-nowrap"
-              >
-                {name}
-              </span>
+              <SchoolChip key={`${name}-${idx}`} name={name} />
             ))}
           </div>
         </div>
       ) : schools.length > 0 ? (
-        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-5">
           {schools.map((name) => (
-            <span
-              key={name}
-              className="px-5 py-2.5 bg-[#F8FAFC] border border-slate-200 font-headline font-bold text-xs sm:text-sm uppercase tracking-wide text-[#0A1930] whitespace-nowrap"
-            >
-              {name}
-            </span>
+            <SchoolChip key={name} name={name} />
           ))}
         </div>
       ) : null}
