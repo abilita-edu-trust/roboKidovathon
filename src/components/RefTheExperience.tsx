@@ -481,8 +481,8 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
           </div>
         </div>
 
-        {/* ── 04b. OUR COLLABORATORS (approved schools marquee + live stats) ── */}
-        <CollaboratorsMarquee />
+        {/* ── 04b. OUR COLLABORATORS (approved schools marquee + live stats + Vote for Ideas) ── */}
+        <CollaboratorsMarquee onNavigate={onNavigate} />
 
         {/* ── 05. FOOTER SUB-STRIP ── */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 text-xs font-mono-code text-slate-400 border-t border-slate-200">

@@ -42,6 +42,8 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const navLinks = [
     { id: 'challenges', label: language === 'sv' ? 'Tävling' : 'Competition' },
+    { id: 'ideas', label: language === 'sv' ? '⭐ Rösta på Idéer' : '⭐ Vote for Ideas' },
+    { id: 'register', label: language === 'sv' ? 'Registrering' : 'Intake & Register' },
     { id: 'workflow', label: language === 'sv' ? 'Arbetsflöde' : 'Workflow' },
     { id: 'events', label: language === 'sv' ? 'Evenemang' : 'Events' },
     { id: 'about', label: language === 'sv' ? 'Om oss' : 'About' },
@@ -189,7 +191,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <motion.button
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.96 }}
-              onClick={onOpenRegister}
+              onClick={() => onNavigate('register')}
               className="btn-pill-lime text-xs font-black py-2.5 px-5 transition-all duration-200 shadow-md flex items-center gap-2 group relative overflow-hidden"
             >
               <span>{language === 'sv' ? 'REGISTRERA SKOLA / LAG' : 'REGISTER SCHOOL / TEAM'}</span>

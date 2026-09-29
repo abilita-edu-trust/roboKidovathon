@@ -116,7 +116,16 @@ export const RefFooter: React.FC<RefFooterProps> = ({
         {/* Bottom copyright & compliance */}
         <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] font-mono-code text-slate-400">
           <span>© 2026 VÄSTERÅS FUTURE INNOVATORS · ALL RIGHTS RESERVED</span>
-          <span>LOW-VOLTAGE 6V HARDWARE · GDPR-COMPLIANT STUDENT PRIVACY</span>
+          <div className="flex flex-wrap items-center gap-4">
+            <span>LOW-VOLTAGE 6V HARDWARE · GDPR-COMPLIANT STUDENT PRIVACY</span>
+            <button
+              type="button"
+              onClick={() => onNavigate('admin')}
+              className="text-slate-400 hover:text-[#FFCD00] transition-colors underline uppercase tracking-wider"
+            >
+              [ Admin Portal 🛡️ ]
+            </button>
+          </div>
         </div>
 
       </div>

@@ -19,6 +19,9 @@ import { ForSchoolsPage } from './pages/ForSchoolsPage';
 import { AboutPage } from './pages/AboutPage';
 import { Lgr22Page } from './pages/Lgr22Page';
 import { EventsPage } from './pages/EventsPage';
+import { IntakeRegisterPage, IntakeProgramTab } from './pages/IntakeRegisterPage';
+import { IdeasVotingPage } from './pages/IdeasVotingPage';
+import { AdminIdeasCurationPage } from './pages/AdminIdeasCurationPage';
 
 import { RegisterModal } from './components/RegisterModal';
 import { EventDeckModal } from './components/EventDeckModal';
@@ -27,11 +30,19 @@ import { useLanguage } from './context/LanguageContext';
 
 export function App() {
   const { language } = useLanguage();
-  const [currentRoute, setCurrentRoute] = useState<string>('home');
+  const [currentRoute, setCurrentRoute] = useState<string>(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('route') === 'register') return 'register';
+    if (params.get('route') === 'ideas' || params.get('idea')) return 'ideas';
+    if (params.get('route') === 'admin') return 'admin';
+    return 'home';
+  });
+  const [registerInitialTab, setRegisterInitialTab] = useState<IntakeProgramTab>('workshop');
   const [isRegisterOpen, setIsRegisterOpen] = useState<boolean>(false);
   const [isDeckOpen, setIsDeckOpen] = useState<boolean>(false);
 
-  const handleNavigate = (route: string) => {
+  const handleNavigate = (route: string, tab?: IntakeProgramTab) => {
+    if (tab) setRegisterInitialTab(tab);
     setCurrentRoute(route);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -100,13 +111,13 @@ export function App() {
 
             {/* 06. Tournament Highlights Photo Reel */}
             <RefPhotoStrip
-              onOpenRegister={() => setIsRegisterOpen(true)}
+              onOpenRegister={() => handleNavigate('register')}
               onNavigate={handleNavigate}
             />
 
             {/* 07. Main Conversion Anchor: Bring Hands-On STEM to Your School */}
             <RefWorkshopTapeBanner
-              onOpenRegister={() => setIsRegisterOpen(true)}
+              onOpenRegister={() => handleNavigate('register')}
               onOpenDeckModal={() => setIsDeckOpen(true)}
               onNavigate={handleNavigate}
             />
@@ -115,7 +126,7 @@ export function App() {
 
         {currentRoute === 'challenges' && (
           <ChallengesPage
-            onOpenRegister={() => setIsRegisterOpen(true)}
+            onOpenRegister={() => handleNavigate('register')}
             onOpenDeckModal={() => setIsDeckOpen(true)}
             onNavigateHome={() => handleNavigate('home')}
           />
@@ -123,14 +134,14 @@ export function App() {
 
         {currentRoute === 'how-it-works' && (
           <HowItWorksPage
-            onOpenRegister={() => setIsRegisterOpen(true)}
+            onOpenRegister={() => handleNavigate('register')}
             onNavigateHome={() => handleNavigate('home')}
           />
         )}
 
         {currentRoute === 'workflow' && (
           <WorkflowPage
-            onOpenRegister={() => setIsRegisterOpen(true)}
+            onOpenRegister={() => handleNavigate('register')}
             onOpenDeckModal={() => setIsDeckOpen(true)}
             onNavigateHome={() => handleNavigate('home')}
           />
@@ -138,7 +149,7 @@ export function App() {
 
         {currentRoute === 'for-schools' && (
           <ForSchoolsPage
-            onOpenRegister={() => setIsRegisterOpen(true)}
+            onOpenRegister={() => handleNavigate('register')}
             onOpenDeckModal={() => setIsDeckOpen(true)}
             onNavigateHome={() => handleNavigate('home')}
           />
@@ -146,22 +157,45 @@ export function App() {
 
         {currentRoute === 'about' && (
           <AboutPage
-            onOpenRegister={() => setIsRegisterOpen(true)}
+            onOpenRegister={() => handleNavigate('register')}
             onNavigateHome={() => handleNavigate('home')}
           />
         )}
 
         {currentRoute === 'lgr22' && (
           <Lgr22Page
-            onOpenRegister={() => setIsRegisterOpen(true)}
+            onOpenRegister={() => handleNavigate('register')}
             onNavigateHome={() => handleNavigate('home')}
           />
         )}
 
         {currentRoute === 'events' && (
           <EventsPage
-            onOpenRegister={() => setIsRegisterOpen(true)}
+            onOpenRegister={() => handleNavigate('register')}
             onNavigateHome={() => handleNavigate('home')}
+          />
+        )}
+
+        {currentRoute === 'register' && (
+          <IntakeRegisterPage
+            initialTab={registerInitialTab}
+            onNavigateHome={() => handleNavigate('home')}
+            onNavigateVoting={() => handleNavigate('ideas')}
+          />
+        )}
+
+        {currentRoute === 'ideas' && (
+          <IdeasVotingPage
+            onNavigateHome={() => handleNavigate('home')}
+            onNavigateSubmit={() => handleNavigate('register', 'submit-idea')}
+            onNavigateAdmin={() => handleNavigate('admin')}
+          />
+        )}
+
+        {currentRoute === 'admin' && (
+          <AdminIdeasCurationPage
+            onNavigateHome={() => handleNavigate('home')}
+            onNavigateVoting={() => handleNavigate('ideas')}
           />
         )}
       </main>
@@ -169,13 +203,17 @@ export function App() {
       {/* ── Master Dark Footer with Verified Contacts ── */}
       <RefFooter
         onNavigate={handleNavigate}
-        onOpenRegister={() => setIsRegisterOpen(true)}
+        onOpenRegister={() => handleNavigate('register')}
       />
 
       {/* ── Interactive Modals ── */}
       <RegisterModal
         isOpen={isRegisterOpen}
         onClose={() => setIsRegisterOpen(false)}
+        onNavigateToFullIntake={(tab) => {
+          setIsRegisterOpen(false);
+          handleNavigate('register', tab as any);
+        }}
       />
 
       <EventDeckModal

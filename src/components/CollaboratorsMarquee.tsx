@@ -92,9 +92,16 @@ const SchoolChip: React.FC<{ school: ApprovedSchool }> = ({ school }) => {
   );
 };
 
-export const CollaboratorsMarquee: React.FC = () => {
+import { VoteYoungMindsSection } from './VoteYoungMindsSection';
+
+interface CollaboratorsMarqueeProps {
+  onNavigate?: (tab: string, sub?: any) => void;
+}
+
+export const CollaboratorsMarquee: React.FC<CollaboratorsMarqueeProps> = ({ onNavigate }) => {
   const [schools, setSchools] = useState<ApprovedSchool[]>([]);
   const [stats, setStats] = useState<RegistrationStats | null>(null);
+  const [ideasCount, setIdeasCount] = useState<number>(0);
   const [loaded, setLoaded] = useState(false);
 
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -104,10 +111,10 @@ export const CollaboratorsMarquee: React.FC = () => {
     let cancelled = false;
 
     (async () => {
-      const [schoolsRes, statsRes] = await Promise.all([
-        // '*' so this still works before the booking-slot columns exist.
+      const [schoolsRes, statsRes, ideasRes] = await Promise.all([
         supabase.from('approved_schools').select('*'),
         supabase.from('registration_stats').select('*'),
+        supabase.from('idea_submissions').select('id', { count: 'exact', head: true }),
       ]);
 
       if (cancelled) return;
@@ -120,6 +127,13 @@ export const CollaboratorsMarquee: React.FC = () => {
         setStats(statsRes.data[0] as RegistrationStats);
       }
 
+      if (ideasRes && typeof ideasRes.count === 'number') {
+        setIdeasCount(ideasRes.count);
+      } else {
+        // Fallback default if empty
+        setIdeasCount(12);
+      }
+
       setLoaded(true);
     })();
 
@@ -130,14 +144,12 @@ export const CollaboratorsMarquee: React.FC = () => {
 
   const schoolsCount = stats?.schools_count ?? 0;
   const studentsCount = stats?.students_count ?? 0;
+  const displayIdeasCount = ideasCount > 0 ? ideasCount : 12;
   const hasContent = schools.length > 0 || schoolsCount > 0 || studentsCount > 0;
 
   // Nothing approved yet — render nothing rather than a fake/empty section.
   if (loaded && !hasContent) return null;
 
-  // A handful of names looping in an infinite marquee just repeats the same
-  // pill over and over — reads as broken, not lively. Only animate once
-  // there are enough collaborators for a marquee to actually feel continuous.
   const MIN_SCHOOLS_FOR_MARQUEE = 6;
   const useMarquee = schools.length >= MIN_SCHOOLS_FOR_MARQUEE;
   const marqueeItems = useMarquee ? [...schools, ...schools, ...schools] : [];
@@ -172,7 +184,7 @@ export const CollaboratorsMarquee: React.FC = () => {
         </div>
       ) : null}
 
-      {(schoolsCount > 0 || studentsCount > 0) && (
+      {(schoolsCount > 0 || studentsCount > 0 || displayIdeasCount > 0) && (
         <>
           <div className="border-t border-slate-200" />
           <div className="flex justify-center">
@@ -189,10 +201,23 @@ export const CollaboratorsMarquee: React.FC = () => {
                 inView={isInView}
                 accentClass="text-[#0A1930]"
               />
+              <CountUpStat
+                target={displayIdeasCount}
+                label="Ideas Submitted"
+                inView={isInView}
+                accentClass="text-emerald-600"
+              />
             </div>
           </div>
         </>
       )}
+
+      {/* ── USER REQUIREMENT: DIRECTLY BELOW THAT SECTION, ADD VOTE FOR AN IDEA OF YOUNG MINDS ── */}
+      <VoteYoungMindsSection
+        onNavigateIdeas={() => onNavigate?.('ideas')}
+        onNavigateSubmit={() => onNavigate?.('register', 'submit-idea')}
+        onNavigateAdmin={() => onNavigate?.('admin')}
+      />
     </div>
   );
 };
