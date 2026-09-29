@@ -1,0 +1,1363 @@
+import React, { useState, useEffect } from 'react';
+import {
+  Sparkles,
+  Building,
+  User,
+  CheckCircle2,
+  AlertCircle,
+  Calendar,
+  MapPin,
+  Lightbulb,
+  Upload,
+  ArrowRight,
+  Share2,
+  Check,
+  Video,
+  Image as ImageIcon,
+  FileText,
+  Compass
+} from 'lucide-react';
+import { supabase } from '../lib/supabase';
+import { VoiceNoteRecorder } from '../components/VoiceNoteRecorder';
+import { uploadIdeaMedia, submitIdea, fetchRegisteredSchools } from '../lib/ideasService';
+
+export type IntakeProgramTab = 'workshop' | 'demo' | 'submit-idea' | 'hackathon';
+
+interface IntakeRegisterPageProps {
+  initialTab?: IntakeProgramTab;
+  onNavigateHome: () => void;
+  onNavigateVoting?: () => void;
+}
+
+export const COUNTRIES = [
+  { slug: 'sweden', name: 'Sweden', defaultCity: 'vasteras' },
+  { slug: 'denmark', name: 'Denmark', defaultCity: 'copenhagen' },
+  { slug: 'latvia', name: 'Latvia', defaultCity: 'riga' },
+  { slug: 'estonia', name: 'Estonia', defaultCity: 'tallinn' },
+];
+
+export const CITIES_BY_COUNTRY: Record<string, { slug: string; name: string }[]> = {
+  sweden: [
+    { slug: 'vasteras', name: 'Västerås' },
+    { slug: 'eskilstuna', name: 'Eskilstuna' },
+    { slug: 'uppsala', name: 'Uppsala' },
+    { slug: 'stockholm', name: 'Stockholm' },
+    { slug: 'gavle', name: 'Gävle' },
+  ],
+  denmark: [{ slug: 'copenhagen', name: 'Copenhagen' }],
+  latvia: [
+    { slug: 'riga', name: 'Riga' },
+    { slug: 'ventspils', name: 'Ventspils' },
+  ],
+  estonia: [{ slug: 'tallinn', name: 'Tallinn' }],
+};
+
+export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
+  initialTab = 'workshop',
+  onNavigateHome,
+  onNavigateVoting,
+}) => {
+  const [selectedProgram, setSelectedProgram] = useState<IntakeProgramTab>(initialTab);
+
+  // Location Fields (Country first, then City / Location)
+  const [countrySlug, setCountrySlug] = useState('sweden');
+  const [citySlug, setCitySlug] = useState('vasteras');
+  const [customCityName, setCustomCityName] = useState('');
+  const [isCustomCity, setIsCustomCity] = useState(false);
+
+  const handleCountryChange = (cSlug: string) => {
+    setCountrySlug(cSlug);
+    const available = CITIES_BY_COUNTRY[cSlug] || [];
+    if (available.length > 0) {
+      setCitySlug(available[0].slug);
+      setIsCustomCity(false);
+    } else {
+      setCitySlug('custom');
+      setIsCustomCity(true);
+    }
+  };
+
+  // School vs Individual toggle (for Demo & Workshop)
+  const [applicantType, setApplicantType] = useState<'school' | 'student'>('school');
+  const [schoolName, setSchoolName] = useState('');
+  const [teamName, setTeamName] = useState('');
+  const [contactName, setContactName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+
+  // Customizable Date & Time (Requirement 1: Customizable date from calendar and customizable time)
+  const [customDate, setCustomDate] = useState('');
+  const [customTime, setCustomTime] = useState('10:00');
+  const [customEndTime, setCustomEndTime] = useState('12:30');
+  const [gradeGroup, setGradeGroup] = useState('Årskurs 4–6 (Mellanstadiet · Ages 10–12)');
+  const [studentCount, setStudentCount] = useState('25');
+
+  // Submit Idea Specific Fields
+  const [studentName, setStudentName] = useState('');
+  const [studentAge, setStudentAge] = useState('13');
+  const [studentGrade, setStudentGrade] = useState('Grade 7');
+  const [ideaTitle, setIdeaTitle] = useState('');
+  const [ideaDescription, setIdeaDescription] = useState('');
+  const [ideaCategory, setIdeaCategory] = useState('Sustainability & Green Tech');
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [voiceNoteFile, setVoiceNoteFile] = useState<File | null>(null);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [videoLink, setVideoLink] = useState('');
+  const [videoInputType, setVideoInputType] = useState<'upload' | 'link'>('link');
+
+  // Hackathon Specific Fields
+  const [hackathonSkills, setHackathonSkills] = useState<string[]>([
+    'Robotics & Hardware',
+    'Coding & Software',
+  ]);
+  const [hackerChallengeDomain, setHackerChallengeDomain] = useState('Sustainable Cities & Climate');
+
+  // Consent & GDPR
+  const [consentAgreed, setConsentAgreed] = useState(false);
+  const [gdprAgreed, setGdprAgreed] = useState(false);
+  const [showGdprInfo, setShowGdprInfo] = useState(false);
+
+  // Registered schools list for autocomplete
+  const [registeredSchools, setRegisteredSchools] = useState<{ name: string; city: string }[]>([]);
+
+  // Submission State
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [generatedId, setGeneratedId] = useState('');
+  const [submitError, setSubmitError] = useState('');
+  const [copiedLink, setCopiedLink] = useState(false);
+
+  useEffect(() => {
+    fetchRegisteredSchools().then((schools) => {
+      setRegisteredSchools(schools);
+    });
+  }, []);
+
+  const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setPhotoFile(file);
+      setPhotoPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleVideoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setVideoFile(file);
+    }
+  };
+
+  const toggleSkill = (skill: string) => {
+    if (hackathonSkills.includes(skill)) {
+      setHackathonSkills(hackathonSkills.filter((s) => s !== skill));
+    } else {
+      setHackathonSkills([...hackathonSkills, skill]);
+    }
+  };
+
+  const handleSelectProgram = (program: IntakeProgramTab) => {
+    setSelectedProgram(program);
+    setSubmitSuccess(false);
+    setTimeout(() => {
+      document.getElementById('intake-form-container')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitError('');
+
+    if (!consentAgreed) {
+      setSubmitError('Please accept the consent checkbox to proceed.');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    const selectedCityName = isCustomCity
+      ? (customCityName.trim() || 'Custom City')
+      : (CITIES_BY_COUNTRY[countrySlug] || []).find((c) => c.slug === citySlug)?.name || citySlug;
+    const selectedCountryName =
+      COUNTRIES.find((c) => c.slug === countrySlug)?.name || countrySlug;
+
+    try {
+      if (selectedProgram === 'submit-idea') {
+        // --- 1. IDEA SUBMISSION WORKFLOW ---
+        let uploadedPhotoUrl: string | null = null;
+        let uploadedAudioUrl: string | null = null;
+        let uploadedVideoUrl: string | null = null;
+
+        // Upload photo if present
+        if (photoFile) {
+          uploadedPhotoUrl = await uploadIdeaMedia(photoFile, 'photos');
+        }
+
+        // Upload voice note if present
+        if (voiceNoteFile) {
+          uploadedAudioUrl = await uploadIdeaMedia(voiceNoteFile, 'audio');
+        }
+
+        // Upload video or save link
+        if (videoInputType === 'upload' && videoFile) {
+          uploadedVideoUrl = await uploadIdeaMedia(videoFile, 'videos');
+        } else if (videoInputType === 'link' && videoLink.trim()) {
+          uploadedVideoUrl = videoLink.trim();
+        }
+
+        const res = await submitIdea({
+          student_name: studentName,
+          student_age: studentAge,
+          student_grade: studentGrade,
+          contact_email: email,
+          contact_phone: phone,
+          school_name: schoolName,
+          country_slug: countrySlug,
+          city_slug: isCustomCity ? 'custom' : citySlug,
+          city_name: selectedCityName,
+          country_name: selectedCountryName,
+          idea_title: ideaTitle,
+          idea_description: ideaDescription,
+          photo_url: uploadedPhotoUrl,
+          voice_note_url: uploadedAudioUrl,
+          video_url: uploadedVideoUrl,
+          video_type:
+            videoInputType === 'upload' && videoFile
+              ? 'file'
+              : videoLink.trim()
+              ? 'link'
+              : 'none',
+          category: ideaCategory,
+          consent_agreed: consentAgreed,
+          gdpr_agreed: gdprAgreed,
+        });
+
+        setGeneratedId(res.public_id);
+        setSubmitSuccess(true);
+      } else {
+        // --- 2. WORKSHOP / DEMO / HACKATHON REGISTRATION WORKFLOW ---
+        const formattedTimeRange = `${customTime} – ${customEndTime}`;
+        const finalSchool =
+          applicantType === 'school' ? schoolName : teamName ? `${teamName} (Team)` : schoolName;
+
+        const payload = {
+          registration_type: applicantType,
+          country_slug: countrySlug,
+          city_slug: isCustomCity ? 'custom' : citySlug,
+          city_name: selectedCityName,
+          country_name: selectedCountryName,
+          school_name: finalSchool,
+          team_name: applicantType === 'student' ? teamName : null,
+          contact_name: contactName,
+          email,
+          phone,
+          category_id:
+            selectedProgram === 'hackathon'
+              ? 'young-innovators-hackathon'
+              : selectedProgram === 'demo'
+              ? 'school-demo-session'
+              : 'vasteras-school-workshop',
+          student_count: studentCount,
+          preferred_date: customDate ? `Custom Date: ${customDate}` : 'To be confirmed',
+          custom_date: customDate || null,
+          custom_time: customTime || null,
+          time_range: formattedTimeRange,
+          workshop_slot: 'custom',
+          grade_group: gradeGroup,
+          consent_agreed: consentAgreed,
+          form_type: selectedProgram,
+        };
+
+        const { data: publicId, error } = await supabase.rpc(
+          'submit_eu_skola_registration',
+          { payload }
+        );
+
+        if (error) {
+          throw new Error(error.message || 'Failed to submit registration');
+        }
+
+        setGeneratedId((publicId as string) || 'REG-' + Math.floor(1000 + Math.random() * 9000));
+        setSubmitSuccess(true);
+      }
+    } catch (err: any) {
+      console.error('Submission error:', err);
+      setSubmitError(err.message || 'Something went wrong while submitting. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleCopyLink = () => {
+    const url = `${window.location.origin}/?route=ideas&idea=${generatedId}`;
+    navigator.clipboard.writeText(url);
+    setCopiedLink(true);
+    setTimeout(() => setCopiedLink(false), 2500);
+  };
+
+  return (
+    <div className="w-full min-h-screen bg-[#F8FAFC] text-[#0A1930] pt-24 pb-20 px-3 sm:px-6">
+      <div className="max-w-5xl mx-auto">
+        {/* Navigation Breadcrumb */}
+        <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-200">
+          <button
+            onClick={onNavigateHome}
+            className="inline-flex items-center gap-2 text-xs font-mono-code font-bold tracking-wider text-[#006AA7] uppercase hover:underline"
+          >
+            ← Back to Overview
+          </button>
+          {onNavigateVoting && (
+            <button
+              onClick={onNavigateVoting}
+              className="inline-flex items-center gap-1.5 text-xs font-mono-code font-bold text-amber-600 hover:text-amber-700 bg-amber-50 border border-amber-200 px-3 py-1.5 uppercase transition-colors"
+            >
+              <span>⭐ View Ideas & Vote</span>
+            </button>
+          )}
+        </div>
+
+        {/* ── TOP SECTION: TRACK CARDS (MATCHING THE 2 USER SCREENSHOTS) ── */}
+        <div className="mb-8">
+          <div className="text-center max-w-3xl mx-auto mb-8">
+            <div className="inline-flex items-center gap-2 text-[11px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase mb-2">
+              <Sparkles className="w-3.5 h-3.5 text-[#FFCD00]" />
+              <span>OFFICIAL PROGRAM INTAKE // VÄSTERÅS 2026</span>
+            </div>
+            <h1 className="font-headline font-black text-3xl sm:text-4xl uppercase tracking-tight text-[#0A1930]">
+              Choose Your Program Pathway
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-600 mt-2 max-w-2xl mx-auto leading-relaxed">
+              We offer 4 distinct pathways: Hands-on Workshops, Live School Demos, Student Idea Submissions, and Hackathon Squads. Click any option below to load its customizable registration form directly underneath.
+            </p>
+          </div>
+
+          {/* 4-Pill Interactive Quick Selector with clear explanations */}
+          <div className="mb-6 grid grid-cols-2 lg:grid-cols-4 gap-2.5">
+            {[
+              {
+                id: 'workshop' as const,
+                num: '1',
+                title: 'School Workshop',
+                subtitle: 'Classroom Robotics',
+                desc: 'Pick your custom date & time for a 20-hr hands-on workshop',
+                icon: '🤖',
+                theme: 'blue',
+              },
+              {
+                id: 'demo' as const,
+                num: '2',
+                title: 'School Demo',
+                subtitle: 'Auditorium Showcase',
+                desc: 'Schedule a live demo session & assembly robot trials',
+                icon: '📢',
+                theme: 'blue',
+              },
+              {
+                id: 'submit-idea' as const,
+                num: '3',
+                title: 'Submit Idea',
+                subtitle: 'Student Innovation',
+                desc: 'Upload voice notes, drawings, or videos & compete in public voting',
+                icon: '💡',
+                theme: 'emerald',
+              },
+              {
+                id: 'hackathon' as const,
+                num: '4',
+                title: 'Hackathon Squad',
+                subtitle: 'Arena Competition',
+                desc: 'Register a student team to compete at Mälardalen University on Dec 5',
+                icon: '🏆',
+                theme: 'emerald',
+              },
+            ].map((p) => {
+              const active = selectedProgram === p.id;
+              return (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => handleSelectProgram(p.id)}
+                  className={`p-3.5 text-left border-2 transition-all relative flex flex-col justify-between ${
+                    active
+                      ? p.theme === 'emerald'
+                        ? 'bg-emerald-800 text-white border-emerald-500 shadow-lg ring-2 ring-emerald-500/40'
+                        : 'bg-[#0A1930] text-white border-[#006AA7] shadow-lg ring-2 ring-[#006AA7]/40'
+                      : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-200'
+                  }`}
+                >
+                  <div>
+                    <div className="flex items-center justify-between text-[11px] font-mono-code font-bold mb-1">
+                      <span className="flex items-center gap-1">
+                        <span>{p.icon}</span>
+                        <span>OPTION {p.num}</span>
+                      </span>
+                      {active ? (
+                        <span className="text-[10px] font-bold px-1.5 py-0.5 bg-[#FFCD00] text-[#0A1930] rounded-xs animate-pulse">
+                          ACTIVE FORM ↓
+                        </span>
+                      ) : (
+                        <span className="text-slate-400 text-[10px]">Click to open</span>
+                      )}
+                    </div>
+                    <div className="font-headline font-black text-sm uppercase tracking-tight">
+                      {p.title}
+                    </div>
+                    <div className={`text-[10px] font-mono-code font-semibold ${active ? 'text-[#FFCD00]' : 'text-[#006AA7]'}`}>
+                      {p.subtitle}
+                    </div>
+                  </div>
+                  <div className={`text-[11px] mt-2 line-clamp-2 leading-tight ${active ? 'text-slate-200' : 'text-slate-500'}`}>
+                    {p.desc}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {/* Card 1: Track 1 - RoboKidovation */}
+            <div
+              className={`p-6 border-2 transition-all relative ${
+                selectedProgram === 'workshop' || selectedProgram === 'demo'
+                  ? 'border-[#006AA7] bg-white shadow-xl ring-2 ring-[#006AA7]/20'
+                  : 'border-slate-200 bg-white/80 hover:border-slate-300 shadow-sm'
+              }`}
+            >
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-[11px] font-mono-code font-bold uppercase tracking-wider text-slate-400">
+                  TRACK 1 // ROBOTICS & CURRICULUM
+                </span>
+                <span className="text-2xl">🤖</span>
+              </div>
+              <h2 className="font-headline font-black text-2xl uppercase tracking-tight text-[#0A1930] mb-2 flex items-center gap-2">
+                RoboKidovation
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed mb-6">
+                Hands-on school robotics learning, customizable calendar date & time selection, classroom build sessions, and competition pathway.
+              </p>
+
+              {/* Action Buttons: Workshop & Demo */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => handleSelectProgram('workshop')}
+                  className={`p-3.5 text-left transition-all border-2 flex flex-col justify-between ${
+                    selectedProgram === 'workshop'
+                      ? 'bg-[#006AA7] text-white border-[#006AA7] shadow-md ring-2 ring-[#006AA7]/30'
+                      : 'bg-slate-50 hover:bg-slate-100 text-[#0A1930] border-slate-200'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-headline font-black text-sm uppercase tracking-wider">
+                      1. Workshop
+                    </span>
+                    {selectedProgram === 'workshop' ? (
+                      <span className="text-[10px] font-mono-code font-bold px-1.5 py-0.5 bg-[#FFCD00] text-[#0A1930]">
+                        FORM BELOW ↓
+                      </span>
+                    ) : (
+                      <span className="text-[10px] font-mono-code px-1.5 py-0.5 bg-slate-200 text-slate-700">
+                        Classroom
+                      </span>
+                    )}
+                  </div>
+                  <div className={`text-[11px] leading-tight ${selectedProgram === 'workshop' ? 'text-white/80' : 'text-slate-500'}`}>
+                    Hands-on 20-hr robotics curriculum & kits brought to your school
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleSelectProgram('demo')}
+                  className={`p-3.5 text-left transition-all border-2 flex flex-col justify-between ${
+                    selectedProgram === 'demo'
+                      ? 'bg-[#006AA7] text-white border-[#006AA7] shadow-md ring-2 ring-[#006AA7]/30'
+                      : 'bg-slate-50 hover:bg-slate-100 text-[#0A1930] border-slate-200'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-headline font-black text-sm uppercase tracking-wider">
+                      2. School Demo
+                    </span>
+                    {selectedProgram === 'demo' ? (
+                      <span className="text-[10px] font-mono-code font-bold px-1.5 py-0.5 bg-[#FFCD00] text-[#0A1930]">
+                        FORM BELOW ↓
+                      </span>
+                    ) : (
+                      <span className="text-[10px] font-mono-code px-1.5 py-0.5 bg-slate-200 text-slate-700">
+                        Assembly
+                      </span>
+                    )}
+                  </div>
+                  <div className={`text-[11px] leading-tight ${selectedProgram === 'demo' ? 'text-white/80' : 'text-slate-500'}`}>
+                    Live demonstration session & challenge trials in your auditorium
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            {/* Card 2: Track 2 - Young Future Innovators Hackathon */}
+            <div
+              className={`p-6 border-2 transition-all relative ${
+                selectedProgram === 'submit-idea' || selectedProgram === 'hackathon'
+                  ? 'border-emerald-600 bg-white shadow-xl ring-2 ring-emerald-600/20'
+                  : 'border-slate-200 bg-white/80 hover:border-slate-300 shadow-sm'
+              }`}
+            >
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-[11px] font-mono-code font-bold uppercase tracking-wider text-slate-400">
+                  TRACK 2 // INNOVATION & ARENA
+                </span>
+                <span className="text-2xl">💡</span>
+              </div>
+              <h2 className="font-headline font-black text-2xl uppercase tracking-tight text-[#0A1930] mb-2 flex items-center gap-2">
+                Young Future Innovators Hackathon
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed mb-6">
+                Problem discovery, student multimodal idea submission (voice/picture/video), team formation, physical/digital prototypes, and arena finals.
+              </p>
+
+              {/* Action Buttons: Submit Idea & Register for Hackathon */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => handleSelectProgram('submit-idea')}
+                  className={`p-3.5 text-left transition-all border-2 flex flex-col justify-between ${
+                    selectedProgram === 'submit-idea'
+                      ? 'bg-emerald-600 text-white border-emerald-600 shadow-md ring-2 ring-emerald-600/30'
+                      : 'bg-slate-50 hover:bg-slate-100 text-[#0A1930] border-slate-200'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-headline font-black text-sm uppercase tracking-wider">
+                      3. Submit Idea
+                    </span>
+                    {selectedProgram === 'submit-idea' ? (
+                      <span className="text-[10px] font-mono-code font-bold px-1.5 py-0.5 bg-[#FFCD00] text-[#0A1930]">
+                        FORM BELOW ↓
+                      </span>
+                    ) : (
+                      <span className="text-[10px] font-mono-code px-1.5 py-0.5 bg-slate-200 text-slate-700">
+                        Multimodal
+                      </span>
+                    )}
+                  </div>
+                  <div className={`text-[11px] leading-tight ${selectedProgram === 'submit-idea' ? 'text-white/80' : 'text-slate-500'}`}>
+                    Submit future idea via text, diagram, voice note, or video pitch
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleSelectProgram('hackathon')}
+                  className={`p-3.5 text-left transition-all border-2 flex flex-col justify-between ${
+                    selectedProgram === 'hackathon'
+                      ? 'bg-emerald-600 text-white border-emerald-600 shadow-md ring-2 ring-emerald-600/30'
+                      : 'bg-slate-50 hover:bg-slate-100 text-[#0A1930] border-slate-200'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-headline font-black text-sm uppercase tracking-wider">
+                      4. Hackathon Squad
+                    </span>
+                    {selectedProgram === 'hackathon' ? (
+                      <span className="text-[10px] font-mono-code font-bold px-1.5 py-0.5 bg-[#FFCD00] text-[#0A1930]">
+                        FORM BELOW ↓
+                      </span>
+                    ) : (
+                      <span className="text-[10px] font-mono-code px-1.5 py-0.5 bg-slate-200 text-slate-700">
+                        Compete
+                      </span>
+                    )}
+                  </div>
+                  <div className={`text-[11px] leading-tight ${selectedProgram === 'hackathon' ? 'text-white/80' : 'text-slate-500'}`}>
+                    Register squad for Dec 5 challenge at Mälardalen University
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ── DYNAMIC INLINE FORM CONTAINER (APPEARS IMMEDIATELY BELOW THE CARDS) ── */}
+        <div id="intake-form-container" className="bg-white border-2 border-slate-300 shadow-xl p-6 sm:p-10 text-[#0A1930] relative scroll-mt-24">
+          {!submitSuccess ? (
+            <div>
+              {/* Form Active Banner */}
+              <div className="mb-6 p-4 border border-slate-200 bg-slate-50 flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className={`w-3 h-3 rounded-full animate-ping ${
+                    selectedProgram === 'submit-idea' || selectedProgram === 'hackathon' ? 'bg-emerald-500' : 'bg-[#006AA7]'
+                  }`} />
+                  <div>
+                    <div className="text-xs font-mono-code font-bold uppercase tracking-wider text-slate-500">
+                      Currently Active Intake Form
+                    </div>
+                    <div className="font-headline font-black text-base uppercase text-[#0A1930]">
+                      {selectedProgram === 'workshop' && 'Option 1: School Workshop Booking'}
+                      {selectedProgram === 'demo' && 'Option 2: Live School Demo Session'}
+                      {selectedProgram === 'submit-idea' && 'Option 3: Student Idea Submission (Voice / Drawing / Video)'}
+                      {selectedProgram === 'hackathon' && 'Option 4: Antigravity Hackathon Squad Registration'}
+                    </div>
+                  </div>
+                </div>
+                <div className="text-xs font-mono-code text-slate-500">
+                  Customizable Calendar Dates & Times
+                </div>
+              </div>
+
+              {/* Form Header Badge */}
+              <div className="mb-6 pb-4 border-b border-slate-200">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="inline-flex items-center gap-2 text-xs font-mono-code font-bold tracking-wider text-[#006AA7] uppercase">
+                    {selectedProgram === 'workshop' && <span>[FORM 1/4] // WORKSHOP BOOKING INTAKE</span>}
+                    {selectedProgram === 'demo' && <span>[FORM 2/4] // SCHOOL DEMO SESSION REQUEST</span>}
+                    {selectedProgram === 'submit-idea' && (
+                      <span className="text-emerald-700">
+                        [FORM 3/4] // STUDENT IDEA SUBMISSION (PICTURE / VOICE / TEXT / VIDEO)
+                      </span>
+                    )}
+                    {selectedProgram === 'hackathon' && (
+                      <span className="text-emerald-700">
+                        [FORM 4/4] // ANTIGRAVITY HACKATHON PARTICIPATION
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-[11px] font-mono-code text-slate-500">
+                    Customizable Scheduling & Multi-City EU Skola Intake
+                  </span>
+                </div>
+
+                <h3 className="font-headline font-black text-2xl uppercase tracking-tight text-[#0A1930] mt-1">
+                  {selectedProgram === 'workshop' && 'Book Hands-On Robotics Workshop'}
+                  {selectedProgram === 'demo' && 'Request School Demo & Overview Session'}
+                  {selectedProgram === 'submit-idea' && 'Submit Your Future Innovation Idea'}
+                  {selectedProgram === 'hackathon' && 'Register Squad for Young Innovators Hackathon'}
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-600 mt-1">
+                  {selectedProgram === 'workshop' &&
+                    'Select your custom preferred calendar date and time. An admin coordinator will review and approve.'}
+                  {selectedProgram === 'demo' &&
+                    'Bring an interactive robotics demonstration straight to your auditorium or classroom.'}
+                  {selectedProgram === 'submit-idea' &&
+                    'Express your vision with multimodal options: write it down, upload blueprints/photos, record a voice note, or attach a video!'}
+                  {selectedProgram === 'hackathon' &&
+                    'Form your hacker squad and tackle real-world challenges in environment, smart cities, and education.'}
+                </p>
+              </div>
+
+              {/* Form Element */}
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* ── LOCATION SELECTION (COUNTRY FIRST, THEN CITY / MUNICIPALITY) ── */}
+                <div className="p-4 bg-sky-50/70 border border-sky-200">
+                  <div className="flex items-center gap-2 text-xs font-headline font-black text-slate-800 uppercase tracking-wider mb-3">
+                    <MapPin className="w-4 h-4 text-[#006AA7]" />
+                    <span>Location & Municipality Intake</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
+                        Country *
+                      </label>
+                      <select
+                        required
+                        value={countrySlug}
+                        onChange={(e) => handleCountryChange(e.target.value)}
+                        className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-[#006AA7] focus:outline-none text-xs sm:text-sm text-[#0A1930] font-medium"
+                      >
+                        {COUNTRIES.map((c) => (
+                          <option key={c.slug} value={c.slug}>
+                            {c.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
+                        City / Location *
+                      </label>
+                      <select
+                        required
+                        value={isCustomCity ? 'custom' : citySlug}
+                        onChange={(e) => {
+                          if (e.target.value === 'custom') {
+                            setIsCustomCity(true);
+                            setCitySlug('custom');
+                          } else {
+                            setIsCustomCity(false);
+                            setCitySlug(e.target.value);
+                          }
+                        }}
+                        className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-[#006AA7] focus:outline-none text-xs sm:text-sm text-[#0A1930] font-medium"
+                      >
+                        {(CITIES_BY_COUNTRY[countrySlug] || []).map((ci) => (
+                          <option key={ci.slug} value={ci.slug}>
+                            {ci.name}
+                          </option>
+                        ))}
+                        <option value="custom">+ Other / Custom City...</option>
+                      </select>
+
+                      {isCustomCity && (
+                        <input
+                          type="text"
+                          required
+                          value={customCityName}
+                          onChange={(e) => setCustomCityName(e.target.value)}
+                          placeholder="Type municipality or city name"
+                          className="w-full mt-2 px-3.5 py-2 bg-white border border-slate-300 focus:border-[#006AA7] focus:outline-none text-xs sm:text-sm text-[#0A1930]"
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* ── APPLICANT & SCHOOL MAPPING DETAILS ── */}
+                <div className="space-y-4">
+                  {/* For Demo & Workshop: School vs Individual switch */}
+                  {(selectedProgram === 'workshop' || selectedProgram === 'demo') && (
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setApplicantType('school')}
+                        className={`py-2 px-4 text-xs font-headline font-bold uppercase tracking-wider border flex items-center gap-1.5 ${
+                          applicantType === 'school'
+                            ? 'bg-[#006AA7] text-white border-[#006AA7]'
+                            : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+                        }`}
+                      >
+                        <Building className="w-3.5 h-3.5" />
+                        <span>School Intake</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setApplicantType('student')}
+                        className={`py-2 px-4 text-xs font-headline font-bold uppercase tracking-wider border flex items-center gap-1.5 ${
+                          applicantType === 'student'
+                            ? 'bg-[#006AA7] text-white border-[#006AA7]'
+                            : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+                        }`}
+                      >
+                        <User className="w-3.5 h-3.5" />
+                        <span>Individual / Student Squad</span>
+                      </button>
+                    </div>
+                  )}
+
+                  {/* School / Entity Name */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
+                        {selectedProgram === 'submit-idea'
+                          ? 'School Name (Auto-mapped to school admin) *'
+                          : applicantType === 'school'
+                          ? 'School Name *'
+                          : 'Team / Squad Name (Optional)'}
+                      </label>
+                      <input
+                        type="text"
+                        required={selectedProgram === 'submit-idea' || applicantType === 'school'}
+                        list="registered-schools-list"
+                        value={applicantType === 'school' || selectedProgram === 'submit-idea' ? schoolName : teamName}
+                        onChange={(e) => {
+                          if (applicantType === 'school' || selectedProgram === 'submit-idea') {
+                            setSchoolName(e.target.value);
+                          } else {
+                            setTeamName(e.target.value);
+                          }
+                        }}
+                        placeholder={
+                          selectedProgram === 'submit-idea'
+                            ? 'e.g. Viksängsskolan, MISV, Hydro Skola...'
+                            : 'e.g. Viksängsskolan'
+                        }
+                        className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 focus:border-[#006AA7] focus:bg-white focus:outline-none text-xs sm:text-sm text-[#0A1930]"
+                      />
+                      {/* Datalist for autocomplete with existing registered schools */}
+                      <datalist id="registered-schools-list">
+                        {registeredSchools.map((s, idx) => (
+                          <option key={idx} value={s.name} />
+                        ))}
+                      </datalist>
+                      {selectedProgram === 'submit-idea' && (
+                        <p className="text-[11px] font-mono-code text-slate-500 mt-1">
+                          Tip: Submissions from registered schools (like Hydro or MISV) are
+                          automatically grouped in their school admin panel!
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
+                        {selectedProgram === 'submit-idea'
+                          ? 'Student / Innovator Name *'
+                          : 'Contact Person *'}
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={selectedProgram === 'submit-idea' ? studentName : contactName}
+                        onChange={(e) => {
+                          if (selectedProgram === 'submit-idea') {
+                            setStudentName(e.target.value);
+                          } else {
+                            setContactName(e.target.value);
+                          }
+                        }}
+                        placeholder="Full Name"
+                        className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 focus:border-[#006AA7] focus:bg-white focus:outline-none text-xs sm:text-sm text-[#0A1930]"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Email & Phone */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
+                        Email Address *
+                      </label>
+                      <input
+                        type="email"
+                        required
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="contact@school.se"
+                        className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 focus:border-[#006AA7] focus:bg-white focus:outline-none text-xs sm:text-sm text-[#0A1930]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
+                        Phone Number
+                      </label>
+                      <input
+                        type="tel"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        placeholder="+46 70 123 4567"
+                        className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 focus:border-[#006AA7] focus:bg-white focus:outline-none text-xs sm:text-sm text-[#0A1930]"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* ── SECTION C: CUSTOMIZABLE DATE & TIME (FOR WORKSHOP, DEMO, HACKATHON) ── */}
+                {selectedProgram !== 'submit-idea' && (
+                  <div className="p-4 bg-sky-50/50 border border-sky-200 space-y-4">
+                    <div className="flex items-center gap-2 text-xs font-headline font-bold text-[#006AA7] uppercase tracking-wider">
+                      <Calendar className="w-4 h-4" />
+                      <span>Customizable Date & Time Selection (Calendar Picker)</span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      {/* Customizable Date Picker */}
+                      <div>
+                        <label className="block text-[11px] font-mono-code font-bold uppercase text-slate-700 mb-1">
+                          Select Custom Date *
+                        </label>
+                        <input
+                          type="date"
+                          required
+                          value={customDate}
+                          onChange={(e) => setCustomDate(e.target.value)}
+                          className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-[#006AA7] text-xs sm:text-sm font-mono-code text-[#0A1930]"
+                        />
+                      </div>
+
+                      {/* Customizable Start Time */}
+                      <div>
+                        <label className="block text-[11px] font-mono-code font-bold uppercase text-slate-700 mb-1">
+                          Start Time *
+                        </label>
+                        <input
+                          type="time"
+                          required
+                          value={customTime}
+                          onChange={(e) => setCustomTime(e.target.value)}
+                          className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-[#006AA7] text-xs sm:text-sm font-mono-code text-[#0A1930]"
+                        />
+                      </div>
+
+                      {/* Customizable End Time */}
+                      <div>
+                        <label className="block text-[11px] font-mono-code font-bold uppercase text-slate-700 mb-1">
+                          End Time *
+                        </label>
+                        <input
+                          type="time"
+                          required
+                          value={customEndTime}
+                          onChange={(e) => setCustomEndTime(e.target.value)}
+                          className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-[#006AA7] text-xs sm:text-sm font-mono-code text-[#0A1930]"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Grade Group & Cohort Count */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                      <div>
+                        <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
+                          Grade / Age Group
+                        </label>
+                        <select
+                          value={gradeGroup}
+                          onChange={(e) => setGradeGroup(e.target.value)}
+                          className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-[#006AA7] text-xs sm:text-sm text-[#0A1930]"
+                        >
+                          <option value="Årskurs 4–6 (Mellanstadiet · Ages 10–12)">
+                            Årskurs 4–6 (Mellanstadiet · Ages 10–12)
+                          </option>
+                          <option value="Årskurs 7–9 (Högstadiet · Ages 13–15)">
+                            Årskurs 7–9 (Högstadiet · Ages 13–15)
+                          </option>
+                          <option value="Gymnasiet (Upper Secondary · Ages 16–18)">
+                            Gymnasiet (Upper Secondary · Ages 16–18)
+                          </option>
+                          <option value="Mixed Cohort / STEM Club">Mixed Cohort / STEM Club</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
+                          Expected Students Count
+                        </label>
+                        <input
+                          type="text"
+                          value={studentCount}
+                          onChange={(e) => setStudentCount(e.target.value)}
+                          placeholder="e.g. 25"
+                          className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-[#006AA7] text-xs sm:text-sm text-[#0A1930]"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* ── SECTION D: MULTIMODAL IDEA SUBMISSION FIELDS (ONLY FOR SUBMIT IDEA) ── */}
+                {selectedProgram === 'submit-idea' && (
+                  <div className="space-y-5 p-5 bg-emerald-50/40 border border-emerald-200">
+                    <div className="flex items-center gap-2 text-xs font-headline font-bold text-emerald-800 uppercase tracking-wider">
+                      <Lightbulb className="w-4 h-4 text-emerald-600" />
+                      <span>Idea Details & Multimodal Submissions (Text, Photo, Voice, Video)</span>
+                    </div>
+
+                    {/* Idea Title & Category */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      <div className="sm:col-span-2">
+                        <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
+                          Idea Title *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={ideaTitle}
+                          onChange={(e) => setIdeaTitle(e.target.value)}
+                          placeholder="e.g. Solar-Powered Smart Rover for School Recycled Sorting"
+                          className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-emerald-600 text-xs sm:text-sm text-[#0A1930]"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
+                          Theme / Category
+                        </label>
+                        <select
+                          value={ideaCategory}
+                          onChange={(e) => setIdeaCategory(e.target.value)}
+                          className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-emerald-600 text-xs sm:text-sm text-[#0A1930]"
+                        >
+                          <option value="Sustainability & Green Tech">Sustainability & Green Tech</option>
+                          <option value="Smart Schools & Health">Smart Schools & Health</option>
+                          <option value="Clean Energy & Water">Clean Energy & Water</option>
+                          <option value="Robotics & Automation">Robotics & Automation</option>
+                          <option value="Inclusive Society & Accessibility">
+                            Inclusive Society & Accessibility
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Student Age & Grade */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
+                          Student Age
+                        </label>
+                        <input
+                          type="number"
+                          min="6"
+                          max="20"
+                          value={studentAge}
+                          onChange={(e) => setStudentAge(e.target.value)}
+                          className="w-full px-3.5 py-2 bg-white border border-slate-300 text-xs sm:text-sm"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
+                          Class / Grade
+                        </label>
+                        <input
+                          type="text"
+                          value={studentGrade}
+                          onChange={(e) => setStudentGrade(e.target.value)}
+                          placeholder="e.g. Grade 7B"
+                          className="w-full px-3.5 py-2 bg-white border border-slate-300 text-xs sm:text-sm"
+                        />
+                      </div>
+                    </div>
+
+                    {/* 1. TYPE THE IDEA */}
+                    <div>
+                      <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1 flex items-center gap-1.5">
+                        <FileText className="w-3.5 h-3.5 text-slate-500" />
+                        <span>1. Type Your Idea Description</span>
+                      </label>
+                      <textarea
+                        rows={4}
+                        value={ideaDescription}
+                        onChange={(e) => setIdeaDescription(e.target.value)}
+                        placeholder="Describe the challenge you are solving, how your idea works, and why it makes a difference..."
+                        className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-emerald-600 text-xs sm:text-sm text-[#0A1930]"
+                      />
+                    </div>
+
+                    {/* 2. UPLOAD A PICTURE */}
+                    <div className="p-4 bg-white border border-slate-200">
+                      <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-2 flex items-center gap-1.5">
+                        <ImageIcon className="w-3.5 h-3.5 text-[#006AA7]" />
+                        <span>2. Upload a Picture / Diagram / Blueprint</span>
+                      </label>
+
+                      <div className="flex flex-wrap items-center gap-4">
+                        <label className="py-2.5 px-4 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-xs font-headline font-bold uppercase tracking-wider flex items-center gap-2 cursor-pointer transition-colors">
+                          <Upload className="w-4 h-4 text-slate-600" />
+                          <span>Choose Image (JPG, PNG, WebP)</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handlePhotoSelect}
+                            className="hidden"
+                          />
+                        </label>
+
+                        {photoFile && (
+                          <div className="flex items-center gap-2 text-xs font-mono-code text-emerald-700">
+                            <CheckCircle2 className="w-4 h-4" />
+                            <span>{photoFile.name}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {photoPreview && (
+                        <div className="mt-3 w-32 h-32 border border-slate-200 overflow-hidden bg-slate-50">
+                          <img
+                            src={photoPreview}
+                            alt="Idea preview"
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* 3. VOICE NOTE (IN-BROWSER MICROPHONE RECORDING) */}
+                    <div>
+                      <VoiceNoteRecorder onAudioReady={(file) => setVoiceNoteFile(file)} />
+                    </div>
+
+                    {/* 4. SUBMIT VIDEO (UPLOAD OR LINK) */}
+                    <div className="p-4 bg-white border border-slate-200 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                          <Video className="w-3.5 h-3.5 text-purple-600" />
+                          <span>4. Submit Video Presentation</span>
+                        </label>
+                        <div className="flex gap-1 text-[11px] font-mono-code">
+                          <button
+                            type="button"
+                            onClick={() => setVideoInputType('link')}
+                            className={`px-2 py-0.5 border ${
+                              videoInputType === 'link'
+                                ? 'bg-[#006AA7] text-white border-[#006AA7]'
+                                : 'bg-slate-100 text-slate-600 border-slate-200'
+                            }`}
+                          >
+                            Paste Link
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setVideoInputType('upload')}
+                            className={`px-2 py-0.5 border ${
+                              videoInputType === 'upload'
+                                ? 'bg-[#006AA7] text-white border-[#006AA7]'
+                                : 'bg-slate-100 text-slate-600 border-slate-200'
+                            }`}
+                          >
+                            Upload File
+                          </button>
+                        </div>
+                      </div>
+
+                      {videoInputType === 'link' ? (
+                        <input
+                          type="url"
+                          value={videoLink}
+                          onChange={(e) => setVideoLink(e.target.value)}
+                          placeholder="Paste YouTube, Vimeo, Loom, or Google Drive video URL..."
+                          className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 focus:border-purple-600 text-xs sm:text-sm text-[#0A1930]"
+                        />
+                      ) : (
+                        <div className="flex flex-wrap items-center gap-4">
+                          <label className="py-2.5 px-4 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-xs font-headline font-bold uppercase tracking-wider flex items-center gap-2 cursor-pointer transition-colors">
+                            <Upload className="w-4 h-4 text-slate-600" />
+                            <span>Select Video (MP4, WebM)</span>
+                            <input
+                              type="file"
+                              accept="video/*"
+                              onChange={handleVideoSelect}
+                              className="hidden"
+                            />
+                          </label>
+
+                          {videoFile && (
+                            <div className="flex items-center gap-2 text-xs font-mono-code text-purple-700">
+                              <CheckCircle2 className="w-4 h-4" />
+                              <span>{videoFile.name}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* ── SECTION E: HACKATHON ROLES & DOMAIN (ONLY FOR HACKATHON) ── */}
+                {selectedProgram === 'hackathon' && (
+                  <div className="p-4 bg-purple-50/50 border border-purple-200 space-y-4">
+                    <div className="flex items-center gap-2 text-xs font-headline font-bold text-purple-900 uppercase tracking-wider">
+                      <Compass className="w-4 h-4 text-purple-600" />
+                      <span>Hacker Squad Profile & Domain Focus</span>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-2">
+                        Squad Skills (Select All That Apply)
+                      </label>
+                      <div className="flex flex-wrap gap-2">
+                        {[
+                          'Robotics & Hardware',
+                          'Coding & Software',
+                          '3D Design & CAD',
+                          'Pitch & Storytelling',
+                          'Science & Research',
+                        ].map((skill) => (
+                          <button
+                            key={skill}
+                            type="button"
+                            onClick={() => toggleSkill(skill)}
+                            className={`py-1.5 px-3 text-xs font-mono-code border transition-all ${
+                              hackathonSkills.includes(skill)
+                                ? 'bg-purple-700 text-white border-purple-700 font-bold'
+                                : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
+                            }`}
+                          >
+                            {skill}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
+                        Challenge Domain
+                      </label>
+                      <select
+                        value={hackerChallengeDomain}
+                        onChange={(e) => setHackerChallengeDomain(e.target.value)}
+                        className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-purple-600 text-xs sm:text-sm text-[#0A1930]"
+                      >
+                        <option value="Sustainable Cities & Climate">
+                          Sustainable Cities & Climate
+                        </option>
+                        <option value="Future School & Digital Learning">
+                          Future School & Digital Learning
+                        </option>
+                        <option value="Autonomous Navigation & Rover Tech">
+                          Autonomous Navigation & Rover Tech
+                        </option>
+                        <option value="Civic Accessibility & Healthcare">
+                          Civic Accessibility & Healthcare
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                )}
+
+                {/* ── SECTION F: CONSENT & GDPR CHECKBOXES ── */}
+                <div className="space-y-3 pt-2 border-t border-slate-200">
+                  <label className="flex items-start gap-2.5 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      required
+                      checked={consentAgreed}
+                      onChange={(e) => setConsentAgreed(e.target.checked)}
+                      className="mt-0.5 w-4 h-4 text-[#006AA7] border-slate-300 rounded cursor-pointer"
+                    />
+                    <span className="text-xs text-slate-700 leading-snug">
+                      I confirm that I am okay to submit my details, and that all necessary
+                      information and materials provided are accurate.
+                    </span>
+                  </label>
+
+                  <label className="flex items-start gap-2.5 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      required
+                      checked={gdprAgreed}
+                      onChange={(e) => setGdprAgreed(e.target.checked)}
+                      className="mt-0.5 w-4 h-4 text-[#006AA7] border-slate-300 rounded cursor-pointer"
+                    />
+                    <span className="text-xs text-slate-700 leading-snug">
+                      I have read and accept the GDPR data protection policy, school privacy
+                      protocol, and consent terms.
+                    </span>
+                  </label>
+
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => setShowGdprInfo(!showGdprInfo)}
+                      className="text-[11px] font-mono-code text-[#006AA7] hover:underline"
+                    >
+                      {showGdprInfo ? '▲ Hide GDPR details' : '▼ Read GDPR & privacy terms'}
+                    </button>
+                    {showGdprInfo && (
+                      <div className="mt-2 p-3 bg-slate-50 border border-slate-200 text-[11px] text-slate-600 leading-relaxed font-light">
+                        Data controller: Västerås Future Innovators / INIAC in accordance with EU
+                        GDPR regulations. Contact data and submission artifacts are used strictly
+                        for workshop scheduling, idea evaluation, and league qualification.
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {submitError && (
+                  <div className="p-3 bg-red-50 border border-red-200 flex items-center gap-2 text-xs font-mono-code text-red-600">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>{submitError}</span>
+                  </div>
+                )}
+
+                {/* Submit Action Button */}
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className={`w-full py-4 px-6 text-white font-headline font-black text-sm tracking-wider uppercase transition-all shadow-md flex items-center justify-center gap-2 disabled:opacity-50 ${
+                    selectedProgram === 'submit-idea' || selectedProgram === 'hackathon'
+                      ? 'bg-emerald-600 hover:bg-emerald-700'
+                      : 'bg-[#006AA7] hover:bg-[#013A63]'
+                  }`}
+                >
+                  {isSubmitting ? (
+                    <span className="inline-flex items-center gap-2">
+                      <span className="w-4 h-4 border-2 border-white/30 border-t-white animate-spin" />
+                      <span>Transmitting Registration...</span>
+                    </span>
+                  ) : (
+                    <>
+                      <span>
+                        {selectedProgram === 'workshop' && 'Submit Workshop Booking Request'}
+                        {selectedProgram === 'demo' && 'Request Free School Demo'}
+                        {selectedProgram === 'submit-idea' && 'Submit Idea for Review'}
+                        {selectedProgram === 'hackathon' && 'Register Hacker Squad'}
+                      </span>
+                      <ArrowRight className="w-4 h-4 text-[#FFCD00]" />
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
+          ) : (
+            /* ── SUBMISSION CONFIRMATION & CAMPAIGN SHARE SCREEN ── */
+            <div className="py-10 text-center flex flex-col items-center">
+              <div className="w-16 h-16 bg-emerald-100 text-emerald-600 flex items-center justify-center mb-4">
+                <CheckCircle2 className="w-8 h-8" />
+              </div>
+
+              <span className="text-[10px] font-mono-code font-bold tracking-[0.25em] text-emerald-600 uppercase mb-1 block">
+                SUCCESSFULLY RECORDED // INTAKE 2026
+              </span>
+
+              <h3 className="font-headline font-black text-3xl uppercase tracking-tight text-[#0A1930]">
+                {selectedProgram === 'submit-idea'
+                  ? 'Idea Submitted for Review!'
+                  : 'Registration Request Received!'}
+              </h3>
+
+              <p className="mt-2 text-xs sm:text-sm text-slate-600 max-w-lg leading-relaxed font-light">
+                {selectedProgram === 'submit-idea'
+                  ? `Your idea has been securely recorded and mapped to your school admin panel for review. Once approved by the coordinator, it will appear on the public "View Ideas & Vote" page!`
+                  : `Your booking request has been forwarded to the municipal coordinator. An email confirmation has been sent to ${email}.`}
+              </p>
+
+              {/* Public Reference Token Badge */}
+              <div className="my-6 p-4 bg-slate-50 border border-slate-200 w-full max-w-md text-center">
+                <span className="text-[10px] font-mono-code text-slate-500 uppercase block mb-1">
+                  OFFICIAL ID TOKEN
+                </span>
+                <span className="font-mono-code font-bold text-xl text-[#006AA7] tracking-wider block">
+                  {generatedId}
+                </span>
+                <span className="text-[11px] text-slate-500 font-mono-code block mt-1">
+                  Status: Pending Coordinator Review
+                </span>
+              </div>
+
+              {/* Share & Action Buttons */}
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                {selectedProgram === 'submit-idea' && (
+                  <button
+                    type="button"
+                    onClick={handleCopyLink}
+                    className="py-3 px-5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-headline font-bold uppercase tracking-wider flex items-center gap-2 shadow-sm transition-all"
+                  >
+                    {copiedLink ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
+                    <span>{copiedLink ? 'Campaign Link Copied!' : 'Copy Campaign URL (Vote For My Idea)'}</span>
+                  </button>
+                )}
+
+                {onNavigateVoting && (
+                  <button
+                    type="button"
+                    onClick={onNavigateVoting}
+                    className="py-3 px-5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-headline font-bold uppercase tracking-wider flex items-center gap-2 shadow-sm transition-all"
+                  >
+                    <span>⭐ View Ideas & Vote</span>
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSubmitSuccess(false);
+                    setIdeaTitle('');
+                    setIdeaDescription('');
+                    setPhotoFile(null);
+                    setPhotoPreview(null);
+                    setVoiceNoteFile(null);
+                    setVideoFile(null);
+                    setVideoLink('');
+                  }}
+                  className="py-3 px-5 bg-[#0A1930] hover:bg-[#006AA7] text-white text-xs font-headline font-bold uppercase tracking-wider transition-colors"
+                >
+                  Submit Another Request
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};

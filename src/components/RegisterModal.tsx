@@ -11,17 +11,52 @@ import {
   ChevronUp,
   Info,
   ArrowRight,
+  MapPin,
 } from 'lucide-react';
 import { COMPETITION_CATEGORIES, CompetitionCategory } from '../data/roboData';
 import { supabase } from '../lib/supabase';
 
+const COUNTRIES = [
+  { slug: 'sweden', name: 'Sweden', defaultCity: 'vasteras' },
+  { slug: 'denmark', name: 'Denmark', defaultCity: 'copenhagen' },
+  { slug: 'latvia', name: 'Latvia', defaultCity: 'riga' },
+  { slug: 'estonia', name: 'Estonia', defaultCity: 'tallinn' },
+];
+
+const CITIES_BY_COUNTRY: Record<string, { slug: string; name: string }[]> = {
+  sweden: [
+    { slug: 'vasteras', name: 'Västerås' },
+    { slug: 'eskilstuna', name: 'Eskilstuna' },
+    { slug: 'uppsala', name: 'Uppsala' },
+    { slug: 'stockholm', name: 'Stockholm' },
+    { slug: 'gavle', name: 'Gävle' },
+  ],
+  denmark: [{ slug: 'copenhagen', name: 'Copenhagen' }],
+  latvia: [
+    { slug: 'riga', name: 'Riga' },
+    { slug: 'ventspils', name: 'Ventspils' },
+  ],
+  estonia: [{ slug: 'tallinn', name: 'Tallinn' }],
+};
+
 interface RegisterModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onNavigateToFullIntake?: (program?: string) => void;
 }
 
-export const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
+export const RegisterModal: React.FC<RegisterModalProps> = ({
+  isOpen,
+  onClose,
+  onNavigateToFullIntake,
+}) => {
   const [activeTab, setActiveTab] = useState<'school' | 'student'>('school');
+
+  // Location Fields
+  const [countrySlug, setCountrySlug] = useState('sweden');
+  const [citySlug, setCitySlug] = useState('vasteras');
+  const [customCityName, setCustomCityName] = useState('');
+  const [isCustomCity, setIsCustomCity] = useState(false);
 
   // School Registration Form Fields
   const [schoolName, setSchoolName] = useState('');
@@ -43,6 +78,18 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose })
   // Student / Team Registration Form Fields
   const [teamName, setTeamName] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('robo-sprint-explorer');
+
+  const handleCountryChange = (cSlug: string) => {
+    setCountrySlug(cSlug);
+    const available = CITIES_BY_COUNTRY[cSlug] || [];
+    if (available.length > 0) {
+      setCitySlug(available[0].slug);
+      setIsCustomCity(false);
+    } else {
+      setCitySlug('custom');
+      setIsCustomCity(true);
+    }
+  };
 
   // State handling
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -82,9 +129,17 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose })
     // The EU Skola ID (EU-SWE-VAST-…) is issued by the database; status is
     // always 'pending' for public submissions. A student entry with a team
     // name is a group (GROU-001), without one an individual (INDV-001).
+    const selectedCityName = isCustomCity
+      ? customCityName
+      : (CITIES_BY_COUNTRY[countrySlug] || []).find((c) => c.slug === citySlug)?.name || citySlug;
+    const selectedCountryName =
+      COUNTRIES.find((c) => c.slug === countrySlug)?.name || countrySlug;
+
     const payload = {
-      country_slug: 'sweden',
-      city_slug: 'vasteras',
+      country_slug: countrySlug,
+      city_slug: isCustomCity ? 'custom' : citySlug,
+      city_name: selectedCityName,
+      country_name: selectedCountryName,
       registration_type: activeTab,
       school_name: activeTab === 'school' ? schoolName : null,
       team_name: activeTab === 'student' ? teamName.trim() || null : null,
@@ -172,6 +227,51 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose })
               </p>
             </div>
 
+            {/* Unified 4-Pathway Banner */}
+            <div className="mb-5 p-3.5 bg-slate-50 border border-slate-200">
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                <span className="text-[11px] font-mono-code font-bold uppercase tracking-wider text-[#006AA7]">
+                  UNIFIED 4-PROGRAM INTAKE
+                </span>
+                {onNavigateToFullIntake && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      onNavigateToFullIntake('workshop');
+                    }}
+                    className="text-[11px] font-headline font-bold text-[#006AA7] hover:underline flex items-center gap-1"
+                  >
+                    <span>Open Full Page Intake</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </button>
+                )}
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-xs">
+                {[
+                  { id: 'workshop', label: '1. Workshop', icon: '🤖' },
+                  { id: 'demo', label: '2. Demo', icon: '📢' },
+                  { id: 'submit-idea', label: '3. Submit Idea', icon: '💡' },
+                  { id: 'hackathon', label: '4. Hackathon', icon: '🏆' },
+                ].map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => {
+                      if (onNavigateToFullIntake) {
+                        onClose();
+                        onNavigateToFullIntake(item.id);
+                      }
+                    }}
+                    className="py-1.5 px-2 bg-white hover:bg-[#006AA7] hover:text-white border border-slate-300 text-slate-800 text-[11px] font-headline font-bold uppercase transition-colors flex items-center justify-center gap-1 text-center"
+                  >
+                    <span>{item.icon}</span>
+                    <span className="truncate">{item.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Tab Switcher */}
             <div className="flex gap-2 border-b border-slate-200 pb-3 mb-5">
               <button
@@ -209,6 +309,71 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose })
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Location Selection (Country first, then City / Municipality) */}
+              <div className="p-3 bg-sky-50/70 border border-sky-200 space-y-2.5">
+                <div className="flex items-center gap-1.5 text-xs font-headline font-bold text-slate-800 uppercase tracking-wider">
+                  <MapPin className="w-3.5 h-3.5 text-[#006AA7]" />
+                  <span>Location & Municipality Intake</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-headline font-bold tracking-wider text-slate-700 uppercase mb-1">
+                      Country *
+                    </label>
+                    <select
+                      required
+                      value={countrySlug}
+                      onChange={(e) => handleCountryChange(e.target.value)}
+                      className="w-full px-3 py-2 bg-white border border-slate-300 focus:border-[#006AA7] focus:outline-none text-xs text-[#0A1930]"
+                    >
+                      {COUNTRIES.map((c) => (
+                        <option key={c.slug} value={c.slug}>
+                          {c.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-headline font-bold tracking-wider text-slate-700 uppercase mb-1">
+                      City / Location *
+                    </label>
+                    <select
+                      required
+                      value={isCustomCity ? 'custom' : citySlug}
+                      onChange={(e) => {
+                        if (e.target.value === 'custom') {
+                          setIsCustomCity(true);
+                          setCitySlug('custom');
+                        } else {
+                          setIsCustomCity(false);
+                          setCitySlug(e.target.value);
+                        }
+                      }}
+                      className="w-full px-3 py-2 bg-white border border-slate-300 focus:border-[#006AA7] focus:outline-none text-xs text-[#0A1930]"
+                    >
+                      {(CITIES_BY_COUNTRY[countrySlug] || []).map((ci) => (
+                        <option key={ci.slug} value={ci.slug}>
+                          {ci.name}
+                        </option>
+                      ))}
+                      <option value="custom">+ Other / Custom City...</option>
+                    </select>
+
+                    {isCustomCity && (
+                      <input
+                        type="text"
+                        required
+                        value={customCityName}
+                        onChange={(e) => setCustomCityName(e.target.value)}
+                        placeholder="Type municipality / city name"
+                        className="w-full mt-2 px-3 py-1.5 bg-white border border-slate-300 focus:border-[#006AA7] text-xs text-[#0A1930]"
+                      />
+                    )}
+                  </div>
+                </div>
+              </div>
+
               {/* Row 1: Name & Contact Person */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
