@@ -38,3 +38,7 @@ public/uhd_25fps.mp4
 
 # Supabase CLI temp files
 supabase/.temp/
+
+# Vite build cache & timestamps
+.vite/
+*.timestamp-*.mjs
