@@ -183,7 +183,7 @@ export const CollaboratorsMarquee: React.FC<CollaboratorsMarqueeProps> = () => {
           Workshops &amp; demos near you
         </span>
         <h2 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#0A1930]">
-          Meet Us @
+          Meet Us At
         </h2>
       </div>
 

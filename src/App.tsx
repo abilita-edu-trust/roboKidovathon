@@ -78,7 +78,7 @@ export function App() {
             {/* 02. Trusted Partners Marquee / Ticker (directly below Hero) */}
             <RefHeroMarquee />
 
-            {/* 03. Meet Us @ — confirmed school bookings + live stats */}
+            {/* 03. Meet Us At — confirmed school bookings + live stats */}
             <section className="w-full bg-white text-[#0A1930] py-14 sm:py-16 px-4 sm:px-6 lg:px-10">
               <div className="max-w-[1560px] mx-auto">
                 <CollaboratorsMarquee onNavigate={handleNavigate} />
