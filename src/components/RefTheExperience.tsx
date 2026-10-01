@@ -48,7 +48,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
       num: 1,
       title: 'School Demo',
       subtitle: 'See the robots, try simple challenges',
-      date: '7 – 25 September 2026',
+      date: '1 – 14 October 2026',
       icon: Presentation,
       highlight: false,
     },
@@ -56,7 +56,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
       num: 2,
       title: 'Hands-On Workshop',
       subtitle: 'Learn and build with real robots',
-      date: '1 – 14 October 2026',
+      date: '15 – 28 October 2026',
       icon: Cpu,
       highlight: false,
     },
@@ -64,7 +64,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
       num: 3,
       title: 'Team Formation',
       subtitle: 'Form teams and start practising',
-      date: '15 – 28 October 2026',
+      date: '29 October – 11 November 2026',
       icon: Users,
       highlight: false,
     },
@@ -72,7 +72,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
       num: 4,
       title: 'School Qualification',
       subtitle: 'Internal challenge to select best teams',
-      date: '29 October – 11 November 2026',
+      date: '12 – 25 November 2026',
       icon: Award,
       highlight: false,
     },
@@ -80,7 +80,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
       num: 5,
       title: 'Final Preparation',
       subtitle: 'Practise and get final-ready',
-      date: '12 November – 4 December 2026',
+      date: '26 November – 4 December 2026',
       icon: Wrench,
       highlight: false,
     },
@@ -101,7 +101,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
       num: 1,
       title: 'Listen',
       subtitle: 'Collect ideas from schools',
-      date: '7 – 25 September 2026',
+      date: '1 – 14 October 2026',
       icon: Compass,
       highlight: false,
     },
@@ -109,7 +109,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
       num: 2,
       title: 'Select',
       subtitle: 'Identify key challenges',
-      date: '1 – 14 October 2026',
+      date: '15 – 28 October 2026',
       icon: Search,
       highlight: false,
     },
@@ -117,7 +117,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
       num: 3,
       title: 'Connect',
       subtitle: 'Form mixed teams with mentors',
-      date: '15 – 28 October 2026',
+      date: '29 October – 11 November 2026',
       icon: UserPlus,
       highlight: false,
     },
@@ -125,7 +125,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
       num: 4,
       title: 'Build',
       subtitle: 'Turn ideas into a prototype',
-      date: '29 October – 11 November 2026',
+      date: '12 – 25 November 2026',
       icon: Layers,
       highlight: false,
     },
@@ -133,7 +133,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
       num: 5,
       title: 'Prepare Pitch',
       subtitle: 'Refine your solution and pitch',
-      date: '12 November – 4 December 2026',
+      date: '26 November – 4 December 2026',
       icon: LineChart,
       highlight: false,
     },
@@ -222,13 +222,13 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
             className="bg-white border-2 border-[#006AA7] shadow-xl overflow-hidden flex flex-col justify-between hover:shadow-2xl transition-all duration-300"
           >
             {/* Blue Card Top Header Banner */}
-            <div className="bg-[#006AA7] text-white p-6 sm:p-7 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div className="bg-[#006AA7] text-white p-6 sm:p-7 flex flex-col items-start gap-4">
               <div className="flex items-center gap-4">
                 <div className="w-14 h-14 bg-white/15 border border-white/25 flex items-center justify-center text-white shrink-0 shadow-inner">
                   <Bot className="w-8 h-8 text-white" />
                 </div>
                 <div>
-                  <h3 className="font-headline font-black text-2xl sm:text-3xl text-white tracking-tight leading-none">
+                  <h3 className="font-headline font-black text-2xl sm:text-3xl text-white tracking-tight leading-none whitespace-nowrap">
                     RoboKidovation
                   </h3>
                   <p className="text-[11px] sm:text-xs font-mono-code font-bold uppercase tracking-[0.2em] text-sky-200 mt-1">
@@ -237,7 +237,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
                 </div>
               </div>
 
-              <div className="text-xs sm:text-sm text-sky-100 font-light max-w-xs md:text-right border-t md:border-t-0 border-white/15 pt-2 md:pt-0">
+              <div className="text-xs sm:text-sm text-sky-100 font-light w-full border-t border-white/15 pt-3">
                 <p>Hands-on robotics challenge for school teams.</p>
                 <p className="text-white/80">No previous experience needed.</p>
               </div>
@@ -323,13 +323,13 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
             className="bg-white border-2 border-[#059669] shadow-xl overflow-hidden flex flex-col justify-between hover:shadow-2xl transition-all duration-300"
           >
             {/* Green Card Top Header Banner */}
-            <div className="bg-[#059669] text-white p-6 sm:p-7 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div className="bg-[#059669] text-white p-6 sm:p-7 flex flex-col items-start gap-4">
               <div className="flex items-center gap-4">
                 <div className="w-14 h-14 bg-white/15 border border-white/25 flex items-center justify-center text-white shrink-0 shadow-inner">
                   <Lightbulb className="w-8 h-8 text-white" />
                 </div>
                 <div>
-                  <h3 className="font-headline font-black text-2xl sm:text-3xl text-white tracking-tight leading-none">
+                  <h3 className="font-headline font-black text-2xl sm:text-3xl text-white tracking-tight leading-none whitespace-nowrap">
                     Young Inno Hack
                   </h3>
                   <p className="text-[11px] sm:text-xs font-mono-code font-bold uppercase tracking-[0.2em] text-emerald-200 mt-1">
@@ -338,7 +338,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
                 </div>
               </div>
 
-              <div className="text-xs sm:text-sm text-emerald-100 font-light max-w-xs md:text-right border-t md:border-t-0 border-white/15 pt-2 md:pt-0">
+              <div className="text-xs sm:text-sm text-emerald-100 font-light w-full border-t border-white/15 pt-3">
                 <p>A one-day innovation challenge solving real-world problems.</p>
                 <p className="text-white/80">Develop a concept and pitch to the jury.</p>
               </div>
