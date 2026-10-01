@@ -3,6 +3,13 @@
 # ── Block directory listing ──
 Options -Indexes
 
+# ── Old address: ssrl.iniac.se moved to vfi.iniac.se (keeps shared links & QR codes working) ──
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_HOST} ^ssrl\.iniac\.se$ [NC]
+  RewriteRule ^ https://vfi.iniac.se%{REQUEST_URI} [L,R=301]
+</IfModule>
+
 # ── Force HTTPS ──
 <IfModule mod_rewrite.c>
   RewriteEngine On
