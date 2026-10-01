@@ -10,7 +10,6 @@ interface RefWorkshopTapeBannerProps {
 }
 
 export const RefWorkshopTapeBanner: React.FC<RefWorkshopTapeBannerProps> = ({
-  onOpenRegister,
   onOpenDeckModal,
 }) => {
   return (
@@ -69,16 +68,18 @@ export const RefWorkshopTapeBanner: React.FC<RefWorkshopTapeBannerProps> = ({
 
             {/* Action CTAs */}
             <div className="relative flex flex-wrap items-center justify-center gap-4 pt-2">
-              <motion.button
+              <motion.a
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.97 }}
-                onClick={onOpenRegister}
+                href="https://iniac.se"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="group relative overflow-hidden bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] text-xs sm:text-sm font-black py-4 px-8 flex items-center gap-2 shadow-lg hover:shadow-xl transition-all"
               >
                 <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out pointer-events-none" />
-                <span>BOOK A SCHOOL MEETING</span>
+                <span>GET THE EDU KIT · INIAC.SE</span>
                 <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </motion.button>
+              </motion.a>
 
               <motion.button
                 whileHover={{ scale: 1.04, y: -2 }}
