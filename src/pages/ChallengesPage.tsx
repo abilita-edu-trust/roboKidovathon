@@ -76,15 +76,16 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="border-b border-slate-200 pb-12"
+          className="border-b border-slate-200 pb-12 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center"
         >
+          <div>
           <span className="text-[10px] font-mono-code font-medium tracking-[0.2em] text-slate-500 uppercase block mb-3">
             OFFICIAL TECHNICAL SPECIFICATIONS &amp; ARENA REGULATIONS // 2026 SEASON
           </span>
 
           <h1
             className="font-headline font-black uppercase tracking-tight leading-[1.02]"
-            style={{ fontSize: 'clamp(3.2rem, 7.5vw, 6.5rem)' }}
+            style={{ fontSize: 'clamp(2.8rem, 5.5vw, 5.5rem)' }}
           >
             <span className="text-stroke block">TECHNICAL</span>
             <span className="text-[#0A1930] block">RULEBOOK</span>
@@ -93,6 +94,14 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
           <p className="mt-4 text-sm sm:text-base text-slate-600 font-light max-w-2xl leading-relaxed">
             Standardized Swedish school arena regulations. Explorer and Advanced share the official 244 × 122 cm (8 × 4 ft) ball-transfer court in head-to-head 3-minute heats. Robo-Precision is an autonomous challenge for gymnasium competitors.
           </p>
+          </div>
+
+          <img
+            src="/techbookside.png"
+            alt="Track 2 – Young Innovators Hackathon overview"
+            className="w-full h-auto border border-slate-200 shadow-sm"
+            loading="lazy"
+          />
         </motion.div>
 
         {/* ── QUICK TRACK COMPARISON MATRIX ── */}
