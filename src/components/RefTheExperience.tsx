@@ -6,7 +6,6 @@ import {
   Lightbulb,
   Target,
   Users,
-  Briefcase,
   Award,
   Trophy,
   Presentation,
@@ -18,10 +17,20 @@ import {
   LineChart,
   Rocket,
   UserPlus,
-  GraduationCap,
+  MapPin,
 } from 'lucide-react';
-import { VenueBanner } from './VenueBanner';
-import { CollaboratorsMarquee } from './CollaboratorsMarquee';
+
+const VENUES: { label: string; name: string; detail?: string; image?: string; track: 'robo' | 'hack' }[] = [
+  {
+    label: 'RoboKidovation Final Venue',
+    name: 'MISV',
+    detail: 'Mälardalen International School Västerås',
+    image: '/venue.png',
+    track: 'robo',
+  },
+  { label: 'Young Inno Hack Opening AW', name: 'TBD', detail: 'Opening After Work · venue to be announced', track: 'hack' },
+  { label: 'Young Inno Hack Final Venue', name: 'HG', track: 'hack' },
+];
 
 interface RefTheExperienceProps {
   onNavigate: (route: string) => void;
@@ -47,7 +56,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
       num: 2,
       title: 'Hands-On Workshop',
       subtitle: 'Learn and build with real robots',
-      date: '1 – 9 October 2026',
+      date: '1 – 14 October 2026',
       icon: Cpu,
       highlight: false,
     },
@@ -55,7 +64,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
       num: 3,
       title: 'Team Formation',
       subtitle: 'Form teams and start practising',
-      date: '12 – 30 October 2026',
+      date: '15 – 28 October 2026',
       icon: Users,
       highlight: false,
     },
@@ -63,7 +72,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
       num: 4,
       title: 'School Qualification',
       subtitle: 'Internal challenge to select best teams',
-      date: '2 – 13 November 2026',
+      date: '29 October – 11 November 2026',
       icon: Award,
       highlight: false,
     },
@@ -71,7 +80,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
       num: 5,
       title: 'Final Preparation',
       subtitle: 'Practise and get final-ready',
-      date: '16 November – 4 December 2026',
+      date: '12 November – 4 December 2026',
       icon: Wrench,
       highlight: false,
     },
@@ -85,7 +94,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
     },
   ];
 
-  // Step definitions for Young Innovators Hackathon (Green) — matches the official
+  // Step definitions for Young Inno Hack (Green) — matches the official
   // Track 2 Young Innovators Hackathon flyer (Listen → Select → Connect → Build → Demonstrate)
   const hackathonSteps = [
     {
@@ -100,7 +109,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
       num: 2,
       title: 'Select',
       subtitle: 'Identify key challenges',
-      date: '1 – 16 October 2026',
+      date: '1 – 14 October 2026',
       icon: Search,
       highlight: false,
     },
@@ -108,7 +117,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
       num: 3,
       title: 'Connect',
       subtitle: 'Form mixed teams with mentors',
-      date: '19 – 30 October 2026',
+      date: '15 – 28 October 2026',
       icon: UserPlus,
       highlight: false,
     },
@@ -116,7 +125,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
       num: 4,
       title: 'Build',
       subtitle: 'Turn ideas into a prototype',
-      date: '2 – 20 November 2026',
+      date: '29 October – 11 November 2026',
       icon: Layers,
       highlight: false,
     },
@@ -124,7 +133,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
       num: 5,
       title: 'Prepare Pitch',
       subtitle: 'Refine your solution and pitch',
-      date: '23 November – 4 December 2026',
+      date: '12 November – 4 December 2026',
       icon: LineChart,
       highlight: false,
     },
@@ -304,7 +313,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
           </motion.div>
 
           {/* ════════════════════════════════════════════════════════════════
-              CARD 02: YOUNG INNOVATORS HACKATHON (GREEN THEME)
+              CARD 02: YOUNG INNO HACK (GREEN THEME)
              ════════════════════════════════════════════════════════════════ */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -321,7 +330,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
                 </div>
                 <div>
                   <h3 className="font-headline font-black text-2xl sm:text-3xl text-white tracking-tight leading-none">
-                    Young Innovators Hackathon
+                    Young Inno Hack
                   </h3>
                   <p className="text-[11px] sm:text-xs font-mono-code font-bold uppercase tracking-[0.2em] text-emerald-200 mt-1">
                     IDEAS TODAY. A BRIGHTER TOMORROW.
@@ -406,52 +415,43 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
 
         </div>
 
-        {/* ── 03. THREE PILLARS (FOR STUDENTS, FOR SCHOOLS, FOR SOCIETY) ── */}
+        {/* ── 03. VENUES ── */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 pb-2">
-          {/* Pillar 1 */}
-          <div className="flex items-center gap-4 p-5 bg-white border border-slate-200/90 shadow-xs">
-            <div className="w-12 h-12 bg-[#006AA7]/10 flex items-center justify-center text-[#006AA7] shrink-0">
-              <Users className="w-6 h-6" />
+          {VENUES.map((venue) => (
+            <div key={venue.label} className="flex flex-col bg-white border border-slate-200/90 shadow-xs overflow-hidden">
+              <div className="p-5 flex items-start gap-4 flex-1">
+                <div
+                  className={`w-12 h-12 flex items-center justify-center shrink-0 ${
+                    venue.track === 'robo' ? 'bg-[#006AA7]/10 text-[#006AA7]' : 'bg-[#059669]/10 text-[#059669]'
+                  }`}
+                >
+                  <MapPin className="w-6 h-6" />
+                </div>
+                <div>
+                  <h5 className="font-headline font-bold text-xs sm:text-sm text-[#0A1930] uppercase tracking-wider">
+                    {venue.label}
+                  </h5>
+                  <p
+                    className={`font-headline font-black text-lg sm:text-xl mt-1 leading-tight ${
+                      venue.track === 'robo' ? 'text-[#006AA7]' : 'text-[#059669]'
+                    }`}
+                  >
+                    {venue.name}
+                  </p>
+                  {venue.detail && <p className="text-xs text-slate-600 font-light mt-0.5">{venue.detail}</p>}
+                </div>
+              </div>
+              <div className="h-32 border-t border-slate-200 bg-[#F8FAFC] flex items-center justify-center p-4">
+                {venue.image ? (
+                  <img src={venue.image} alt={venue.detail || venue.name} className="max-h-full w-auto object-contain" />
+                ) : (
+                  <span className="text-[11px] font-mono-code font-bold uppercase tracking-widest text-slate-400">
+                    Image coming soon
+                  </span>
+                )}
+              </div>
             </div>
-            <div>
-              <h5 className="font-headline font-bold text-xs sm:text-sm text-[#0A1930] uppercase tracking-wider">
-                FOR STUDENTS
-              </h5>
-              <p className="text-xs text-slate-600 font-light mt-0.5 leading-relaxed">
-                Hands-on learning, teamwork and real-world experience.
-              </p>
-            </div>
-          </div>
-
-          {/* Pillar 2 */}
-          <div className="flex items-center gap-4 p-5 bg-white border border-slate-200/90 shadow-xs">
-            <div className="w-12 h-12 bg-[#006AA7]/10 flex items-center justify-center text-[#006AA7] shrink-0">
-              <GraduationCap className="w-6 h-6" />
-            </div>
-            <div>
-              <h5 className="font-headline font-bold text-xs sm:text-sm text-[#0A1930] uppercase tracking-wider">
-                FOR SCHOOLS
-              </h5>
-              <p className="text-xs text-slate-600 font-light mt-0.5 leading-relaxed">
-                Inspire students and develop future skills (Lgr22).
-              </p>
-            </div>
-          </div>
-
-          {/* Pillar 3 */}
-          <div className="flex items-center gap-4 p-5 bg-white border border-slate-200/90 shadow-xs">
-            <div className="w-12 h-12 bg-[#006AA7]/10 flex items-center justify-center text-[#006AA7] shrink-0">
-              <Briefcase className="w-6 h-6" />
-            </div>
-            <div>
-              <h5 className="font-headline font-bold text-xs sm:text-sm text-[#0A1930] uppercase tracking-wider">
-                FOR SOCIETY
-              </h5>
-              <p className="text-xs text-slate-600 font-light mt-0.5 leading-relaxed">
-                A stronger link between education, innovation and working life.
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
 
         {/* ── 04. REGISTER CTA BAR (SECTION 3 CONVERSION ANCHOR) ── */}
@@ -464,7 +464,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
               Ready to bring your school into the 2026 Championship?
             </h3>
             <p className="text-xs sm:text-sm text-white/80 font-light max-w-xl">
-              Choose RoboKidovation, Young Innovators Hackathon, or register teams across both tracks.
+              Choose RoboKidovation, Young Inno Hack, or register teams across both tracks.
             </p>
           </div>
 
@@ -481,9 +481,6 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
           </div>
         </div>
 
-        {/* ── 04b. OUR COLLABORATORS (approved schools marquee + live stats + Vote for Ideas) ── */}
-        <CollaboratorsMarquee onNavigate={onNavigate} />
-
         {/* ── 05. FOOTER SUB-STRIP ── */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 text-xs font-mono-code text-slate-400 border-t border-slate-200">
           <span>// VÄSTERÅS FUTURE INNOVATORS 2026</span>
@@ -499,9 +496,6 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
             VÄSTERÅS | 5 DECEMBER 2026
           </span>
         </div>
-
-        {/* ── 06. FINAL VENUE ── */}
-        <VenueBanner />
 
       </div>
     </section>
