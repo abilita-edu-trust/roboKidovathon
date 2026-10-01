@@ -48,7 +48,7 @@ export const EventsPage: React.FC<EventsPageProps> = ({
           </h1>
 
           <p className="mt-4 text-sm sm:text-base text-slate-600 font-light max-w-2xl leading-relaxed">
-            A clear timeline of the autumn season in Västerås: in-school qualifiers in October, then the Robo-Sprint City Final and the Young Innovators Hackathon together on December 5, 2026 at Mälardalen International School.
+            A clear timeline of the autumn season in Västerås: in-school qualifiers in October, then the Robo-Sprint City Final and the Young Inno Hack together on December 5, 2026 at Mälardalen International School.
           </p>
         </motion.div>
 

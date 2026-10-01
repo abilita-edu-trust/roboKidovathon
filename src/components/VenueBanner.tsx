@@ -23,7 +23,7 @@ export const VenueBanner: React.FC = () => {
           <span className="text-xs sm:text-sm font-mono-code uppercase">Västerås, Sweden · December 5, 2026</span>
         </div>
         <p className="text-sm text-slate-600 font-light leading-relaxed max-w-2xl pt-1">
-          Both the Robo-Sprint City Final and the Young Innovators Hackathon are hosted together at Mälardalen International School on December 5, 2026.
+          Both the Robo-Sprint City Final and the Young Inno Hack are hosted together at Mälardalen International School on December 5, 2026.
         </p>
       </div>
     </div>

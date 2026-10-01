@@ -129,7 +129,7 @@ export const STATS_DATA = [
 ];
 
 export const PARTNER_LOGOS: PartnerLogo[] = [
-  { name: 'Indisk BarnKlubb (IBK) Västerås', file: '/ibk logo.png', role: 'Host & Organizer' },
+  { name: 'Indisk BarnKlubb (IBK) Västerås', file: '/ibk logo.png', role: 'Co-host' },
   { name: 'INIAC', file: '/iniac logo.png', role: 'Programme & Pedagogy Partner' },
   { name: 'SkillSkolan', file: '/skillskolan logo.png', role: 'Education Delivery Partner' },
   { name: 'Blix', file: '/blix a thon logo.png', role: 'Technology & Kit Partner' },
@@ -366,7 +366,7 @@ export const UPCOMING_EVENTS: UpcomingEvent[] = [
     id: 'young-innovators-hackathon',
     date: 'DECEMBER 5, 2026',
     day: 'SATURDAY · DEC 5',
-    title: 'Young Innovators Hackathon',
+    title: 'Young Inno Hack',
     subtitle: 'At Mälardalen International School, Västerås',
     location: 'Mälardalen International School, Västerås',
     description: 'A one-day interdisciplinary innovation challenge where student teams tackle a real-world problem — sustainable cities, climate and environment, future schools, energy, accessibility, health, AI or technology for society — and present a concept, model, prototype or digital solution to a jury. Unlike the robotics track, no previous robotics experience is required, so students interested in science, technology, design, creativity or entrepreneurship can take part.',

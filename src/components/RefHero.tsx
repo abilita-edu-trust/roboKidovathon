@@ -94,7 +94,7 @@ export const RefHero: React.FC<RefHeroProps> = ({
 
             {/* Sub-copy - refined size */}
             <p className="text-xs sm:text-sm text-white/75 font-light leading-relaxed max-w-md">
-              Västerås Future Innovators — hands-on STEM robotics and the Young Innovators Hackathon,
+              Västerås Future Innovators — hands-on STEM robotics and the Young Inno Hack,
               built for Swedish schools, grades 3–9 and Gymnasium.
             </p>
 

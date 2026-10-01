@@ -2372,7 +2372,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                       className="w-4 h-4 cursor-pointer text-[#006AA7]"
                     />
                     <h2 className="font-headline font-black text-xl uppercase text-[#0A1930] flex items-center gap-2">
-                      <span>🏆 4. Young Innovators Hackathon Squads</span>
+                      <span>🏆 4. Young Inno Hack Squads</span>
                       <span className="text-xs font-mono-code text-slate-500 font-normal">
                         ({filteredRegistrations.length} squads)
                       </span>
