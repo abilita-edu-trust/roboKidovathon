@@ -52,6 +52,79 @@ export const CITIES_BY_COUNTRY: Record<string, { slug: string; name: string }[]>
   estonia: [{ slug: 'tallinn', name: 'Tallinn' }],
 };
 
+type Choice = { value: string; label: string };
+
+/** Areas from the printed Idea Card (stored as the English value). */
+const IDEA_AREAS: Choice[] = [
+  { value: 'Sustainability', label: 'Sustainability / Hållbarhet' },
+  { value: 'Energy', label: 'Energy / Energi' },
+  { value: 'Future Cities', label: 'Future Cities / Framtidens städer' },
+  { value: 'Future Schools', label: 'Future Schools / Framtidens skolor' },
+  { value: 'Technology / AI', label: 'Technology / AI / Teknik / AI' },
+  { value: 'Community', label: 'Community / Samhälle' },
+];
+
+const DEVELOP_OPTIONS: Choice[] = [
+  { value: 'yes', label: 'Yes / Ja' },
+  { value: 'maybe', label: 'Maybe / Kanske' },
+  { value: 'just-submitting', label: 'Just submitting my idea / Jag vill bara lämna in min idé' },
+];
+
+/** Options from the printed Interest Card. */
+const WANTS_TO_OPTIONS: Choice[] = [
+  { value: 'demo', label: 'Try a robotics demo / Prova en robotikdemo' },
+  { value: 'workshop', label: 'Join a hands-on workshop / Delta i en praktisk workshop' },
+  { value: 'team', label: 'Join a RoboKidovation team / Gå med i ett RoboKidovation-lag' },
+  { value: 'final', label: 'Take part in the final / Delta i finalen' },
+];
+
+const EXPERIENCE_OPTIONS: Choice[] = [
+  { value: 'first-time', label: 'First time / Första gången' },
+  { value: 'a-little', label: 'A little / Lite erfarenhet' },
+  { value: 'built-before', label: 'I have built or coded before / Jag har byggt eller programmerat tidigare' },
+];
+
+const INTEREST_OPTIONS: Choice[] = [
+  { value: 'building', label: 'Building / Bygga' },
+  { value: 'coding', label: 'Coding / Programmering' },
+  { value: 'engineering', label: 'Engineering / Teknik' },
+  { value: 'design', label: 'Design / Design' },
+  { value: 'problem-solving', label: 'Problem-solving / Problemlösning' },
+];
+
+const ChoiceGroup: React.FC<{
+  label: string;
+  options: Choice[];
+  selected: string[];
+  onToggle: (value: string) => void;
+  tone?: 'blue' | 'green';
+}> = ({ label, options, selected, onToggle, tone = 'blue' }) => {
+  const on = tone === 'green' ? 'bg-[#059669] border-[#059669]' : 'bg-[#006AA7] border-[#006AA7]';
+  return (
+    <div>
+      <span className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-2">{label}</span>
+      <div className="flex flex-wrap gap-2">
+        {options.map((o) => {
+          const active = selected.includes(o.value);
+          return (
+            <button
+              key={o.value}
+              type="button"
+              onClick={() => onToggle(o.value)}
+              aria-pressed={active}
+              className={`py-1.5 px-3 text-xs border transition-all text-left ${
+                active ? `${on} text-white font-bold` : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
+              }`}
+            >
+              {o.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
 export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
   initialTab = 'workshop',
   onNavigateHome,
@@ -98,7 +171,18 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
   const [studentGrade, setStudentGrade] = useState('Grade 7');
   const [ideaTitle, setIdeaTitle] = useState('');
   const [ideaDescription, setIdeaDescription] = useState('');
-  const [ideaCategory, setIdeaCategory] = useState('Sustainability & Green Tech');
+  const [ideaCategory, setIdeaCategory] = useState(IDEA_AREAS[0].value);
+  const [problemStatement, setProblemStatement] = useState('');
+  const [beneficiaries, setBeneficiaries] = useState('');
+  const [developFurther, setDevelopFurther] = useState('');
+
+  // Interest Card fields (individual / group students)
+  const [interestAge, setInterestAge] = useState('');
+  const [wantsTo, setWantsTo] = useState<string[]>([]);
+  const [experience, setExperience] = useState('');
+  const [interests, setInterests] = useState<string[]>([]);
+  const [guardianName, setGuardianName] = useState('');
+  const [guardianPhone, setGuardianPhone] = useState('');
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [voiceNoteFile, setVoiceNoteFile] = useState<File | null>(null);
@@ -156,6 +240,12 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
       setHackathonSkills([...hackathonSkills, skill]);
     }
   };
+
+  const isHack = selectedProgram === 'submit-idea' || selectedProgram === 'hackathon';
+  const showInterestCard = applicantType === 'student' && (selectedProgram === 'workshop' || selectedProgram === 'demo');
+
+  const toggleIn = (list: string[], value: string, set: (v: string[]) => void) =>
+    set(list.includes(value) ? list.filter((v) => v !== value) : [...list, value]);
 
   const handleSelectProgram = (program: IntakeProgramTab) => {
     setSelectedProgram(program);
@@ -229,6 +319,9 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
               ? 'link'
               : 'none',
           category: ideaCategory,
+          problem_statement: problemStatement,
+          beneficiaries,
+          develop_further: developFurther,
           consent_agreed: consentAgreed,
           gdpr_agreed: gdprAgreed,
         });
@@ -267,6 +360,18 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
           grade_group: gradeGroup,
           consent_agreed: consentAgreed,
           form_type: selectedProgram,
+          intake_details: showInterestCard
+            ? {
+                student_age: interestAge,
+                would_like_to: wantsTo,
+                experience,
+                interests,
+                guardian_name: guardianName,
+                guardian_phone: guardianPhone,
+              }
+            : selectedProgram === 'hackathon'
+            ? { squad_skills: hackathonSkills, challenge_domain: hackerChallengeDomain }
+            : null,
         };
 
         const { data: publicId, error } = await supabase.rpc(
@@ -498,7 +603,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
               </div>
             </div>
 
-            {/* Card 2: Track 2 - Young Future Innovators Hackathon */}
+            {/* Card 2: Track 2 - Young Inno Hack */}
             <div
               className={`p-6 border-2 transition-all relative ${
                 selectedProgram === 'submit-idea' || selectedProgram === 'hackathon'
@@ -513,7 +618,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                 <span className="text-2xl">💡</span>
               </div>
               <h2 className="font-headline font-black text-2xl uppercase tracking-tight text-[#0A1930] mb-2 flex items-center gap-2">
-                Young Future Innovators Hackathon
+                Young Inno Hack
               </h2>
               <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed mb-6">
                 Problem discovery, student multimodal idea submission (voice/picture/video), team formation, physical/digital prototypes, and arena finals.
@@ -582,7 +687,12 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
         </div>
 
         {/* ── DYNAMIC INLINE FORM CONTAINER (APPEARS IMMEDIATELY BELOW THE CARDS) ── */}
-        <div id="intake-form-container" className="bg-white border-2 border-slate-300 shadow-xl p-6 sm:p-10 text-[#0A1930] relative scroll-mt-24">
+        <div
+          id="intake-form-container"
+          className={`bg-white border-2 border-t-8 shadow-xl p-6 sm:p-10 text-[#0A1930] relative scroll-mt-24 ${
+            isHack ? 'border-[#059669]' : 'border-[#006AA7]'
+          }`}
+        >
           {!submitSuccess ? (
             <div>
               {/* Form Active Banner */}
@@ -599,7 +709,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                       {selectedProgram === 'workshop' && 'Option 1: School Workshop Booking'}
                       {selectedProgram === 'demo' && 'Option 2: Live School Demo Session'}
                       {selectedProgram === 'submit-idea' && 'Option 3: Student Idea Submission (Voice / Drawing / Video)'}
-                      {selectedProgram === 'hackathon' && 'Option 4: Antigravity Hackathon Squad Registration'}
+                      {selectedProgram === 'hackathon' && 'Option 4: Young Inno Hack Squad Registration'}
                     </div>
                   </div>
                 </div>
@@ -611,7 +721,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
               {/* Form Header Badge */}
               <div className="mb-6 pb-4 border-b border-slate-200">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="inline-flex items-center gap-2 text-xs font-mono-code font-bold tracking-wider text-[#006AA7] uppercase">
+                  <div className={`inline-flex items-center gap-2 text-xs font-mono-code font-bold tracking-wider uppercase ${isHack ? 'text-[#059669]' : 'text-[#006AA7]'}`}>
                     {selectedProgram === 'workshop' && <span>[FORM 1/4] // WORKSHOP BOOKING INTAKE</span>}
                     {selectedProgram === 'demo' && <span>[FORM 2/4] // SCHOOL DEMO SESSION REQUEST</span>}
                     {selectedProgram === 'submit-idea' && (
@@ -621,7 +731,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                     )}
                     {selectedProgram === 'hackathon' && (
                       <span className="text-emerald-700">
-                        [FORM 4/4] // ANTIGRAVITY HACKATHON PARTICIPATION
+                        [FORM 4/4] // YOUNG INNO HACK PARTICIPATION
                       </span>
                     )}
                   </div>
@@ -634,7 +744,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                   {selectedProgram === 'workshop' && 'Book Hands-On Robotics Workshop'}
                   {selectedProgram === 'demo' && 'Request School Demo & Overview Session'}
                   {selectedProgram === 'submit-idea' && 'Submit Your Future Innovation Idea'}
-                  {selectedProgram === 'hackathon' && 'Register Squad for Young Innovators Hackathon'}
+                  {selectedProgram === 'hackathon' && 'Register Squad for Young Inno Hack'}
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-600 mt-1">
                   {selectedProgram === 'workshop' &&
@@ -651,15 +761,15 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
               {/* Form Element */}
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* ── LOCATION SELECTION (COUNTRY FIRST, THEN CITY / MUNICIPALITY) ── */}
-                <div className="p-4 bg-sky-50/70 border border-sky-200">
+                <div className={`p-4 border ${isHack ? 'bg-emerald-50/60 border-emerald-200' : 'bg-sky-50/70 border-sky-200'}`}>
                   <div className="flex items-center gap-2 text-xs font-headline font-black text-slate-800 uppercase tracking-wider mb-3">
-                    <MapPin className="w-4 h-4 text-[#006AA7]" />
-                    <span>Location & Municipality Intake</span>
+                    <MapPin className={`w-4 h-4 ${isHack ? 'text-[#059669]' : 'text-[#006AA7]'}`} />
+                    <span>Location / Plats</span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
-                        Country *
+                        Country / Land *
                       </label>
                       <select
                         required
@@ -677,7 +787,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
 
                     <div>
                       <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
-                        City / Location *
+                        City / Stad *
                       </label>
                       <select
                         required
@@ -698,7 +808,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                             {ci.name}
                           </option>
                         ))}
-                        <option value="custom">+ Other / Custom City...</option>
+                        <option value="custom">+ Other city / Annan stad...</option>
                       </select>
 
                       {isCustomCity && (
@@ -707,7 +817,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                           required
                           value={customCityName}
                           onChange={(e) => setCustomCityName(e.target.value)}
-                          placeholder="Type municipality or city name"
+                          placeholder="City name / Stadens namn"
                           className="w-full mt-2 px-3.5 py-2 bg-white border border-slate-300 focus:border-[#006AA7] focus:outline-none text-xs sm:text-sm text-[#0A1930]"
                         />
                       )}
@@ -730,7 +840,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                         }`}
                       >
                         <Building className="w-3.5 h-3.5" />
-                        <span>School Intake</span>
+                        <span>School / Skola</span>
                       </button>
                       <button
                         type="button"
@@ -742,7 +852,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                         }`}
                       >
                         <User className="w-3.5 h-3.5" />
-                        <span>Individual / Student Squad</span>
+                        <span>Individual or group / Individ eller grupp</span>
                       </button>
                     </div>
                   )}
@@ -752,10 +862,10 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                     <div>
                       <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
                         {selectedProgram === 'submit-idea'
-                          ? 'School Name (Auto-mapped to school admin) *'
+                          ? 'School / Skola *'
                           : applicantType === 'school'
-                          ? 'School Name *'
-                          : 'Team / Squad Name (Optional)'}
+                          ? 'School / Skola *'
+                          : 'Team name / Lagnamn (optional / frivilligt)'}
                       </label>
                       <input
                         type="text"
@@ -793,8 +903,10 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                     <div>
                       <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
                         {selectedProgram === 'submit-idea'
-                          ? 'Student / Innovator Name *'
-                          : 'Contact Person *'}
+                          ? 'Name / Namn *'
+                          : applicantType === 'student' && selectedProgram !== 'hackathon'
+                          ? 'Student name / Elevens namn *'
+                          : 'Contact person / Kontaktperson *'}
                       </label>
                       <input
                         type="text"
@@ -807,7 +919,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                             setContactName(e.target.value);
                           }
                         }}
-                        placeholder="Full Name"
+                        placeholder="Full name / Fullständigt namn"
                         className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 focus:border-[#006AA7] focus:bg-white focus:outline-none text-xs sm:text-sm text-[#0A1930]"
                       />
                     </div>
@@ -817,7 +929,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
-                        Email Address *
+                        Email / E-post *
                       </label>
                       <input
                         type="email"
@@ -830,7 +942,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                     </div>
                     <div>
                       <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
-                        Phone Number
+                        Phone / Telefon
                       </label>
                       <input
                         type="tel"
@@ -845,17 +957,17 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
 
                 {/* ── SECTION C: CUSTOMIZABLE DATE & TIME (FOR WORKSHOP, DEMO, HACKATHON) ── */}
                 {selectedProgram !== 'submit-idea' && (
-                  <div className="p-4 bg-sky-50/50 border border-sky-200 space-y-4">
-                    <div className="flex items-center gap-2 text-xs font-headline font-bold text-[#006AA7] uppercase tracking-wider">
+                  <div className={`p-4 border space-y-4 ${isHack ? 'bg-emerald-50/50 border-emerald-200' : 'bg-sky-50/50 border-sky-200'}`}>
+                    <div className={`flex items-center gap-2 text-xs font-headline font-bold uppercase tracking-wider ${isHack ? 'text-[#059669]' : 'text-[#006AA7]'}`}>
                       <Calendar className="w-4 h-4" />
-                      <span>Customizable Date & Time Selection (Calendar Picker)</span>
+                      <span>Date & time / Datum och tid</span>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       {/* Customizable Date Picker */}
                       <div>
                         <label className="block text-[11px] font-mono-code font-bold uppercase text-slate-700 mb-1">
-                          Select Custom Date *
+                          Date / Datum *
                         </label>
                         <input
                           type="date"
@@ -869,7 +981,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                       {/* Customizable Start Time */}
                       <div>
                         <label className="block text-[11px] font-mono-code font-bold uppercase text-slate-700 mb-1">
-                          Start Time *
+                          Start time / Starttid *
                         </label>
                         <input
                           type="time"
@@ -883,7 +995,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                       {/* Customizable End Time */}
                       <div>
                         <label className="block text-[11px] font-mono-code font-bold uppercase text-slate-700 mb-1">
-                          End Time *
+                          End time / Sluttid *
                         </label>
                         <input
                           type="time"
@@ -899,7 +1011,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                       <div>
                         <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
-                          Grade / Age Group
+                          Grade / Årskurs
                         </label>
                         <select
                           value={gradeGroup}
@@ -921,7 +1033,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
 
                       <div>
                         <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
-                          Expected Students Count
+                          Number of students / Antal elever
                         </label>
                         <input
                           type="text"
@@ -935,19 +1047,96 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                   </div>
                 )}
 
+                {/* ── SECTION C2: INTEREST CARD (INDIVIDUAL / GROUP STUDENTS) ── */}
+                {showInterestCard && (
+                  <div className="p-4 bg-sky-50/50 border border-sky-200 space-y-4">
+                    <div className="flex items-center gap-2 text-xs font-headline font-bold text-[#006AA7] uppercase tracking-wider">
+                      <User className="w-4 h-4" />
+                      <span>About the student / Om eleven</span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
+                          Age / Ålder
+                        </label>
+                        <input
+                          type="number"
+                          min="6"
+                          max="20"
+                          value={interestAge}
+                          onChange={(e) => setInterestAge(e.target.value)}
+                          className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-[#006AA7] text-xs sm:text-sm text-[#0A1930]"
+                        />
+                      </div>
+                    </div>
+
+                    <ChoiceGroup
+                      label="I would like to / Jag skulle vilja"
+                      options={WANTS_TO_OPTIONS}
+                      selected={wantsTo}
+                      onToggle={(v) => toggleIn(wantsTo, v, setWantsTo)}
+                    />
+                    <ChoiceGroup
+                      label="My experience / Min erfarenhet"
+                      options={EXPERIENCE_OPTIONS}
+                      selected={experience ? [experience] : []}
+                      onToggle={(v) => setExperience(experience === v ? '' : v)}
+                    />
+                    <ChoiceGroup
+                      label="What interests me / Det här intresserar mig"
+                      options={INTEREST_OPTIONS}
+                      selected={interests}
+                      onToggle={(v) => toggleIn(interests, v, setInterests)}
+                    />
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-sky-200">
+                      <div>
+                        <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
+                          Parent / Guardian name / Vårdnadshavarens namn *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={guardianName}
+                          onChange={(e) => setGuardianName(e.target.value)}
+                          className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-[#006AA7] text-xs sm:text-sm text-[#0A1930]"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
+                          Parent / Guardian phone / Vårdnadshavarens telefon *
+                        </label>
+                        <input
+                          type="tel"
+                          required
+                          value={guardianPhone}
+                          onChange={(e) => setGuardianPhone(e.target.value)}
+                          placeholder="+46 70 123 4567"
+                          className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-[#006AA7] text-xs sm:text-sm text-[#0A1930]"
+                        />
+                      </div>
+                    </div>
+                    <p className="text-[11px] text-slate-600 italic leading-relaxed">
+                      Parent/guardian approval is required before final registration. / Vårdnadshavarens godkännande
+                      krävs innan slutlig registrering.
+                    </p>
+                  </div>
+                )}
+
                 {/* ── SECTION D: MULTIMODAL IDEA SUBMISSION FIELDS (ONLY FOR SUBMIT IDEA) ── */}
                 {selectedProgram === 'submit-idea' && (
                   <div className="space-y-5 p-5 bg-emerald-50/40 border border-emerald-200">
                     <div className="flex items-center gap-2 text-xs font-headline font-bold text-emerald-800 uppercase tracking-wider">
                       <Lightbulb className="w-4 h-4 text-emerald-600" />
-                      <span>Idea Details & Multimodal Submissions (Text, Photo, Voice, Video)</span>
+                      <span>Your idea / Din idé</span>
                     </div>
 
                     {/* Idea Title & Category */}
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       <div className="sm:col-span-2">
                         <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
-                          Idea Title *
+                          Idea title / Idéns titel *
                         </label>
                         <input
                           type="text"
@@ -961,20 +1150,18 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
 
                       <div>
                         <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
-                          Theme / Category
+                          Choose an area / Välj ett område
                         </label>
                         <select
                           value={ideaCategory}
                           onChange={(e) => setIdeaCategory(e.target.value)}
                           className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-emerald-600 text-xs sm:text-sm text-[#0A1930]"
                         >
-                          <option value="Sustainability & Green Tech">Sustainability & Green Tech</option>
-                          <option value="Smart Schools & Health">Smart Schools & Health</option>
-                          <option value="Clean Energy & Water">Clean Energy & Water</option>
-                          <option value="Robotics & Automation">Robotics & Automation</option>
-                          <option value="Inclusive Society & Accessibility">
-                            Inclusive Society & Accessibility
-                          </option>
+                          {IDEA_AREAS.map((area) => (
+                            <option key={area.value} value={area.value}>
+                              {area.label}
+                            </option>
+                          ))}
                         </select>
                       </div>
                     </div>
@@ -983,7 +1170,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
-                          Student Age
+                          Age / Ålder
                         </label>
                         <input
                           type="number"
@@ -996,7 +1183,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                       </div>
                       <div>
                         <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
-                          Class / Grade
+                          Grade / Class / Årskurs / Klass
                         </label>
                         <input
                           type="text"
@@ -1008,26 +1195,64 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                       </div>
                     </div>
 
-                    {/* 1. TYPE THE IDEA */}
+                    <p className="text-xs font-semibold text-emerald-800 leading-relaxed">
+                      You do not need to know how to build it yet. Start with a problem or an idea.
+                      <br />
+                      Du behöver inte veta hur du ska bygga det ännu. Börja med ett problem eller en idé.
+                    </p>
+
+                    <div>
+                      <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
+                        1. What problem do you see? / Vilket problem ser du?
+                      </label>
+                      <textarea
+                        rows={3}
+                        value={problemStatement}
+                        onChange={(e) => setProblemStatement(e.target.value)}
+                        className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-emerald-600 text-xs sm:text-sm text-[#0A1930]"
+                      />
+                    </div>
+
+                    {/* 2. TYPE THE IDEA */}
                     <div>
                       <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1 flex items-center gap-1.5">
                         <FileText className="w-3.5 h-3.5 text-slate-500" />
-                        <span>1. Type Your Idea Description</span>
+                        <span>2. What is your idea? / Vad är din idé?</span>
                       </label>
                       <textarea
                         rows={4}
                         value={ideaDescription}
                         onChange={(e) => setIdeaDescription(e.target.value)}
-                        placeholder="Describe the challenge you are solving, how your idea works, and why it makes a difference..."
+                        placeholder="How does your idea work? / Hur fungerar din idé?"
                         className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-emerald-600 text-xs sm:text-sm text-[#0A1930]"
                       />
                     </div>
+
+                    <div>
+                      <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
+                        3. Who would your idea help? / Vem skulle din idé hjälpa?
+                      </label>
+                      <textarea
+                        rows={2}
+                        value={beneficiaries}
+                        onChange={(e) => setBeneficiaries(e.target.value)}
+                        className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-emerald-600 text-xs sm:text-sm text-[#0A1930]"
+                      />
+                    </div>
+
+                    <ChoiceGroup
+                      label="Would you like to develop this idea further? / Vill du utveckla idén vidare?"
+                      options={DEVELOP_OPTIONS}
+                      selected={developFurther ? [developFurther] : []}
+                      onToggle={(v) => setDevelopFurther(developFurther === v ? '' : v)}
+                      tone="green"
+                    />
 
                     {/* 2. UPLOAD A PICTURE */}
                     <div className="p-4 bg-white border border-slate-200">
                       <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-2 flex items-center gap-1.5">
                         <ImageIcon className="w-3.5 h-3.5 text-[#006AA7]" />
-                        <span>2. Upload a Picture / Diagram / Blueprint</span>
+                        <span>Picture or drawing / Bild eller ritning</span>
                       </label>
 
                       <div className="flex flex-wrap items-center gap-4">
@@ -1071,7 +1296,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                       <div className="flex items-center justify-between">
                         <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
                           <Video className="w-3.5 h-3.5 text-purple-600" />
-                          <span>4. Submit Video Presentation</span>
+                          <span>Video</span>
                         </label>
                         <div className="flex gap-1 text-[11px] font-mono-code">
                           <button
@@ -1134,15 +1359,15 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
 
                 {/* ── SECTION E: HACKATHON ROLES & DOMAIN (ONLY FOR HACKATHON) ── */}
                 {selectedProgram === 'hackathon' && (
-                  <div className="p-4 bg-purple-50/50 border border-purple-200 space-y-4">
-                    <div className="flex items-center gap-2 text-xs font-headline font-bold text-purple-900 uppercase tracking-wider">
-                      <Compass className="w-4 h-4 text-purple-600" />
-                      <span>Hacker Squad Profile & Domain Focus</span>
+                  <div className="p-4 bg-emerald-50/50 border border-emerald-200 space-y-4">
+                    <div className="flex items-center gap-2 text-xs font-headline font-bold text-emerald-900 uppercase tracking-wider">
+                      <Compass className="w-4 h-4 text-emerald-600" />
+                      <span>Squad profile / Lagprofil</span>
                     </div>
 
                     <div>
                       <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-2">
-                        Squad Skills (Select All That Apply)
+                        Squad skills / Lagets färdigheter
                       </label>
                       <div className="flex flex-wrap gap-2">
                         {[
@@ -1158,7 +1383,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                             onClick={() => toggleSkill(skill)}
                             className={`py-1.5 px-3 text-xs font-mono-code border transition-all ${
                               hackathonSkills.includes(skill)
-                                ? 'bg-purple-700 text-white border-purple-700 font-bold'
+                                ? 'bg-[#059669] text-white border-[#059669] font-bold'
                                 : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
                             }`}
                           >
@@ -1170,12 +1395,12 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
 
                     <div>
                       <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
-                        Challenge Domain
+                        Challenge area / Utmaningsområde
                       </label>
                       <select
                         value={hackerChallengeDomain}
                         onChange={(e) => setHackerChallengeDomain(e.target.value)}
-                        className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-purple-600 text-xs sm:text-sm text-[#0A1930]"
+                        className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-emerald-600 text-xs sm:text-sm text-[#0A1930]"
                       >
                         <option value="Sustainable Cities & Climate">
                           Sustainable Cities & Climate
@@ -1205,8 +1430,8 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                       className="mt-0.5 w-4 h-4 text-[#006AA7] border-slate-300 rounded cursor-pointer"
                     />
                     <span className="text-xs text-slate-700 leading-snug">
-                      I confirm that I am okay to submit my details, and that all necessary
-                      information and materials provided are accurate.
+                      I confirm that the details I submit are accurate. / Jag bekräftar att uppgifterna
+                      jag lämnar är korrekta.
                     </span>
                   </label>
 
@@ -1219,8 +1444,8 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                       className="mt-0.5 w-4 h-4 text-[#006AA7] border-slate-300 rounded cursor-pointer"
                     />
                     <span className="text-xs text-slate-700 leading-snug">
-                      I have read and accept the GDPR data protection policy, school privacy
-                      protocol, and consent terms.
+                      I accept the GDPR data protection policy and consent terms. / Jag godkänner
+                      GDPR-policyn och villkoren för samtycke.
                     </span>
                   </label>
 
@@ -1343,6 +1568,9 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                     setSubmitSuccess(false);
                     setIdeaTitle('');
                     setIdeaDescription('');
+                    setProblemStatement('');
+                    setBeneficiaries('');
+                    setDevelopFurther('');
                     setPhotoFile(null);
                     setPhotoPreview(null);
                     setVoiceNoteFile(null);

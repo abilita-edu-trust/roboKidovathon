@@ -44,6 +44,9 @@ export interface SubmitIdeaPayload {
   video_url?: string | null;
   video_type?: 'file' | 'link' | 'none';
   category?: string;
+  problem_statement?: string;
+  beneficiaries?: string;
+  develop_further?: string;
   consent_agreed?: boolean;
   gdpr_agreed?: boolean;
 }
