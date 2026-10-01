@@ -8,6 +8,7 @@ interface ApprovedSchool {
   preferred_date?: string | null;
   workshop_slot?: string | null;
   time_range?: string | null;
+  form_type?: string | null;
 }
 
 interface RegistrationStats {
@@ -56,15 +57,30 @@ const CountUpStat: React.FC<{ target: number; label: string; inView: boolean; ac
 const SLOT_LABELS: Record<string, string> = {
   morning: 'Morning',
   afternoon: 'Afternoon',
-  custom: 'Custom time',
+};
+
+const KIND_LABELS: Record<string, string> = {
+  demo: 'Demo',
+  workshop: 'Workshop',
+  hackathon: 'Young Inno Hack',
 };
 
 // Drops the trailing "(…)" note, e.g. "09:00–11:30 (2.5 hours)" → "09:00–11:30".
 const stripNote = (s?: string | null) => (s ? s.replace(/\s*\([^)]*\)\s*$/, '').trim() : '');
 
+// "Custom Date: 2026-10-02" → "2 Oct 2026"; other free text is kept as-is.
+const cleanDate = (s?: string | null) => {
+  const text = stripNote(s).replace(/^custom\s*date:\s*/i, '');
+  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
+    const d = new Date(`${text}T00:00:00`);
+    if (!isNaN(d.getTime())) return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+  return text;
+};
+
 const bookingLabel = (school: ApprovedSchool) => {
-  const date = stripNote(school.preferred_date);
-  const slot = school.workshop_slot ? SLOT_LABELS[school.workshop_slot] ?? school.workshop_slot : '';
+  const date = cleanDate(school.preferred_date);
+  const slot = school.workshop_slot ? SLOT_LABELS[school.workshop_slot] ?? '' : '';
   const time = stripNote(school.time_range);
   const slotText = slot && time ? `${slot} (${time})` : slot || time;
   return [date, slotText].filter(Boolean).join(' · ');
@@ -72,14 +88,22 @@ const bookingLabel = (school: ApprovedSchool) => {
 
 const SchoolChip: React.FC<{ school: ApprovedSchool }> = ({ school }) => {
   const booking = bookingLabel(school);
+  const kind = school.form_type ? KIND_LABELS[school.form_type] : undefined;
   return (
     <div className="flex-shrink-0 group flex items-center gap-3 px-6 py-3.5 sm:py-4 bg-[#0A1930] hover:bg-[#006AA7] border border-[#0A1930] shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5">
       <div className="w-8 h-8 sm:w-9 sm:h-9 bg-white/10 flex items-center justify-center text-[#FFCD00] shrink-0">
         <School className="w-4 h-4 sm:w-5 sm:h-5" />
       </div>
       <div className="flex flex-col">
-        <span className="font-headline font-black text-sm sm:text-base uppercase tracking-wide text-white whitespace-nowrap">
-          {school.school_name}
+        <span className="flex items-center gap-2">
+          <span className="font-headline font-black text-sm sm:text-base uppercase tracking-wide text-white whitespace-nowrap">
+            {school.school_name}
+          </span>
+          {kind && (
+            <span className="px-1.5 py-0.5 bg-[#FFCD00] text-[#0A1930] text-[10px] font-mono-code font-black uppercase tracking-wider whitespace-nowrap">
+              {kind}
+            </span>
+          )}
         </span>
         {booking && (
           <span className="flex items-center gap-1.5 mt-0.5 text-[11px] sm:text-xs font-mono-code font-bold text-[#FFCD00] whitespace-nowrap">
@@ -92,13 +116,11 @@ const SchoolChip: React.FC<{ school: ApprovedSchool }> = ({ school }) => {
   );
 };
 
-import { VoteYoungMindsSection } from './VoteYoungMindsSection';
-
 interface CollaboratorsMarqueeProps {
   onNavigate?: (tab: string, sub?: any) => void;
 }
 
-export const CollaboratorsMarquee: React.FC<CollaboratorsMarqueeProps> = ({ onNavigate }) => {
+export const CollaboratorsMarquee: React.FC<CollaboratorsMarqueeProps> = () => {
   const [schools, setSchools] = useState<ApprovedSchool[]>([]);
   const [stats, setStats] = useState<RegistrationStats | null>(null);
   const [ideasCount, setIdeasCount] = useState<number>(0);
@@ -155,13 +177,13 @@ export const CollaboratorsMarquee: React.FC<CollaboratorsMarqueeProps> = ({ onNa
   const marqueeItems = useMarquee ? [...schools, ...schools, ...schools] : [];
 
   return (
-    <div ref={sectionRef} className="pt-2 space-y-8 border-t border-slate-200">
+    <div ref={sectionRef} className="space-y-8">
       <div className="text-center space-y-2">
         <span className="block text-[11px] font-mono-code font-bold tracking-[0.25em] text-[#006AA7] uppercase">
-          Collaborative Ecosystem
+          Workshops &amp; demos near you
         </span>
         <h2 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#0A1930]">
-          Our Collaborators
+          Meet Us @
         </h2>
       </div>
 
@@ -212,12 +234,6 @@ export const CollaboratorsMarquee: React.FC<CollaboratorsMarqueeProps> = ({ onNa
         </>
       )}
 
-      {/* ── USER REQUIREMENT: DIRECTLY BELOW THAT SECTION, ADD VOTE FOR AN IDEA OF YOUNG MINDS ── */}
-      <VoteYoungMindsSection
-        onNavigateIdeas={() => onNavigate?.('ideas')}
-        onNavigateSubmit={() => onNavigate?.('register', 'submit-idea')}
-        onNavigateAdmin={() => onNavigate?.('admin')}
-      />
     </div>
   );
 };
