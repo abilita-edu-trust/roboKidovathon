@@ -7,7 +7,9 @@ import { RefWorkflowMindMap } from './components/RefWorkflowMindMap';
 import { RefTrackComparison } from './components/RefTrackComparison';
 import { RefKioskShowcase } from './components/RefKioskShowcase';
 import { RefCompetitionFlow } from './components/RefCompetitionFlow';
-import { VenueBanner } from './components/VenueBanner';
+import { CollaboratorsMarquee } from './components/CollaboratorsMarquee';
+import { VoteYoungMindsSection } from './components/VoteYoungMindsSection';
+import { VotePrompt } from './components/VotePrompt';
 import { RefPhotoStrip } from './components/RefPhotoStrip';
 import { RefWorkshopTapeBanner } from './components/RefWorkshopTapeBanner';
 import { RefFooter } from './components/RefFooter';
@@ -23,7 +25,6 @@ import { IntakeRegisterPage, IntakeProgramTab } from './pages/IntakeRegisterPage
 import { IdeasVotingPage } from './pages/IdeasVotingPage';
 import { AdminIdeasCurationPage } from './pages/AdminIdeasCurationPage';
 
-import { RegisterModal } from './components/RegisterModal';
 import { EventDeckModal } from './components/EventDeckModal';
 import { RoboCursor } from './components/RoboCursor';
 import { useLanguage } from './context/LanguageContext';
@@ -38,13 +39,21 @@ export function App() {
     return 'home';
   });
   const [registerInitialTab, setRegisterInitialTab] = useState<IntakeProgramTab>('workshop');
-  const [isRegisterOpen, setIsRegisterOpen] = useState<boolean>(false);
   const [isDeckOpen, setIsDeckOpen] = useState<boolean>(false);
 
   const handleNavigate = (route: string, tab?: IntakeProgramTab) => {
     if (tab) setRegisterInitialTab(tab);
     setCurrentRoute(route);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const openRegister = () => handleNavigate('register');
+
+  const goToVote = () => {
+    const scroll = () => document.getElementById('vote-ideas')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (currentRoute === 'home') return scroll();
+    setCurrentRoute('home');
+    setTimeout(scroll, 150);
   };
 
   return (
@@ -56,7 +65,7 @@ export function App() {
       <Navbar
         activeTab={currentRoute}
         onNavigate={handleNavigate}
-        onOpenRegister={() => setIsRegisterOpen(true)}
+        onOpenRegister={openRegister}
       />
 
       {/* ── Page Router ── */}
@@ -64,63 +73,53 @@ export function App() {
         {currentRoute === 'home' && (
           <>
             {/* 01. Main Hero / Video & Design Section */}
-            <RefHero
-              onNavigate={handleNavigate}
-              onOpenRegister={() => setIsRegisterOpen(true)}
-            />
+            <RefHero onNavigate={handleNavigate} onOpenRegister={openRegister} />
 
             {/* 02. Trusted Partners Marquee / Ticker (directly below Hero) */}
             <RefHeroMarquee />
 
-            {/* 03. Dual Experience Pathways: RoboKidovation & Young Innovators Hackathon */}
-            <RefTheExperience
-              onNavigate={handleNavigate}
-              onOpenRegister={() => setIsRegisterOpen(true)}
-            />
-
-            {/* 04. Workflow Mind Map: From Parts to City Final */}
-            <RefWorkflowMindMap
-              onNavigate={handleNavigate}
-              onOpenRegister={() => setIsRegisterOpen(true)}
-            />
-
-            {/* 04. Top Three Cards: Robo Sprint / Robo Sprint Advanced / Robo Trials */}
-            <RefTrackComparison
-              onNavigate={handleNavigate}
-              onOpenRegister={() => setIsRegisterOpen(true)}
-            />
-
-            {/* 04. Design, Build & Compete: Robo Sprint + Arena Match (Cohesive 2-Card Layout) */}
-            <RefKioskShowcase
-              onNavigate={handleNavigate}
-              onOpenRegister={() => setIsRegisterOpen(true)}
-            />
-
-            {/* 05. Competition Pathway: Real 3-Stage Milestone Journey */}
-            <RefCompetitionFlow
-              onOpenRegister={() => setIsRegisterOpen(true)}
-              onNavigate={handleNavigate}
-            />
-
-            {/* 05b. Final Venue */}
-            <section className="w-full bg-white text-[#0A1930] py-16 sm:py-20 px-3 sm:px-6 border-t border-slate-200">
-              <div className="max-w-[1440px] mx-auto">
-                <VenueBanner />
+            {/* 03. Meet Us @ — confirmed school bookings + live stats */}
+            <section className="w-full bg-white text-[#0A1930] py-14 sm:py-16 px-4 sm:px-6 lg:px-10">
+              <div className="max-w-[1560px] mx-auto">
+                <CollaboratorsMarquee onNavigate={handleNavigate} />
               </div>
             </section>
 
-            {/* 06. Tournament Highlights Photo Reel */}
-            <RefPhotoStrip
-              onOpenRegister={() => handleNavigate('register')}
-              onNavigate={handleNavigate}
-            />
+            {/* 04. From Classroom to Arena: 3-Stage Competition Pathway */}
+            <RefCompetitionFlow onOpenRegister={openRegister} onNavigate={handleNavigate} />
 
-            {/* 07. Main Conversion Anchor: Bring Hands-On STEM to Your School */}
+            {/* 05. Choose your pathway: RoboKidovation & Young Inno Hack + venues */}
+            <RefTheExperience onNavigate={handleNavigate} onOpenRegister={openRegister} />
+
+            {/* 06. Vote for an idea of young minds */}
+            <section id="vote-ideas" className="w-full bg-white text-[#0A1930] py-10 sm:py-14 px-4 sm:px-6 lg:px-10 scroll-mt-20">
+              <div className="max-w-[1560px] mx-auto">
+                <VoteYoungMindsSection
+                  onNavigateIdeas={() => handleNavigate('ideas')}
+                  onNavigateSubmit={() => handleNavigate('register', 'submit-idea')}
+                  onNavigateAdmin={() => handleNavigate('admin')}
+                />
+              </div>
+            </section>
+
+            {/* 07. Tournament Highlights Photo Reel */}
+            <RefPhotoStrip onOpenRegister={openRegister} onNavigate={handleNavigate} />
+
+            {/* 08. Design, Build & Compete */}
+            <RefKioskShowcase onNavigate={handleNavigate} onOpenRegister={openRegister} />
+
+            {/* 09. How students progress: STEM learning pathway */}
+            <RefWorkflowMindMap onNavigate={handleNavigate} onOpenRegister={openRegister} />
+
+            {/* 10. Bring Hands-On STEM to Your School (Edu Kit → iniac.se) */}
             <RefWorkshopTapeBanner
-              onOpenRegister={() => handleNavigate('register')}
+              onOpenRegister={openRegister}
               onOpenDeckModal={() => setIsDeckOpen(true)}
               onNavigate={handleNavigate}
             />
+
+            {/* 11. Competition league tracks */}
+            <RefTrackComparison onNavigate={handleNavigate} onOpenRegister={openRegister} />
           </>
         )}
 
@@ -207,19 +206,14 @@ export function App() {
       />
 
       {/* ── Interactive Modals ── */}
-      <RegisterModal
-        isOpen={isRegisterOpen}
-        onClose={() => setIsRegisterOpen(false)}
-        onNavigateToFullIntake={(tab) => {
-          setIsRegisterOpen(false);
-          handleNavigate('register', tab as any);
-        }}
-      />
-
       <EventDeckModal
         isOpen={isDeckOpen}
         onClose={() => setIsDeckOpen(false)}
       />
+
+      {currentRoute !== 'admin' && (
+        <VotePrompt onGoToVote={goToVote} onSubmitIdea={() => handleNavigate('register', 'submit-idea')} />
+      )}
 
     </div>
   );
