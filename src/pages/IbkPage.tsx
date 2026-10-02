@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Calendar, MapPin, Ticket, Sparkles, Mail, Phone, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Calendar, Clock, MapPin, Ticket, Sparkles, Mail, Phone, CheckCircle2 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 interface IbkPageProps {
@@ -8,6 +8,19 @@ interface IbkPageProps {
 }
 
 const ibkImage = (file: string) => `/ibk/${encodeURIComponent(file)}`;
+
+const TEAM_REGISTRATION_FORM =
+  'https://docs.google.com/forms/d/e/1FAIpQLSf92IaaY4SzkGYdu-kcUO1de4F-KJMdRPmwNd0ap8__Quv6Fg/viewform';
+
+const WORKSHOP_SCHEDULE: { time: string; place: string; note?: { en: string; sv: string } }[] = [
+  { time: '08:30–11:00', place: 'MISV' },
+  { time: '13:00–14:00', place: 'Viksängskolan' },
+  {
+    time: '17:30–19:00',
+    place: 'ABF, Pilgatan',
+    note: { en: 'Open session for children aged 7+ & parents', sv: 'Öppen session för barn från 7 år och föräldrar' },
+  },
+];
 
 type BoardMember = { name: string; role: { en: string; sv: string }; photo: string | null };
 
@@ -90,8 +103,127 @@ export const IbkPage: React.FC<IbkPageProps> = ({ onNavigateHome }) => {
           </p>
         </motion.div>
 
+        {/* ── LATEST: ROBOKIDOVATION WORKSHOPS 2 OCT 2026 ── */}
+        <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <div className="lg:col-span-5">
+            <img
+              src={ibkImage('ibk-vfi.png')}
+              alt={L(
+                'Västerås Future Innovators introductory workshop poster, 2 October 2026',
+                'Affisch för Västerås Future Innovators introduktionsworkshop, 2 oktober 2026'
+              )}
+              loading="lazy"
+              className="w-full h-auto border border-slate-200"
+            />
+          </div>
+
+          <div className="lg:col-span-7 space-y-6">
+            <div>
+              <span className="text-[10px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase block mb-2">
+                {L('LATEST // FRIDAY 2 OCTOBER 2026', 'SENASTE // FREDAG 2 OKTOBER 2026')}
+              </span>
+              <h2 className="font-headline font-black text-3xl sm:text-4xl uppercase tracking-tight">
+                {L('RoboKidovation Workshops', 'RoboKidovation-workshoppar')}
+              </h2>
+              <p className="text-sm font-bold text-[#0A1930] mt-1">
+                {L('Young minds, big ideas, endless possibilities!', 'Unga hjärnor, stora idéer, oändliga möjligheter!')}
+              </p>
+            </div>
+
+            <p className="text-sm sm:text-base text-slate-600 font-light leading-relaxed">
+              {L(
+                'On the occasion of Gandhi Jayanti, IBK invites young innovators to explore robotics, science and technology as we prepare for Västerås Future Innovators 2026 – RoboKidovation & Young Innovators Hackathon! 🚀',
+                'Med anledning av Gandhi Jayanti bjuder IBK in unga innovatörer att utforska robotik, naturvetenskap och teknik inför Västerås Future Innovators 2026 – RoboKidovation & Young Innovators Hackathon! 🚀'
+              )}
+            </p>
+
+            <div>
+              <h3 className="font-headline font-black text-lg uppercase tracking-tight mb-3">
+                {L('Workshop schedule – Friday, 2 October', 'Workshopschema – fredag 2 oktober')}
+              </h3>
+              <ol className="space-y-2">
+                {WORKSHOP_SCHEDULE.map((w, i) => (
+                  <li key={w.place} className="flex items-start gap-3 p-3 border border-slate-200 bg-[#F8FAFC]">
+                    <span className="w-6 h-6 shrink-0 bg-[#0A1930] text-[#FFCD00] text-xs font-mono-code font-bold flex items-center justify-center">
+                      {i + 1}
+                    </span>
+                    <div>
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-bold text-[#0A1930]">
+                        <span className="inline-flex items-center gap-1.5">
+                          <MapPin className="w-3.5 h-3.5 text-[#006AA7]" />
+                          {w.place}
+                        </span>
+                        <span className="inline-flex items-center gap-1.5 font-mono-code text-xs text-slate-600">
+                          <Clock className="w-3.5 h-3.5 text-[#006AA7]" />
+                          {w.time}
+                        </span>
+                      </div>
+                      {w.note && <div className="text-xs text-[#006AA7] font-bold mt-0.5">{sv ? w.note.sv : w.note.en}</div>}
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            <div className="space-y-3 text-sm sm:text-base text-slate-600 font-light leading-relaxed">
+              <p>
+                {L(
+                  'The ABF session is an open session for interested children and parents. We invite all engineers, researchers and parents to come together and develop an interactive session where we exchange our ideas to make Västerås Future Innovators a meaningful event for our kids.',
+                  'Sessionen på ABF är öppen för intresserade barn och föräldrar. Vi bjuder in alla ingenjörer, forskare och föräldrar att tillsammans skapa en interaktiv session där vi utbyter idéer för att göra Västerås Future Innovators till ett meningsfullt evenemang för våra barn.'
+                )}
+              </p>
+              <p>
+                {L(
+                  'Calling all children aged 7+ and their parents! Join us at ABF to discover our exciting science and technology event, learn about the robotics activities and find out how to participate.',
+                  'Alla barn från 7 år och deras föräldrar är välkomna! Kom till ABF och upptäck vårt spännande evenemang inom naturvetenskap och teknik, lär dig om robotikaktiviteterna och ta reda på hur ni kan delta.'
+                )}
+              </p>
+              <p>
+                {L(
+                  '💬 Bring your curiosity, questions and ideas! We welcome open discussions and suggestions from children and parents to help shape this initiative together.',
+                  '💬 Ta med din nyfikenhet, dina frågor och idéer! Vi välkomnar öppna diskussioner och förslag från barn och föräldrar för att tillsammans forma detta initiativ.'
+                )}
+              </p>
+            </div>
+
+            <div className="p-5 border-2 border-[#006AA7] bg-white space-y-3">
+              <h3 className="font-headline font-black text-lg uppercase tracking-tight">
+                📝 {L('Team registrations open on 2 October!', 'Laganmälan öppnar 2 oktober!')}
+              </h3>
+              <p className="text-sm text-slate-600">
+                {L(
+                  'Teams from schools, universities and private groups representing different associations are welcome to register.',
+                  'Lag från skolor, universitet och privata grupper som representerar olika föreningar är välkomna att anmäla sig.'
+                )}
+              </p>
+              <a
+                href={TEAM_REGISTRATION_FORM}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex btn-pill-lime text-xs font-black py-3 px-5 items-center gap-2"
+              >
+                <span>{L('REGISTER YOUR TEAM', 'ANMÄL ERT LAG')}</span>
+                <ArrowRight className="w-4 h-4" />
+              </a>
+            </div>
+
+            <p className="text-sm text-slate-600">
+              {L(
+                "Let's inspire our youngsters to learn, build, innovate and work together!",
+                'Låt oss inspirera våra unga att lära sig, bygga, förnya och samarbeta!'
+              )}
+            </p>
+            <p className="text-xs font-mono-code font-bold uppercase text-slate-500">
+              {L(
+                'Organised by IBK in collaboration with INIAC, Skill Skolan, MISV and ABF',
+                'Arrangeras av IBK i samarbete med INIAC, Skill Skolan, MISV och ABF'
+              )}
+            </p>
+          </div>
+        </section>
+
         {/* ── OUR WORKS: MKM FUSION X 2026 ── */}
-        <section className="space-y-8">
+        <section className="border-t border-slate-200 pt-12 space-y-8">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <span className="text-[10px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase block mb-2">
