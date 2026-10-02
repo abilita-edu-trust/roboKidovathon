@@ -86,15 +86,15 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             <span
-              className={`font-headline font-black text-sm sm:text-base md:text-lg tracking-tight uppercase whitespace-nowrap transition-colors duration-300 ${
+              className={`flex flex-col items-start gap-0.5 font-headline font-black text-sm sm:text-base 2xl:text-lg leading-none tracking-tight uppercase whitespace-nowrap transition-colors duration-300 ${
                 isDarkHeader
                   ? 'text-white group-hover:text-[#FFCD00]'
                   : 'text-[#0A1930] group-hover:text-[#006AA7]'
               }`}
             >
-              VÄSTERÅS FUTURE INNOVATORS{' '}
+              <span>VÄSTERÅS FUTURE INNOVATORS</span>
               <span
-                className={`font-mono-code font-bold text-xs px-1.5 py-0.5 ml-1 border transition-colors ${
+                className={`font-mono-code font-bold text-[10px] leading-none px-1.5 py-0.5 border transition-colors ${
                   isDarkHeader
                     ? 'text-[#FFCD00] bg-white/10 border-white/20'
                     : 'text-[#006AA7] bg-slate-100 border-slate-200'
@@ -119,7 +119,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   key={item.id}
                   onClick={() => handleLinkClick(item.id)}
-                  className={`relative px-3 py-1.5 text-xs font-display font-medium tracking-wide whitespace-nowrap transition-all duration-200 ${
+                  className={`relative px-2.5 2xl:px-3 py-1.5 text-xs font-display font-medium tracking-wide whitespace-nowrap transition-all duration-200 ${
                     isDarkHeader
                       ? isActive
                         ? 'text-[#0A1930] font-bold'
@@ -167,7 +167,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 title="Växla hela webbplatsen till svenska"
                 aria-label="Byt språk till svenska"
               >
-                <span className="text-xs leading-none">🇸🇪</span>
+                <span className="hidden 2xl:inline text-xs leading-none">🇸🇪</span>
                 <span>SV</span>
               </button>
               <button
@@ -183,7 +183,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 title="Switch whole site to English"
                 aria-label="Switch language to English"
               >
-                <span className="text-xs leading-none">🇬🇧</span>
+                <span className="hidden 2xl:inline text-xs leading-none">🇬🇧</span>
                 <span>EN</span>
               </button>
             </div>
@@ -192,7 +192,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.96 }}
               onClick={() => onNavigate('register')}
-              className="btn-pill-lime text-xs font-black py-2.5 px-5 whitespace-nowrap transition-all duration-200 shadow-md flex items-center gap-2 group relative overflow-hidden"
+              className="btn-pill-lime text-xs font-black py-2.5 px-4 2xl:px-5 whitespace-nowrap transition-all duration-200 shadow-md flex items-center gap-2 group relative overflow-hidden"
             >
               <span>{language === 'sv' ? 'REGISTRERA SKOLA / LAG' : 'REGISTER SCHOOL / TEAM'}</span>
               <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
