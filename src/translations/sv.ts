@@ -2058,4 +2058,12 @@ export const svTranslations: Record<string, string> = {
   'A confirmation email will be sent to': 'Ett bekräftelsemejl skickas till',
   'once our coordinator confirms your registration.': 'när vår samordnare har bekräftat din registrering.',
   'Custom time': 'Egen tid',
+  'We offer 5 distinct pathways: Hands-on Workshops, Live School Demos, Student Idea Submissions, Hackathon Squads, and Volunteering. Click any option below to load its customizable registration form directly underneath.': 'Vi erbjuder 5 olika vägar: praktiska workshoppar, live-demos på skolor, elevernas idéinlämningar, hackathonlag och volontärarbete. Klicka på ett alternativ nedan för att öppna dess anmälningsformulär direkt under.',
+  'Volunteer': 'Volontär',
+  'Work as a Volunteer': 'Arbeta som volontär',
+  'Help run Västerås Future Innovators events as a volunteer': 'Hjälp till att genomföra Västerås Future Innovators evenemang som volontär',
+  'Volunteer with Västerås Future Innovators': 'Bli volontär hos Västerås Future Innovators',
+  'Help us run robotics finals, hackathons and school events across Västerås. Pick your role, your time and the events you want to support.': 'Hjälp oss att genomföra robotikfinaler, hackathons och skolevenemang i Västerås. Välj din roll, din tid och de evenemang du vill stötta.',
+  'REGISTER AS A VOLUNTEER': 'ANMÄL DIG SOM VOLONTÄR',
+  'Volunteers': 'Volontärer',
 };

@@ -42,11 +42,11 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const navLinks = [
     { id: 'challenges', label: language === 'sv' ? 'Tävling' : 'Competition' },
-    { id: 'ideas', label: language === 'sv' ? '⭐ Rösta på Idéer' : '⭐ Vote for Ideas' },
     { id: 'register', label: language === 'sv' ? 'Registrering' : 'Intake & Register' },
     { id: 'workflow', label: language === 'sv' ? 'Arbetsflöde' : 'Workflow' },
     { id: 'events', label: language === 'sv' ? 'Evenemang' : 'Events' },
     { id: 'about', label: language === 'sv' ? 'Om oss' : 'About' },
+    { id: 'ibk', label: 'Indisk Barnklubb (IBK)' },
     { id: 'contact', label: language === 'sv' ? 'Kontakt' : 'Contact' },
   ];
 
@@ -86,7 +86,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             <span
-              className={`font-headline font-black text-sm sm:text-base md:text-lg tracking-tight uppercase transition-colors duration-300 ${
+              className={`font-headline font-black text-sm sm:text-base md:text-lg tracking-tight uppercase whitespace-nowrap transition-colors duration-300 ${
                 isDarkHeader
                   ? 'text-white group-hover:text-[#FFCD00]'
                   : 'text-[#0A1930] group-hover:text-[#006AA7]'
@@ -119,7 +119,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   key={item.id}
                   onClick={() => handleLinkClick(item.id)}
-                  className={`relative px-3.5 py-1.5 text-xs font-display font-medium tracking-wide transition-all duration-200 ${
+                  className={`relative px-3 py-1.5 text-xs font-display font-medium tracking-wide whitespace-nowrap transition-all duration-200 ${
                     isDarkHeader
                       ? isActive
                         ? 'text-[#0A1930] font-bold'
@@ -192,7 +192,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.96 }}
               onClick={() => onNavigate('register')}
-              className="btn-pill-lime text-xs font-black py-2.5 px-5 transition-all duration-200 shadow-md flex items-center gap-2 group relative overflow-hidden"
+              className="btn-pill-lime text-xs font-black py-2.5 px-5 whitespace-nowrap transition-all duration-200 shadow-md flex items-center gap-2 group relative overflow-hidden"
             >
               <span>{language === 'sv' ? 'REGISTRERA SKOLA / LAG' : 'REGISTER SCHOOL / TEAM'}</span>
               <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />

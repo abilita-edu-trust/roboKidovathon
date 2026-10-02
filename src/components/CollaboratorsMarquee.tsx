@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useInView } from 'framer-motion';
-import { CalendarClock, School } from 'lucide-react';
+import { CalendarClock, MapPin, School } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface ApprovedSchool {
@@ -9,6 +9,7 @@ interface ApprovedSchool {
   workshop_slot?: string | null;
   time_range?: string | null;
   form_type?: string | null;
+  city_name?: string | null;
 }
 
 interface RegistrationStats {
@@ -105,6 +106,12 @@ const SchoolChip: React.FC<{ school: ApprovedSchool }> = ({ school }) => {
             </span>
           )}
         </span>
+        {school.city_name && (
+          <span className="flex items-center gap-1.5 mt-0.5 text-[11px] sm:text-xs font-mono-code font-bold text-white/80 whitespace-nowrap">
+            <MapPin className="w-3 h-3 shrink-0" />
+            {school.city_name}
+          </span>
+        )}
         {booking && (
           <span className="flex items-center gap-1.5 mt-0.5 text-[11px] sm:text-xs font-mono-code font-bold text-[#FFCD00] whitespace-nowrap">
             <CalendarClock className="w-3 h-3 shrink-0" />

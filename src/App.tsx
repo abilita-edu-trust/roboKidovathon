@@ -24,6 +24,8 @@ import { EventsPage } from './pages/EventsPage';
 import { IntakeRegisterPage, IntakeProgramTab } from './pages/IntakeRegisterPage';
 import { IdeasVotingPage } from './pages/IdeasVotingPage';
 import { AdminIdeasCurationPage } from './pages/AdminIdeasCurationPage';
+import { IbkPage } from './pages/IbkPage';
+import { VolunteerCta } from './components/VolunteerCta';
 
 import { EventDeckModal } from './components/EventDeckModal';
 import { RoboCursor } from './components/RoboCursor';
@@ -33,12 +35,15 @@ export function App() {
   const { language } = useLanguage();
   const [currentRoute, setCurrentRoute] = useState<string>(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get('route') === 'register') return 'register';
+    if (params.get('route') === 'register' || params.get('route') === 'volunteer') return 'register';
     if (params.get('route') === 'ideas' || params.get('idea')) return 'ideas';
     if (params.get('route') === 'admin') return 'admin';
+    if (params.get('route') === 'ibk') return 'ibk';
     return 'home';
   });
-  const [registerInitialTab, setRegisterInitialTab] = useState<IntakeProgramTab>('workshop');
+  const [registerInitialTab, setRegisterInitialTab] = useState<IntakeProgramTab>(() =>
+    new URLSearchParams(window.location.search).get('route') === 'volunteer' ? 'volunteer' : 'workshop'
+  );
   const [isDeckOpen, setIsDeckOpen] = useState<boolean>(false);
 
   const handleNavigate = (route: string, tab?: IntakeProgramTab) => {
@@ -102,6 +107,9 @@ export function App() {
               </div>
             </section>
 
+            {/* 06b. Volunteer call-to-action */}
+            <VolunteerCta onOpenVolunteer={() => handleNavigate('register', 'volunteer')} />
+
             {/* 07. Tournament Highlights Photo Reel */}
             <RefPhotoStrip onOpenRegister={openRegister} onNavigate={handleNavigate} />
 
@@ -159,6 +167,10 @@ export function App() {
             onOpenRegister={() => handleNavigate('register')}
             onNavigateHome={() => handleNavigate('home')}
           />
+        )}
+
+        {currentRoute === 'ibk' && (
+          <IbkPage onNavigateHome={() => handleNavigate('home')} />
         )}
 
         {currentRoute === 'lgr22' && (

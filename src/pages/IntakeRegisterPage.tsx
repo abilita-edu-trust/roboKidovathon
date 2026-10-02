@@ -20,8 +20,9 @@ import {
 import { supabase } from '../lib/supabase';
 import { VoiceNoteRecorder } from '../components/VoiceNoteRecorder';
 import { uploadIdeaMedia, submitIdea, fetchRegisteredSchools } from '../lib/ideasService';
+import { VolunteerForm } from '../components/VolunteerForm';
 
-export type IntakeProgramTab = 'workshop' | 'demo' | 'submit-idea' | 'hackathon';
+export type IntakeProgramTab = 'workshop' | 'demo' | 'submit-idea' | 'hackathon' | 'volunteer';
 
 interface IntakeRegisterPageProps {
   initialTab?: IntakeProgramTab;
@@ -433,12 +434,12 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
               Choose Your Program Pathway
             </h1>
             <p className="text-xs sm:text-sm text-slate-600 mt-2 max-w-2xl mx-auto leading-relaxed">
-              We offer 4 distinct pathways: Hands-on Workshops, Live School Demos, Student Idea Submissions, and Hackathon Squads. Click any option below to load its customizable registration form directly underneath.
+              We offer 5 distinct pathways: Hands-on Workshops, Live School Demos, Student Idea Submissions, Hackathon Squads, and Volunteering. Click any option below to load its customizable registration form directly underneath.
             </p>
           </div>
 
           {/* 4-Pill Interactive Quick Selector with clear explanations */}
-          <div className="mb-6 grid grid-cols-2 lg:grid-cols-4 gap-2.5">
+          <div className="mb-6 grid grid-cols-2 lg:grid-cols-5 gap-2.5">
             {[
               {
                 id: 'workshop' as const,
@@ -475,6 +476,15 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                 desc: 'Register a student team to compete at Mälardalen University on Dec 5',
                 icon: '🏆',
                 theme: 'emerald',
+              },
+              {
+                id: 'volunteer' as const,
+                num: '5',
+                title: 'Volunteer',
+                subtitle: 'Work as a Volunteer',
+                desc: 'Help run Västerås Future Innovators events as a volunteer',
+                icon: '🙋',
+                theme: 'blue',
               },
             ].map((p) => {
               const active = selectedProgram === p.id;
@@ -693,7 +703,9 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
             isHack ? 'border-[#059669]' : 'border-[#006AA7]'
           }`}
         >
-          {!submitSuccess ? (
+          {selectedProgram === 'volunteer' ? (
+            <VolunteerForm />
+          ) : !submitSuccess ? (
             <div>
               {/* Form Active Banner */}
               <div className="mb-6 p-4 border border-slate-200 bg-slate-50 flex flex-wrap items-center justify-between gap-3">
