@@ -96,7 +96,7 @@ export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
   };
 
   const handleCopyLink = (idea: IdeaSubmission) => {
-    const url = `${window.location.origin}/?route=ideas&idea=${idea.public_id}`;
+    const url = `${window.location.origin}/ideas?idea=${idea.public_id}`;
     navigator.clipboard.writeText(url);
     setCopiedId(idea.id);
     setTimeout(() => setCopiedId(null), 2500);

@@ -149,7 +149,7 @@ export const IdeasVotingPage: React.FC<IdeasVotingPageProps> = ({
   };
 
   const handleCopyIdeaLink = (idea: IdeaSubmission) => {
-    const url = `${window.location.origin}/?route=ideas&idea=${idea.public_id}`;
+    const url = `${window.location.origin}/ideas?idea=${idea.public_id}`;
     navigator.clipboard.writeText(url);
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 2500);
