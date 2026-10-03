@@ -48,8 +48,8 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
       num: '04',
       title: 'QUALIFY',
       subtitle: 'School Robo-Sprint Matches',
-      desc: 'Held inside each participating school during October 2026. Teams compete on the official mat. The top Explorer and Advanced teams qualify for the city final.',
-      badge: 'OCTOBER 2026',
+      desc: 'Held inside each participating school or association on 12–25 November 2026. Teams compete on the official mat. Up to 4 teams from each participating school or association qualify for the Final.',
+      badge: '12–25 NOVEMBER 2026',
     },
     {
       num: '05',
@@ -62,7 +62,7 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
       num: '06',
       title: 'GRAND FINALE',
       subtitle: 'Västerås City Final',
-      desc: 'School champions compete live on Saturday, December 5, 2026 at Mälardalen International School in Västerås for SEK 3,000 in prizes, official trophies, and certificates.',
+      desc: 'Qualified teams compete live on Saturday, December 5, 2026 at Mälardalen International School (MISV) in Västerås for SEK 3,000 in prizes, official trophies, and certificates.',
       badge: 'DECEMBER 5, 2026',
       highlight: true,
     },
@@ -191,7 +191,7 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
               onClick={onOpenRegister}
               className="w-full sm:w-auto px-7 py-4 bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] font-syne font-black text-xs sm:text-sm uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 group active:scale-95"
             >
-              <span>REGISTER FOR AUTUMN INTAKE</span>
+              <span>REGISTER SCHOOL, ASSOCIATION OR TEAM</span>
               <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
             </button>
           </div>
@@ -349,7 +349,7 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
               onClick={onOpenRegister}
               className="btn-pill-lime text-xs sm:text-sm font-black py-4 px-8"
             >
-              <span>REGISTER SCHOOL / TEAM</span>
+              <span>REGISTER SCHOOL, ASSOCIATION OR TEAM</span>
             </button>
             <button
               onClick={onNavigateHome}

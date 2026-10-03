@@ -131,7 +131,7 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
       title: 'City Final',
       subtitle: 'Dec 5 Grand Finale',
       icon: Award,
-      desc: 'Selected teams represent their school and meet students from other schools in Västerås.',
+      desc: 'Up to 4 teams per school or association represent their group at the Final and meet students from across Västerås.',
       tag: 'DECEMBER 5 GRAND FINALE',
       color: '#FFCD00',
       isFinal: true,
@@ -179,7 +179,7 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
           {/* Institutional Badge */}
           <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-slate-100 border border-slate-200 text-xs font-mono-code font-bold uppercase tracking-wider text-[#0A1930]">
             <School className="w-4 h-4 text-[#006AA7]" />
-            <span>MDU C2 | VÄSTERÅS FUTURE INNOVATORS 2026</span>
+            <span>VÄSTERÅS FUTURE INNOVATORS 2026</span>
           </div>
 
           {/* 3 Value Pillars */}
@@ -222,13 +222,13 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
               onClick={onOpenRegister}
               className="w-full sm:w-auto px-6 py-3 bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] font-syne font-black text-xs uppercase tracking-wider transition-all shadow-sm flex items-center justify-center gap-2 group active:scale-95"
             >
-              <span>ENROL SCHOOL IN 20H WORKFLOW</span>
+              <span>REGISTER SCHOOL, ASSOCIATION OR TEAM</span>
               <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
             </button>
           </div>
         </motion.div>
 
-        {/* ── SECTION 1: DUAL LEARNING LEVELS (EXPLORER & ADVANCED) ── */}
+        {/* ── SECTION 1: DUAL LEARNING LEVELS (JUNIOR & SENIOR) ── */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -288,10 +288,10 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
 
               {/* 2 Learning Levels Box */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Explorer */}
+                {/* Junior */}
                 <div className="p-4 bg-[#F8FAFC] border border-slate-200 space-y-2">
                   <span className="text-[11px] font-mono-code font-bold text-[#006AA7] uppercase tracking-wider block">
-                    Explorer · Grades 3–6
+                    Junior · Grades 3–6
                   </span>
                   <p className="text-xs text-slate-600 font-normal leading-relaxed">
                     Focus on stable construction, basic mechanisms, movement, motor control, teamwork
@@ -305,7 +305,7 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
                 {/* Advanced */}
                 <div className="p-4 bg-[#F8FAFC] border border-slate-200 space-y-2">
                   <span className="text-[11px] font-mono-code font-bold text-[#EA580C] uppercase tracking-wider block">
-                    Advanced · Grades 7–9
+                    Senior · Grades 7–9
                   </span>
                   <p className="text-xs text-slate-600 font-normal leading-relaxed">
                     Go deeper into engineering design, measurement, optimization, control logic and
@@ -615,7 +615,7 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
             <div className="space-y-4 max-w-2xl">
               <span className="text-[10px] sm:text-[11px] font-mono-code font-bold tracking-widest text-[#FFCD00] uppercase">
-                MDU C2 | VÄSTERÅS FUTURE INNOVATORS 2026
+                VÄSTERÅS FUTURE INNOVATORS 2026
               </span>
               <h2 className="font-headline font-black text-2xl sm:text-3xl md:text-4xl text-white uppercase tracking-tight">
                 Reusable hands-on STEM platform
@@ -632,7 +632,7 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
                 onClick={onOpenRegister}
                 className="bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] font-black text-xs sm:text-sm py-4 px-7 shadow-md flex items-center gap-2 transition-transform hover:scale-105 uppercase tracking-wider"
               >
-                <span>REGISTER SCHOOL / COHORT</span>
+                <span>REGISTER SCHOOL, ASSOCIATION OR TEAM</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
 

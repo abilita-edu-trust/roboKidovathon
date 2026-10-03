@@ -48,7 +48,7 @@ export const EventsPage: React.FC<EventsPageProps> = ({
           </h1>
 
           <p className="mt-4 text-sm sm:text-base text-slate-600 font-light max-w-2xl leading-relaxed">
-            A clear timeline of the autumn season in Västerås: in-school qualifiers in October, then the Robo-Sprint City Final and the Young Inno Hack together on December 5, 2026 at Mälardalen International School.
+            A clear timeline of the autumn season in Västerås: qualifiers in participating schools and associations on 12–25 November, then the Robo-Sprint City Final at Mälardalen International School (MISV) and the Young Inno Hack final presentations (venue to be confirmed) on 5 December 2026.
           </p>
         </motion.div>
 
@@ -68,11 +68,11 @@ export const EventsPage: React.FC<EventsPageProps> = ({
               </span>
               <div className="flex items-center gap-2 text-[#006AA7] pt-2">
                 <Calendar className="w-4 h-4" />
-                <span className="text-sm font-mono-code font-bold uppercase">OCTOBER 2026</span>
+                <span className="text-sm font-mono-code font-bold uppercase">12–25 NOVEMBER 2026</span>
               </div>
               <div className="flex items-center gap-2 text-slate-500">
                 <MapPin className="w-4 h-4" />
-                <span className="text-xs font-mono-code uppercase">IN EACH PARTICIPATING SCHOOL</span>
+                <span className="text-xs font-mono-code uppercase">IN EACH PARTICIPATING SCHOOL OR ASSOCIATION</span>
               </div>
             </div>
 
@@ -84,11 +84,11 @@ export const EventsPage: React.FC<EventsPageProps> = ({
                 10-Session In-School STEM Project Climax
               </p>
               <p className="text-sm text-slate-600 font-light leading-relaxed max-w-2xl">
-                Held inside each participating school across the final sessions of the 20-hour STEM project. Student teams test their built robots under official 3-minute referee match conditions. One winning Explorer team (Grades 3–6) and one winning Advanced team (Grades 7–9) qualify to represent their school in the municipal final.
+                Held inside each participating school or association after the 20-hour STEM project. Student teams test their built robots under official 3-minute referee match conditions in the Junior (Grades 3–6) and Senior (Grades 7–9) categories. Up to 4 teams from each participating school or association qualify for the Final. Grades 1–2 take part as participants, not as a competition category.
               </p>
               <div className="pt-2">
                 <span className="text-xs font-mono-code font-bold text-[#0A1930] uppercase tracking-wider">
-                  Advancement: 1 Explorer + 1 Advanced Team per School
+                  Advancement: Up to 4 Teams per School or Association
                 </span>
               </div>
             </div>
@@ -182,7 +182,7 @@ export const EventsPage: React.FC<EventsPageProps> = ({
               onClick={onOpenRegister}
               className="bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] font-syne font-black text-xs sm:text-sm uppercase tracking-wider py-3.5 px-8 shadow-md transition-all active:scale-95"
             >
-              <span>REGISTER FOR AUTUMN 2026</span>
+              <span>REGISTER SCHOOL, ASSOCIATION OR TEAM</span>
             </button>
           </div>
         </div>

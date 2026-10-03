@@ -83,7 +83,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
               <div className="p-4 bg-[#F8FAFC] border border-slate-200 flex items-center gap-3">
                 <Award className="w-5 h-5 text-[#006AA7] shrink-0" />
                 <span className="text-xs font-mono-code font-bold text-[#0A1930] uppercase">
-                  Explorer &amp; Advanced Leagues
+                  Junior &amp; Senior Leagues
                 </span>
               </div>
               <div className="p-4 bg-[#F8FAFC] border border-slate-200 flex items-center gap-3">
@@ -99,7 +99,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
                 onClick={onOpenRegister}
                 className="btn-pill-lime text-xs font-black py-3.5 px-8 flex items-center gap-2 shadow-md"
               >
-                <span>REGISTER SCHOOL / TEAM</span>
+                <span>REGISTER SCHOOL, ASSOCIATION OR TEAM</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>

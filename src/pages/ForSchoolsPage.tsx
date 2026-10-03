@@ -22,8 +22,8 @@ const WHY_SCHOOLS_PARTICIPATE = [
   },
   {
     title: 'School-to-City Pathway',
-    desc: 'School qualifiers feed directly into the Västerås City Final on December 5, 2026.',
-    detail: 'Winning Explorer (Grades 3–6) and Advanced (Grades 7–9) teams represent their school in a high-stakes municipal showdown with SEK 3,000 in prizes and certificates.',
+    desc: 'School and association qualifiers (12–25 November) feed directly into the Västerås City Final on December 5, 2026.',
+    detail: 'Up to 4 Junior (Grades 3–6) and Senior (Grades 7–9) teams from each school or association go to the Final, with SEK 3,000 in prizes and certificates.',
   },
 ];
 
@@ -45,7 +45,7 @@ const FAQ_ITEMS: FAQItem[] = [
     id: 'faq-2',
     category: 'Eligibility & Grades',
     question: 'Which grades can participate in Västerås Future Innovators 2026?',
-    answer: 'Robo-Sprint Explorer is designed for Grades 3–6 (Grundskola). Robo-Sprint Advanced is for Grades 7–9. The Robo-Precision autonomous challenge is structured for Gymnasium and upper-level students.',
+    answer: 'RoboKido Junior is designed for Grades 3–6 (Grundskola). RoboKido Senior is for Grades 7–9. Grades 1–2 can join workshops and demos as a participant category (not a competition category). The RoboKido GYM autonomous challenge is structured for Gymnasium and upper-level students. The Young Inno Hack is open to Grades 7–9 (basic level), Gymnasiet students (medium level) and university students (advanced level).',
   },
   {
     id: 'faq-3',
@@ -95,7 +95,7 @@ export const ForSchoolsPage: React.FC<ForSchoolsPageProps> = ({
     {
       num: '03',
       title: 'RUN PROJECT & QUALIFY',
-      desc: 'Students complete the 10-session project, run in-school qualifiers in October, and top teams advance to the December 5 Final.',
+      desc: 'Students complete the 10-session project, run qualifiers on 12–25 November, and up to 4 teams per school or association advance to the December 5 Final.',
     },
   ];
 
@@ -142,7 +142,7 @@ export const ForSchoolsPage: React.FC<ForSchoolsPageProps> = ({
               onClick={onOpenRegister}
               className="btn-pill-lime text-xs font-black py-3.5 px-7 shadow-md flex items-center gap-2"
             >
-              <span>BOOK A SCHOOL MEETING</span>
+              <span>REGISTER SCHOOL, ASSOCIATION OR TEAM</span>
               <ArrowRight className="w-4 h-4" />
             </button>
             <button
@@ -368,10 +368,10 @@ export const ForSchoolsPage: React.FC<ForSchoolsPageProps> = ({
               RESERVE WORKSHOP DATES FOR AUTUMN 2026
             </span>
             <h3 className="font-headline font-black text-3xl sm:text-4xl uppercase">
-              REGISTER YOUR SCHOOL COHORT
+              REGISTER SCHOOL, ASSOCIATION OR TEAM
             </h3>
             <p className="text-xs sm:text-sm text-[#0A1930]/80 font-medium max-w-lg">
-              Intake for schools in Västerås is open for the 2026 season ahead of the October in-school qualifiers and December 5 City Final.
+              Intake for schools, associations and independent teams is open for the 2026 season ahead of the 12–25 November qualifiers and December 5 City Final.
             </p>
           </div>
 
@@ -380,7 +380,7 @@ export const ForSchoolsPage: React.FC<ForSchoolsPageProps> = ({
               onClick={onOpenRegister}
               className="btn-pill-white text-xs font-bold py-3.5 px-6 shadow-md"
             >
-              <span>BOOK A SCHOOL MEETING</span>
+              <span>REGISTER SCHOOL, ASSOCIATION OR TEAM</span>
             </button>
 
             <button

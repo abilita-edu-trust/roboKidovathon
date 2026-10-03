@@ -29,7 +29,7 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
   const TRACK_SUMMARY = [
     {
       id: 'robo-sprint-explorer',
-      title: 'Robo-Sprint Explorer',
+      title: 'RoboKido Junior',
       grades: 'Grades 3–6',
       format: '3 Min · Ball-Transfer',
       control: 'Wired Dual-Switch Remote',
@@ -38,7 +38,7 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
     },
     {
       id: 'robo-sprint-advanced',
-      title: 'Robo-Sprint Advanced',
+      title: 'RoboKido Senior',
       grades: 'Grades 7–9',
       format: '3 Min · Obstacle Agility',
       control: 'Wired Multi-Channel Controller',
@@ -47,7 +47,7 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
     },
     {
       id: 'robo-precision',
-      title: 'Robo-Precision',
+      title: 'RoboKido GYM',
       grades: 'Gymnasium (15+)',
       format: '5 Min · Autonomous Build',
       control: 'Autonomous Coded Sequence',
@@ -92,7 +92,7 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
           </h1>
 
           <p className="mt-4 text-sm sm:text-base text-slate-600 font-light max-w-2xl leading-relaxed">
-            Standardized Swedish school arena regulations. Explorer and Advanced share the official 244 × 122 cm (8 × 4 ft) ball-transfer court in head-to-head 3-minute heats. Robo-Precision is an autonomous challenge for gymnasium competitors.
+            Standardized Swedish school arena regulations. Junior and Senior share the official 244 × 122 cm (8 × 4 ft) ball-transfer court in head-to-head 3-minute heats. RoboKido GYM is an autonomous challenge for gymnasium competitors.
           </p>
           </div>
 
@@ -265,7 +265,7 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
                             onClick={onOpenRegister}
                             className="btn-pill-lime text-xs font-black py-3 px-6 shadow-md flex-1 text-center"
                           >
-                            <span>REGISTER COHORT</span>
+                            <span>REGISTER SCHOOL, ASSOCIATION OR TEAM</span>
                           </button>
                           <button
                             onClick={onOpenDeckModal}
@@ -405,7 +405,7 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
               onClick={onOpenRegister}
               className="btn-pill-lime text-xs sm:text-sm font-black py-3.5 px-8"
             >
-              <span>REGISTER SCHOOL / TEAM</span>
+              <span>REGISTER SCHOOL, ASSOCIATION OR TEAM</span>
             </button>
             <button
               onClick={onNavigateHome}

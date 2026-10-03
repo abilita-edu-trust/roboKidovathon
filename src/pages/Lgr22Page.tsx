@@ -138,7 +138,7 @@ export const Lgr22Page: React.FC<Lgr22PageProps> = ({
               Three Age Pathways, One Family Of Challenges
             </h2>
             <p className="mt-2 text-sm text-slate-600 font-light max-w-2xl leading-relaxed">
-              Explorer and Advanced play the same Robo-Sprint arena at different pedagogical depths; Robo-Precision is the autonomous track for gymnasium cohorts.
+              Junior and Senior play the same Robo-Sprint arena at different pedagogical depths; RoboKido GYM is the autonomous track for gymnasium cohorts.
             </p>
           </div>
 
