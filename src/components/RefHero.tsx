@@ -95,7 +95,7 @@ export const RefHero: React.FC<RefHeroProps> = ({
             {/* Sub-copy - refined size */}
             <p className="text-xs sm:text-sm text-white/75 font-light leading-relaxed max-w-md">
               Västerås Future Innovators — hands-on STEM robotics and the Young Inno Hack,
-              built for Swedish schools, grades 3–9 and Gymnasium.
+              for schools, associations and independent teams — RoboKido Junior, Senior and GYM, the Young Inno Hack from grade 7 to university, and grades 1–2 as participants.
             </p>
 
             {/* CTAs - compact & sharp with playful interactions */}
@@ -108,7 +108,7 @@ export const RefHero: React.FC<RefHeroProps> = ({
               >
                 {/* Playful Light Sweep Shimmer */}
                 <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out pointer-events-none" />
-                <span>REGISTER SCHOOL / TEAM</span>
+                <span>REGISTER SCHOOL, ASSOCIATION OR TEAM</span>
                 <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
               </motion.button>
 
@@ -131,7 +131,7 @@ export const RefHero: React.FC<RefHeroProps> = ({
             className="lg:col-span-5 flex flex-wrap gap-2 items-end justify-start lg:justify-end"
           >
             {[
-              { label: 'GRADES', value: '3–9 + GYM' },
+              { label: 'GRADES', value: '1–9 + GYM' },
               { label: 'PRIZE POOL', value: 'SEK 3,000' },
               { label: 'PROGRAMME', value: '20H STEM' },
               { label: 'LGR22', value: 'CURRICULUM FIT' },

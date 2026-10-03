@@ -397,7 +397,7 @@ export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({
                 onClick={onOpenRegister}
                 className="w-full sm:w-auto px-7 py-4 bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] font-syne font-black text-xs sm:text-sm uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 group active:scale-95"
               >
-                <span>BOOK IN-CLASS WORKSHOP</span>
+                <span>REGISTER SCHOOL, ASSOCIATION OR TEAM</span>
                 <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
               </button>
             )}

@@ -43,12 +43,12 @@ export const RefTrackComparison: React.FC<RefTrackComparisonProps> = ({
         'Chassis Stability',
         'Teamwork',
       ],
-      registerLabel: 'REGISTER FOR GRADES 3 – 6 →',
+      registerLabel: 'REGISTER SCHOOL, ASSOCIATION OR TEAM →',
     },
     {
       id: 'robo-sprint-advanced',
       badge: 'GRADES 7 – 9',
-      title: 'ROBO SPRINT ADVANCED',
+      title: 'ROBOKIDO SENIOR',
       division: 'SENIOR LEAGUE • GRADE 7 TO 9',
       description: 'Engineer, measure, and optimize mechanical advantages under competition conditions.',
       bannerImage: bannerRoboSprintAdvanced,
@@ -64,7 +64,7 @@ export const RefTrackComparison: React.FC<RefTrackComparisonProps> = ({
         'Tactical Strategy',
         'Documentation',
       ],
-      registerLabel: 'REGISTER FOR GRADES 7 – 9 →',
+      registerLabel: 'REGISTER SCHOOL, ASSOCIATION OR TEAM →',
     },
     {
       id: 'robo-trials',
@@ -86,7 +86,7 @@ export const RefTrackComparison: React.FC<RefTrackComparisonProps> = ({
         'Teamwork',
       ],
       taglinePill: 'CONTROL • STRATEGY • ACCURACY • TEAMWORK',
-      registerLabel: 'REGISTER FOR ROBO TRIALS →',
+      registerLabel: 'REGISTER SCHOOL, ASSOCIATION OR TEAM →',
     },
   ];
 

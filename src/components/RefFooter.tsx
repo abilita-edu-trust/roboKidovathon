@@ -27,7 +27,7 @@ export const RefFooter: React.FC<RefFooterProps> = ({
               </span>
             </div>
             <p className="text-xs sm:text-sm text-slate-300 font-light leading-relaxed max-w-sm">
-              Hands-on STEM programme and school robotics competition pathway bringing schools together through robotics. Hosted by Indisk BarnKlubb (IBK) Västerås, INIAC, and SkillSkolan, with Blix as technology and kit partner.
+              Hands-on STEM programme and robotics competition for schools, associations and independent teams. Hosted by Indisk BarnKlubb (IBK) Västerås, INIAC and SkillSkolan, with Blix as technology and kit partner.
             </p>
             <div className="flex flex-wrap items-center gap-4 text-xs font-mono-code text-slate-300 pt-1">
               <span className="flex items-center gap-1.5">
@@ -36,7 +36,7 @@ export const RefFooter: React.FC<RefFooterProps> = ({
               </span>
               <span className="flex items-center gap-1.5">
                 <ShieldCheck className="w-3.5 h-3.5 text-[#FFCD00]" />
-                <span>GRADES 3–9 &amp; GYMNASIUM</span>
+                <span>GRADES 1–9 &amp; GYMNASIUM</span>
               </span>
             </div>
           </div>
@@ -47,6 +47,7 @@ export const RefFooter: React.FC<RefFooterProps> = ({
               PROGRAMME
             </span>
             <ul className="space-y-2 text-xs text-slate-300 font-light">
+              <li><button onClick={() => onNavigate('future-innovators')} className="hover:text-[#FFCD00] transition-colors">Future Innovators</button></li>
               <li><button onClick={() => onNavigate('for-schools')} className="hover:text-[#FFCD00] transition-colors">For Schools</button></li>
               <li><button onClick={() => onNavigate('workflow')} className="hover:text-[#FFCD00] transition-colors">STEM Workflow</button></li>
               <li><button onClick={() => onNavigate('challenges')} className="hover:text-[#FFCD00] transition-colors">Competition Tracks</button></li>
@@ -62,6 +63,8 @@ export const RefFooter: React.FC<RefFooterProps> = ({
               ORGANIZATION &amp; CONTACT
             </span>
             <ul className="space-y-2 text-xs text-slate-300 font-light">
+              <li><button onClick={() => onNavigate('ibk')} className="hover:text-[#FFCD00] transition-colors">Indisk Barnklubb (IBK)</button></li>
+              <li><button onClick={() => onNavigate('ibk#contact')} className="hover:text-[#FFCD00] transition-colors">Contact IBK</button></li>
               <li><button onClick={() => onNavigate('about')} className="hover:text-[#FFCD00] transition-colors">About the League</button></li>
               <li className="text-slate-300 flex items-center gap-1.5 pt-1">
                 <Mail className="w-3.5 h-3.5 text-[#FFCD00]" />
@@ -79,10 +82,10 @@ export const RefFooter: React.FC<RefFooterProps> = ({
           {/* Cohort CTA */}
           <div className="md:col-span-3 space-y-4">
             <span className="font-headline font-bold text-xs uppercase tracking-widest text-white block">
-              ENROL COHORT
+              REGISTER
             </span>
             <p className="text-xs text-slate-300 font-light leading-relaxed">
-              Registrations for Västerås schools and student cohorts are open ahead of the October qualifiers and December 5, 2026 Grand Finale.
+              Registration is open for schools, associations and independent teams ahead of the 12–25 November qualifiers and the 5 December 2026 Final.
             </p>
             <motion.button
               whileHover={{ scale: 1.03 }}
@@ -90,7 +93,7 @@ export const RefFooter: React.FC<RefFooterProps> = ({
               onClick={onOpenRegister}
               className="bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] text-xs font-syne font-black py-3.5 px-6 flex items-center justify-center gap-2 shadow-md uppercase tracking-wider transition-all"
             >
-              <span>REGISTER SCHOOL / TEAM</span>
+              <span>REGISTER SCHOOL, ASSOCIATION OR TEAM</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </motion.button>
           </div>
@@ -115,7 +118,7 @@ export const RefFooter: React.FC<RefFooterProps> = ({
 
         {/* Bottom copyright & compliance */}
         <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] font-mono-code text-slate-400">
-          <span>© 2026 VÄSTERÅS FUTURE INNOVATORS · ALL RIGHTS RESERVED</span>
+          <span>© 2026 VÄSTERÅS FUTURE INNOVATORS · INDISK BARNKLUBB VÄSTERÅS</span>
           <div className="flex flex-wrap items-center gap-4">
             <span>LOW-VOLTAGE 6V HARDWARE · GDPR-COMPLIANT STUDENT PRIVACY</span>
             <button

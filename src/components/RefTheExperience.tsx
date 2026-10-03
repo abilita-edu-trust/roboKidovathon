@@ -29,7 +29,7 @@ const VENUES: { label: string; name: string; detail?: string; image?: string; tr
     track: 'robo',
   },
   { label: 'Young Inno Hack Opening AW', name: 'TBD', detail: 'Opening After Work · venue to be announced', track: 'hack' },
-  { label: 'Young Inno Hack Final Venue', name: 'HG', track: 'hack' },
+  { label: 'Young Inno Hack Final Venue', name: 'TBC', detail: 'Venue to be confirmed', track: 'hack' },
 ];
 
 interface RefTheExperienceProps {
@@ -238,8 +238,9 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
               </div>
 
               <div className="text-xs sm:text-sm text-sky-100 font-light w-full border-t border-white/15 pt-3">
-                <p>Hands-on robotics challenge for school teams.</p>
+                <p>Hands-on robotics challenge for teams from schools and associations.</p>
                 <p className="text-white/80">No previous experience needed.</p>
+                <p className="text-white/80">Junior: grades 3–6 · Senior: grades 7–9 · GYM: programmable bot.</p>
               </div>
             </div>
 
@@ -295,7 +296,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
                     <Target className="w-5 h-5" />
                   </div>
                   <p className="text-xs sm:text-sm text-[#0A1930] leading-snug font-medium">
-                    From school workshops and internal competitions, we select <span className="font-bold text-[#006AA7]">4 teams</span> to represent each school at the Västerås RoboKidovation Final on <span className="font-bold text-[#006AA7]">5 December 2026</span>.
+                    From school workshops and internal competitions, up to <span className="font-bold text-[#006AA7]">4 teams</span> from each participating school or association qualify for the Västerås RoboKidovation Final on <span className="font-bold text-[#006AA7]">5 December 2026</span>.
                   </p>
                 </div>
 
@@ -341,6 +342,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
               <div className="text-xs sm:text-sm text-emerald-100 font-light w-full border-t border-white/15 pt-3">
                 <p>A one-day innovation challenge solving real-world problems.</p>
                 <p className="text-white/80">Develop a concept and pitch to the jury.</p>
+                <p className="text-white/80">Basic: grades 7–9 · Medium: gymnasiet · Advanced: university students.</p>
               </div>
             </div>
 
@@ -458,10 +460,10 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
         <div className="p-6 sm:p-8 bg-gradient-to-r from-[#0A1930] via-[#006AA7] to-[#0A1930] text-white flex flex-col lg:flex-row items-center justify-between gap-6 shadow-xl">
           <div className="space-y-1 text-center lg:text-left">
             <span className="text-[11px] font-mono-code font-bold tracking-[0.25em] text-[#FFCD00] uppercase block">
-              REGISTRATION OPEN FOR VÄSTERÅS SCHOOLS
+              REGISTRATION OPEN FOR SCHOOLS, ASSOCIATIONS & TEAMS
             </span>
             <h3 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight">
-              Ready to bring your school into the 2026 Championship?
+              Ready to join the 2026 Championship?
             </h3>
             <p className="text-xs sm:text-sm text-white/80 font-light max-w-xl">
               Choose RoboKidovation, Young Inno Hack, or register teams across both tracks.
@@ -474,7 +476,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
                 onClick={onOpenRegister}
                 className="w-full sm:w-auto px-8 py-4 bg-[#FFCD00] hover:bg-[#E6B800] text-[#0A1930] font-syne font-black text-xs sm:text-sm tracking-wider uppercase transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2.5 active:scale-95"
               >
-                <span>REGISTER SCHOOL / TEAM</span>
+                <span>REGISTER SCHOOL, ASSOCIATION OR TEAM</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             )}

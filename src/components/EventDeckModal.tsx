@@ -57,7 +57,7 @@ export const EventDeckModal: React.FC<EventDeckModalProps> = ({ isOpen, onClose 
               Download Event Deck.
             </h2>
             <p className="text-xs sm:text-sm text-slate-500 font-light mt-2 leading-relaxed">
-              Complete tournament prospectus for school principals, educators, and team mentors. Includes the Robo-Sprint &amp; Robo-Precision rulebooks, official kit inventories, and competition schedules.
+              Complete tournament prospectus for school principals, educators, and team mentors. Includes the Robo-Sprint &amp; RoboKido GYM rulebooks, official kit inventories, and competition schedules.
             </p>
 
             {/* Visual Document Previews */}

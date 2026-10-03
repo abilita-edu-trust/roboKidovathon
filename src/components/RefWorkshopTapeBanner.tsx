@@ -49,7 +49,7 @@ export const RefWorkshopTapeBanner: React.FC<RefWorkshopTapeBannerProps> = ({
               transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
               className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#FFCD00] text-[#0A1930] text-[10px] sm:text-[11px] font-mono-code font-black uppercase tracking-widest shadow-md"
             >
-              <span>OFFICIAL MDU C2 INTAKE · AUTUMN 2026</span>
+              <span>OFFICIAL INTAKE · AUTUMN 2026</span>
             </motion.div>
 
             {/* Main Headline */}
@@ -59,10 +59,10 @@ export const RefWorkshopTapeBanner: React.FC<RefWorkshopTapeBannerProps> = ({
                 style={{ fontSize: 'clamp(1.8rem, 5.5vw, 4.8rem)' }}
               >
                 BRING HANDS-ON STEM<br />
-                <span className="text-[#FFCD00]">TO YOUR SCHOOL</span>
+                <span className="text-[#FFCD00]">TO YOUR SCHOOL OR ASSOCIATION</span>
               </h2>
               <p className="text-sm sm:text-base text-slate-300 font-light leading-relaxed max-w-xl mx-auto pt-2">
-                Start with a workshop, run a 20-hour STEM project, or prepare a school team for Västerås Future Innovators 2026.
+                Start with a workshop, run a 20-hour STEM project, or prepare a team for Västerås Future Innovators 2026.
               </p>
             </div>
 

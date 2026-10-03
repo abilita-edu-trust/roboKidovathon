@@ -386,7 +386,7 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
                   onClick={onOpenRegister}
                   className="bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] font-black text-xs sm:text-sm py-3 px-5 sm:px-6 shadow-xs flex items-center gap-2 transition-transform hover:scale-105"
                 >
-                  <span>REGISTER COHORT</span>
+                  <span>REGISTER SCHOOL, ASSOCIATION OR TEAM</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
                 <button

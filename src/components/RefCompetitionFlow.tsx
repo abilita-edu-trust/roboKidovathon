@@ -32,7 +32,7 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
         'Students build, wire, and drive a working competition rover from turnkey mechanical kits — delivered directly to your classroom.',
       specs: [
         { label: 'DELIVERY', value: 'Turnkey 6V DC Kits' },
-        { label: 'COHORTS', value: 'Grades 3–6 & 7–9' },
+        { label: 'CATEGORIES', value: 'Grades 3–6 & 7–9 (1–2 take part)' },
         { label: 'DURATION', value: '10 Sessions (20h)' },
       ],
       isDark: false,
@@ -42,17 +42,17 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
       badge: 'STAGE 02 · QUALIFIERS',
       title: 'INTER-SCHOOL HEATS',
       tagline: 'Put the skills to the test.',
-      timing: 'NOVEMBER · SCHOOL ARENA',
+      timing: '12–25 NOVEMBER · SCHOOL ARENA',
       icon: Target,
       image: roboSprintTopDown,
       imageTag: 'TACTICAL MATCH COURT',
       imageCaption: 'Standardized 2.44 × 1.22 m 1 vs 1 competition mat',
       description:
-        'Fast-paced 1 vs 1 heats on a standardized dual court. Navigate obstacles, clear hurdles, and battle for the school slot.',
+        'Fast-paced 1 vs 1 heats on a standardized dual court. Navigate obstacles, clear hurdles, and battle for a place in the Final.',
       specs: [
         { label: 'ARENA', value: '2.44 × 1.22 m Mat' },
         { label: 'MATCH DURATION', value: '03:00 (1 vs 1)' },
-        { label: 'ADVANCEMENT', value: 'Top Team to Finals' },
+        { label: 'ADVANCEMENT', value: 'Up to 4 Teams per School / Association' },
       ],
       isDark: false,
     },
@@ -67,9 +67,9 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
       imageTag: 'CHAMPIONSHIP VENUE',
       imageCaption: 'Live tournament floor setup in Västerås',
       description:
-        'Qualifying school cohorts battle live in Västerås for medals, trophies, and the grand title.',
+        'Qualifying teams from schools and associations battle live in Västerås for medals, trophies, and the grand title.',
       specs: [
-        { label: 'VENUE', value: 'Mälardalen International School' },
+        { label: 'VENUE', value: 'MISV · Mälardalen International School' },
         { label: 'PRIZE POOL', value: 'SEK 3,000' },
         { label: 'SHOWCASE', value: 'Live Audience Heats' },
       ],
@@ -114,7 +114,7 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
                 onClick={onOpenRegister}
                 className="bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] font-black text-xs sm:text-sm py-3 px-6 shadow-xs flex items-center gap-2 transition-transform hover:scale-105 uppercase tracking-wider"
               >
-                <span>REGISTER SCHOOL</span>
+                <span>REGISTER SCHOOL, ASSOCIATION OR TEAM</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             )}
@@ -318,7 +318,7 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
         >
           <div className="space-y-1.5 text-center lg:text-left">
             <span className="text-[10px] font-mono-code font-bold tracking-widest text-[#006AA7] uppercase block">
-              STAGE 01 · OCTOBER 2026 QUALIFIERS
+              STAGE 02 · 12–25 NOVEMBER 2026 QUALIFIERS
             </span>
             <h4 className="font-headline font-black text-xl sm:text-2xl uppercase tracking-tight text-[#0A1930]">
               Secure your school's slot in the 2026 tournament heats
@@ -334,7 +334,7 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
                 onClick={onOpenRegister}
                 className="w-full sm:w-auto px-7 py-4 bg-[#006AA7] hover:bg-[#005587] text-white font-syne font-black text-xs sm:text-sm uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 group active:scale-95"
               >
-                <span>SECURE YOUR QUALIFIER SPOT</span>
+                <span>REGISTER SCHOOL, ASSOCIATION OR TEAM</span>
                 <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
               </button>
             )}
