@@ -2099,4 +2099,5 @@ export const svTranslations: Record<string, string> = {
   'Register squad for the 5 Dec final (venue to be confirmed)': 'Anmäl laget till finalen 5 dec (plats meddelas senare)',
   'Register a student team for the Young Inno Hack final on 5 Dec (venue to be confirmed)': 'Anmäl ett elevlag till Young Inno Hack-finalen 5 dec (plats meddelas senare)',
   'Hands-on STEM programme and robotics competition for schools, associations and independent teams. Hosted by Indisk BarnKlubb (IBK) Västerås, INIAC and SkillSkolan, with Blix as technology and kit partner.': 'Ett praktiskt STEM-program och en robotiktävling för skolor, föreningar och fristående lag. Arrangeras av Indisk BarnKlubb (IBK) Västerås, INIAC och SkillSkolan, med Blix som teknik- och kitpartner.',
+  'Developed & maintained by': 'Utvecklad och förvaltad av',
 };

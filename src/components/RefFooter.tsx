@@ -131,6 +131,24 @@ export const RefFooter: React.FC<RefFooterProps> = ({
           </div>
         </div>
 
+        {/* Developer credit */}
+        <div className="pt-6 border-t border-white/10 flex justify-center">
+          <a
+            href="https://www.artechstudio.co.in/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1 px-4 py-2.5 border border-white/15 hover:border-[#FFCD00] transition-colors"
+          >
+            <span className="text-[10px] sm:text-[11px] font-mono-code font-bold uppercase tracking-[0.2em] text-slate-300">
+              Developed &amp; maintained by
+            </span>
+            <span className="font-headline font-black normal-case text-base sm:text-lg tracking-tight text-[#FFCD00] group-hover:text-white transition-colors">
+              ArTechStudio
+            </span>
+            <ArrowRight className="w-3.5 h-3.5 text-[#FFCD00] transition-transform group-hover:translate-x-1" />
+          </a>
+        </div>
+
       </div>
     </footer>
   );
