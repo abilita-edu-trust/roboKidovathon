@@ -114,7 +114,7 @@ export const IbkHomePage: React.FC<IbkHomePageProps> = ({ onNavigate }) => {
   return (
     <div data-no-translate="true" className={`w-full bg-white text-[#0A1930] transition-opacity duration-300 ${ready ? 'opacity-100' : 'opacity-0'}`}>
       {/* ── 1. WELCOME TO IBK ── */}
-      <section className="relative w-full min-h-[640px] lg:min-h-[min(100vh,960px)] flex items-end overflow-hidden bg-[#0A1930] text-white pt-32 sm:pt-36 pb-16 sm:pb-20 px-4 sm:px-6 lg:px-10">
+      <section className="relative w-full min-h-[640px] lg:min-h-[min(100vh,960px)] flex flex-col overflow-hidden bg-[#0A1930] text-white pt-32 sm:pt-36 pb-16 sm:pb-20 px-4 sm:px-6 lg:px-10">
         {c.hero.video && (
           <video
             key={c.hero.video}
@@ -128,6 +128,19 @@ export const IbkHomePage: React.FC<IbkHomePageProps> = ({ onNavigate }) => {
         )}
         {/* Flat scrim keeps the headline readable over the video */}
         <div className="absolute inset-0 bg-[#0A1930]/60 pointer-events-none" />
+        {/* IBK logo, centred in the open space above the headline */}
+        <div className="relative z-10 flex-1 flex items-center justify-center pb-8 sm:pb-10">
+          {c.hero.logo && (
+            <motion.img
+              initial={{ opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              src={mediaUrl(c.hero.logo)}
+              alt="Indisk Barnklubb (IBK) Västerås"
+              className="w-56 sm:w-72 lg:w-80 h-auto object-contain drop-shadow-[0_0_22px_rgba(255,255,255,0.45)]"
+            />
+          )}
+        </div>
         <div className="relative z-10 w-full max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-end">
           <motion.div
             initial={{ opacity: 0, y: 30 }}

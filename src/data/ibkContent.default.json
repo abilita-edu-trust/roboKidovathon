@@ -1,6 +1,7 @@
 {
   "hero": {
     "video": "/ibk-assets/ibk_hero.mp4",
+    "logo": "/ibk logo.png",
     "eyebrow": { "en": "NON-PROFIT ASSOCIATION // VÄSTERÅS, SWEDEN", "sv": "IDEELL FÖRENING // VÄSTERÅS, SVERIGE" },
     "titleLine1": { "en": "Welcome to", "sv": "Välkommen till" },
     "titleLine2": { "en": "Indisk Barnklubb", "sv": "Indisk Barnklubb" },
