@@ -124,7 +124,7 @@ export interface LearningBlock {
 export const STATS_DATA = [
   { value: '4', label: 'HOST PARTNERS', sub: 'IBK · INIAC · SKILLSKOLAN · BLIX', accent: 'text-[#006AA7]' },
   { value: '20H', label: 'STEM PROJECT', sub: '10 SESSIONS · BUILD TO COMPETE', accent: 'text-[#0A1930]' },
-  { value: 'SEK 3,000', label: 'PRIZE POOL', sub: '1,200 EXPLORER + 1,800 ADVANCED', accent: 'text-[#006AA7]' },
+  { value: 'SEK 3,000', label: 'PRIZE POOL', sub: '1,200 JUNIOR + 1,800 SENIOR', accent: 'text-[#006AA7]' },
   { value: 'DEC 5', label: 'GRAND FINALE', sub: 'VÄSTERÅS, SWEDEN · 2026', accent: 'text-[#0A1930]' },
 ];
 
@@ -133,6 +133,7 @@ export const PARTNER_LOGOS: PartnerLogo[] = [
   { name: 'INIAC', file: '/iniac logo.png', role: 'Programme & Pedagogy Partner' },
   { name: 'SkillSkolan', file: '/skillskolan logo.png', role: 'Education Delivery Partner' },
   { name: 'Blix', file: '/blix a thon logo.png', role: 'Technology & Kit Partner' },
+  { name: 'ABF Västerås', file: '/ibk/abf.png', role: 'Venue Partner' },
 ];
 
 export const KIT_PIECES: KitPiece[] = [
@@ -183,8 +184,8 @@ export const COMPETITION_CATEGORIES: CompetitionCategory[] = [
   {
     id: 'robo-sprint-explorer',
     code: 'CAT A',
-    title: 'ROBO-SPRINT',
-    division: 'EXPLORER LEAGUE',
+    title: 'ROBOKIDO JUNIOR',
+    division: 'JUNIOR LEAGUE',
     ageRange: 'GRADES 3 – 6',
     duration: '3 MINUTES PER MATCH',
     format: 'Arena Ball-Transfer Challenge',
@@ -233,7 +234,7 @@ export const COMPETITION_CATEGORIES: CompetitionCategory[] = [
   {
     id: 'robo-sprint-advanced',
     code: 'CAT B',
-    title: 'ROBO-PRECISION & SPRINT',
+    title: 'ROBOKIDO SENIOR',
     division: 'SENIOR LEAGUE',
     ageRange: 'GRADES 7 – 9',
     duration: '6 MINUTES PER MATCH',
@@ -303,8 +304,8 @@ export const ROADMAP_STEPS: RoadmapStep[] = [
     tag: 'STAGE 03 // CHALLENGE',
     title: 'CHALLENGE',
     subtitle: 'School Robo-Sprint (Qualifiers)',
-    description: 'Test, measure and improve your design, then compete in Robo-Sprint matches within your own school in October 2026. One winning Explorer team and one winning Advanced team qualify per school.',
-    badge: 'OCTOBER 2026'
+    description: 'Test, measure and improve your design, then compete in Robo-Sprint qualifiers within your school or association on 12–25 November 2026. Up to 4 teams from each participating school or association qualify for the Final.',
+    badge: '12–25 NOVEMBER 2026'
   },
   {
     stepNumber: '04',
@@ -329,11 +330,11 @@ export const CHAMPIONSHIP_STAGES: ChampionshipStage[] = [
     stageNumber: '01',
     stageCode: 'STAGE 01',
     title: 'ROBOSKOLAN ROBO LEAGUE',
-    subtitle: 'QUALIFIERS — WITHIN EACH SCHOOL',
-    date: 'OCTOBER 2026',
-    location: 'PARTICIPATING SCHOOL VENUES · VÄSTERÅS',
-    description: 'A 20-hour, ten-session in-school STEM project — learn, build, test, improve and apply — held inside each participating school and completed with School Robo-Sprint matches.',
-    advancement: '1 WINNING EXPLORER TEAM & 1 WINNING ADVANCED TEAM PER SCHOOL QUALIFY',
+    subtitle: 'QUALIFIERS — WITHIN EACH SCHOOL OR ASSOCIATION',
+    date: '12–25 NOVEMBER 2026',
+    location: 'PARTICIPATING SCHOOLS & ASSOCIATIONS · VÄSTERÅS',
+    description: 'A 20-hour, ten-session in-school STEM project — learn, build, test, improve and apply — held inside each participating school or association and completed with School Robo-Sprint matches.',
+    advancement: 'UP TO 4 TEAMS PER SCHOOL OR ASSOCIATION QUALIFY',
     active: false
   },
   {
@@ -342,9 +343,9 @@ export const CHAMPIONSHIP_STAGES: ChampionshipStage[] = [
     title: 'VÄSTERÅS FUTURE INNOVATORS ROBO-SPRINT CITY FINAL',
     subtitle: 'INTER-SCHOOL COMPETITION & SHOWCASE',
     date: 'DECEMBER 5, 2026',
-    location: 'MÄLARDALEN INTERNATIONAL SCHOOL, VÄSTERÅS',
-    description: 'Winning school teams compete live in the Robo-Sprint arena for cash prizes, trophies, and certificates, alongside an innovation and robotics showcase.',
-    advancement: 'SEK 3,000 AWARDED — 1,200 EXPLORER + 1,800 ADVANCED',
+    location: 'MÄLARDALEN INTERNATIONAL SCHOOL (MISV), VÄSTERÅS',
+    description: 'Qualified teams compete live in the Robo-Sprint arena for cash prizes, trophies, and certificates, alongside an innovation and robotics showcase.',
+    advancement: 'SEK 3,000 AWARDED — 1,200 JUNIOR + 1,800 SENIOR',
     active: true
   }
 ];
@@ -355,11 +356,11 @@ export const UPCOMING_EVENTS: UpcomingEvent[] = [
     date: 'DECEMBER 5, 2026',
     day: 'SATURDAY · DEC 5',
     title: 'Västerås Future Innovators — Robo-Sprint City Final',
-    subtitle: 'Explorer (Grades 3–6) & Advanced (Grades 7–9) Championships',
+    subtitle: 'RoboKido Junior (Grades 3–6), Senior (Grades 7–9) & GYM (Gymnasium) Championships',
     location: 'Mälardalen International School, Västerås',
-    description: 'School champions from the autumn STEM project compete live in the Robo-Sprint arena, judged across match performance, engineering design, teamwork and technical explanation.',
-    categories: ['Grades 3–6', 'Grades 7–9'],
-    cta: 'REGISTER YOUR SCHOOL',
+    description: 'Qualified teams from the autumn STEM project compete live in the Robo-Sprint arena, judged across match performance, engineering design, teamwork and technical explanation.',
+    categories: ['Junior · Grades 3–6', 'Senior · Grades 7–9', 'GYM · Gymnasium'],
+    cta: 'REGISTER SCHOOL, ASSOCIATION OR TEAM',
     ctaAction: 'register',
   },
   {
@@ -367,8 +368,9 @@ export const UPCOMING_EVENTS: UpcomingEvent[] = [
     date: 'DECEMBER 5, 2026',
     day: 'SATURDAY · DEC 5',
     title: 'Young Inno Hack',
-    subtitle: 'At Mälardalen International School, Västerås',
-    location: 'Mälardalen International School, Västerås',
+    subtitle: 'Final presentations · venue to be confirmed',
+    location: 'Venue to be confirmed',
+    categories: ['Basic · Grades 7–9', 'Medium · Gymnasiet', 'Advanced · University'],
     description: 'A one-day interdisciplinary innovation challenge where student teams tackle a real-world problem — sustainable cities, climate and environment, future schools, energy, accessibility, health, AI or technology for society — and present a concept, model, prototype or digital solution to a jury. Unlike the robotics track, no previous robotics experience is required, so students interested in science, technology, design, creativity or entrepreneurship can take part.',
     curriculumNote: 'For grundskolan, the hackathon supports the broader intentions of Lgr22 by giving students opportunities to use creativity, curiosity, initiative, problem-solving and collaboration in a practical context, following the technology-development process from identifying a need through construction, testing and evaluation. For gymnasium students, it can complement Gy25 through project-based problem-solving, technical development, programming and interdisciplinary work — fitting well with the Technology Programme, where technical processes and links between technology and societal development are important elements.',
     cta: 'ASK ABOUT THE HACKATHON',
@@ -405,7 +407,7 @@ export const WHY_SCHOOLS_PARTICIPATE: WhyParticipateReason[] = [
   {
     title: 'School-To-City Pathway',
     desc: 'Students can represent their school beyond the classroom.',
-    detail: 'Winning Explorer and Advanced teams from each school\'s Robo-Sprint qualifiers advance directly to the Västerås Future Innovators Robo-Sprint City Final on December 5, 2026.',
+    detail: 'Up to 4 teams from each school or association\'s Robo-Sprint qualifiers advance to the Västerås Future Innovators Robo-Sprint City Final on December 5, 2026.',
   },
 ];
 
@@ -428,26 +430,26 @@ export const AGE_PATHWAYS: AgePathway[] = [
   {
     id: 'explorer',
     grades: 'Grades 3–6',
-    name: 'Robo-Sprint Explorer',
+    name: 'RoboKido Junior',
     focus: ['Basic mechanisms', 'Construction', 'Movement', 'Motor control', 'Teamwork', 'Testing'],
     message: 'Build a robot that moves reliably, solve the challenge and learn through experimentation.',
-    detail: 'The question students ask is simple: "Can we build something that moves reliably and solve the challenge together?" Explorer teams spend the 20-hour STEM project on structure, wheels, axles and motor connection, then apply it in the Robo-Sprint Explorer arena — a 3-minute, ball-transfer match judged 70% on match performance, 20% on robot design & improvement, and 10% on teamwork & explanation.',
+    detail: 'The question students ask is simple: "Can we build something that moves reliably and solve the challenge together?" Junior teams spend the 20-hour STEM project on structure, wheels, axles and motor connection, then apply it in the RoboKido Junior arena — a 3-minute, ball-transfer match judged 70% on match performance, 20% on robot design & improvement, and 10% on teamwork & explanation.',
   },
   {
     id: 'advanced',
     grades: 'Grades 7–9',
-    name: 'Robo-Sprint Advanced',
+    name: 'RoboKido Senior',
     focus: ['Engineering design', 'Control', 'Measurement', 'Optimisation', 'Programming/sensors where relevant', 'Technical documentation'],
     message: 'Design, measure and optimise a technical solution for competition.',
-    detail: 'The question shifts to: "How can we engineer, measure and optimise a better solution?" Advanced teams go deeper into control, sensors and strategy within the same 20-hour project, then compete in the same 3-minute Robo-Sprint arena — judged 60% on match performance, 25% on engineering & technical design, and 15% on testing, documentation & explanation.',
+    detail: 'The question shifts to: "How can we engineer, measure and optimise a better solution?" Senior teams go deeper into control, sensors and strategy within the same 20-hour project, then compete in the same 3-minute Robo-Sprint arena — judged 60% on match performance, 25% on engineering & technical design, and 15% on testing, documentation & explanation.',
   },
   {
     id: 'precision',
     grades: 'Gymnasium · 15+',
-    name: 'Robo-Precision',
+    name: 'RoboKido GYM',
     focus: ['Autonomous control', 'Crane & servo kinematics', 'Balance and stability', 'Precision manipulation', 'Sensor feedback', 'Technical documentation'],
     message: 'Engineer a fully autonomous crane arm that builds the tallest stable tower — zero human touch once the build begins.',
-    detail: 'A gymnasium-level track that pairs naturally with Gy25\'s programming and software-development focus. Robo-Precision teams programme the entire build sequence in advance — no manual control once the 5-minute match starts — and are judged 60% on tower height & stability, 30% on engineering & autonomy design, and 10% on documentation & explanation.',
+    detail: 'A gymnasium-level track that pairs naturally with Gy25\'s programming and software-development focus. RoboKido GYM teams programme the entire build sequence in advance — no manual control once the 5-minute match starts — and are judged 60% on tower height & stability, 30% on engineering & autonomy design, and 10% on documentation & explanation.',
   },
 ];
 
@@ -499,7 +501,7 @@ export const LEARNING_BLOCKS: LearningBlock[] = [
   {
     tag: 'CODE',
     desc: 'Logic, control, programming and automation',
-    detail: 'Programming and sensor-assisted control come in at the Advanced (Grades 7–9) and Robo-Precision (Gymnasium/Gy25) levels, where teams move from manual control into control logic and autonomy.',
+    detail: 'Programming and sensor-assisted control come in at the Senior (Grades 7–9) and RoboKido GYM (Gymnasium/Gy25) levels, where teams move from manual control into control logic and autonomy.',
   },
   {
     tag: 'CREATE',
@@ -509,7 +511,7 @@ export const LEARNING_BLOCKS: LearningBlock[] = [
   {
     tag: 'COMPETE',
     desc: 'Apply the learning through Västerås Future Innovators',
-    detail: 'Sessions 9–10 close with documentation and presentation prep, then School Robo-Sprint qualifiers — winning teams represent their school at the Robo-Sprint City Final on December 5, 2026.',
+    detail: 'Sessions 9–10 close with documentation and presentation prep, then Robo-Sprint qualifiers (12–25 November) — up to 4 teams per school or association go to the Robo-Sprint City Final on December 5, 2026.',
   },
 ];
 
@@ -517,7 +519,7 @@ export const FAQ_ITEMS: FAQItem[] = [
   {
     id: 'faq-1',
     question: 'Who can participate in Västerås Future Innovators 2026?',
-    answer: 'Students up to Grade 9 are eligible, split into two categories: the Robo-Sprint Explorer league (Grades 3–6) and the Robo-Sprint Advanced league (Grades 7–9).',
+    answer: 'Children in Grades 1–9 from schools, associations and independent teams can take part. RoboKidovation has three categories: RoboKido Junior (Grades 3–6, basic), RoboKido Senior (Grades 7–9, advanced) and RoboKido GYM (Gymnasium, programmable bot). The Young Inno Hack has three levels: Grades 7–9 (basic), Gymnasiet students (medium) and university students (advanced). Grades 1–2 join as a participant category, not as a competition category.',
     category: 'Eligibility'
   },
   {
@@ -535,19 +537,19 @@ export const FAQ_ITEMS: FAQItem[] = [
   {
     id: 'faq-4',
     question: 'How does the ROBO-SPRINT challenge work?',
-    answer: 'It’s an arena ball-transfer challenge. Each match begins with an equal number of balls on both sides, and teams try to move as many as possible into the opponent’s side. Every ball moved across scores 5 points. Both the Explorer and Advanced leagues play 3-minute matches; ties are broken by fewer balls remaining, then a tie-break round, then sudden death.',
+    answer: 'It’s an arena ball-transfer challenge. Each match begins with an equal number of balls on both sides, and teams try to move as many as possible into the opponent’s side. Every ball moved across scores 5 points. Both the Junior and Senior leagues play 3-minute matches; ties are broken by fewer balls remaining, then a tie-break round, then sudden death.',
     category: 'Competition & Arena'
   },
   {
     id: 'faq-5',
     question: 'What is the competition structure?',
-    answer: 'Stage 1 is the RoboSkolan Robo League qualifiers, held within each school across the 20-hour STEM project in October 2026. One winning Explorer team and one winning Advanced team from each school advance directly to the Västerås Future Innovators Robo-Sprint City Final on December 5, 2026.',
+    answer: 'Stage 1 is the RoboSkolan Robo League qualifiers, held within each participating school or association on 12–25 November 2026 after the 20-hour STEM project. Up to 4 teams from each school or association advance to the Västerås Future Innovators Robo-Sprint City Final on December 5, 2026.',
     category: 'Schools & Fees'
   },
   {
     id: 'faq-6',
     question: 'What can winning teams take home?',
-    answer: 'A total of SEK 3,000 is awarded to winning teams (SEK 1,200 Explorer + SEK 1,800 Advanced), along with cash, trophies, and certificates for all finalists.',
+    answer: 'A total of SEK 3,000 is awarded to winning teams (SEK 1,200 Junior + SEK 1,800 Senior), along with cash, trophies, and certificates for all finalists.',
     category: 'Competition & Arena'
   },
   {
