@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Navbar } from './components/Navbar';
 import { RefHero } from './components/RefHero';
 import { RefHeroMarquee } from './components/RefHeroMarquee';
@@ -10,9 +10,10 @@ import { RefCompetitionFlow } from './components/RefCompetitionFlow';
 import { CollaboratorsMarquee } from './components/CollaboratorsMarquee';
 import { VoteYoungMindsSection } from './components/VoteYoungMindsSection';
 import { VotePrompt } from './components/VotePrompt';
-import { RefPhotoStrip } from './components/RefPhotoStrip';
 import { RefWorkshopTapeBanner } from './components/RefWorkshopTapeBanner';
 import { RefFooter } from './components/RefFooter';
+import { FutureInnovatorsDetailLinks } from './components/FutureInnovatorsDetailLinks';
+import { ParticipationFees } from './components/ParticipationFees';
 
 import { ChallengesPage } from './pages/ChallengesPage';
 import { HowItWorksPage } from './pages/HowItWorksPage';
@@ -24,42 +25,78 @@ import { EventsPage } from './pages/EventsPage';
 import { IntakeRegisterPage, IntakeProgramTab } from './pages/IntakeRegisterPage';
 import { IdeasVotingPage } from './pages/IdeasVotingPage';
 import { AdminIdeasCurationPage } from './pages/AdminIdeasCurationPage';
-import { IbkPage } from './pages/IbkPage';
+import { IbkHomePage } from './pages/IbkHomePage';
 import { VolunteerCta } from './components/VolunteerCta';
 
 import { EventDeckModal } from './components/EventDeckModal';
 import { RoboCursor } from './components/RoboCursor';
 import { useLanguage } from './context/LanguageContext';
+import { initialRouteFromLocation, pathForRoute, routeFromPath } from './lib/routes';
+
+const REGISTER_TABS: IntakeProgramTab[] = ['workshop', 'demo', 'association', 'submit-idea', 'hackathon', 'volunteer'];
+const toRegisterTab = (tab: string | null): IntakeProgramTab =>
+  REGISTER_TABS.includes(tab as IntakeProgramTab) ? (tab as IntakeProgramTab) : 'workshop';
+
+const scrollToSection = (id: string) => {
+  // Wait for the newly routed page to render before scrolling.
+  setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
+};
 
 export function App() {
   const { language } = useLanguage();
-  const [currentRoute, setCurrentRoute] = useState<string>(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('route') === 'register' || params.get('route') === 'volunteer') return 'register';
-    if (params.get('route') === 'ideas' || params.get('idea')) return 'ideas';
-    if (params.get('route') === 'admin') return 'admin';
-    if (params.get('route') === 'ibk') return 'ibk';
-    return 'home';
-  });
-  const [registerInitialTab, setRegisterInitialTab] = useState<IntakeProgramTab>(() =>
-    new URLSearchParams(window.location.search).get('route') === 'volunteer' ? 'volunteer' : 'workshop'
-  );
+  const [initial] = useState(initialRouteFromLocation);
+  const [currentRoute, setCurrentRoute] = useState<string>(initial.route);
+  const [registerInitialTab, setRegisterInitialTab] = useState<IntakeProgramTab>(() => toRegisterTab(initial.tab));
   const [isDeckOpen, setIsDeckOpen] = useState<boolean>(false);
 
-  const handleNavigate = (route: string, tab?: IntakeProgramTab) => {
+  // Rewrite legacy `?route=` links to their real path once, keeping other params (e.g. ?idea=).
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (!params.has('route')) return;
+    params.delete('route');
+    if (initial.route === 'register' && initial.tab) params.set('tab', initial.tab);
+    const query = params.toString();
+    window.history.replaceState(null, '', pathForRoute(initial.route) + (query ? `?${query}` : '') + window.location.hash);
+  }, [initial]);
+
+  // Browser back / forward.
+  useEffect(() => {
+    const onPopState = () => {
+      const route = routeFromPath(window.location.pathname);
+      if (route === 'register') {
+        setRegisterInitialTab(toRegisterTab(new URLSearchParams(window.location.search).get('tab')));
+      }
+      setCurrentRoute(route);
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
+
+  // Deep links to a section, e.g. /#contact.
+  useEffect(() => {
+    if (window.location.hash) scrollToSection(window.location.hash.slice(1));
+  }, []);
+
+  /** Navigate to a route id, optionally with a register tab or a `route#section` anchor. */
+  const handleNavigate = useCallback((target: string, tab?: IntakeProgramTab) => {
+    const [route, section] = target.split('#');
     if (tab) setRegisterInitialTab(tab);
+    else if (route === 'register') setRegisterInitialTab('workshop');
+
+    const query = route === 'register' && tab && tab !== 'workshop' ? `?tab=${tab}` : '';
+    const url = pathForRoute(route) + query + (section ? `#${section}` : '');
+    if (url !== window.location.pathname + window.location.search + window.location.hash) {
+      window.history.pushState(null, '', url);
+    }
     setCurrentRoute(route);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+
+    if (section) scrollToSection(section);
+    else window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   const openRegister = () => handleNavigate('register');
 
-  const goToVote = () => {
-    const scroll = () => document.getElementById('vote-ideas')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    if (currentRoute === 'home') return scroll();
-    setCurrentRoute('home');
-    setTimeout(scroll, 150);
-  };
+  const goToVote = () => handleNavigate('future-innovators#vote-ideas');
 
   return (
     <div key={language} className="min-h-screen bg-white text-[#0A1930] font-sans selection:bg-[#FFCD00] selection:text-[#0A1930] relative overflow-x-hidden">
@@ -75,28 +112,34 @@ export function App() {
 
       {/* ── Page Router ── */}
       <main className="w-full">
-        {currentRoute === 'home' && (
+        {currentRoute === 'ibk' && <IbkHomePage onNavigate={handleNavigate} />}
+
+        {currentRoute === 'future-innovators' && (
           <>
-            {/* 01. Main Hero / Video & Design Section */}
+            {/* 01. Programme hero */}
             <RefHero onNavigate={handleNavigate} onOpenRegister={openRegister} />
 
-            {/* 02. Trusted Partners Marquee / Ticker (directly below Hero) */}
+            {/* 02. Partners ticker */}
             <RefHeroMarquee />
 
-            {/* 03. Meet Us At — confirmed school bookings + live stats */}
+            {/* 03. Meet Us At — confirmed bookings + live stats */}
             <section className="w-full bg-white text-[#0A1930] py-14 sm:py-16 px-4 sm:px-6 lg:px-10">
               <div className="max-w-[1560px] mx-auto">
                 <CollaboratorsMarquee onNavigate={handleNavigate} />
               </div>
             </section>
 
-            {/* 04. From Classroom to Arena: 3-Stage Competition Pathway */}
-            <RefCompetitionFlow onOpenRegister={openRegister} onNavigate={handleNavigate} />
-
-            {/* 05. Choose your pathway: RoboKidovation & Young Inno Hack + venues */}
+            {/* 04. Two pathways, the one official timeline, and venues */}
             <RefTheExperience onNavigate={handleNavigate} onOpenRegister={openRegister} />
 
-            {/* 06. Vote for an idea of young minds */}
+            {/* 04b. Participation fees, next to the registration call-to-action */}
+            <section className="w-full bg-white px-4 sm:px-6 lg:px-10 pb-12">
+              <div className="max-w-[1560px] mx-auto">
+                <ParticipationFees />
+              </div>
+            </section>
+
+            {/* 05. Vote for an idea of young minds */}
             <section id="vote-ideas" className="w-full bg-white text-[#0A1930] py-10 sm:py-14 px-4 sm:px-6 lg:px-10 scroll-mt-20">
               <div className="max-w-[1560px] mx-auto">
                 <VoteYoungMindsSection
@@ -107,27 +150,11 @@ export function App() {
               </div>
             </section>
 
-            {/* 06b. Volunteer call-to-action */}
+            {/* 06. Volunteer call-to-action */}
             <VolunteerCta onOpenVolunteer={() => handleNavigate('register', 'volunteer')} />
 
-            {/* 07. Tournament Highlights Photo Reel */}
-            <RefPhotoStrip onOpenRegister={openRegister} onNavigate={handleNavigate} />
-
-            {/* 08. Design, Build & Compete */}
-            <RefKioskShowcase onNavigate={handleNavigate} onOpenRegister={openRegister} />
-
-            {/* 09. How students progress: STEM learning pathway */}
-            <RefWorkflowMindMap onNavigate={handleNavigate} onOpenRegister={openRegister} />
-
-            {/* 10. Bring Hands-On STEM to Your School (Edu Kit → iniac.se) */}
-            <RefWorkshopTapeBanner
-              onOpenRegister={openRegister}
-              onOpenDeckModal={() => setIsDeckOpen(true)}
-              onNavigate={handleNavigate}
-            />
-
-            {/* 11. Competition league tracks */}
-            <RefTrackComparison onNavigate={handleNavigate} onOpenRegister={openRegister} />
+            {/* 07. Detailed rules, curriculum and equipment live on their own pages */}
+            <FutureInnovatorsDetailLinks onNavigate={handleNavigate} />
           </>
         )}
 
@@ -135,14 +162,25 @@ export function App() {
           <ChallengesPage
             onOpenRegister={() => handleNavigate('register')}
             onOpenDeckModal={() => setIsDeckOpen(true)}
-            onNavigateHome={() => handleNavigate('home')}
+            onNavigateHome={() => handleNavigate('future-innovators')}
           />
+        )}
+        {currentRoute === 'challenges' && (
+          <>
+            <RefCompetitionFlow onOpenRegister={openRegister} onNavigate={handleNavigate} />
+            <RefTrackComparison onNavigate={handleNavigate} onOpenRegister={openRegister} />
+            <section className="w-full bg-white px-4 sm:px-6 lg:px-10 pb-16">
+              <div className="max-w-[1560px] mx-auto">
+                <ParticipationFees />
+              </div>
+            </section>
+          </>
         )}
 
         {currentRoute === 'how-it-works' && (
           <HowItWorksPage
             onOpenRegister={() => handleNavigate('register')}
-            onNavigateHome={() => handleNavigate('home')}
+            onNavigateHome={() => handleNavigate('future-innovators')}
           />
         )}
 
@@ -150,54 +188,70 @@ export function App() {
           <WorkflowPage
             onOpenRegister={() => handleNavigate('register')}
             onOpenDeckModal={() => setIsDeckOpen(true)}
-            onNavigateHome={() => handleNavigate('home')}
+            onNavigateHome={() => handleNavigate('future-innovators')}
           />
+        )}
+
+        {currentRoute === 'workflow' && (
+          <>
+            <RefKioskShowcase onNavigate={handleNavigate} onOpenRegister={openRegister} />
+            <RefWorkflowMindMap onNavigate={handleNavigate} onOpenRegister={openRegister} />
+            <RefWorkshopTapeBanner
+              onOpenRegister={openRegister}
+              onOpenDeckModal={() => setIsDeckOpen(true)}
+              onNavigate={handleNavigate}
+            />
+          </>
         )}
 
         {currentRoute === 'for-schools' && (
           <ForSchoolsPage
             onOpenRegister={() => handleNavigate('register')}
             onOpenDeckModal={() => setIsDeckOpen(true)}
-            onNavigateHome={() => handleNavigate('home')}
+            onNavigateHome={() => handleNavigate('future-innovators')}
           />
         )}
 
         {currentRoute === 'about' && (
           <AboutPage
             onOpenRegister={() => handleNavigate('register')}
-            onNavigateHome={() => handleNavigate('home')}
+            onNavigateHome={() => handleNavigate('future-innovators')}
           />
-        )}
-
-        {currentRoute === 'ibk' && (
-          <IbkPage onNavigateHome={() => handleNavigate('home')} />
         )}
 
         {currentRoute === 'lgr22' && (
           <Lgr22Page
             onOpenRegister={() => handleNavigate('register')}
-            onNavigateHome={() => handleNavigate('home')}
+            onNavigateHome={() => handleNavigate('future-innovators')}
           />
         )}
 
         {currentRoute === 'events' && (
-          <EventsPage
-            onOpenRegister={() => handleNavigate('register')}
-            onNavigateHome={() => handleNavigate('home')}
-          />
+          <>
+            <EventsPage
+              onOpenRegister={() => handleNavigate('register')}
+              onNavigateHome={() => handleNavigate('future-innovators')}
+            />
+            <section className="w-full bg-white px-4 sm:px-6 lg:px-10 pb-16">
+              <div className="max-w-[1560px] mx-auto">
+                <ParticipationFees />
+              </div>
+            </section>
+          </>
         )}
 
         {currentRoute === 'register' && (
           <IntakeRegisterPage
+            key={registerInitialTab}
             initialTab={registerInitialTab}
-            onNavigateHome={() => handleNavigate('home')}
+            onNavigateHome={() => handleNavigate('future-innovators')}
             onNavigateVoting={() => handleNavigate('ideas')}
           />
         )}
 
         {currentRoute === 'ideas' && (
           <IdeasVotingPage
-            onNavigateHome={() => handleNavigate('home')}
+            onNavigateHome={() => handleNavigate('future-innovators')}
             onNavigateSubmit={() => handleNavigate('register', 'submit-idea')}
             onNavigateAdmin={() => handleNavigate('admin')}
           />
@@ -205,7 +259,7 @@ export function App() {
 
         {currentRoute === 'admin' && (
           <AdminIdeasCurationPage
-            onNavigateHome={() => handleNavigate('home')}
+            onNavigateHome={() => handleNavigate('future-innovators')}
             onNavigateVoting={() => handleNavigate('ideas')}
           />
         )}

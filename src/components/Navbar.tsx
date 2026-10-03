@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ArrowRight, ShieldCheck, Mail, MapPin, Globe } from 'lucide-react';
+import { Menu, X, ArrowRight, Globe } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { pathForRoute } from '../lib/routes';
 
 interface NavbarProps {
   activeTab: string;
@@ -17,7 +18,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [contactModalOpen, setContactModalOpen] = useState(false);
   const { language, setLanguage, toggleLanguage } = useLanguage();
 
   useEffect(() => {
@@ -41,25 +41,32 @@ export const Navbar: React.FC<NavbarProps> = ({
   }, [mobileMenuOpen]);
 
   const navLinks = [
+    { id: 'future-innovators', label: language === 'sv' ? 'Hem' : 'Home' },
     { id: 'challenges', label: language === 'sv' ? 'Tävling' : 'Competition' },
-    { id: 'register', label: language === 'sv' ? 'Registrering' : 'Intake & Register' },
-    { id: 'workflow', label: language === 'sv' ? 'Arbetsflöde' : 'Workflow' },
     { id: 'events', label: language === 'sv' ? 'Evenemang' : 'Events' },
+    { id: 'register', label: language === 'sv' ? 'Registrering' : 'Register' },
     { id: 'about', label: language === 'sv' ? 'Om oss' : 'About' },
     { id: 'ibk', label: 'Indisk Barnklubb (IBK)' },
-    { id: 'contact', label: language === 'sv' ? 'Kontakt' : 'Contact' },
+    { id: 'ibk#contact', label: language === 'sv' ? 'Kontakt' : 'Contact' },
   ];
 
-  const handleLinkClick = (id: string) => {
+  const registerLabel =
+    language === 'sv' ? 'REGISTRERA SKOLA, FÖRENING ELLER LAG' : 'REGISTER SCHOOL, ASSOCIATION OR TEAM';
+
+  // Real links (shareable, open-in-new-tab) that navigate in-app on a plain click.
+  const handleLinkClick = (e: React.MouseEvent, id: string) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
     setMobileMenuOpen(false);
-    if (id === 'contact') {
-      setContactModalOpen(true);
-    } else {
-      onNavigate(id);
-    }
+    onNavigate(id);
   };
 
-  const isDarkHeader = activeTab === 'home' && !isScrolled;
+  const hrefFor = (id: string) => {
+    const [route, section] = id.split('#');
+    return pathForRoute(route) + (section ? `#${section}` : '');
+  };
+
+  const isDarkHeader = (activeTab === 'ibk' || activeTab === 'future-innovators') && !isScrolled;
 
   return (
     <>
@@ -73,10 +80,11 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="w-full px-4 sm:px-6 flex items-center justify-between gap-4">
 
           {/* Brand Mark Logo */}
-          <motion.button
+          <motion.a
+            href="/"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => handleLinkClick('home')}
+            onClick={(e) => handleLinkClick(e, 'future-innovators')}
             className="text-left group focus:outline-none flex items-center gap-2.5"
           >
             {/* Swedish Flag / STEM Mark */}
@@ -103,7 +111,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 2026
               </span>
             </span>
-          </motion.button>
+          </motion.a>
 
           {/* Desktop Navigation Links */}
           <nav
@@ -116,9 +124,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             {navLinks.map((item) => {
               const isActive = activeTab === item.id;
               return (
-                <button
+                <a
                   key={item.id}
-                  onClick={() => handleLinkClick(item.id)}
+                  href={hrefFor(item.id)}
+                  onClick={(e) => handleLinkClick(e, item.id)}
                   className={`relative px-2.5 2xl:px-3 py-1.5 text-xs font-display font-medium tracking-wide whitespace-nowrap transition-all duration-200 ${
                     isDarkHeader
                       ? isActive
@@ -139,7 +148,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     />
                   )}
                   <span className="relative z-10">{item.label}</span>
-                </button>
+                </a>
               );
             })}
           </nav>
@@ -188,15 +197,17 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
             </div>
 
-            <motion.button
+            <motion.a
+              href={pathForRoute('register')}
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.96 }}
-              onClick={() => onNavigate('register')}
+              onClick={(e) => handleLinkClick(e, 'register')}
               className="btn-pill-lime text-xs font-black py-2.5 px-4 2xl:px-5 whitespace-nowrap transition-all duration-200 shadow-md flex items-center gap-2 group relative overflow-hidden"
             >
-              <span>{language === 'sv' ? 'REGISTRERA SKOLA / LAG' : 'REGISTER SCHOOL / TEAM'}</span>
+              <span className="xl:hidden">{language === 'sv' ? 'REGISTRERA' : 'REGISTER'}</span>
+              <span className="hidden xl:inline">{registerLabel}</span>
               <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-            </motion.button>
+            </motion.a>
           </div>
 
           {/* Mobile Right Controls: Fast Language Button + Hamburger */}
@@ -243,12 +254,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                   {navLinks.map((item, idx) => {
                     const isActive = activeTab === item.id;
                     return (
-                      <motion.button
+                      <motion.a
                         key={item.id}
+                        href={hrefFor(item.id)}
                         initial={{ opacity: 0, x: -16 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.25, delay: idx * 0.03 }}
-                        onClick={() => handleLinkClick(item.id)}
+                        onClick={(e) => handleLinkClick(e, item.id)}
                         className={`py-3 px-4 rounded-xl text-left text-sm font-display font-medium transition-all ${
                           isActive
                             ? 'text-[#006AA7] bg-slate-100 font-bold border border-slate-200'
@@ -256,7 +268,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         }`}
                       >
                         {item.label}
-                      </motion.button>
+                      </motion.a>
                     );
                   })}
                 </div>
@@ -301,7 +313,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     }}
                     className="w-full btn-pill-lime py-3.5 text-xs font-black flex items-center justify-center gap-2 shadow-md"
                   >
-                    <span>{language === 'sv' ? 'REGISTRERA SKOLA / LAG' : 'REGISTER SCHOOL / TEAM'}</span>
+                    <span>{registerLabel}</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
 
@@ -317,95 +329,6 @@ export const Navbar: React.FC<NavbarProps> = ({
         </AnimatePresence>
       </header>
 
-      {/* ── REAL CONTACT MODAL EXPERIENCES ── */}
-      <AnimatePresence>
-        {contactModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 select-none">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setContactModalOpen(false)}
-              className="fixed inset-0 bg-[#0A1930]/70 backdrop-blur-sm"
-            />
-
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              className="relative max-w-lg w-full bg-white p-6 sm:p-8 border border-slate-200 shadow-2xl z-10 space-y-6 text-[#0A1930]"
-            >
-              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-                <div>
-                  <span className="text-[10px] font-mono-code font-bold text-[#006AA7] uppercase tracking-wider block">
-                    VÄSTERÅS LEAGUE OFFICE
-                  </span>
-                  <h3 className="font-headline font-black text-xl sm:text-2xl uppercase tracking-tight text-[#0A1930]">
-                    Contact Organizers
-                  </h3>
-                </div>
-                <button
-                  onClick={() => setContactModalOpen(false)}
-                  className="p-2 text-slate-400 hover:text-[#0A1930] hover:bg-slate-100 transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              <div className="space-y-4 text-xs sm:text-sm">
-                <p className="text-slate-600 font-light leading-relaxed">
-                  Have questions about bringing the 20-hour STEM project to your school or preparing a student team? Contact the organizing secretariat:
-                </p>
-
-                <div className="space-y-3 p-4 bg-[#F8FAFC] border border-slate-200 font-mono-code text-xs">
-                  <div className="flex items-start gap-3">
-                    <MapPin className="w-4 h-4 text-[#006AA7] shrink-0 mt-0.5" />
-                    <div>
-                      <span className="text-slate-400 block text-[10px]">HOST &amp; LOCATION:</span>
-                      <strong className="text-[#0A1930]">Indisk BarnKlubb (IBK) Västerås &amp; INIAC</strong>
-                      <span className="text-slate-500 block">Västerås, Sweden</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3 pt-2 border-t border-slate-200">
-                    <Mail className="w-4 h-4 text-[#006AA7] shrink-0 mt-0.5" />
-                    <div>
-                      <span className="text-slate-400 block text-[10px]">DIRECT INQUIRIES:</span>
-                      <strong className="text-[#0A1930]">contact@robokidovation.se</strong>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3 pt-2 border-t border-slate-200">
-                    <ShieldCheck className="w-4 h-4 text-[#006AA7] shrink-0 mt-0.5" />
-                    <div>
-                      <span className="text-slate-400 block text-[10px]">PARTNERS:</span>
-                      <span className="text-slate-600">SkillSkolan (Education) · Blix (Hardware)</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
-                <button
-                  onClick={() => {
-                    setContactModalOpen(false);
-                    onOpenRegister();
-                  }}
-                  className="w-full btn-pill-lime py-3 text-xs font-black tracking-wider uppercase text-center"
-                >
-                  BOOK A SCHOOL MEETING / REGISTER
-                </button>
-                <button
-                  onClick={() => setContactModalOpen(false)}
-                  className="w-full sm:w-auto px-5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-mono-code text-xs font-bold uppercase transition-colors"
-                >
-                  CLOSE
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </>
   );
 };
