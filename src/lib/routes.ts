@@ -36,6 +36,20 @@ export const routeFromPath = (path: string): string => {
 
 export const pathForRoute = (route: string): string => ROUTE_PATHS[route] || '/';
 
+/** True for links that leave the app (other sites, email, phone). */
+export const isExternalHref = (href: string): boolean => /^(https?:|mailto:|tel:)/i.test(href);
+
+/**
+ * Turns an in-site link such as "/register?tab=association" or "/ibk#join" into the
+ * `route#section` target and register tab that the app navigator understands.
+ */
+export const hrefToTarget = (href: string): { target: string; tab: string | null } => {
+  const url = new URL(href, window.location.origin);
+  const route = routeFromPath(url.pathname);
+  const section = url.hash.replace(/^#/, '');
+  return { target: section ? `${route}#${section}` : route, tab: url.searchParams.get('tab') };
+};
+
 /**
  * Resolves the starting route from the current URL, including legacy `?route=` links
  * (QR codes and shared links) and the `?idea=` campaign links.

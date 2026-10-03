@@ -1,0 +1,372 @@
+{
+  "hero": {
+    "video": "/ibk-assets/ibk_hero.mp4",
+    "eyebrow": { "en": "NON-PROFIT ASSOCIATION // VÄSTERÅS, SWEDEN", "sv": "IDEELL FÖRENING // VÄSTERÅS, SVERIGE" },
+    "titleLine1": { "en": "Welcome to", "sv": "Välkommen till" },
+    "titleLine2": { "en": "Indisk Barnklubb", "sv": "Indisk Barnklubb" },
+    "intro": {
+      "en": "IBK is a non-profit club in Västerås that fills the lives of children and youth with culture, creativity and community — and helps them find their place in Swedish society. We run cultural festivals, workshops and, this autumn, Västerås Future Innovators.",
+      "sv": "IBK är en ideell förening i Västerås som fyller barns och ungdomars liv med kultur, kreativitet och gemenskap — och hjälper dem att hitta sin plats i det svenska samhället. Vi arrangerar kulturfestivaler, workshoppar och i höst Västerås Future Innovators."
+    },
+    "primaryButton": { "label": { "en": "Join IBK", "sv": "Gå med i IBK" }, "href": "/ibk#join" },
+    "secondaryButton": { "label": { "en": "Future Innovators 2026", "sv": "Future Innovators 2026" }, "href": "/ibk#future-innovators" },
+    "facts": [
+      { "label": { "en": "Cultural festivals", "sv": "Kulturfestivaler" }, "value": { "en": "MKM", "sv": "MKM" } },
+      { "label": { "en": "Science & robotics", "sv": "Teknik & robotik" }, "value": { "en": "VFI 2026", "sv": "VFI 2026" } },
+      { "label": { "en": "For", "sv": "För" }, "value": { "en": "Children & youth", "sv": "Barn & unga" } },
+      { "label": { "en": "Based in", "sv": "Hemort" }, "value": { "en": "Västerås", "sv": "Västerås" } }
+    ]
+  },
+
+  "events": {
+    "title": { "en": "Upcoming events", "sv": "Kommande evenemang" },
+    "subtitle": { "en": "Upcoming activities", "sv": "Kommande aktiviteter" },
+    "note": { "en": "Save the dates! More details coming soon.", "sv": "Spara datumen! Mer information kommer snart." },
+    "items": [
+      {
+        "icon": "Bird",
+        "when": { "en": "2 Oct", "sv": "2 okt" },
+        "title": { "en": "Gandhi Jayanti & RoboKidovation workshop", "sv": "Gandhi Jayanti & RoboKidovation-workshop" },
+        "where": { "en": "MISV & Viksängskolan", "sv": "MISV & Viksängskolan" },
+        "link": { "label": { "en": "", "sv": "" }, "href": "" }
+      },
+      {
+        "icon": "Bot",
+        "when": { "en": "October 2026", "sv": "Oktober 2026" },
+        "title": { "en": "Future Innovators school demos & workshops", "sv": "Future Innovators skoldemos och workshoppar" },
+        "where": { "en": "Participating schools and associations, Västerås", "sv": "Deltagande skolor och föreningar, Västerås" },
+        "link": { "label": { "en": "Register School, Association or Team", "sv": "Registrera skola, förening eller lag" }, "href": "/register" }
+      },
+      {
+        "icon": "Flame",
+        "when": { "en": "During Höstlov", "sv": "Under höstlovet" },
+        "title": { "en": "Diwali Decoration Activity", "sv": "Diwali-pyssel" },
+        "where": { "en": "", "sv": "" },
+        "link": { "label": { "en": "", "sv": "" }, "href": "" }
+      },
+      {
+        "icon": "Ghost",
+        "when": { "en": "25 Oct", "sv": "25 okt" },
+        "title": { "en": "Halloween Party", "sv": "Halloweenfest" },
+        "where": { "en": "", "sv": "" },
+        "link": { "label": { "en": "", "sv": "" }, "href": "" }
+      },
+      {
+        "icon": "Bot",
+        "when": { "en": "9 Nov", "sv": "9 nov" },
+        "title": { "en": "RoboKidovation workshop", "sv": "RoboKidovation-workshop" },
+        "where": { "en": "Classes 3–6 at MISV", "sv": "Årskurs 3–6 på MISV" },
+        "link": { "label": { "en": "", "sv": "" }, "href": "" }
+      },
+      {
+        "icon": "Bot",
+        "when": { "en": "10 Nov", "sv": "10 nov" },
+        "title": { "en": "RoboKidovation workshop", "sv": "RoboKidovation-workshop" },
+        "where": { "en": "Classes 7–9 at MISV", "sv": "Årskurs 7–9 på MISV" },
+        "link": { "label": { "en": "", "sv": "" }, "href": "" }
+      },
+      {
+        "icon": "Calendar",
+        "when": { "en": "12–25 November 2026", "sv": "12–25 november 2026" },
+        "title": { "en": "RoboKidovation school qualifiers", "sv": "RoboKidovation skolkval" },
+        "where": { "en": "Held in each participating school or association", "sv": "Genomförs på varje deltagande skola eller förening" },
+        "link": { "label": { "en": "See the competition rules", "sv": "Se tävlingsreglerna" }, "href": "/competition" }
+      },
+      {
+        "icon": "Trophy",
+        "when": { "en": "5 Dec", "sv": "5 dec" },
+        "title": { "en": "RoboKidovation & Young Innovators Hackathon", "sv": "RoboKidovation & Young Innovators Hackathon" },
+        "where": { "en": "", "sv": "" },
+        "link": { "label": { "en": "", "sv": "" }, "href": "" }
+      },
+      {
+        "icon": "MapPin",
+        "when": { "en": "5 December 2026", "sv": "5 december 2026" },
+        "title": { "en": "RoboKidovation Final", "sv": "RoboKidovation-final" },
+        "where": { "en": "Mälardalen International School Västerås (MISV)", "sv": "Mälardalen International School Västerås (MISV)" },
+        "link": { "label": { "en": "About the final", "sv": "Om finalen" }, "href": "/events" }
+      },
+      {
+        "icon": "Lightbulb",
+        "when": { "en": "5 December 2026", "sv": "5 december 2026" },
+        "title": { "en": "Young Inno Hack final presentations", "sv": "Young Inno Hack – finalpresentationer" },
+        "where": { "en": "Venue to be confirmed", "sv": "Plats meddelas senare" },
+        "link": { "label": { "en": "Submit an idea", "sv": "Skicka in en idé" }, "href": "/register?tab=submit-idea" }
+      },
+      {
+        "icon": "Gift",
+        "when": { "en": "12 Dec", "sv": "12 dec" },
+        "title": { "en": "Christmas Party", "sv": "Julfest" },
+        "where": { "en": "MKM FusionX & Young Innovators Västerås Success Celebration", "sv": "MKM FusionX & Young Innovators Västerås – vi firar framgångarna" },
+        "link": { "label": { "en": "", "sv": "" }, "href": "" }
+      },
+      {
+        "icon": "Users",
+        "when": { "en": "17 or 18 Dec", "sv": "17 eller 18 dec" },
+        "title": { "en": "IBK Annual General Meeting (AGM)", "sv": "IBK:s årsmöte" },
+        "where": { "en": "", "sv": "" },
+        "link": { "label": { "en": "", "sv": "" }, "href": "" }
+      }
+    ]
+  },
+
+  "futureInnovators": {
+    "eyebrow": { "en": "AN IBK PROGRAMME // AUTUMN 2026", "sv": "ETT IBK-PROGRAM // HÖSTEN 2026" },
+    "title": { "en": "Västerås Future Innovators 2026", "sv": "Västerås Future Innovators 2026" },
+    "intro": {
+      "en": "Hands-on robotics (RoboKidovation) and a youth innovation challenge (Young Inno Hack) for children from schools, associations and independent teams. No previous experience needed.",
+      "sv": "Praktisk robotik (RoboKidovation) och en innovationsutmaning för unga (Young Inno Hack) för barn från skolor, föreningar och fristående lag. Inga förkunskaper behövs."
+    },
+    "primaryButton": { "label": { "en": "Register School, Association or Team", "sv": "Registrera skola, förening eller lag" }, "href": "/register" },
+    "secondaryButton": { "label": { "en": "Programme details", "sv": "Om programmet" }, "href": "/" },
+    "whoCanJoin": {
+      "title": { "en": "Who can join", "sv": "Vem kan delta" },
+      "robokidoLabel": { "en": "RoboKidovation", "sv": "RoboKidovation" },
+      "robokido": [
+        { "tag": { "en": "Junior", "sv": "Junior" }, "grades": { "en": "Grades 3–6", "sv": "Årskurs 3–6" }, "level": { "en": "Basic", "sv": "Grundnivå" } },
+        { "tag": { "en": "Senior", "sv": "Senior" }, "grades": { "en": "Grades 7–9", "sv": "Årskurs 7–9" }, "level": { "en": "Advanced", "sv": "Avancerad" } },
+        { "tag": { "en": "GYM", "sv": "GYM" }, "grades": { "en": "Gymnasium", "sv": "Gymnasiet" }, "level": { "en": "Programmable bot", "sv": "Programmerbar robot" } }
+      ],
+      "participant": {
+        "tag": { "en": "Grades 1 & 2", "sv": "Årskurs 1 & 2" },
+        "text": { "en": "Participant category · no competition", "sv": "Deltagarkategori · ingen tävling" }
+      },
+      "hackathonLabel": { "en": "Hackathon", "sv": "Hackathon" },
+      "hackathon": [
+        { "who": { "en": "Grades 7–9", "sv": "Årskurs 7–9" }, "level": { "en": "Basic level", "sv": "Grundnivå" } },
+        { "who": { "en": "Gymnasiet students", "sv": "Gymnasieelever" }, "level": { "en": "Medium level", "sv": "Mellannivå" } },
+        { "who": { "en": "University students", "sv": "Universitetsstudenter" }, "level": { "en": "Advanced level", "sv": "Avancerad nivå" } }
+      ]
+    },
+    "timeline": {
+      "title": { "en": "Timeline", "sv": "Tidslinje" },
+      "steps": [
+        { "label": { "en": "School demos", "sv": "Skoldemos" }, "date": { "en": "1–14 Oct", "sv": "1–14 okt" } },
+        { "label": { "en": "Hands-on workshops", "sv": "Praktiska workshoppar" }, "date": { "en": "15–28 Oct", "sv": "15–28 okt" } },
+        { "label": { "en": "Team formation", "sv": "Lagbildning" }, "date": { "en": "29 Oct – 11 Nov", "sv": "29 okt – 11 nov" } },
+        { "label": { "en": "School qualifiers", "sv": "Skolkval" }, "date": { "en": "12–25 Nov", "sv": "12–25 nov" } },
+        { "label": { "en": "Final preparation", "sv": "Finalförberedelser" }, "date": { "en": "26 Nov – 4 Dec", "sv": "26 nov – 4 dec" } },
+        { "label": { "en": "Final", "sv": "Final" }, "date": { "en": "5 Dec", "sv": "5 dec" } }
+      ]
+    },
+    "venues": {
+      "title": { "en": "Qualification & venue", "sv": "Kval och plats" },
+      "items": [
+        {
+          "image": "/venue.png",
+          "label": { "en": "RoboKidovation Final", "sv": "RoboKidovation-final" },
+          "name": { "en": "Mälardalen International School Västerås (MISV)", "sv": "Mälardalen International School Västerås (MISV)" },
+          "day": "5",
+          "month": { "en": "Dec", "sv": "dec" },
+          "confirmed": true
+        },
+        {
+          "image": "",
+          "label": { "en": "Young Inno Hack", "sv": "Young Inno Hack" },
+          "name": { "en": "Venue to be confirmed", "sv": "Plats meddelas senare" },
+          "day": "5",
+          "month": { "en": "Dec", "sv": "dec" },
+          "confirmed": false
+        }
+      ]
+    }
+  },
+
+  "join": {
+    "eyebrow": { "en": "GET INVOLVED", "sv": "ENGAGERA DIG" },
+    "title": { "en": "Join IBK", "sv": "Gå med i IBK" },
+    "intro": {
+      "logo": "/ibk logo.png",
+      "title": { "en": "Why join Indisk Barnklubb (IBK)?", "sv": "Varför gå med i Indisk Barnklubb (IBK)?" },
+      "text": {
+        "en": "IBK welcomes children and families from all cultures and backgrounds — you don’t need to be Indian to join!",
+        "sv": "IBK välkomnar barn och familjer från alla kulturer och bakgrunder — du behöver inte vara indier för att gå med!"
+      },
+      "tagline": { "en": "Celebrating cultures, inspiring young minds and growing together.", "sv": "Vi firar kulturer, inspirerar unga och växer tillsammans." },
+      "button": { "label": { "en": "Membership form", "sv": "Medlemsformulär" }, "href": "https://forms.gle/fJ1ycYvkK1rN3kZw5" }
+    },
+    "benefits": [
+      { "icon": "Smile", "title": { "en": "Make new friends", "sv": "Få nya vänner" }, "text": { "en": "Connect with children from different backgrounds in a welcoming community.", "sv": "Träffa barn med olika bakgrunder i en välkomnande gemenskap." } },
+      { "icon": "Globe2", "title": { "en": "Explore cultures", "sv": "Upptäck kulturer" }, "text": { "en": "Discover Indian traditions and share your own through festivals, music, dance and art.", "sv": "Upptäck indiska traditioner och dela dina egna genom festivaler, musik, dans och konst." } },
+      { "icon": "Sparkles", "title": { "en": "Build confidence", "sv": "Bygg självförtroende" }, "text": { "en": "Express yourself through performances and creative activities.", "sv": "Uttryck dig genom framträdanden och kreativa aktiviteter." } },
+      { "icon": "FlaskConical", "title": { "en": "Learn through discovery", "sv": "Lär genom att upptäcka" }, "text": { "en": "Explore science, robotics and innovation through hands-on workshops.", "sv": "Utforska naturvetenskap, robotik och innovation i praktiska workshoppar." } },
+      { "icon": "Puzzle", "title": { "en": "Develop valuable skills", "sv": "Utveckla värdefulla färdigheter" }, "text": { "en": "Practise teamwork, communication and creative problem-solving.", "sv": "Öva lagarbete, kommunikation och kreativ problemlösning." } },
+      { "icon": "PartyPopper", "title": { "en": "Enjoy time together", "sv": "Ha roligt tillsammans" }, "text": { "en": "Join family activities, celebrations and community events.", "sv": "Delta i familjeaktiviteter, firanden och gemenskapsevenemang." } }
+    ],
+    "actions": [
+      {
+        "icon": "Heart",
+        "logo": "/ibk logo.png",
+        "title": { "en": "Become a member", "sv": "Bli medlem" },
+        "text": { "en": "Families from all cultures and backgrounds are welcome. Fill in the membership form to join IBK.", "sv": "Familjer från alla kulturer och bakgrunder är välkomna. Fyll i medlemsformuläret för att gå med i IBK." },
+        "button": { "label": { "en": "Membership form", "sv": "Medlemsformulär" }, "href": "https://forms.gle/fJ1ycYvkK1rN3kZw5" }
+      },
+      {
+        "icon": "HandHeart",
+        "logo": "/ibk logo.png",
+        "title": { "en": "Volunteer with us", "sv": "Bli volontär" },
+        "text": { "en": "Help at our festivals, workshops and the Future Innovators final — every pair of hands counts.", "sv": "Hjälp till på våra festivaler, workshoppar och Future Innovators-finalen — varje insats räknas." },
+        "button": { "label": { "en": "Volunteer form", "sv": "Volontärformulär" }, "href": "/register?tab=volunteer" }
+      }
+    ]
+  },
+
+  "robokidovation": {
+    "eyebrow": { "en": "ROBOKIDOVATION 2026", "sv": "ROBOKIDOVATION 2026" },
+    "title": { "en": "Categories, teams & final day", "sv": "Kategorier, lag och finaldag" },
+    "categoryTable": {
+      "headers": {
+        "category": { "en": "Category", "sv": "Kategori" },
+        "grades": { "en": "Grades", "sv": "Årskurs" },
+        "focus": { "en": "Main focus", "sv": "Huvudfokus" },
+        "coding": { "en": "Coding", "sv": "Programmering" }
+      },
+      "rows": [
+        { "category": { "en": "RoboKido Junior", "sv": "RoboKido Junior" }, "grades": { "en": "Grades 3–6", "sv": "Årskurs 3–6" }, "focus": { "en": "Building, motors, joystick/control, teamwork", "sv": "Bygga, motorer, joystick/styrning, lagarbete" }, "coding": { "en": "Not required", "sv": "Krävs inte" } },
+        { "category": { "en": "RoboKido Senior", "sv": "RoboKido Senior" }, "grades": { "en": "Grades 7–9", "sv": "Årskurs 7–9" }, "focus": { "en": "Sensors, mechanisms, problem-solving, basic automation", "sv": "Sensorer, mekanismer, problemlösning, enkel automation" }, "coding": { "en": "Intro/basic coding", "sv": "Introduktion/grundläggande programmering" } },
+        { "category": { "en": "RoboKido GYM", "sv": "RoboKido GYM" }, "grades": { "en": "Gymnasium", "sv": "Gymnasiet" }, "focus": { "en": "Programmable/autonomous robot", "sv": "Programmerbar/autonom robot" }, "coding": { "en": "Required", "sv": "Krävs" } }
+      ]
+    },
+    "teams": {
+      "icon": "Users",
+      "title": { "en": "Teams", "sv": "Lag" },
+      "stats": [
+        { "big": { "en": "4–5", "sv": "4–5" }, "small": { "en": "participants per team", "sv": "deltagare per lag" } },
+        { "big": { "en": "Team / solo", "sv": "Lag / enskild" }, "small": { "en": "registration", "sv": "anmälan" } },
+        { "big": { "en": "Nov wk 1", "sv": "Nov v. 1" }, "small": { "en": "teams formed", "sv": "lagen bildas" } }
+      ],
+      "rolesTitle": { "en": "Rotating team roles", "sv": "Roterande roller i laget" },
+      "roles": [
+        { "icon": "Wrench", "label": { "en": "Builder", "sv": "Byggare" } },
+        { "icon": "Gamepad2", "label": { "en": "Controller", "sv": "Förare" } },
+        { "icon": "Code2", "label": { "en": "Programmer", "sv": "Programmerare" } },
+        { "icon": "PenTool", "label": { "en": "Designer / tester", "sv": "Designer / testare" } },
+        { "icon": "Mic", "label": { "en": "Presenter", "sv": "Presentatör" } }
+      ],
+      "rules": [
+        { "en": "Each team should have 4–5 participants.", "sv": "Varje lag ska ha 4–5 deltagare." },
+        { "en": "Students can register either as a full team or as an individual participant. Individual registrations will be grouped with other participants by the organizers.", "sv": "Elever kan anmäla sig som ett helt lag eller som enskild deltagare. Enskilda anmälningar placeras i lag med andra deltagare av arrangörerna." },
+        { "en": "Teams will be formed during the first workshop in the first week of November.", "sv": "Lagen bildas under den första workshoppen i första veckan i november." },
+        { "en": "Where possible, teams should be balanced by age/grade level, experience and gender. Students from different schools can be placed in the same team if needed.", "sv": "Om möjligt balanseras lagen efter ålder/årskurs, erfarenhet och kön. Elever från olika skolor kan placeras i samma lag vid behov." },
+        { "en": "Every team should choose a team name and assign simple rotating roles such as builder, controller, programmer, designer/tester and presenter.", "sv": "Varje lag väljer ett lagnamn och fördelar enkla roterande roller, till exempel byggare, förare, programmerare, designer/testare och presentatör." },
+        { "en": "One student should not do all the technical work. Team members should be encouraged to rotate roles during workshops.", "sv": "En elev ska inte göra allt tekniskt arbete. Lagmedlemmarna uppmuntras att rotera roller under workshopparna." },
+        { "en": "For Junior teams, coding experience is not required. For higher categories, previous coding experience is also not mandatory; introductory support will be provided.", "sv": "För Junior-lag krävs ingen programmeringserfarenhet. Inte heller i högre kategorier är tidigare erfarenhet ett krav; introduktionsstöd ges." },
+        { "en": "Teams should attend the scheduled preparation workshops to remain eligible for the final challenge.", "sv": "Lagen ska delta i de schemalagda förberedande workshopparna för att få delta i finalutmaningen." },
+        { "en": "If someone drops out, the organizers may move or add participants to keep teams at a workable size.", "sv": "Om någon hoppar av kan arrangörerna flytta eller lägga till deltagare så att lagen har en fungerande storlek." },
+        { "en": "Final team composition should normally be fixed after the first or second workshop, so students have enough time to work together before the competition.", "sv": "Lagens sammansättning bör normalt vara fastställd efter den första eller andra workshoppen, så att eleverna hinner arbeta tillsammans före tävlingen." }
+      ]
+    },
+    "beforeFinal": {
+      "icon": "Code2",
+      "title": { "en": "Before the Final", "sv": "Före finalen" },
+      "stats": [
+        { "big": { "en": "3 h", "sv": "3 h" }, "small": { "en": "guided preparation", "sv": "handledd förberedelse" } },
+        { "big": { "en": "2 × 90", "sv": "2 × 90" }, "small": { "en": "minute workshops", "sv": "minuters workshoppar" } },
+        { "big": { "en": "Pick", "sv": "Välj" }, "small": { "en": "your workshop slot", "sv": "er workshoptid" } }
+      ],
+      "text": {
+        "en": "Each participant gets 3 hours of guided preparation, preferably as 2 × 90-minute workshops. Several workshop slots are opened so teams can choose suitable times. The workshops teach the skills but do not reveal the final competition problem.",
+        "sv": "Varje deltagare får 3 timmars handledd förberedelse, helst som 2 × 90-minuters workshoppar. Flera workshoptider öppnas så att lagen kan välja passande tider. Workshopparna lär ut färdigheterna men avslöjar inte finaluppgiften."
+      },
+      "paths": [
+        { "name": { "en": "Junior", "sv": "Junior" }, "steps": { "en": "Motor control → chassis/building → joystick → testing → simple obstacle tasks", "sv": "Motorstyrning → chassi/bygge → joystick → testning → enkla hinderuppgifter" } },
+        { "name": { "en": "Senior", "sv": "Senior" }, "steps": { "en": "Motors → sensors → basic ESP32 logic → testing → simple autonomous functions", "sv": "Motorer → sensorer → grundläggande ESP32-logik → testning → enkla autonoma funktioner" } },
+        { "name": { "en": "GYM", "sv": "GYM" }, "steps": { "en": "ESP32 programming → sensors → motor control → line/maze concepts → debugging and autonomous robot development", "sv": "ESP32-programmering → sensorer → motorstyrning → linje-/labyrintkoncept → felsökning och utveckling av autonom robot" } }
+      ]
+    },
+    "finalDay": {
+      "icon": "Timer",
+      "title": { "en": "Final-day format", "sv": "Finaldagens upplägg" },
+      "badge": { "en": "T – 3 h", "sv": "T – 3 h" },
+      "text": { "en": "The challenge is given only on competition day. Teams have 3 hours from check-in to submission.", "sv": "Uppgiften ges först på tävlingsdagen. Lagen har 3 timmar från incheckning till inlämning." },
+      "steps": [
+        { "time": { "en": "Check-in", "sv": "Incheckning" }, "minutes": 0, "text": { "en": "Teams check in → kits are handed over → official problem statement announced", "sv": "Lagen checkar in → kit delas ut → den officiella uppgiften presenteras" } },
+        { "time": { "en": "15 min", "sv": "15 min" }, "minutes": 15, "text": { "en": "Read the rules + team planning", "sv": "Läs reglerna + planering i laget" } },
+        { "time": { "en": "2 h", "sv": "2 h" }, "minutes": 120, "text": { "en": "Design, build, code and test", "sv": "Designa, bygg, programmera och testa" } },
+        { "time": { "en": "30 min", "sv": "30 min" }, "minutes": 30, "text": { "en": "Final testing / inspection", "sv": "Sluttest / inspektion" } },
+        { "time": { "en": "15 min", "sv": "15 min" }, "minutes": 15, "text": { "en": "Robot submitted to the competition area", "sv": "Roboten lämnas till tävlingsområdet" } }
+      ]
+    },
+    "showFees": true
+  },
+
+  "stories": {
+    "eyebrow": { "en": "PHOTOS & COMMUNITY STORIES", "sv": "BILDER & BERÄTTELSER" },
+    "title": { "en": "From our community", "sv": "Från vår gemenskap" },
+    "items": [
+      {
+        "image": "",
+        "imageAlt": { "en": "IBK upcoming activities poster", "sv": "Affisch med IBK:s kommande aktiviteter" },
+        "date": { "en": "Friday 2 October 2026", "sv": "Fredag 2 oktober 2026" },
+        "title": { "en": "RoboKidovation workshops on Gandhi Jayanti", "sv": "RoboKidovation-workshoppar på Gandhi Jayanti" },
+        "text": {
+          "en": "IBK invited young innovators to explore robotics, science and technology at three sessions across Västerås, including an open session at ABF for children aged 7+ and their parents.",
+          "sv": "IBK bjöd in unga innovatörer att utforska robotik, naturvetenskap och teknik på tre tillfällen i Västerås, bland annat en öppen session på ABF för barn från 7 år och deras föräldrar."
+        },
+        "badge": { "en": "", "sv": "" },
+        "schedule": [
+          { "place": { "en": "MISV", "sv": "MISV" }, "time": "08:30–11:00", "note": { "en": "", "sv": "" } },
+          { "place": { "en": "Viksängskolan", "sv": "Viksängskolan" }, "time": "13:00–14:00", "note": { "en": "", "sv": "" } },
+          { "place": { "en": "ABF, Pilgatan", "sv": "ABF, Pilgatan" }, "time": "17:30–19:00", "note": { "en": "Open session for children aged 7+ & parents", "sv": "Öppen session för barn från 7 år och föräldrar" } }
+        ],
+        "highlights": [],
+        "link": {
+          "label": { "en": "Team registration form", "sv": "Formulär för laganmälan" },
+          "href": "https://docs.google.com/forms/d/e/1FAIpQLSf92IaaY4SzkGYdu-kcUO1de4F-KJMdRPmwNd0ap8__Quv6Fg/viewform"
+        }
+      },
+      {
+        "image": "",
+        "imageAlt": { "en": "", "sv": "" },
+        "date": { "en": "29 August 2026 · Stora Torget, Västerås", "sv": "29 augusti 2026 · Stora Torget, Västerås" },
+        "title": { "en": "MKM Fusion X – Season 3", "sv": "MKM Fusion X – säsong 3" },
+        "text": {
+          "en": "One of Västerås’ largest multicultural festivals brought people from many cultures, nationalities and backgrounds together on one stage to share music, dance, art and traditions.",
+          "sv": "En av Västerås största mångkulturella festivaler samlade människor från många kulturer, nationaliteter och bakgrunder på en scen för att dela musik, dans, konst och traditioner."
+        },
+        "badge": { "en": "Free entry · One stage, many cultures", "sv": "Fri entré · En scen, många kulturer" },
+        "schedule": [],
+        "highlights": [
+          { "emoji": "🌍", "text": { "en": "Multicultural stage performances", "sv": "Mångkulturella scenframträdanden" } },
+          { "emoji": "💃", "text": { "en": "Inter-city dance championship", "sv": "Dansmästerskap mellan städer" } },
+          { "emoji": "🍛", "text": { "en": "International food stalls", "sv": "Internationella matstånd" } },
+          { "emoji": "🎈", "text": { "en": "Children's activities", "sv": "Aktiviteter för barn" } }
+        ],
+        "link": { "label": { "en": "", "sv": "" }, "href": "" }
+      }
+    ]
+  },
+
+  "partners": {
+    "eyebrow": { "en": "PARTNERS", "sv": "PARTNER" },
+    "title": { "en": "Working together", "sv": "Vi samarbetar med" },
+    "items": [
+      { "name": "INIAC", "logo": "/iniac logo.png", "role": { "en": "Programme & Pedagogy Partner", "sv": "Program- och pedagogikpartner" }, "href": "https://iniac.se" },
+      { "name": "SkillSkolan", "logo": "/skillskolan logo.png", "role": { "en": "Education Delivery Partner", "sv": "Utbildningspartner" }, "href": "" },
+      { "name": "Blix", "logo": "/blix a thon logo.png", "role": { "en": "Technology & Kit Partner", "sv": "Teknik- och kitpartner" }, "href": "" },
+      { "name": "ABF Västerås", "logo": "/ibk-assets/abf.png", "role": { "en": "Venue Partner", "sv": "Lokalpartner" }, "href": "" }
+    ],
+    "note": {
+      "en": "Future Innovators workshops are run in collaboration with MISV and ABF Västerås.",
+      "sv": "Future Innovators-workshopparna genomförs i samarbete med MISV och ABF Västerås."
+    }
+  },
+
+  "contact": {
+    "eyebrow": { "en": "CONTACT US", "sv": "KONTAKTA OSS" },
+    "title": { "en": "Get in touch", "sv": "Hör av dig" },
+    "cards": [
+      { "icon": "Mail", "label": { "en": "Email", "sv": "E-post" }, "value": "Vasteras@indiskbarnklubb.se", "href": "mailto:Vasteras@indiskbarnklubb.se" },
+      { "icon": "Phone", "label": { "en": "Mobile", "sv": "Mobil" }, "value": "Richa · 0761692757", "href": "tel:+46761692757" }
+    ],
+    "boardTitle": { "en": "Our board – 2026", "sv": "Vår styrelse – 2026" },
+    "board": [
+      { "name": "Richa Nautiyal", "role": { "en": "Chairman", "sv": "Ordförande" }, "photo": "/ibk-assets/Richa Nautiyal, Chairman.png" },
+      { "name": "Poonam Shenoy", "role": { "en": "Deputy Chairman", "sv": "Vice ordförande" }, "photo": "/ibk-assets/Poonam Shenoy, Deputy Chairman.jpeg" },
+      { "name": "Sandhya Acharya", "role": { "en": "Secretary", "sv": "Sekreterare" }, "photo": "/ibk-assets/Sandhya Acharya, Secretary.jpeg" },
+      { "name": "Radha", "role": { "en": "Deputy Secretary", "sv": "Vice sekreterare" }, "photo": "/ibk-assets/Radha, Deputy Secretary.jpeg" },
+      { "name": "Priyanka Eti", "role": { "en": "Treasurer", "sv": "Kassör" }, "photo": "/ibk-assets/Priyanka Eti – Treasurer Srushti – Deputy Treasurer.jpg" },
+      { "name": "Srushti", "role": { "en": "Deputy Treasurer", "sv": "Vice kassör" }, "photo": "/ibk-assets/last pic.jpeg" }
+    ]
+  }
+}
