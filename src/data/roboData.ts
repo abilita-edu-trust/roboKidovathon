@@ -133,7 +133,7 @@ export const PARTNER_LOGOS: PartnerLogo[] = [
   { name: 'INIAC', file: '/iniac logo.png', role: 'Programme & Pedagogy Partner' },
   { name: 'SkillSkolan', file: '/skillskolan logo.png', role: 'Education Delivery Partner' },
   { name: 'Blix', file: '/blix a thon logo.png', role: 'Technology & Kit Partner' },
-  { name: 'ABF Västerås', file: '/ibk/abf.png', role: 'Venue Partner' },
+  { name: 'ABF Västerås', file: '/ibk-assets/abf.png', role: 'Venue Partner' },
 ];
 
 export const KIT_PIECES: KitPiece[] = [

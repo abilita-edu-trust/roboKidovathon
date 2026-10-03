@@ -35,7 +35,7 @@ interface IbkHomePageProps {
   onNavigate: (route: string, tab?: IntakeProgramTab) => void;
 }
 
-const ibkImage = (file: string) => `/ibk/${encodeURIComponent(file)}`;
+const ibkImage = (file: string) => `/ibk-assets/${encodeURIComponent(file)}`;
 
 const IBK_EMAIL = 'Vasteras@indiskbarnklubb.se';
 
