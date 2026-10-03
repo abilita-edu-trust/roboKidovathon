@@ -167,7 +167,7 @@ export const VolunteerForm: React.FC = () => {
     <form data-no-translate="true" onSubmit={handleSubmit} className="space-y-6">
       <div className="pb-4 border-b border-slate-200">
         <span className="text-[11px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase">
-          {L('OPTION 5 // VOLUNTEER', 'ALTERNATIV 5 // VOLONTÄR')}
+          {L('OPTION 6 // VOLUNTEER', 'ALTERNATIV 6 // VOLONTÄR')}
         </span>
         <h2 className="font-headline font-black text-2xl uppercase tracking-tight mt-1">
           {L('Work as a Volunteer', 'Arbeta som volontär')}

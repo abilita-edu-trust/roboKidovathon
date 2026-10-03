@@ -64,6 +64,7 @@ const KIND_LABELS: Record<string, string> = {
   demo: 'Demo',
   workshop: 'Workshop',
   hackathon: 'Young Inno Hack',
+  association: 'Association',
 };
 
 // Drops the trailing "(…)" note, e.g. "09:00–11:30 (2.5 hours)" → "09:00–11:30".

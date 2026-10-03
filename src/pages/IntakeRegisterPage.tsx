@@ -21,8 +21,10 @@ import { supabase } from '../lib/supabase';
 import { VoiceNoteRecorder } from '../components/VoiceNoteRecorder';
 import { uploadIdeaMedia, submitIdea, fetchRegisteredSchools } from '../lib/ideasService';
 import { VolunteerForm } from '../components/VolunteerForm';
+import { GRADE_GROUP_OPTIONS } from '../data/vfiFacts';
+import { ParticipationFees } from '../components/ParticipationFees';
 
-export type IntakeProgramTab = 'workshop' | 'demo' | 'submit-idea' | 'hackathon' | 'volunteer';
+export type IntakeProgramTab = 'workshop' | 'demo' | 'association' | 'submit-idea' | 'hackathon' | 'volunteer';
 
 interface IntakeRegisterPageProps {
   initialTab?: IntakeProgramTab;
@@ -77,6 +79,23 @@ const WANTS_TO_OPTIONS: Choice[] = [
   { value: 'workshop', label: 'Join a hands-on workshop / Delta i en praktisk workshop' },
   { value: 'team', label: 'Join a RoboKidovation team / Gå med i ett RoboKidovation-lag' },
   { value: 'final', label: 'Take part in the final / Delta i finalen' },
+];
+
+/** Group / association form: what the group would like from the programme. */
+const ASSOCIATION_WANTS_OPTIONS: Choice[] = [
+  { value: 'workshop', label: 'Hands-on workshop / Praktisk workshop' },
+  { value: 'demo', label: 'Robotics demo / Robotikdemo' },
+  { value: 'competition-teams', label: 'Enter competition teams / Anmäla tävlingslag' },
+  { value: 'grade-1-2-participants', label: 'Grades 1–2 participant session / Deltagarpass för åk 1–2' },
+  { value: 'young-inno-hack', label: 'Young Inno Hack ideas / Idéer till Young Inno Hack' },
+];
+
+const ASSOCIATION_TYPE_OPTIONS: Choice[] = [
+  { value: 'cultural-association', label: 'Cultural association / Kulturförening' },
+  { value: 'sports-club', label: 'Sports club / Idrottsförening' },
+  { value: 'study-association', label: 'Study association / Studieförbund' },
+  { value: 'parent-group', label: 'Parent group / Föräldragrupp' },
+  { value: 'other', label: 'Other / Annat' },
 ];
 
 const EXPERIENCE_OPTIONS: Choice[] = [
@@ -163,7 +182,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
   const [customDate, setCustomDate] = useState('');
   const [customTime, setCustomTime] = useState('10:00');
   const [customEndTime, setCustomEndTime] = useState('12:30');
-  const [gradeGroup, setGradeGroup] = useState('Årskurs 4–6 (Mellanstadiet · Ages 10–12)');
+  const [gradeGroup, setGradeGroup] = useState(GRADE_GROUP_OPTIONS[1]);
   const [studentCount, setStudentCount] = useState('25');
 
   // Submit Idea Specific Fields
@@ -190,6 +209,11 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [videoLink, setVideoLink] = useState('');
   const [videoInputType, setVideoInputType] = useState<'upload' | 'link'>('link');
+
+  // Group / association fields
+  const [associationType, setAssociationType] = useState('');
+  const [associationWants, setAssociationWants] = useState<string[]>([]);
+  const [teamCount, setTeamCount] = useState('');
 
   // Hackathon Specific Fields
   const [hackathonSkills, setHackathonSkills] = useState<string[]>([
@@ -243,6 +267,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
   };
 
   const isHack = selectedProgram === 'submit-idea' || selectedProgram === 'hackathon';
+  const isAssociation = selectedProgram === 'association';
   const showInterestCard = applicantType === 'student' && (selectedProgram === 'workshop' || selectedProgram === 'demo');
 
   const toggleIn = (list: string[], value: string, set: (v: string[]) => void) =>
@@ -262,6 +287,10 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
 
     if (!consentAgreed) {
       setSubmitError('Please accept the consent checkbox to proceed.');
+      return;
+    }
+    if (isAssociation && associationWants.length === 0) {
+      setSubmitError('Please choose what your group would like to take part in.');
       return;
     }
 
@@ -332,17 +361,18 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
       } else {
         // --- 2. WORKSHOP / DEMO / HACKATHON REGISTRATION WORKFLOW ---
         const formattedTimeRange = `${customTime} – ${customEndTime}`;
-        const finalSchool =
-          applicantType === 'school' ? schoolName : teamName ? `${teamName} (Team)` : schoolName;
+        // Associations register as an organisation (stored as registration_type 'school').
+        const isOrg = applicantType === 'school' || isAssociation;
+        const finalSchool = isOrg ? schoolName : teamName ? `${teamName} (Team)` : schoolName;
 
         const payload = {
-          registration_type: applicantType,
+          registration_type: isAssociation ? 'school' : applicantType,
           country_slug: countrySlug,
           city_slug: isCustomCity ? 'custom' : citySlug,
           city_name: selectedCityName,
           country_name: selectedCountryName,
           school_name: finalSchool,
-          team_name: applicantType === 'student' ? teamName : null,
+          team_name: !isAssociation && applicantType === 'student' ? teamName : null,
           contact_name: contactName,
           email,
           phone,
@@ -351,6 +381,8 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
               ? 'young-innovators-hackathon'
               : selectedProgram === 'demo'
               ? 'school-demo-session'
+              : isAssociation
+              ? 'association-group-programme'
               : 'vasteras-school-workshop',
           student_count: studentCount,
           preferred_date: customDate ? `Custom Date: ${customDate}` : 'To be confirmed',
@@ -361,7 +393,14 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
           grade_group: gradeGroup,
           consent_agreed: consentAgreed,
           form_type: selectedProgram,
-          intake_details: showInterestCard
+          intake_details: isAssociation
+            ? {
+                applicant_kind: 'association',
+                association_type: associationType,
+                would_like_to: associationWants,
+                team_count: teamCount,
+              }
+            : showInterestCard
             ? {
                 student_age: interestAge,
                 would_like_to: wantsTo,
@@ -396,7 +435,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
   };
 
   const handleCopyLink = () => {
-    const url = `${window.location.origin}/?route=ideas&idea=${generatedId}`;
+    const url = `${window.location.origin}/ideas?idea=${generatedId}`;
     navigator.clipboard.writeText(url);
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 2500);
@@ -434,12 +473,12 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
               Choose Your Program Pathway
             </h1>
             <p className="text-xs sm:text-sm text-slate-600 mt-2 max-w-2xl mx-auto leading-relaxed">
-              We offer 5 distinct pathways: Hands-on Workshops, Live School Demos, Student Idea Submissions, Hackathon Squads, and Volunteering. Click any option below to load its customizable registration form directly underneath.
+              We offer 6 pathways: Hands-on Workshops, Live School Demos, Groups & Associations, Student Idea Submissions, Hackathon Squads, and Volunteering. Click any option below to load its customizable registration form directly underneath.
             </p>
           </div>
 
-          {/* 4-Pill Interactive Quick Selector with clear explanations */}
-          <div className="mb-6 grid grid-cols-2 lg:grid-cols-5 gap-2.5">
+          {/* Quick selector with clear explanations */}
+          <div className="mb-6 grid grid-cols-2 lg:grid-cols-6 gap-2.5">
             {[
               {
                 id: 'workshop' as const,
@@ -460,8 +499,17 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                 theme: 'blue',
               },
               {
-                id: 'submit-idea' as const,
+                id: 'association' as const,
                 num: '3',
+                title: 'Group / Association',
+                subtitle: 'Associations & Clubs',
+                desc: 'Register an association, club or community group anywhere in Sweden',
+                icon: '🤝',
+                theme: 'blue',
+              },
+              {
+                id: 'submit-idea' as const,
+                num: '4',
                 title: 'Submit Idea',
                 subtitle: 'Student Innovation',
                 desc: 'Upload voice notes, drawings, or videos & compete in public voting',
@@ -470,16 +518,16 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
               },
               {
                 id: 'hackathon' as const,
-                num: '4',
+                num: '5',
                 title: 'Hackathon Squad',
                 subtitle: 'Arena Competition',
-                desc: 'Register a student team to compete at Mälardalen University on Dec 5',
+                desc: 'Register a student team for the Young Inno Hack final on 5 Dec (venue to be confirmed)',
                 icon: '🏆',
                 theme: 'emerald',
               },
               {
                 id: 'volunteer' as const,
-                num: '5',
+                num: '6',
                 title: 'Volunteer',
                 subtitle: 'Work as a Volunteer',
                 desc: 'Help run Västerås Future Innovators events as a volunteer',
@@ -535,7 +583,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
             {/* Card 1: Track 1 - RoboKidovation */}
             <div
               className={`p-6 border-2 transition-all relative ${
-                selectedProgram === 'workshop' || selectedProgram === 'demo'
+                selectedProgram === 'workshop' || selectedProgram === 'demo' || selectedProgram === 'association'
                   ? 'border-[#006AA7] bg-white shadow-xl ring-2 ring-[#006AA7]/20'
                   : 'border-slate-200 bg-white/80 hover:border-slate-300 shadow-sm'
               }`}
@@ -610,6 +658,34 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                     Live demonstration session & challenge trials in your auditorium
                   </div>
                 </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleSelectProgram('association')}
+                  className={`sm:col-span-2 p-3.5 text-left transition-all border-2 flex flex-col justify-between ${
+                    selectedProgram === 'association'
+                      ? 'bg-[#006AA7] text-white border-[#006AA7] shadow-md ring-2 ring-[#006AA7]/30'
+                      : 'bg-slate-50 hover:bg-slate-100 text-[#0A1930] border-slate-200'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-headline font-black text-sm uppercase tracking-wider">
+                      3. Group / Association
+                    </span>
+                    {selectedProgram === 'association' ? (
+                      <span className="text-[10px] font-mono-code font-bold px-1.5 py-0.5 bg-[#FFCD00] text-[#0A1930]">
+                        FORM BELOW ↓
+                      </span>
+                    ) : (
+                      <span className="text-[10px] font-mono-code px-1.5 py-0.5 bg-slate-200 text-slate-700">
+                        Associations
+                      </span>
+                    )}
+                  </div>
+                  <div className={`text-[11px] leading-tight ${selectedProgram === 'association' ? 'text-white/80' : 'text-slate-500'}`}>
+                    Associations, clubs and community groups from anywhere in Sweden
+                  </div>
+                </button>
               </div>
             </div>
 
@@ -647,7 +723,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-headline font-black text-sm uppercase tracking-wider">
-                      3. Submit Idea
+                      4. Submit Idea
                     </span>
                     {selectedProgram === 'submit-idea' ? (
                       <span className="text-[10px] font-mono-code font-bold px-1.5 py-0.5 bg-[#FFCD00] text-[#0A1930]">
@@ -675,7 +751,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-headline font-black text-sm uppercase tracking-wider">
-                      4. Hackathon Squad
+                      5. Hackathon Squad
                     </span>
                     {selectedProgram === 'hackathon' ? (
                       <span className="text-[10px] font-mono-code font-bold px-1.5 py-0.5 bg-[#FFCD00] text-[#0A1930]">
@@ -688,7 +764,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                     )}
                   </div>
                   <div className={`text-[11px] leading-tight ${selectedProgram === 'hackathon' ? 'text-white/80' : 'text-slate-500'}`}>
-                    Register squad for Dec 5 challenge at Mälardalen University
+                    Register squad for the 5 Dec final (venue to be confirmed)
                   </div>
                 </button>
               </div>
@@ -720,8 +796,9 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                     <div className="font-headline font-black text-base uppercase text-[#0A1930]">
                       {selectedProgram === 'workshop' && 'Option 1: School Workshop Booking'}
                       {selectedProgram === 'demo' && 'Option 2: Live School Demo Session'}
-                      {selectedProgram === 'submit-idea' && 'Option 3: Student Idea Submission (Voice / Drawing / Video)'}
-                      {selectedProgram === 'hackathon' && 'Option 4: Young Inno Hack Squad Registration'}
+                      {selectedProgram === 'association' && 'Option 3: Group / Association Registration'}
+                      {selectedProgram === 'submit-idea' && 'Option 4: Student Idea Submission (Voice / Drawing / Video)'}
+                      {selectedProgram === 'hackathon' && 'Option 5: Young Inno Hack Squad Registration'}
                     </div>
                   </div>
                 </div>
@@ -734,16 +811,17 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
               <div className="mb-6 pb-4 border-b border-slate-200">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className={`inline-flex items-center gap-2 text-xs font-mono-code font-bold tracking-wider uppercase ${isHack ? 'text-[#059669]' : 'text-[#006AA7]'}`}>
-                    {selectedProgram === 'workshop' && <span>[FORM 1/4] // WORKSHOP BOOKING INTAKE</span>}
-                    {selectedProgram === 'demo' && <span>[FORM 2/4] // SCHOOL DEMO SESSION REQUEST</span>}
+                    {selectedProgram === 'workshop' && <span>[FORM 1/5] // WORKSHOP BOOKING INTAKE</span>}
+                    {selectedProgram === 'demo' && <span>[FORM 2/5] // SCHOOL DEMO SESSION REQUEST</span>}
+                    {selectedProgram === 'association' && <span>[FORM 3/5] // GROUP / ASSOCIATION REGISTRATION</span>}
                     {selectedProgram === 'submit-idea' && (
                       <span className="text-emerald-700">
-                        [FORM 3/4] // STUDENT IDEA SUBMISSION (PICTURE / VOICE / TEXT / VIDEO)
+                        [FORM 4/5] // STUDENT IDEA SUBMISSION (PICTURE / VOICE / TEXT / VIDEO)
                       </span>
                     )}
                     {selectedProgram === 'hackathon' && (
                       <span className="text-emerald-700">
-                        [FORM 4/4] // YOUNG INNO HACK PARTICIPATION
+                        [FORM 5/5] // YOUNG INNO HACK PARTICIPATION
                       </span>
                     )}
                   </div>
@@ -755,6 +833,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                 <h3 className="font-headline font-black text-2xl uppercase tracking-tight text-[#0A1930] mt-1">
                   {selectedProgram === 'workshop' && 'Book Hands-On Robotics Workshop'}
                   {selectedProgram === 'demo' && 'Request School Demo & Overview Session'}
+                  {selectedProgram === 'association' && 'Register Your Group or Association'}
                   {selectedProgram === 'submit-idea' && 'Submit Your Future Innovation Idea'}
                   {selectedProgram === 'hackathon' && 'Register Squad for Young Inno Hack'}
                 </h3>
@@ -763,6 +842,8 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                     'Select your custom preferred calendar date and time. An admin coordinator will review and approve.'}
                   {selectedProgram === 'demo' &&
                     'Bring an interactive robotics demonstration straight to your auditorium or classroom.'}
+                  {selectedProgram === 'association' &&
+                    'For associations, clubs and community groups in Sweden. Tell us about your children and what you would like — the IBK team will contact you to plan it.'}
                   {selectedProgram === 'submit-idea' &&
                     'Express your vision with multimodal options: write it down, upload blueprints/photos, record a voice note, or attach a video!'}
                   {selectedProgram === 'hackathon' &&
@@ -873,7 +954,9 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
-                        {selectedProgram === 'submit-idea'
+                        {isAssociation
+                          ? 'Association or group name / Förening eller grupp *'
+                          : selectedProgram === 'submit-idea'
                           ? 'School / Skola *'
                           : applicantType === 'school'
                           ? 'School / Skola *'
@@ -881,18 +964,20 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                       </label>
                       <input
                         type="text"
-                        required={selectedProgram === 'submit-idea' || applicantType === 'school'}
-                        list="registered-schools-list"
-                        value={applicantType === 'school' || selectedProgram === 'submit-idea' ? schoolName : teamName}
+                        required={selectedProgram === 'submit-idea' || applicantType === 'school' || isAssociation}
+                        list={isAssociation ? undefined : 'registered-schools-list'}
+                        value={applicantType === 'school' || selectedProgram === 'submit-idea' || isAssociation ? schoolName : teamName}
                         onChange={(e) => {
-                          if (applicantType === 'school' || selectedProgram === 'submit-idea') {
+                          if (applicantType === 'school' || selectedProgram === 'submit-idea' || isAssociation) {
                             setSchoolName(e.target.value);
                           } else {
                             setTeamName(e.target.value);
                           }
                         }}
                         placeholder={
-                          selectedProgram === 'submit-idea'
+                          isAssociation
+                            ? 'e.g. Indisk Barnklubb Västerås'
+                            : selectedProgram === 'submit-idea'
                             ? 'e.g. Viksängsskolan, MISV, Hydro Skola...'
                             : 'e.g. Viksängsskolan'
                         }
@@ -916,7 +1001,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                       <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
                         {selectedProgram === 'submit-idea'
                           ? 'Name / Namn *'
-                          : applicantType === 'student' && selectedProgram !== 'hackathon'
+                          : applicantType === 'student' && selectedProgram !== 'hackathon' && !isAssociation
                           ? 'Student name / Elevens namn *'
                           : 'Contact person / Kontaktperson *'}
                       </label>
@@ -967,7 +1052,48 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                   </div>
                 </div>
 
-                {/* ── SECTION C: CUSTOMIZABLE DATE & TIME (FOR WORKSHOP, DEMO, HACKATHON) ── */}
+                {/* ── SECTION B2: GROUP / ASSOCIATION DETAILS ── */}
+                {isAssociation && (
+                  <div className="p-4 bg-sky-50/50 border border-sky-200 space-y-4">
+                    <div className="flex items-center gap-2 text-xs font-headline font-bold text-[#006AA7] uppercase tracking-wider">
+                      <Building className="w-4 h-4" />
+                      <span>About your group / Om er grupp</span>
+                    </div>
+                    <ChoiceGroup
+                      label="Type of group / Typ av grupp"
+                      options={ASSOCIATION_TYPE_OPTIONS}
+                      selected={associationType ? [associationType] : []}
+                      onToggle={(v) => setAssociationType(associationType === v ? '' : v)}
+                    />
+                    <ChoiceGroup
+                      label="We would like / Vi vill gärna *"
+                      options={ASSOCIATION_WANTS_OPTIONS}
+                      selected={associationWants}
+                      onToggle={(v) => toggleIn(associationWants, v, setAssociationWants)}
+                    />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
+                          Number of teams (if competing) / Antal lag
+                        </label>
+                        <input
+                          type="text"
+                          value={teamCount}
+                          onChange={(e) => setTeamCount(e.target.value)}
+                          placeholder="e.g. 2"
+                          className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-[#006AA7] text-xs sm:text-sm text-[#0A1930]"
+                        />
+                      </div>
+                    </div>
+                    <p className="text-[11px] text-slate-600 italic leading-relaxed">
+                      Grades 1–2 take part as participants, not as a competition category. Up to 4 teams per association
+                      qualify for the Final. / Årskurs 1–2 deltar som deltagare, inte som tävlingskategori. Upp till 4 lag per
+                      förening går vidare till finalen.
+                    </p>
+                  </div>
+                )}
+
+                {/* ── SECTION C: CUSTOMIZABLE DATE & TIME (FOR WORKSHOP, DEMO, ASSOCIATION, HACKATHON) ── */}
                 {selectedProgram !== 'submit-idea' && (
                   <div className={`p-4 border space-y-4 ${isHack ? 'bg-emerald-50/50 border-emerald-200' : 'bg-sky-50/50 border-sky-200'}`}>
                     <div className={`flex items-center gap-2 text-xs font-headline font-bold uppercase tracking-wider ${isHack ? 'text-[#059669]' : 'text-[#006AA7]'}`}>
@@ -1030,22 +1156,17 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                           onChange={(e) => setGradeGroup(e.target.value)}
                           className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-[#006AA7] text-xs sm:text-sm text-[#0A1930]"
                         >
-                          <option value="Årskurs 4–6 (Mellanstadiet · Ages 10–12)">
-                            Årskurs 4–6 (Mellanstadiet · Ages 10–12)
-                          </option>
-                          <option value="Årskurs 7–9 (Högstadiet · Ages 13–15)">
-                            Årskurs 7–9 (Högstadiet · Ages 13–15)
-                          </option>
-                          <option value="Gymnasiet (Upper Secondary · Ages 16–18)">
-                            Gymnasiet (Upper Secondary · Ages 16–18)
-                          </option>
-                          <option value="Mixed Cohort / STEM Club">Mixed Cohort / STEM Club</option>
+                          {GRADE_GROUP_OPTIONS.map((g) => (
+                            <option key={g} value={g}>
+                              {g}
+                            </option>
+                          ))}
                         </select>
                       </div>
 
                       <div>
                         <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
-                          Number of students / Antal elever
+                          {isAssociation ? 'Number of children / Antal barn' : 'Number of students / Antal elever'}
                         </label>
                         <input
                           type="text"
@@ -1431,6 +1552,9 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                   </div>
                 )}
 
+                {/* ── SECTION E2: PARTICIPATION FEES (WORKSHOP, DEMO, ASSOCIATION, HACKATHON) ── */}
+                {selectedProgram !== 'submit-idea' && <ParticipationFees />}
+
                 {/* ── SECTION F: CONSENT & GDPR CHECKBOXES ── */}
                 <div className="space-y-3 pt-2 border-t border-slate-200">
                   <label className="flex items-start gap-2.5 cursor-pointer select-none">
@@ -1505,7 +1629,8 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                     <>
                       <span>
                         {selectedProgram === 'workshop' && 'Submit Workshop Booking Request'}
-                        {selectedProgram === 'demo' && 'Request Free School Demo'}
+                        {selectedProgram === 'demo' && 'Request School Demo'}
+                        {selectedProgram === 'association' && 'Register Group / Association'}
                         {selectedProgram === 'submit-idea' && 'Submit Idea for Review'}
                         {selectedProgram === 'hackathon' && 'Register Hacker Squad'}
                       </span>
@@ -1588,6 +1713,9 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                     setVoiceNoteFile(null);
                     setVideoFile(null);
                     setVideoLink('');
+                    setAssociationType('');
+                    setAssociationWants([]);
+                    setTeamCount('');
                   }}
                   className="py-3 px-5 bg-[#0A1930] hover:bg-[#006AA7] text-white text-xs font-headline font-bold uppercase tracking-wider transition-colors"
                 >

@@ -15,7 +15,7 @@ export interface AdminRegistration {
   time_range: string | null;
   grade_group: string | null;
   status: 'pending' | 'approved' | 'rejected';
-  form_type: 'workshop' | 'demo' | 'hackathon';
+  form_type: 'workshop' | 'demo' | 'association' | 'hackathon';
   country_slug: string;
   custom_date: string | null;
   custom_time: string | null;
