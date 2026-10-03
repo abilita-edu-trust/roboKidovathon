@@ -21,6 +21,8 @@ Options -Indexes
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
+  # /ibk is an app page; serve it even if an old ibk/ asset folder is left on the server
+  RewriteRule ^ibk/?$ /index.html [L]
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
