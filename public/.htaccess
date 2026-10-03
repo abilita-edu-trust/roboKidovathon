@@ -10,6 +10,26 @@ Options -Indexes
   RewriteRule ^ https://vfi.iniac.se%{REQUEST_URI} [L,R=301]
 </IfModule>
 
+# ── indiskbarnklubb.se: canonical host + root opens the IBK page ──
+# Every rule is gated on the host, so vfi.iniac.se never matches and falls
+# through to the SPA fallback below. `^$` matches only the bare root, so
+# /ibk, /ibk-assets/*, /assets/* (CSS/JS) and all other paths are never caught.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # www root -> https://indiskbarnklubb.se/ibk
+  RewriteCond %{HTTP_HOST} ^www\.indiskbarnklubb\.se$ [NC]
+  RewriteRule ^$ https://indiskbarnklubb.se/ibk [L,R=301]
+
+  # www any other path -> same path on the bare domain
+  RewriteCond %{HTTP_HOST} ^www\.indiskbarnklubb\.se$ [NC]
+  RewriteRule ^(.*)$ https://indiskbarnklubb.se/$1 [L,R=301]
+
+  # bare-domain root -> /ibk
+  RewriteCond %{HTTP_HOST} ^indiskbarnklubb\.se$ [NC]
+  RewriteRule ^$ https://indiskbarnklubb.se/ibk [L,R=301]
+</IfModule>
+
 # ── Force HTTPS ──
 <IfModule mod_rewrite.c>
   RewriteEngine On
