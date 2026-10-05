@@ -14,6 +14,7 @@ import { RefWorkshopTapeBanner } from './components/RefWorkshopTapeBanner';
 import { RefFooter } from './components/RefFooter';
 import { FutureInnovatorsDetailLinks } from './components/FutureInnovatorsDetailLinks';
 import { ParticipationFees } from './components/ParticipationFees';
+import { RoboKidoTeamsFinalDay } from './components/RoboKidoTeamsFinalDay';
 
 import { ChallengesPage } from './pages/ChallengesPage';
 import { HowItWorksPage } from './pages/HowItWorksPage';
@@ -132,6 +133,9 @@ export function App() {
             {/* 04. Two pathways, the one official timeline, and venues */}
             <RefTheExperience onNavigate={handleNavigate} onOpenRegister={openRegister} />
 
+            {/* 04a. RoboKidovation categories, teams, workshops and final-day format */}
+            <RoboKidoTeamsFinalDay />
+
             {/* 04b. Participation fees, next to the registration call-to-action */}
             <section className="w-full bg-white px-4 sm:px-6 lg:px-10 pb-12">
               <div className="max-w-[1560px] mx-auto">
@@ -168,6 +172,7 @@ export function App() {
         {currentRoute === 'challenges' && (
           <>
             <RefCompetitionFlow onOpenRegister={openRegister} onNavigate={handleNavigate} />
+            <RoboKidoTeamsFinalDay />
             <RefTrackComparison onNavigate={handleNavigate} onOpenRegister={openRegister} />
             <section className="w-full bg-white px-4 sm:px-6 lg:px-10 pb-16">
               <div className="max-w-[1560px] mx-auto">
