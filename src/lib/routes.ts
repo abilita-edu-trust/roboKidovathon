@@ -15,7 +15,16 @@ export const ROUTE_PATHS: Record<string, string> = {
   register: '/register',
   ideas: '/ideas',
   admin: '/admin',
+  vxo: '/vxo',
 };
+
+// Event subdomains that always show one route, so visitors stay on that event
+// (.htaccess also redirects the subdomain's root to the route's path).
+const HOST_ROUTES: Record<string, string> = {
+  'vxo.iniac.se': 'vxo',
+};
+
+const hostRoute = (): string | undefined => HOST_ROUTES[window.location.hostname.toLowerCase()];
 
 // Old addresses that should keep working.
 const PATH_ALIASES: Record<string, string> = {
@@ -29,6 +38,8 @@ const PATH_ALIASES: Record<string, string> = {
 const normalizePath = (path: string) => (path.length > 1 ? path.replace(/\/+$/, '') : path) || '/';
 
 export const routeFromPath = (path: string): string => {
+  const locked = hostRoute();
+  if (locked) return locked;
   const p = normalizePath(path).toLowerCase();
   const match = Object.entries(ROUTE_PATHS).find(([, routePath]) => routePath === p);
   return match ? match[0] : PATH_ALIASES[p] || 'future-innovators';
@@ -55,6 +66,9 @@ export const hrefToTarget = (href: string): { target: string; tab: string | null
  * (QR codes and shared links) and the `?idea=` campaign links.
  */
 export const initialRouteFromLocation = (): { route: string; tab: string | null } => {
+  const locked = hostRoute();
+  if (locked) return { route: locked, tab: null };
+
   const params = new URLSearchParams(window.location.search);
   const legacy = params.get('route');
   const tab = params.get('tab');

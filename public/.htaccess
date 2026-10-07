@@ -30,6 +30,15 @@ Options -Indexes
   RewriteRule ^$ https://indiskbarnklubb.se/ibk [L,R=301]
 </IfModule>
 
+# ── vxo.iniac.se: YNG RoboHack Växjö; the root opens /vxo ──
+# Host-gated like the IBK rules. 302 (not 301) so browsers don't cache it forever
+# in case the subdomain's landing page changes later.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_HOST} ^vxo\.iniac\.se$ [NC]
+  RewriteRule ^$ https://vxo.iniac.se/vxo [L,R=302]
+</IfModule>
+
 # ── Force HTTPS ──
 <IfModule mod_rewrite.c>
   RewriteEngine On

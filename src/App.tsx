@@ -28,6 +28,10 @@ import { IdeasVotingPage } from './pages/IdeasVotingPage';
 import { AdminIdeasCurationPage } from './pages/AdminIdeasCurationPage';
 import { IbkHomePage } from './pages/IbkHomePage';
 import { VolunteerCta } from './components/VolunteerCta';
+import { RoboHackPage } from './pages/RoboHackPage';
+import { RoboHackNavbar } from './components/robohack/RoboHackNavbar';
+import { RoboHackFooter } from './components/robohack/RoboHackFooter';
+import { ROBOHACK_EVENTS } from './data/robohack';
 
 import { EventDeckModal } from './components/EventDeckModal';
 import { RoboCursor } from './components/RoboCursor';
@@ -98,6 +102,21 @@ export function App() {
   const openRegister = () => handleNavigate('register');
 
   const goToVote = () => handleNavigate('future-innovators#vote-ideas');
+
+  // RoboHack event pages (e.g. /vxo) have their own header and footer and link only within the event.
+  const robohackEvent = ROBOHACK_EVENTS[currentRoute];
+  if (robohackEvent) {
+    return (
+      <div key={language} className="min-h-screen bg-white text-[#0A1930] font-sans selection:bg-[#FFCD00] selection:text-[#0A1930] relative overflow-x-hidden">
+        <RoboCursor />
+        <RoboHackNavbar event={robohackEvent} onNavigate={handleNavigate} />
+        <main className="w-full">
+          <RoboHackPage event={robohackEvent} />
+        </main>
+        <RoboHackFooter event={robohackEvent} onNavigate={handleNavigate} />
+      </div>
+    );
+  }
 
   return (
     <div key={language} className="min-h-screen bg-white text-[#0A1930] font-sans selection:bg-[#FFCD00] selection:text-[#0A1930] relative overflow-x-hidden">
