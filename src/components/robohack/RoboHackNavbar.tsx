@@ -34,11 +34,12 @@ export const RoboHackNavbar: React.FC<RoboHackNavbarProps> = ({ event, onNavigat
   }, [mobileMenuOpen]);
 
   const navLinks = [
-    { section: 'about', label: sv ? 'Om' : 'About' },
+    { section: 'about', label: sv ? 'Om oss' : 'About' },
     { section: 'tracks', label: sv ? 'Spår' : 'Tracks' },
-    { section: 'journey', label: sv ? 'Resan' : 'Journey' },
+    { section: 'challenges', label: sv ? 'Utmaningar' : 'Challenges' },
+    { section: 'partners', label: sv ? 'Partner' : 'Partners' },
     { section: 'details', label: sv ? 'Praktisk info' : 'Details' },
-    { section: 'register', label: sv ? 'Anmälan' : 'Register' },
+    { section: 'join', label: sv ? 'Anmälan' : 'Register' },
   ];
 
   const hrefFor = (section?: string) => pathForRoute(event.route) + (section ? `#${section}` : '');
@@ -132,10 +133,10 @@ export const RoboHackNavbar: React.FC<RoboHackNavbarProps> = ({ event, onNavigat
             {langButton('en', 'bg-[#0A1930]')}
           </div>
           <motion.a
-            href={hrefFor('register')}
+            href={hrefFor('join')}
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.96 }}
-            onClick={(e) => handleLinkClick(e, 'register')}
+            onClick={(e) => handleLinkClick(e, 'join')}
             className="btn-pill-lime text-xs font-black py-2.5 px-4 2xl:px-5 whitespace-nowrap shadow-md flex items-center gap-2 group"
           >
             <span>{sv ? 'ANMÄLAN' : 'REGISTER'}</span>

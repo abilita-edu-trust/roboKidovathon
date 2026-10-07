@@ -36,10 +36,33 @@ const inputCls =
   'w-full px-3 py-2.5 text-sm border border-slate-300 bg-white focus:outline-none focus:border-[#006AA7] focus:ring-1 focus:ring-[#006AA7]';
 const labelCls = 'block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1.5';
 
-export const VolunteerForm: React.FC = () => {
+type Bilingual = { en: string; sv: string };
+
+interface VolunteerFormProps {
+  /** Lock the form to one city (e.g. Växjö on vxo.iniac.se); hides the country/city pickers. */
+  city?: { countrySlug: string; citySlug: string; countryName: string; cityName: string };
+  /** Events to offer; defaults to the VFI events. */
+  eventOptions?: Option[];
+  eyebrow?: Bilingual;
+  intro?: Bilingual;
+  /** Who replies, e.g. "VFI" or "YNG RoboHack". */
+  teamName?: string;
+}
+
+export const VolunteerForm: React.FC<VolunteerFormProps> = ({
+  city,
+  eventOptions = VOLUNTEER_EVENTS,
+  eyebrow = { en: 'OPTION 6 // VOLUNTEER', sv: 'ALTERNATIV 6 // VOLONTÄR' },
+  intro = {
+    en: 'Help us run Västerås Future Innovators events. All fields are required.',
+    sv: 'Hjälp oss att genomföra Västerås Future Innovators evenemang. Alla fält är obligatoriska.',
+  },
+  teamName = 'VFI',
+}) => {
   const { language } = useLanguage();
   const sv = language === 'sv';
   const L = (en: string, svText: string) => (sv ? svText : en);
+  const T = (b: Bilingual) => (sv ? b.sv : b.en);
 
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -47,9 +70,10 @@ export const VolunteerForm: React.FC = () => {
   const [ageGroup, setAgeGroup] = useState<'' | 'under-18' | '18-plus'>('');
   const [guardianName, setGuardianName] = useState('');
   const [guardianPhone, setGuardianPhone] = useState('');
-  const [countrySlug, setCountrySlug] = useState('sweden');
-  const [citySlug, setCitySlug] = useState('vasteras');
-  const [events, setEvents] = useState<string[]>([]);
+  const [countrySlug, setCountrySlug] = useState(city?.countrySlug ?? 'sweden');
+  const [citySlug, setCitySlug] = useState(city?.citySlug ?? 'vasteras');
+  // A single event is preselected so the volunteer doesn't have to tick it.
+  const [events, setEvents] = useState<string[]>(eventOptions.length === 1 ? [eventOptions[0].value] : []);
   const [roles, setRoles] = useState<string[]>([]);
   const [availability, setAvailability] = useState('');
   const [languages, setLanguages] = useState('');
@@ -75,8 +99,8 @@ export const VolunteerForm: React.FC = () => {
   const resetForm = () => {
     setFullName(''); setEmail(''); setPhone(''); setAgeGroup('');
     setGuardianName(''); setGuardianPhone('');
-    setCountrySlug('sweden'); setCitySlug('vasteras');
-    setEvents([]); setRoles([]); setAvailability('');
+    setCountrySlug(city?.countrySlug ?? 'sweden'); setCitySlug(city?.citySlug ?? 'vasteras');
+    setEvents(eventOptions.length === 1 ? [eventOptions[0].value] : []); setRoles([]); setAvailability('');
     setLanguages(''); setExperience(''); setTshirtSize('');
     setConsentAgreed(false); setGdprAgreed(false);
     setGeneratedId(''); setSubmitError('');
@@ -105,8 +129,8 @@ export const VolunteerForm: React.FC = () => {
         guardian_phone: ageGroup === 'under-18' ? guardianPhone : '',
         country_slug: countrySlug,
         city_slug: citySlug,
-        country_name: COUNTRIES.find((c) => c.slug === countrySlug)?.name || countrySlug,
-        city_name: cities.find((c) => c.slug === citySlug)?.name || citySlug,
+        country_name: city?.countryName ?? (COUNTRIES.find((c) => c.slug === countrySlug)?.name || countrySlug),
+        city_name: city?.cityName ?? (cities.find((c) => c.slug === citySlug)?.name || citySlug),
         events,
         roles,
         availability,
@@ -138,8 +162,8 @@ export const VolunteerForm: React.FC = () => {
         </h2>
         <p className="text-sm text-slate-600 max-w-md mx-auto">
           {L(
-            'We have received your volunteer registration. The VFI team will contact you by email with next steps.',
-            'Vi har tagit emot din volontäranmälan. VFI-teamet kontaktar dig via e-post med nästa steg.'
+            `We have received your volunteer registration. The ${teamName} team will contact you by email with next steps.`,
+            `Vi har tagit emot din volontäranmälan. ${teamName}-teamet kontaktar dig via e-post med nästa steg.`
           )}
         </p>
         <div className="inline-block px-4 py-2 bg-slate-100 border border-slate-200 font-mono-code text-sm font-bold text-[#006AA7]">
@@ -167,16 +191,13 @@ export const VolunteerForm: React.FC = () => {
     <form data-no-translate="true" onSubmit={handleSubmit} className="space-y-6">
       <div className="pb-4 border-b border-slate-200">
         <span className="text-[11px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase">
-          {L('OPTION 6 // VOLUNTEER', 'ALTERNATIV 6 // VOLONTÄR')}
+          {T(eyebrow)}
         </span>
         <h2 className="font-headline font-black text-2xl uppercase tracking-tight mt-1">
           {L('Work as a Volunteer', 'Arbeta som volontär')}
         </h2>
         <p className="text-sm text-slate-600 mt-1">
-          {L(
-            'Help us run Västerås Future Innovators events. All fields are required.',
-            'Hjälp oss att genomföra Västerås Future Innovators evenemang. Alla fält är obligatoriska.'
-          )}
+          {T(intro)}
         </p>
       </div>
 
@@ -225,6 +246,7 @@ export const VolunteerForm: React.FC = () => {
       )}
 
       {/* Location */}
+      {!city && (
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className={labelCls} htmlFor="vol-country">{L('Country', 'Land')} *</label>
@@ -243,12 +265,13 @@ export const VolunteerForm: React.FC = () => {
           </select>
         </div>
       </div>
+      )}
 
       {/* Events */}
       <div>
         <span className={labelCls}>{L('Which event(s)?', 'Vilket/vilka evenemang?')} *</span>
         <div className="flex flex-wrap gap-2">
-          {VOLUNTEER_EVENTS.map((o) => (
+          {eventOptions.map((o) => (
             <button key={o.value} type="button" aria-pressed={events.includes(o.value)} onClick={() => toggle(events, o.value, setEvents)} className={chip(events.includes(o.value))}>
               {sv ? o.sv : o.en}
             </button>
