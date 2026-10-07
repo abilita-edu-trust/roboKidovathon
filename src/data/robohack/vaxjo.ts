@@ -19,12 +19,65 @@ export const vaxjo: RoboHackEvent = {
     },
   },
 
+  // Format, levels, themes and curriculum fit carried over from the Young Inno Hack.
+  about: {
+    tagline: { en: 'Ideas today. A brighter tomorrow.', sv: 'Idéer i dag. En ljusare morgondag.' },
+    points: [
+      {
+        en: 'A one-day innovation challenge solving real-world problems.',
+        sv: 'En dags innovationsutmaning där verkliga problem löses.',
+      },
+      {
+        en: 'Teams present a concept, model, prototype or digital solution to a jury.',
+        sv: 'Lagen presenterar ett koncept, en modell, en prototyp eller en digital lösning för en jury.',
+      },
+      {
+        en: 'No previous robotics experience is required. Students interested in science, technology, design, creativity or entrepreneurship can take part.',
+        sv: 'Ingen tidigare erfarenhet av robotik krävs. Elever som är intresserade av naturvetenskap, teknik, design, kreativitet eller entreprenörskap kan delta.',
+      },
+      {
+        en: 'Teams are mixed and supported by mentors.',
+        sv: 'Lagen är blandade och får stöd av mentorer.',
+      },
+    ],
+    levels: [
+      { level: { en: 'Basic', sv: 'Grundnivå' }, who: { en: 'Grades 7–9', sv: 'Årskurs 7–9' } },
+      { level: { en: 'Medium', sv: 'Mellannivå' }, who: { en: 'Gymnasiet students', sv: 'Gymnasieelever' } },
+      { level: { en: 'Advanced', sv: 'Avancerad nivå' }, who: { en: 'University students', sv: 'Universitetsstudenter' } },
+    ],
+  },
+
+  themes: [
+    { en: 'Sustainable cities', sv: 'Hållbara städer' },
+    { en: 'Climate and environment', sv: 'Klimat och miljö' },
+    { en: 'Future schools', sv: 'Framtidens skola' },
+    { en: 'Energy', sv: 'Energi' },
+    { en: 'Accessibility', sv: 'Tillgänglighet' },
+    { en: 'Health', sv: 'Hälsa' },
+    { en: 'AI', sv: 'AI' },
+    { en: 'Technology for society', sv: 'Teknik för samhället' },
+  ],
+
+  curriculum: [
+    {
+      en: 'For grundskolan, the hackathon supports the broader intentions of Lgr22: students use creativity, curiosity, initiative, problem-solving and collaboration in a practical context, following the technology-development process from identifying a need through construction, testing and evaluation.',
+      sv: 'För grundskolan stöder hackathonet de bredare intentionerna i Lgr22: eleverna använder kreativitet, nyfikenhet, initiativförmåga, problemlösning och samarbete i ett praktiskt sammanhang och följer teknikutvecklingsprocessen från att identifiera ett behov till konstruktion, test och utvärdering.',
+    },
+    {
+      en: 'For gymnasium students, it complements Gy25 through project-based problem-solving, technical development, programming and interdisciplinary work, and fits well with the Technology Programme.',
+      sv: 'För gymnasieelever kompletterar det Gy25 genom projektbaserad problemlösning, teknisk utveckling, programmering och ämnesövergripande arbete, och passar väl ihop med Teknikprogrammet.',
+    },
+  ],
+
   // Fill in each value as it is confirmed. null renders as "TBC".
   details: [
     { label: { en: 'Date', sv: 'Datum' }, value: null },
     { label: { en: 'Venue', sv: 'Plats' }, value: null },
     { label: { en: 'Team size', sv: 'Lagstorlek' }, value: null },
-    { label: { en: 'Who can join', sv: 'Vem kan delta' }, value: null },
+    {
+      label: { en: 'Who can join', sv: 'Vem kan delta' },
+      value: { en: 'Grades 7–9 to university', sv: 'Årskurs 7–9 till universitet' },
+    },
     { label: { en: 'Registration deadline', sv: 'Sista anmälningsdag' }, value: null },
     { label: { en: 'Prizes', sv: 'Priser' }, value: null },
   ],
@@ -98,7 +151,10 @@ export const vaxjo: RoboHackEvent = {
     {
       icon: Users,
       title: { en: 'Form Team', sv: 'Bilda lag' },
-      description: { en: 'Team up and split the roles.', sv: 'Bilda lag och fördela rollerna.' },
+      description: {
+        en: 'Form mixed teams with mentors and split the roles.',
+        sv: 'Bilda blandade lag med mentorer och fördela rollerna.',
+      },
     },
     {
       icon: Hammer,

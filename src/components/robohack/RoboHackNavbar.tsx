@@ -34,6 +34,7 @@ export const RoboHackNavbar: React.FC<RoboHackNavbarProps> = ({ event, onNavigat
   }, [mobileMenuOpen]);
 
   const navLinks = [
+    { section: 'about', label: sv ? 'Om' : 'About' },
     { section: 'tracks', label: sv ? 'Spår' : 'Tracks' },
     { section: 'journey', label: sv ? 'Resan' : 'Journey' },
     { section: 'details', label: sv ? 'Praktisk info' : 'Details' },

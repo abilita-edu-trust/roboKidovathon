@@ -126,6 +126,46 @@ export const RoboHackPage: React.FC<RoboHackPageProps> = ({ event }) => {
         </div>
       </section>
 
+      {/* ── 1b. ABOUT: format and levels ── */}
+      <section id="about" className="w-full py-16 sm:py-20 px-4 sm:px-6 lg:px-10 border-b border-slate-200 scroll-mt-20">
+        <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10">
+          <div className="lg:col-span-7 space-y-6">
+            <div className="space-y-3">
+              <Eyebrow>{sv ? 'Om hackathonet' : 'About the hackathon'}</Eyebrow>
+              <SectionTitle>{t(event.about.tagline)}</SectionTitle>
+            </div>
+            <ul className="space-y-3">
+              {event.about.points.map((p) => (
+                <li key={p.en} className="flex items-start gap-3 text-sm sm:text-base text-slate-600 font-light leading-relaxed">
+                  <ArrowRight className="w-4 h-4 text-[#006AA7] shrink-0 mt-1" />
+                  <span>{t(p)}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="lg:col-span-5 lg:pt-10">
+            <span className="text-[10px] font-mono-code font-bold uppercase tracking-widest text-slate-500 block mb-3">
+              {sv ? 'Nivåer' : 'Levels'}
+            </span>
+            <div className="grid grid-cols-1 gap-2">
+              {event.about.levels.map((l, i) => (
+                <div key={l.level.en} className="flex items-center justify-between gap-4 border border-slate-200 bg-[#F8FAFC] px-5 py-4">
+                  <span className="font-headline font-black text-lg uppercase tracking-tight">{t(l.level)}</span>
+                  <span
+                    className={`text-[10px] font-mono-code font-bold uppercase tracking-wide px-2.5 py-1 ${
+                      ['bg-[#006AA7] text-white', 'bg-[#0A1930] text-white', 'bg-[#FFCD00] text-[#0A1930]'][i % 3]
+                    }`}
+                  >
+                    {t(l.who)}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── 2. TRACKS ── */}
       <section id="tracks" className="w-full py-16 sm:py-20 px-4 sm:px-6 lg:px-10 scroll-mt-20">
         <div className="max-w-[1400px] mx-auto space-y-10">
@@ -187,6 +227,21 @@ export const RoboHackPage: React.FC<RoboHackPageProps> = ({ event }) => {
               );
             })}
           </div>
+
+          {event.themes.length > 0 && (
+            <div className="border border-slate-200 p-5 sm:p-6 space-y-3">
+              <span className="text-[10px] font-mono-code font-bold uppercase tracking-widest text-[#006AA7] block">
+                {sv ? 'Utmaningsområden' : 'Challenge themes'}
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {event.themes.map((theme) => (
+                  <span key={theme.en} className="text-xs font-mono-code font-bold text-white bg-[#0A1930] px-3 py-2 uppercase tracking-wide">
+                    {t(theme)}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -236,6 +291,17 @@ export const RoboHackPage: React.FC<RoboHackPageProps> = ({ event }) => {
               </div>
             ))}
           </dl>
+
+          {event.curriculum.length > 0 && (
+            <div className="bg-[#F8FAFC] border border-slate-200 p-5 sm:p-6 space-y-3">
+              <span className="text-[10px] font-mono-code font-bold uppercase tracking-widest text-[#006AA7] block">
+                {sv ? 'Koppling till läroplanen' : 'Curriculum fit'} · Lgr22 · Gy25
+              </span>
+              {event.curriculum.map((c) => (
+                <p key={c.en} className="text-sm text-slate-600 font-light leading-relaxed max-w-4xl">{t(c)}</p>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

@@ -41,6 +41,17 @@ export interface RoboHackEvent {
   meta: { title: string; description: string };
   brand: { name: string; city: string };
   hero: { eyebrow: Bilingual; intro: Bilingual };
+  about: {
+    tagline: Bilingual;
+    /** Short statements about the format. */
+    points: Bilingual[];
+    /** Participant levels, e.g. Basic · Grades 7–9. */
+    levels: { level: Bilingual; who: Bilingual }[];
+  };
+  /** Areas the problem statements are drawn from. */
+  themes: Bilingual[];
+  /** How the event fits the school curriculum. Empty hides the block. */
+  curriculum: Bilingual[];
   /** Key facts. The first four also appear in the hero. */
   details: RoboHackDetail[];
   tracks: RoboHackTrack[];

@@ -15,6 +15,7 @@ export const RoboHackFooter: React.FC<RoboHackFooterProps> = ({ event, onNavigat
   const sv = language === 'sv';
 
   const links = [
+    { section: 'about', label: sv ? 'Om' : 'About' },
     { section: 'tracks', label: sv ? 'Spår' : 'Tracks' },
     { section: 'journey', label: sv ? 'Resan' : 'Journey' },
     { section: 'details', label: sv ? 'Praktisk info' : 'Event details' },
