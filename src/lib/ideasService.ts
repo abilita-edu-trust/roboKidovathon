@@ -118,11 +118,15 @@ export async function submitIdea(payload: SubmitIdeaPayload) {
   return data as { id: string; public_id: string; school_mapped: boolean; status: string };
 }
 
+// The only idea columns the public may read (migration 0014); contact details stay private.
+const PUBLIC_IDEA_COLUMNS =
+  'id, public_id, student_name, school_name, country_slug, city_slug, city_name, country_name, idea_title, idea_description, photo_url, voice_note_url, video_url, video_type, category, status, votes_count, created_at';
+
 /** Fetch all approved ideas for public showcase & voting */
 export async function fetchApprovedIdeas(): Promise<IdeaSubmission[]> {
   const { data, error } = await supabase
     .from('idea_submissions')
-    .select('*')
+    .select(PUBLIC_IDEA_COLUMNS)
     .eq('status', 'approved')
     .order('votes_count', { ascending: false });
 

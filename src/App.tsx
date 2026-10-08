@@ -26,6 +26,7 @@ import { EventsPage } from './pages/EventsPage';
 import { IntakeRegisterPage, IntakeProgramTab } from './pages/IntakeRegisterPage';
 import { IdeasVotingPage } from './pages/IdeasVotingPage';
 import { AdminIdeasCurationPage } from './pages/AdminIdeasCurationPage';
+import { AdminLoginGate } from './components/AdminLoginGate';
 import { IbkHomePage } from './pages/IbkHomePage';
 import { VolunteerCta } from './components/VolunteerCta';
 import { RoboHackPage } from './pages/RoboHackPage';
@@ -282,10 +283,12 @@ export function App() {
         )}
 
         {currentRoute === 'admin' && (
-          <AdminIdeasCurationPage
-            onNavigateHome={() => handleNavigate('future-innovators')}
-            onNavigateVoting={() => handleNavigate('ideas')}
-          />
+          <AdminLoginGate>
+            <AdminIdeasCurationPage
+              onNavigateHome={() => handleNavigate('future-innovators')}
+              onNavigateVoting={() => handleNavigate('ideas')}
+            />
+          </AdminLoginGate>
         )}
       </main>
 
