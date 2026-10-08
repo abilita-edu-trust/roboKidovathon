@@ -26,6 +26,7 @@ import {
   voteForIdea,
   hasVotedLocally
 } from '../lib/ideasService';
+import { useSite } from '../context/SiteContext';
 
 interface IdeasVotingPageProps {
   onNavigateHome: () => void;
@@ -38,6 +39,7 @@ export const IdeasVotingPage: React.FC<IdeasVotingPageProps> = ({
   onNavigateSubmit,
   onNavigateAdmin,
 }) => {
+  const site = useSite();
   const [ideas, setIdeas] = useState<IdeaSubmission[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -62,7 +64,7 @@ export const IdeasVotingPage: React.FC<IdeasVotingPageProps> = ({
   const loadIdeas = async () => {
     setLoading(true);
     try {
-      const data = await fetchApprovedIdeas();
+      const data = await fetchApprovedIdeas(site.ideasFilter);
       setIdeas(data);
 
       // Deep link support: ?idea=VFI-IDEA-0001
@@ -149,7 +151,7 @@ export const IdeasVotingPage: React.FC<IdeasVotingPageProps> = ({
   };
 
   const handleCopyIdeaLink = (idea: IdeaSubmission) => {
-    const url = `${window.location.origin}/ideas?idea=${idea.public_id}`;
+    const url = `${window.location.origin}${site.ideasPath}?idea=${idea.public_id}`;
     navigator.clipboard.writeText(url);
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 2500);
@@ -191,7 +193,7 @@ export const IdeasVotingPage: React.FC<IdeasVotingPageProps> = ({
         <div className="text-center max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 text-[11px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase mb-2">
             <Sparkles className="w-3.5 h-3.5 text-[#FFCD00]" />
-            <span>VÄSTERÅS FUTURE INNOVATORS // PUBLIC VOTING ARENA</span>
+            <span>{site.location ? `${site.hackLabel} ${site.cityName}`.toUpperCase() : 'VÄSTERÅS FUTURE INNOVATORS'} // PUBLIC VOTING ARENA</span>
           </div>
           <h1 className="font-headline font-black text-3xl sm:text-5xl uppercase tracking-tight text-[#0A1930]">
             View Ideas and Vote for the Best Idea
@@ -284,7 +286,7 @@ export const IdeasVotingPage: React.FC<IdeasVotingPageProps> = ({
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search by idea title, student name, or school (e.g. Hydro)..."
+                placeholder={site.location ? 'Search by idea title, student name, or school...' : 'Search by idea title, student name, or school (e.g. Hydro)...'}
                 className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-300 focus:border-[#006AA7] text-xs sm:text-sm text-[#0A1930] focus:outline-none"
               />
             </div>

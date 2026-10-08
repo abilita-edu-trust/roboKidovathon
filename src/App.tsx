@@ -32,14 +32,18 @@ import { VolunteerCta } from './components/VolunteerCta';
 import { RoboHackPage } from './pages/RoboHackPage';
 import { RoboHackNavbar } from './components/robohack/RoboHackNavbar';
 import { RoboHackFooter } from './components/robohack/RoboHackFooter';
-import { ROBOHACK_EVENTS } from './data/robohack';
+import { robohackPageFor } from './data/robohack';
+import { robohackSite } from './components/robohack/robohackSite';
+import { SiteProvider } from './context/SiteContext';
 
 import { EventDeckModal } from './components/EventDeckModal';
 import { RoboCursor } from './components/RoboCursor';
 import { useLanguage } from './context/LanguageContext';
 import { initialRouteFromLocation, pathForRoute, routeFromPath } from './lib/routes';
 
-const REGISTER_TABS: IntakeProgramTab[] = ['workshop', 'demo', 'association', 'submit-idea', 'hackathon', 'volunteer'];
+const REGISTER_TABS: IntakeProgramTab[] = ['workshop', 'demo', 'association', 'submit-idea', 'hackathon', 'volunteer', 'partner'];
+/** The VFI register page and the RoboHack city register pages (e.g. 'vxo-register'). */
+const isRegisterRoute = (route: string) => route === 'register' || route.endsWith('-register');
 const toRegisterTab = (tab: string | null): IntakeProgramTab =>
   REGISTER_TABS.includes(tab as IntakeProgramTab) ? (tab as IntakeProgramTab) : 'workshop';
 
@@ -60,7 +64,7 @@ export function App() {
     const params = new URLSearchParams(window.location.search);
     if (!params.has('route')) return;
     params.delete('route');
-    if (initial.route === 'register' && initial.tab) params.set('tab', initial.tab);
+    if (isRegisterRoute(initial.route) && initial.tab) params.set('tab', initial.tab);
     const query = params.toString();
     window.history.replaceState(null, '', pathForRoute(initial.route) + (query ? `?${query}` : '') + window.location.hash);
   }, [initial]);
@@ -69,7 +73,7 @@ export function App() {
   useEffect(() => {
     const onPopState = () => {
       const route = routeFromPath(window.location.pathname);
-      if (route === 'register') {
+      if (isRegisterRoute(route)) {
         setRegisterInitialTab(toRegisterTab(new URLSearchParams(window.location.search).get('tab')));
       }
       setCurrentRoute(route);
@@ -87,9 +91,9 @@ export function App() {
   const handleNavigate = useCallback((target: string, tab?: IntakeProgramTab) => {
     const [route, section] = target.split('#');
     if (tab) setRegisterInitialTab(tab);
-    else if (route === 'register') setRegisterInitialTab('workshop');
+    else if (isRegisterRoute(route)) setRegisterInitialTab('workshop');
 
-    const query = route === 'register' && tab && tab !== 'workshop' ? `?tab=${tab}` : '';
+    const query = isRegisterRoute(route) && tab && tab !== 'workshop' ? `?tab=${tab}` : '';
     const url = pathForRoute(route) + query + (section ? `#${section}` : '');
     if (url !== window.location.pathname + window.location.search + window.location.hash) {
       window.history.pushState(null, '', url);
@@ -104,18 +108,30 @@ export function App() {
 
   const goToVote = () => handleNavigate('future-innovators#vote-ideas');
 
-  // RoboHack event pages (e.g. /vxo) have their own header and footer and link only within the event.
-  const robohackEvent = ROBOHACK_EVENTS[currentRoute];
-  if (robohackEvent) {
+  // RoboHack event sites (e.g. /vxo, /vxo/register, /vxo/ideas) have their own header and
+  // footer, link only within the event, and run the shared forms and voting for their city.
+  const robohack = robohackPageFor(currentRoute);
+  if (robohack) {
+    const { event, page } = robohack;
+    const goHome = () => handleNavigate(event.route);
+    const goRegister = (tab?: IntakeProgramTab) => handleNavigate(`${event.route}-register`, tab);
+    const goIdeas = () => handleNavigate(`${event.route}-ideas`);
     return (
-      <div key={language} className="min-h-screen bg-white text-[#0A1930] font-sans selection:bg-[#FFCD00] selection:text-[#0A1930] relative overflow-x-hidden">
-        <RoboCursor />
-        <RoboHackNavbar event={robohackEvent} onNavigate={handleNavigate} />
-        <main className="w-full">
-          <RoboHackPage event={robohackEvent} />
-        </main>
-        <RoboHackFooter event={robohackEvent} onNavigate={handleNavigate} />
-      </div>
+      <SiteProvider site={robohackSite(event)}>
+        <div key={language} className="min-h-screen bg-white text-[#0A1930] font-sans selection:bg-[#FFCD00] selection:text-[#0A1930] relative overflow-x-hidden">
+          <RoboCursor />
+          <RoboHackNavbar event={event} activeRoute={currentRoute} onNavigate={handleNavigate} />
+          <main className="w-full">
+            {page === 'home' && <RoboHackPage event={event} onRegister={goRegister} onOpenIdeas={goIdeas} />}
+            {page === 'register' && (
+              <IntakeRegisterPage key={registerInitialTab} initialTab={registerInitialTab} onNavigateHome={goHome} onNavigateVoting={goIdeas} />
+            )}
+            {page === 'ideas' && <IdeasVotingPage onNavigateHome={goHome} onNavigateSubmit={() => goRegister('submit-idea')} />}
+          </main>
+          <RoboHackFooter event={event} onNavigate={handleNavigate} />
+          <VotePrompt onGoToVote={goIdeas} onSubmitIdea={() => goRegister('submit-idea')} />
+        </div>
+      </SiteProvider>
     );
   }
 

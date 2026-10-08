@@ -16,15 +16,18 @@ export const ROUTE_PATHS: Record<string, string> = {
   ideas: '/ideas',
   admin: '/admin',
   vxo: '/vxo',
+  'vxo-register': '/vxo/register',
+  'vxo-ideas': '/vxo/ideas',
 };
 
-// Event subdomains that always show one route, so visitors stay on that event
-// (.htaccess also redirects the subdomain's root to the route's path).
-const HOST_ROUTES: Record<string, string> = {
-  'vxo.iniac.se': 'vxo',
+// Event subdomains that only show their own routes, so visitors stay on that event.
+// The first route is the fallback for every other path (.htaccess also redirects the
+// subdomain's root to it).
+const HOST_ROUTES: Record<string, string[]> = {
+  'vxo.iniac.se': ['vxo', 'vxo-register', 'vxo-ideas'],
 };
 
-const hostRoute = (): string | undefined => HOST_ROUTES[window.location.hostname.toLowerCase()];
+const hostRoutes = (): string[] | undefined => HOST_ROUTES[window.location.hostname.toLowerCase()];
 
 // Old addresses that should keep working.
 const PATH_ALIASES: Record<string, string> = {
@@ -37,12 +40,16 @@ const PATH_ALIASES: Record<string, string> = {
 
 const normalizePath = (path: string) => (path.length > 1 ? path.replace(/\/+$/, '') : path) || '/';
 
-export const routeFromPath = (path: string): string => {
-  const locked = hostRoute();
-  if (locked) return locked;
+const resolvePath = (path: string): string => {
   const p = normalizePath(path).toLowerCase();
   const match = Object.entries(ROUTE_PATHS).find(([, routePath]) => routePath === p);
   return match ? match[0] : PATH_ALIASES[p] || 'future-innovators';
+};
+
+export const routeFromPath = (path: string): string => {
+  const route = resolvePath(path);
+  const allowed = hostRoutes();
+  return allowed && !allowed.includes(route) ? allowed[0] : route;
 };
 
 export const pathForRoute = (route: string): string => ROUTE_PATHS[route] || '/';
@@ -66,10 +73,15 @@ export const hrefToTarget = (href: string): { target: string; tab: string | null
  * (QR codes and shared links) and the `?idea=` campaign links.
  */
 export const initialRouteFromLocation = (): { route: string; tab: string | null } => {
-  const locked = hostRoute();
-  if (locked) return { route: locked, tab: null };
-
   const params = new URLSearchParams(window.location.search);
+  const allowed = hostRoutes();
+  if (allowed) {
+    // Campaign links (?idea=) open the event's own voting page.
+    const ideasRoute = `${allowed[0]}-ideas`;
+    if (params.get('idea') && allowed.includes(ideasRoute)) return { route: ideasRoute, tab: null };
+    return { route: routeFromPath(window.location.pathname), tab: params.get('tab') };
+  }
+
   const legacy = params.get('route');
   const tab = params.get('tab');
 

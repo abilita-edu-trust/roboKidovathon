@@ -23,8 +23,10 @@ import { uploadIdeaMedia, submitIdea, fetchRegisteredSchools } from '../lib/idea
 import { VolunteerForm } from '../components/VolunteerForm';
 import { GRADE_GROUP_OPTIONS } from '../data/vfiFacts';
 import { ParticipationFees } from '../components/ParticipationFees';
+import { useSite } from '../context/SiteContext';
 
-export type IntakeProgramTab = 'workshop' | 'demo' | 'association' | 'submit-idea' | 'hackathon' | 'volunteer';
+// 'partner' only exists on city sites that provide an extra form (see SiteConfig.intake.extraForm).
+export type IntakeProgramTab = 'workshop' | 'demo' | 'association' | 'submit-idea' | 'hackathon' | 'volunteer' | 'partner';
 
 interface IntakeRegisterPageProps {
   initialTab?: IntakeProgramTab;
@@ -150,11 +152,17 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
   onNavigateHome,
   onNavigateVoting,
 }) => {
-  const [selectedProgram, setSelectedProgram] = useState<IntakeProgramTab>(initialTab);
+  // City sites (e.g. vxo.iniac.se) lock the location and swap the Västerås-only wording.
+  const site = useSite();
+  const lockedLocation = site.location;
+  const extraForm = site.intake.extraForm;
+  const [selectedProgram, setSelectedProgram] = useState<IntakeProgramTab>(
+    initialTab === 'partner' && !extraForm ? 'workshop' : initialTab
+  );
 
   // Location Fields (Country first, then City / Location)
-  const [countrySlug, setCountrySlug] = useState('sweden');
-  const [citySlug, setCitySlug] = useState('vasteras');
+  const [countrySlug, setCountrySlug] = useState(lockedLocation?.countrySlug ?? 'sweden');
+  const [citySlug, setCitySlug] = useState(lockedLocation?.citySlug ?? 'vasteras');
   const [customCityName, setCustomCityName] = useState('');
   const [isCustomCity, setIsCustomCity] = useState(false);
 
@@ -296,11 +304,13 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
 
     setIsSubmitting(true);
 
-    const selectedCityName = isCustomCity
+    const selectedCityName = lockedLocation
+      ? lockedLocation.cityName
+      : isCustomCity
       ? (customCityName.trim() || 'Custom City')
       : (CITIES_BY_COUNTRY[countrySlug] || []).find((c) => c.slug === citySlug)?.name || citySlug;
     const selectedCountryName =
-      COUNTRIES.find((c) => c.slug === countrySlug)?.name || countrySlug;
+      lockedLocation?.countryName ?? (COUNTRIES.find((c) => c.slug === countrySlug)?.name || countrySlug);
 
     try {
       if (selectedProgram === 'submit-idea') {
@@ -383,7 +393,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
               ? 'school-demo-session'
               : isAssociation
               ? 'association-group-programme'
-              : 'vasteras-school-workshop',
+              : `${lockedLocation?.citySlug ?? 'vasteras'}-school-workshop`,
           student_count: studentCount,
           preferred_date: customDate ? `Custom Date: ${customDate}` : 'To be confirmed',
           custom_date: customDate || null,
@@ -435,7 +445,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
   };
 
   const handleCopyLink = () => {
-    const url = `${window.location.origin}/ideas?idea=${generatedId}`;
+    const url = `${window.location.origin}${site.ideasPath}?idea=${generatedId}`;
     navigator.clipboard.writeText(url);
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 2500);
@@ -467,18 +477,21 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
           <div className="text-center max-w-3xl mx-auto mb-8">
             <div className="inline-flex items-center gap-2 text-[11px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase mb-2">
               <Sparkles className="w-3.5 h-3.5 text-[#FFCD00]" />
-              <span>OFFICIAL PROGRAM INTAKE // VÄSTERÅS 2026</span>
+              <span>{site.intake.eyebrow}</span>
             </div>
             <h1 className="font-headline font-black text-3xl sm:text-4xl uppercase tracking-tight text-[#0A1930]">
               Choose Your Program Pathway
             </h1>
             <p className="text-xs sm:text-sm text-slate-600 mt-2 max-w-2xl mx-auto leading-relaxed">
-              We offer 6 pathways: Hands-on Workshops, Live School Demos, Groups & Associations, Student Idea Submissions, Hackathon Squads, and Volunteering. Click any option below to load its customizable registration form directly underneath.
+              {extraForm
+                ? `We offer 7 pathways: Hands-on Workshops, Live School Demos, Groups & Associations, Student Idea Submissions, Hackathon Squads, Volunteering, and ${extraForm.title}.`
+                : 'We offer 6 pathways: Hands-on Workshops, Live School Demos, Groups & Associations, Student Idea Submissions, Hackathon Squads, and Volunteering.'}{' '}
+              Click any option below to load its customizable registration form directly underneath.
             </p>
           </div>
 
           {/* Quick selector with clear explanations */}
-          <div className="mb-6 grid grid-cols-2 lg:grid-cols-6 gap-2.5">
+          <div className={`mb-6 grid grid-cols-2 gap-2.5 ${extraForm ? 'lg:grid-cols-7' : 'lg:grid-cols-6'}`}>
             {[
               {
                 id: 'workshop' as const,
@@ -521,7 +534,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                 num: '5',
                 title: 'Hackathon Squad',
                 subtitle: 'Arena Competition',
-                desc: 'Register a student team for the Young Inno Hack final on 5 Dec (venue to be confirmed)',
+                desc: site.intake.hackathonDesc,
                 icon: '🏆',
                 theme: 'emerald',
               },
@@ -530,10 +543,23 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                 num: '6',
                 title: 'Volunteer',
                 subtitle: 'Work as a Volunteer',
-                desc: 'Help run Västerås Future Innovators events as a volunteer',
+                desc: site.intake.volunteerDesc,
                 icon: '🙋',
                 theme: 'blue',
               },
+              ...(extraForm
+                ? [
+                    {
+                      id: 'partner' as const,
+                      num: '7',
+                      title: extraForm.title,
+                      subtitle: extraForm.subtitle,
+                      desc: extraForm.desc,
+                      icon: extraForm.icon,
+                      theme: 'blue',
+                    },
+                  ]
+                : []),
             ].map((p) => {
               const active = selectedProgram === p.id;
               return (
@@ -704,7 +730,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                 <span className="text-2xl">💡</span>
               </div>
               <h2 className="font-headline font-black text-2xl uppercase tracking-tight text-[#0A1930] mb-2 flex items-center gap-2">
-                Young Inno Hack
+                {site.hackLabel}
               </h2>
               <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed mb-6">
                 Problem discovery, student multimodal idea submission (voice/picture/video), team formation, physical/digital prototypes, and arena finals.
@@ -764,7 +790,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                     )}
                   </div>
                   <div className={`text-[11px] leading-tight ${selectedProgram === 'hackathon' ? 'text-white/80' : 'text-slate-500'}`}>
-                    Register squad for the 5 Dec final (venue to be confirmed)
+                    {site.intake.hackathonDesc}
                   </div>
                 </button>
               </div>
@@ -780,7 +806,19 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
           }`}
         >
           {selectedProgram === 'volunteer' ? (
-            <VolunteerForm />
+            site.intake.volunteer ? (
+              <VolunteerForm
+                city={lockedLocation ?? undefined}
+                eventOptions={site.intake.volunteer.eventOptions}
+                eyebrow={site.intake.volunteer.eyebrow}
+                intro={site.intake.volunteer.intro}
+                teamName={site.intake.volunteer.teamName}
+              />
+            ) : (
+              <VolunteerForm />
+            )
+          ) : selectedProgram === 'partner' && extraForm ? (
+            extraForm.render()
           ) : !submitSuccess ? (
             <div>
               {/* Form Active Banner */}
@@ -798,7 +836,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                       {selectedProgram === 'demo' && 'Option 2: Live School Demo Session'}
                       {selectedProgram === 'association' && 'Option 3: Group / Association Registration'}
                       {selectedProgram === 'submit-idea' && 'Option 4: Student Idea Submission (Voice / Drawing / Video)'}
-                      {selectedProgram === 'hackathon' && 'Option 5: Young Inno Hack Squad Registration'}
+                      {selectedProgram === 'hackathon' && `Option 5: ${site.hackLabel} Squad Registration`}
                     </div>
                   </div>
                 </div>
@@ -821,7 +859,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                     )}
                     {selectedProgram === 'hackathon' && (
                       <span className="text-emerald-700">
-                        [FORM 5/5] // YOUNG INNO HACK PARTICIPATION
+                        [FORM 5/5] // {site.hackLabel.toUpperCase()} PARTICIPATION
                       </span>
                     )}
                   </div>
@@ -835,7 +873,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                   {selectedProgram === 'demo' && 'Request School Demo & Overview Session'}
                   {selectedProgram === 'association' && 'Register Your Group or Association'}
                   {selectedProgram === 'submit-idea' && 'Submit Your Future Innovation Idea'}
-                  {selectedProgram === 'hackathon' && 'Register Squad for Young Inno Hack'}
+                  {selectedProgram === 'hackathon' && `Register Squad for ${site.hackLabel}`}
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-600 mt-1">
                   {selectedProgram === 'workshop' &&
@@ -843,7 +881,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                   {selectedProgram === 'demo' &&
                     'Bring an interactive robotics demonstration straight to your auditorium or classroom.'}
                   {selectedProgram === 'association' &&
-                    'For associations, clubs and community groups in Sweden. Tell us about your children and what you would like — the IBK team will contact you to plan it.'}
+                    `For associations, clubs and community groups in Sweden. Tell us about your children and what you would like — ${site.intake.associationContact} will contact you to plan it.`}
                   {selectedProgram === 'submit-idea' &&
                     'Express your vision with multimodal options: write it down, upload blueprints/photos, record a voice note, or attach a video!'}
                   {selectedProgram === 'hackathon' &&
@@ -859,6 +897,11 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                     <MapPin className={`w-4 h-4 ${isHack ? 'text-[#059669]' : 'text-[#006AA7]'}`} />
                     <span>Location / Plats</span>
                   </div>
+                  {lockedLocation ? (
+                    <p className="text-sm font-headline font-bold text-[#0A1930]">
+                      {lockedLocation.cityName}, {lockedLocation.countryName}
+                    </p>
+                  ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
@@ -916,6 +959,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                       )}
                     </div>
                   </div>
+                  )}
                 </div>
 
                 {/* ── APPLICANT & SCHOOL MAPPING DETAILS ── */}
@@ -975,7 +1019,11 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                           }
                         }}
                         placeholder={
-                          isAssociation
+                          lockedLocation
+                            ? isAssociation
+                              ? 'Association or group name'
+                              : 'School name'
+                            : isAssociation
                             ? 'e.g. Indisk Barnklubb Västerås'
                             : selectedProgram === 'submit-idea'
                             ? 'e.g. Viksängsskolan, MISV, Hydro Skola...'
@@ -989,7 +1037,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                           <option key={idx} value={s.name} />
                         ))}
                       </datalist>
-                      {selectedProgram === 'submit-idea' && (
+                      {selectedProgram === 'submit-idea' && !lockedLocation && (
                         <p className="text-[11px] font-mono-code text-slate-500 mt-1">
                           Tip: Submissions from registered schools (like Hydro or MISV) are
                           automatically grouped in their school admin panel!
@@ -1553,7 +1601,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                 )}
 
                 {/* ── SECTION E2: PARTICIPATION FEES (WORKSHOP, DEMO, ASSOCIATION, HACKATHON) ── */}
-                {selectedProgram !== 'submit-idea' && <ParticipationFees />}
+                {selectedProgram !== 'submit-idea' && site.intake.showFees && <ParticipationFees />}
 
                 {/* ── SECTION F: CONSENT & GDPR CHECKBOXES ── */}
                 <div className="space-y-3 pt-2 border-t border-slate-200">
@@ -1595,7 +1643,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                     </button>
                     {showGdprInfo && (
                       <div className="mt-2 p-3 bg-slate-50 border border-slate-200 text-[11px] text-slate-600 leading-relaxed font-light">
-                        Data controller: Västerås Future Innovators / INIAC in accordance with EU
+                        Data controller: {site.organiser} in accordance with EU
                         GDPR regulations. Contact data and submission artifacts are used strictly
                         for workshop scheduling, idea evaluation, and league qualification.
                       </div>

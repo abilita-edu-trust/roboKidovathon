@@ -14,19 +14,26 @@ export const RoboHackFooter: React.FC<RoboHackFooterProps> = ({ event, onNavigat
   const { language } = useLanguage();
   const sv = language === 'sv';
 
+  // Targets are `route` or `route#section`, as the app navigator expects.
   const links = [
-    { section: 'about', label: sv ? 'Om oss' : 'About' },
-    { section: 'tracks', label: sv ? 'Spår' : 'Tracks' },
-    { section: 'challenges', label: sv ? 'Utmaningar' : 'Challenges' },
-    { section: 'partners', label: sv ? 'Partner' : 'Partners' },
-    { section: 'details', label: sv ? 'Praktisk info' : 'Details' },
-    { section: 'join', label: sv ? 'Anmälan' : 'Register' },
+    { target: `${event.route}#about`, label: sv ? 'Om oss' : 'About' },
+    { target: `${event.route}#tracks`, label: sv ? 'Spår' : 'Tracks' },
+    { target: `${event.route}#challenges`, label: sv ? 'Utmaningar' : 'Challenges' },
+    { target: `${event.route}-ideas`, label: sv ? 'Idéer och röstning' : 'Ideas & Vote' },
+    { target: `${event.route}#partners`, label: sv ? 'Partner' : 'Partners' },
+    { target: `${event.route}#details`, label: sv ? 'Praktisk info' : 'Event details' },
+    { target: `${event.route}-register`, label: sv ? 'Anmälan' : 'Register' },
   ];
 
-  const handleClick = (e: React.MouseEvent, section: string) => {
+  const hrefFor = (target: string) => {
+    const [route, section] = target.split('#');
+    return pathForRoute(route) + (section ? `#${section}` : '');
+  };
+
+  const handleClick = (e: React.MouseEvent, target: string) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
     e.preventDefault();
-    onNavigate(`${event.route}#${section}`);
+    onNavigate(target);
   };
 
   return (
@@ -55,8 +62,8 @@ export const RoboHackFooter: React.FC<RoboHackFooterProps> = ({ event, onNavigat
             </span>
             <ul className="space-y-2 text-xs text-slate-300 font-light">
               {links.map((l) => (
-                <li key={l.section}>
-                  <a href={`${pathForRoute(event.route)}#${l.section}`} onClick={(e) => handleClick(e, l.section)} className="hover:text-[#FFCD00] transition-colors">
+                <li key={l.target}>
+                  <a href={hrefFor(l.target)} onClick={(e) => handleClick(e, l.target)} className="hover:text-[#FFCD00] transition-colors">
                     {l.label}
                   </a>
                 </li>

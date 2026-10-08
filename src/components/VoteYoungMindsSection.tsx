@@ -18,6 +18,7 @@ import {
   voteForIdea,
   hasVotedLocally
 } from '../lib/ideasService';
+import { useSite } from '../context/SiteContext';
 
 interface VoteYoungMindsSectionProps {
   onNavigateIdeas: () => void;
@@ -30,6 +31,7 @@ export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
   onNavigateSubmit,
   onNavigateAdmin,
 }) => {
+  const site = useSite();
   const [ideas, setIdeas] = useState<IdeaSubmission[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedSegregation, setSelectedSegregation] = useState<string>('all');
@@ -44,7 +46,7 @@ export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
     (async () => {
       setLoading(true);
       try {
-        const data = await fetchApprovedIdeas();
+        const data = await fetchApprovedIdeas(site.ideasFilter);
         if (!cancelled) {
           setIdeas(data);
           const initialVoted: Record<string, boolean> = {};
@@ -96,7 +98,7 @@ export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
   };
 
   const handleCopyLink = (idea: IdeaSubmission) => {
-    const url = `${window.location.origin}/ideas?idea=${idea.public_id}`;
+    const url = `${window.location.origin}${site.ideasPath}?idea=${idea.public_id}`;
     navigator.clipboard.writeText(url);
     setCopiedId(idea.id);
     setTimeout(() => setCopiedId(null), 2500);
@@ -129,13 +131,13 @@ export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
         <div>
           <div className="inline-flex items-center gap-2 text-[11px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase mb-1.5">
             <Sparkles className="w-3.5 h-3.5 text-[#FFCD00]" />
-            <span>COMMUNITY VOTING ARENA // VÄSTERÅS</span>
+            <span>COMMUNITY VOTING ARENA // {site.cityName.toUpperCase()}</span>
           </div>
           <h3 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#0A1930]">
             Vote for an Idea of Young Minds
           </h3>
           <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-xl">
-            Explore innovations submitted by students across schools. Listen to voice notes, inspect blueprints, and vote to propel the best ideas to the Västerås Finals!
+            Explore innovations submitted by students across schools. Listen to voice notes, inspect blueprints, and vote to propel the best ideas to {site.finalsLabel}!
           </p>
         </div>
 

@@ -7,6 +7,8 @@ import type { RoboHackEvent } from '../../data/robohack/types';
 
 interface RoboHackNavbarProps {
   event: RoboHackEvent;
+  /** Current route, to highlight the open page. */
+  activeRoute: string;
   onNavigate: (target: string) => void;
 }
 
@@ -14,7 +16,7 @@ interface RoboHackNavbarProps {
  * Header for a RoboHack event page. Same look as the main Navbar, but every link stays
  * on the event page so visitors on the event subdomain never leave it.
  */
-export const RoboHackNavbar: React.FC<RoboHackNavbarProps> = ({ event, onNavigate }) => {
+export const RoboHackNavbar: React.FC<RoboHackNavbarProps> = ({ event, activeRoute, onNavigate }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { language, setLanguage } = useLanguage();
@@ -33,25 +35,30 @@ export const RoboHackNavbar: React.FC<RoboHackNavbarProps> = ({ event, onNavigat
     };
   }, [mobileMenuOpen]);
 
+  // Targets are `route` or `route#section`, as the app navigator expects.
   const navLinks = [
-    { section: 'about', label: sv ? 'Om oss' : 'About' },
-    { section: 'tracks', label: sv ? 'Spår' : 'Tracks' },
-    { section: 'challenges', label: sv ? 'Utmaningar' : 'Challenges' },
-    { section: 'partners', label: sv ? 'Partner' : 'Partners' },
-    { section: 'details', label: sv ? 'Praktisk info' : 'Details' },
-    { section: 'join', label: sv ? 'Anmälan' : 'Register' },
+    { target: `${event.route}#about`, label: sv ? 'Om oss' : 'About' },
+    { target: `${event.route}#tracks`, label: sv ? 'Spår' : 'Tracks' },
+    { target: `${event.route}#challenges`, label: sv ? 'Utmaningar' : 'Challenges' },
+    { target: `${event.route}-ideas`, label: sv ? 'Idéer och röstning' : 'Ideas & Vote' },
+    { target: `${event.route}#partners`, label: sv ? 'Partner' : 'Partners' },
+    { target: `${event.route}-register`, label: sv ? 'Anmälan' : 'Register' },
   ];
 
-  const hrefFor = (section?: string) => pathForRoute(event.route) + (section ? `#${section}` : '');
+  const hrefFor = (target: string) => {
+    const [route, section] = target.split('#');
+    return pathForRoute(route) + (section ? `#${section}` : '');
+  };
 
-  const handleLinkClick = (e: React.MouseEvent, section?: string) => {
+  const handleLinkClick = (e: React.MouseEvent, target: string) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
     e.preventDefault();
     setMobileMenuOpen(false);
-    onNavigate(section ? `${event.route}#${section}` : event.route);
+    onNavigate(target);
   };
 
-  const isDarkHeader = !isScrolled && !mobileMenuOpen;
+  // Only the home page has the dark hero behind the header.
+  const isDarkHeader = activeRoute === event.route && !isScrolled && !mobileMenuOpen;
 
   const langButton = (lang: 'sv' | 'en', activeBg: string) => (
     <button
@@ -81,7 +88,7 @@ export const RoboHackNavbar: React.FC<RoboHackNavbarProps> = ({ event, onNavigat
     >
       <div className="w-full px-4 sm:px-6 flex items-center justify-between gap-4">
         {/* Brand */}
-        <a href={hrefFor()} onClick={(e) => handleLinkClick(e)} className="text-left group focus:outline-none flex items-center gap-2.5">
+        <a href={hrefFor(event.route)} onClick={(e) => handleLinkClick(e, event.route)} className="text-left group focus:outline-none flex items-center gap-2.5">
           <div className="w-5 h-5 bg-[#006AA7] flex items-center justify-center relative overflow-hidden flex-shrink-0">
             <div className="absolute top-0 bottom-0 left-[35%] w-[22%] bg-[#FFCD00]" />
             <div className="absolute left-0 right-0 top-[38%] h-[24%] bg-[#FFCD00]" />
@@ -110,11 +117,16 @@ export const RoboHackNavbar: React.FC<RoboHackNavbarProps> = ({ event, onNavigat
         >
           {navLinks.map((item) => (
             <a
-              key={item.section}
-              href={hrefFor(item.section)}
-              onClick={(e) => handleLinkClick(e, item.section)}
+              key={item.target}
+              href={hrefFor(item.target)}
+              onClick={(e) => handleLinkClick(e, item.target)}
+              aria-current={item.target === activeRoute ? 'page' : undefined}
               className={`px-3 py-1.5 text-xs font-display font-medium tracking-wide whitespace-nowrap transition-all duration-200 ${
-                isDarkHeader ? 'text-white/90 hover:text-white hover:bg-white/15' : 'text-slate-700 hover:text-[#0A1930] hover:bg-slate-200/60'
+                item.target === activeRoute
+                  ? 'bg-[#006AA7] text-white font-bold'
+                  : isDarkHeader
+                  ? 'text-white/90 hover:text-white hover:bg-white/15'
+                  : 'text-slate-700 hover:text-[#0A1930] hover:bg-slate-200/60'
               }`}
             >
               {item.label}
@@ -133,10 +145,10 @@ export const RoboHackNavbar: React.FC<RoboHackNavbarProps> = ({ event, onNavigat
             {langButton('en', 'bg-[#0A1930]')}
           </div>
           <motion.a
-            href={hrefFor('join')}
+            href={hrefFor(`${event.route}-register`)}
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.96 }}
-            onClick={(e) => handleLinkClick(e, 'join')}
+            onClick={(e) => handleLinkClick(e, `${event.route}-register`)}
             className="btn-pill-lime text-xs font-black py-2.5 px-4 2xl:px-5 whitespace-nowrap shadow-md flex items-center gap-2 group"
           >
             <span>{sv ? 'ANMÄLAN' : 'REGISTER'}</span>
@@ -170,9 +182,9 @@ export const RoboHackNavbar: React.FC<RoboHackNavbarProps> = ({ event, onNavigat
               <div className="flex flex-col gap-1">
                 {navLinks.map((item) => (
                   <a
-                    key={item.section}
-                    href={hrefFor(item.section)}
-                    onClick={(e) => handleLinkClick(e, item.section)}
+                    key={item.target}
+                    href={hrefFor(item.target)}
+                    onClick={(e) => handleLinkClick(e, item.target)}
                     className="py-3 px-4 text-left text-sm font-display font-medium text-slate-700 hover:text-[#0A1930] hover:bg-slate-50"
                   >
                     {item.label}

@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import type { IdeasCityFilter } from '../context/SiteContext';
 
 export interface IdeaSubmission {
   id: string;
@@ -122,13 +123,18 @@ export async function submitIdea(payload: SubmitIdeaPayload) {
 const PUBLIC_IDEA_COLUMNS =
   'id, public_id, student_name, school_name, country_slug, city_slug, city_name, country_name, idea_title, idea_description, photo_url, voice_note_url, video_url, video_type, category, status, votes_count, created_at';
 
-/** Fetch all approved ideas for public showcase & voting */
-export async function fetchApprovedIdeas(): Promise<IdeaSubmission[]> {
-  const { data, error } = await supabase
+/** Fetch approved ideas for public showcase & voting, optionally for one city's site. */
+export async function fetchApprovedIdeas(filter?: IdeasCityFilter): Promise<IdeaSubmission[]> {
+  let query = supabase
     .from('idea_submissions')
     .select(PUBLIC_IDEA_COLUMNS)
-    .eq('status', 'approved')
-    .order('votes_count', { ascending: false });
+    .eq('status', 'approved');
+  if (filter?.only) {
+    query = query.eq('country_slug', filter.only.countrySlug).eq('city_slug', filter.only.citySlug);
+  } else if (filter?.exclude?.length) {
+    query = query.not('city_slug', 'in', `(${filter.exclude.join(',')})`);
+  }
+  const { data, error } = await query.order('votes_count', { ascending: false });
 
   if (error) {
     console.error('Fetch approved ideas error:', error);

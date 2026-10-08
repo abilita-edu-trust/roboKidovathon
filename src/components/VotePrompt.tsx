@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, Building, Check, Heart, Lightbulb, Trophy, X } from 'lucide-react';
 import { IdeaSubmission, fetchApprovedIdeas, hasVotedLocally, voteForIdea } from '../lib/ideasService';
+import { useSite } from '../context/SiteContext';
 
 const SESSION_KEY = 'vote_prompt_shown';
 const DELAY_MS = 6000;
@@ -19,6 +20,7 @@ interface VotePromptProps {
  * Shows the current top ideas so visitors can vote without leaving the page.
  */
 export const VotePrompt: React.FC<VotePromptProps> = ({ onGoToVote, onSubmitIdea }) => {
+  const site = useSite();
   const [open, setOpen] = useState(false);
   const [ideas, setIdeas] = useState<IdeaSubmission[] | null>(null);
   const [voted, setVoted] = useState<Record<string, boolean>>({});
@@ -47,11 +49,11 @@ export const VotePrompt: React.FC<VotePromptProps> = ({ onGoToVote, onSubmitIdea
   // Load the leaderboard the first time the popup opens.
   useEffect(() => {
     if (!open || ideas) return;
-    fetchApprovedIdeas().then((list) => {
+    fetchApprovedIdeas(site.ideasFilter).then((list) => {
       setIdeas(list);
       setVoted(Object.fromEntries(list.map((i) => [i.id, hasVotedLocally(i.id)])));
     });
-  }, [open, ideas]);
+  }, [open, ideas, site.ideasFilter]);
 
   useEffect(() => {
     if (!open) return;
@@ -130,7 +132,7 @@ export const VotePrompt: React.FC<VotePromptProps> = ({ onGoToVote, onSubmitIdea
               <div className="relative bg-[#059669] text-white p-6 pr-14 overflow-hidden">
                 <Lightbulb className="absolute -right-4 -bottom-6 w-32 h-32 text-white/10" aria-hidden />
                 <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-[#FFCD00] text-[#0A1930] text-[10px] font-mono-code font-black uppercase tracking-widest">
-                  Young Inno Hack · Västerås
+                  {site.hackLabel} · {site.cityName}
                 </span>
                 <h2
                   id="vote-prompt-title"
@@ -139,7 +141,7 @@ export const VotePrompt: React.FC<VotePromptProps> = ({ onGoToVote, onSubmitIdea
                   Vote for an idea of young minds
                 </h2>
                 <p className="text-sm text-emerald-50 mt-2 leading-relaxed">
-                  Students across Västerås are imagining a brighter tomorrow. Back your favourite with one tap.
+                  Students across {site.cityName} are imagining a brighter tomorrow. Back your favourite with one tap.
                 </p>
               </div>
 
