@@ -156,8 +156,17 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
   const site = useSite();
   const lockedLocation = site.location;
   const extraForm = site.intake.extraForm;
+  // Forms this site offers, in order (VFI: the six below; vxo.iniac.se: the hackathon ones).
+  const offeredTabs: IntakeProgramTab[] =
+    site.intake.tabs ?? ['workshop', 'demo', 'association', 'submit-idea', 'hackathon', 'volunteer'];
+  const offers = (tab: IntakeProgramTab) => offeredTabs.includes(tab) && (tab !== 'partner' || !!extraForm);
+  // Numbering follows the order shown: registration forms first, then volunteer and partner.
+  const formTabs: IntakeProgramTab[] = offeredTabs.filter((t) => t !== 'volunteer' && t !== 'partner');
+  const optionNum = (tab: IntakeProgramTab) => offeredTabs.indexOf(tab) + 1;
+  const formLabel = (tab: IntakeProgramTab) => `[FORM ${formTabs.indexOf(tab) + 1}/${formTabs.length}]`;
+  const showRoboKido = offers('workshop') || offers('demo') || offers('association');
   const [selectedProgram, setSelectedProgram] = useState<IntakeProgramTab>(
-    initialTab === 'partner' && !extraForm ? 'workshop' : initialTab
+    offers(initialTab) ? initialTab : site.intake.defaultTab
   );
 
   // Location Fields (Country first, then City / Location)
@@ -190,7 +199,8 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
   const [customDate, setCustomDate] = useState('');
   const [customTime, setCustomTime] = useState('10:00');
   const [customEndTime, setCustomEndTime] = useState('12:30');
-  const [gradeGroup, setGradeGroup] = useState(GRADE_GROUP_OPTIONS[1]);
+  // Hackathon-only sites (no RoboKidovation forms) start at the hackathon's youngest level.
+  const [gradeGroup, setGradeGroup] = useState(GRADE_GROUP_OPTIONS[showRoboKido ? 1 : 2]);
   const [studentCount, setStudentCount] = useState('25');
 
   // Submit Idea Specific Fields
@@ -273,6 +283,18 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
       setHackathonSkills([...hackathonSkills, skill]);
     }
   };
+
+  const pathwayNames: Record<IntakeProgramTab, string> = {
+    workshop: 'Hands-on Workshops',
+    demo: 'Live School Demos',
+    association: 'Groups & Associations',
+    'submit-idea': 'Student Idea Submissions',
+    hackathon: `${site.intake.squadTitle}s`,
+    volunteer: 'Volunteering',
+    partner: extraForm?.title ?? 'Partners',
+  };
+  const shownPathways = offeredTabs.filter(offers).map((t) => pathwayNames[t]);
+  const pathwaysSentence = `We offer ${shownPathways.length} pathways: ${shownPathways.slice(0, -1).join(', ')}, and ${shownPathways[shownPathways.length - 1]}.`;
 
   const isHack = selectedProgram === 'submit-idea' || selectedProgram === 'hackathon';
   const isAssociation = selectedProgram === 'association';
@@ -483,19 +505,21 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
               Choose Your Program Pathway
             </h1>
             <p className="text-xs sm:text-sm text-slate-600 mt-2 max-w-2xl mx-auto leading-relaxed">
-              {extraForm
-                ? `We offer 7 pathways: Hands-on Workshops, Live School Demos, Groups & Associations, Student Idea Submissions, Hackathon Squads, Volunteering, and ${extraForm.title}.`
-                : 'We offer 6 pathways: Hands-on Workshops, Live School Demos, Groups & Associations, Student Idea Submissions, Hackathon Squads, and Volunteering.'}{' '}
-              Click any option below to load its customizable registration form directly underneath.
+              {`${pathwaysSentence} Click any option below to load its customizable registration form directly underneath.`}
             </p>
           </div>
 
           {/* Quick selector with clear explanations */}
-          <div className={`mb-6 grid grid-cols-2 gap-2.5 ${extraForm ? 'lg:grid-cols-7' : 'lg:grid-cols-6'}`}>
+          <div
+            className={`mb-6 grid grid-cols-2 gap-2.5 ${
+              ({ 4: 'lg:grid-cols-4', 5: 'lg:grid-cols-5', 6: 'lg:grid-cols-6', 7: 'lg:grid-cols-7' } as Record<number, string>)[
+                offeredTabs.filter(offers).length
+              ] ?? 'lg:grid-cols-6'
+            }`}
+          >
             {[
               {
                 id: 'workshop' as const,
-                num: '1',
                 title: 'School Workshop',
                 subtitle: 'Classroom Robotics',
                 desc: 'Pick your custom date & time for a 20-hr hands-on workshop',
@@ -504,7 +528,6 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
               },
               {
                 id: 'demo' as const,
-                num: '2',
                 title: 'School Demo',
                 subtitle: 'Auditorium Showcase',
                 desc: 'Schedule a live demo session & assembly robot trials',
@@ -513,7 +536,6 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
               },
               {
                 id: 'association' as const,
-                num: '3',
                 title: 'Group / Association',
                 subtitle: 'Associations & Clubs',
                 desc: 'Register an association, club or community group anywhere in Sweden',
@@ -522,7 +544,6 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
               },
               {
                 id: 'submit-idea' as const,
-                num: '4',
                 title: 'Submit Idea',
                 subtitle: 'Student Innovation',
                 desc: 'Upload voice notes, drawings, or videos & compete in public voting',
@@ -531,8 +552,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
               },
               {
                 id: 'hackathon' as const,
-                num: '5',
-                title: 'Hackathon Squad',
+                title: site.intake.squadTitle,
                 subtitle: 'Arena Competition',
                 desc: site.intake.hackathonDesc,
                 icon: '🏆',
@@ -540,7 +560,6 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
               },
               {
                 id: 'volunteer' as const,
-                num: '6',
                 title: 'Volunteer',
                 subtitle: 'Work as a Volunteer',
                 desc: site.intake.volunteerDesc,
@@ -551,7 +570,6 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                 ? [
                     {
                       id: 'partner' as const,
-                      num: '7',
                       title: extraForm.title,
                       subtitle: extraForm.subtitle,
                       desc: extraForm.desc,
@@ -560,7 +578,9 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                     },
                   ]
                 : []),
-            ].map((p) => {
+            ]
+              .filter((p) => offers(p.id))
+              .map((p) => {
               const active = selectedProgram === p.id;
               return (
                 <button
@@ -579,7 +599,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                     <div className="flex items-center justify-between text-[11px] font-mono-code font-bold mb-1">
                       <span className="flex items-center gap-1">
                         <span>{p.icon}</span>
-                        <span>OPTION {p.num}</span>
+                        <span>OPTION {optionNum(p.id)}</span>
                       </span>
                       {active ? (
                         <span className="text-[10px] font-bold px-1.5 py-0.5 bg-[#FFCD00] text-[#0A1930] rounded-xs animate-pulse">
@@ -605,8 +625,9 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
           </div>
 
           {/* Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className={`grid grid-cols-1 gap-5 ${showRoboKido ? 'md:grid-cols-2' : ''}`}>
             {/* Card 1: Track 1 - RoboKidovation */}
+            {showRoboKido && (
             <div
               className={`p-6 border-2 transition-all relative ${
                 selectedProgram === 'workshop' || selectedProgram === 'demo' || selectedProgram === 'association'
@@ -714,6 +735,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                 </button>
               </div>
             </div>
+            )}
 
             {/* Card 2: Track 2 - Young Inno Hack */}
             <div
@@ -725,7 +747,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
             >
               <div className="flex items-center justify-between mb-3">
                 <span className="text-[11px] font-mono-code font-bold uppercase tracking-wider text-slate-400">
-                  TRACK 2 // INNOVATION & ARENA
+                  {showRoboKido ? 'TRACK 2 // ' : ''}INNOVATION & ARENA
                 </span>
                 <span className="text-2xl">💡</span>
               </div>
@@ -749,7 +771,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-headline font-black text-sm uppercase tracking-wider">
-                      4. Submit Idea
+                      {optionNum('submit-idea')}. Submit Idea
                     </span>
                     {selectedProgram === 'submit-idea' ? (
                       <span className="text-[10px] font-mono-code font-bold px-1.5 py-0.5 bg-[#FFCD00] text-[#0A1930]">
@@ -777,7 +799,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-headline font-black text-sm uppercase tracking-wider">
-                      5. Hackathon Squad
+                      {optionNum('hackathon')}. {site.intake.squadTitle}
                     </span>
                     {selectedProgram === 'hackathon' ? (
                       <span className="text-[10px] font-mono-code font-bold px-1.5 py-0.5 bg-[#FFCD00] text-[#0A1930]">
@@ -832,11 +854,11 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                       Currently Active Intake Form
                     </div>
                     <div className="font-headline font-black text-base uppercase text-[#0A1930]">
-                      {selectedProgram === 'workshop' && 'Option 1: School Workshop Booking'}
-                      {selectedProgram === 'demo' && 'Option 2: Live School Demo Session'}
-                      {selectedProgram === 'association' && 'Option 3: Group / Association Registration'}
-                      {selectedProgram === 'submit-idea' && 'Option 4: Student Idea Submission (Voice / Drawing / Video)'}
-                      {selectedProgram === 'hackathon' && `Option 5: ${site.hackLabel} Squad Registration`}
+                      {selectedProgram === 'workshop' && `Option ${optionNum('workshop')}: School Workshop Booking`}
+                      {selectedProgram === 'demo' && `Option ${optionNum('demo')}: Live School Demo Session`}
+                      {selectedProgram === 'association' && `Option ${optionNum('association')}: Group / Association Registration`}
+                      {selectedProgram === 'submit-idea' && `Option ${optionNum('submit-idea')}: Student Idea Submission (Voice / Drawing / Video)`}
+                      {selectedProgram === 'hackathon' && `Option ${optionNum('hackathon')}: ${site.hackLabel} Squad Registration`}
                     </div>
                   </div>
                 </div>
@@ -849,17 +871,17 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
               <div className="mb-6 pb-4 border-b border-slate-200">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className={`inline-flex items-center gap-2 text-xs font-mono-code font-bold tracking-wider uppercase ${isHack ? 'text-[#059669]' : 'text-[#006AA7]'}`}>
-                    {selectedProgram === 'workshop' && <span>[FORM 1/5] // WORKSHOP BOOKING INTAKE</span>}
-                    {selectedProgram === 'demo' && <span>[FORM 2/5] // SCHOOL DEMO SESSION REQUEST</span>}
-                    {selectedProgram === 'association' && <span>[FORM 3/5] // GROUP / ASSOCIATION REGISTRATION</span>}
+                    {selectedProgram === 'workshop' && <span>{formLabel('workshop')} // WORKSHOP BOOKING INTAKE</span>}
+                    {selectedProgram === 'demo' && <span>{formLabel('demo')} // SCHOOL DEMO SESSION REQUEST</span>}
+                    {selectedProgram === 'association' && <span>{formLabel('association')} // GROUP / ASSOCIATION REGISTRATION</span>}
                     {selectedProgram === 'submit-idea' && (
                       <span className="text-emerald-700">
-                        [FORM 4/5] // STUDENT IDEA SUBMISSION (PICTURE / VOICE / TEXT / VIDEO)
+                        {formLabel('submit-idea')} // STUDENT IDEA SUBMISSION (PICTURE / VOICE / TEXT / VIDEO)
                       </span>
                     )}
                     {selectedProgram === 'hackathon' && (
                       <span className="text-emerald-700">
-                        [FORM 5/5] // {site.hackLabel.toUpperCase()} PARTICIPATION
+                        {formLabel('hackathon')} // {site.hackLabel.toUpperCase()} PARTICIPATION
                       </span>
                     )}
                   </div>

@@ -17,7 +17,6 @@ export const vaxjo: RoboHackEvent = {
   location: { countrySlug: 'sweden', citySlug: 'vaxjo', countryName: 'Sweden', cityName: 'Växjö' },
 
   hero: {
-    eyebrow: { en: 'Future innovators', sv: 'Framtidens innovatörer' },
     lines: [
       { en: 'You see the problem.', sv: 'Du ser problemet.' },
       { en: 'You bring the idea.', sv: 'Du kommer med idén.' },
@@ -27,7 +26,14 @@ export const vaxjo: RoboHackEvent = {
       en: 'A youth innovation platform where curiosity becomes STEM learning, ideas become prototypes, and young people become future innovators.',
       sv: 'En innovationsplattform för unga där nyfikenhet blir STEM-lärande, idéer blir prototyper och unga blir framtidens innovatörer.',
     },
-    keywords: ['Robotics', 'Coding', 'STEM', 'AI', 'Innovation'],
+    facts: [
+      { label: 'DATES', value: '20–21 NOV 2026' },
+      { label: 'VENUE', value: 'LINNAEUS UNIVERSITY' },
+      { label: 'TRACKS', value: 'ROBOTICS · CODE · HACK' },
+      { label: 'FOR', value: 'STUDENTS & YOUNG INNOVATORS' },
+      { label: 'CODING', value: 'NOT REQUIRED' },
+      { label: 'POWERED BY', value: 'INIAC × LNU AI SOCIETY' },
+    ],
   },
 
   platform: {

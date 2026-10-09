@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Calendar, Check, MapPin } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useSite } from '../context/SiteContext';
 import { VoteYoungMindsSection } from '../components/VoteYoungMindsSection';
 import type { IntakeProgramTab } from './IntakeRegisterPage';
 import type { Bilingual, RoboHackEvent } from '../data/robohack/types';
@@ -81,6 +82,7 @@ export const RoboHackPage: React.FC<RoboHackPageProps> = ({ event, onRegister, o
   const tbc = sv ? 'Meddelas senare' : 'TBC';
 
   const tracks = event.tracks.filter((track) => track.enabled);
+  const { intake } = useSite();
 
   // The same seven forms as the register page, opened there.
   const pathways: { tab: IntakeProgramTab; icon: string; title: Bilingual; desc: Bilingual }[] = [
@@ -93,55 +95,9 @@ export const RoboHackPage: React.FC<RoboHackPageProps> = ({ event, onRegister, o
     { tab: 'partner', icon: '🏢', title: event.partners.cta, desc: { en: 'Problem statements, mentors, workshops or equipment', sv: 'Problemformuleringar, mentorer, workshoppar eller utrustning' } },
   ];
 
-  // Event-specific tab title and description while this page is open.
-  useEffect(() => {
-    const meta = document.querySelector('meta[name="description"]');
-    const prevTitle = document.title;
-    const prevDescription = meta?.getAttribute('content') ?? '';
-    document.title = event.meta.title;
-    meta?.setAttribute('content', event.meta.description);
-    return () => {
-      document.title = prevTitle;
-      meta?.setAttribute('content', prevDescription);
-    };
-  }, [event]);
-
   return (
     <>
     <div data-no-translate="true" className="w-full bg-white text-[#0A1930]">
-      {/* ── 1. HERO ── */}
-      <section className="relative w-full min-h-[640px] lg:min-h-[min(100vh,900px)] flex flex-col justify-center overflow-hidden bg-[#0A1930] text-white pt-32 sm:pt-36 pb-16 sm:pb-20 px-4 sm:px-6 lg:px-10">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-10 w-full max-w-[1200px] mx-auto text-center space-y-6"
-        >
-          <Eyebrow light>{event.brand.name} · {t(event.hero.eyebrow)}</Eyebrow>
-          <h1 className="font-headline font-black uppercase tracking-tight leading-[1.02]" style={{ fontSize: 'clamp(2.2rem, 6.4vw, 5.6rem)' }}>
-            {event.hero.lines.map((line, i) => (
-              <span key={line.en} className={`block ${i === event.hero.lines.length - 1 ? 'text-[#FFCD00]' : ''}`}>
-                {t(line)}
-              </span>
-            ))}
-          </h1>
-          <p className="text-sm sm:text-lg text-white/80 font-light max-w-2xl mx-auto leading-relaxed">{t(event.hero.intro)}</p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
-            <button type="button" onClick={() => onRegister('submit-idea')} className={btnPrimary}>
-              <span>{sv ? 'Kom med din idé' : 'Bring Your Idea'}</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-            <button type="button" onClick={() => onRegister('hackathon')} className={btnGhostLight}>
-              <span>{sv ? 'Var med i en RoboHack' : 'Join a RoboHack'}</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-          <p className="pt-4 text-[11px] sm:text-xs font-mono-code font-bold uppercase tracking-[0.25em] text-white/60">
-            {event.hero.keywords.join('  •  ')}
-          </p>
-        </motion.div>
-      </section>
-
       {/* ── 2. PLATFORM ── */}
       <Section id="about">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
@@ -450,8 +406,8 @@ export const RoboHackPage: React.FC<RoboHackPageProps> = ({ event, onRegister, o
                 : 'Choose how you want to take part. Each option opens its form.'}
             </p>
           </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            {pathways.map((p) => (
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+            {pathways.filter((p) => !intake.tabs || intake.tabs.includes(p.tab)).map((p) => (
               <button
                 key={p.tab}
                 type="button"

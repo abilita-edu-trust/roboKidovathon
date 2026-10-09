@@ -30,8 +30,6 @@ import { AdminLoginGate } from './components/AdminLoginGate';
 import { IbkHomePage } from './pages/IbkHomePage';
 import { VolunteerCta } from './components/VolunteerCta';
 import { RoboHackPage } from './pages/RoboHackPage';
-import { RoboHackNavbar } from './components/robohack/RoboHackNavbar';
-import { RoboHackFooter } from './components/robohack/RoboHackFooter';
 import { robohackPageFor } from './data/robohack';
 import { robohackSite } from './components/robohack/robohackSite';
 import { SiteProvider } from './context/SiteContext';
@@ -82,6 +80,21 @@ export function App() {
     return () => window.removeEventListener('popstate', onPopState);
   }, []);
 
+  // RoboHack city sites get their own tab title and description on all their pages.
+  const robohackEvent = robohackPageFor(currentRoute)?.event;
+  useEffect(() => {
+    if (!robohackEvent) return;
+    const meta = document.querySelector('meta[name="description"]');
+    const prevTitle = document.title;
+    const prevDescription = meta?.getAttribute('content') ?? '';
+    document.title = robohackEvent.meta.title;
+    meta?.setAttribute('content', robohackEvent.meta.description);
+    return () => {
+      document.title = prevTitle;
+      meta?.setAttribute('content', prevDescription);
+    };
+  }, [robohackEvent]);
+
   // Deep links to a section, e.g. /#contact.
   useEffect(() => {
     if (window.location.hash) scrollToSection(window.location.hash.slice(1));
@@ -108,27 +121,35 @@ export function App() {
 
   const goToVote = () => handleNavigate('future-innovators#vote-ideas');
 
-  // RoboHack event sites (e.g. /vxo, /vxo/register, /vxo/ideas) have their own header and
-  // footer, link only within the event, and run the shared forms and voting for their city.
+  // RoboHack city sites (e.g. vxo.iniac.se: /vxo, /vxo/register, /vxo/ideas) use the same
+  // components as VFI; the site settings give them the event's name, routes and city.
   const robohack = robohackPageFor(currentRoute);
   if (robohack) {
     const { event, page } = robohack;
+    const site = robohackSite(event);
     const goHome = () => handleNavigate(event.route);
-    const goRegister = (tab?: IntakeProgramTab) => handleNavigate(`${event.route}-register`, tab);
+    const goRegister = (tab?: IntakeProgramTab) => handleNavigate(site.nav.registerRoute, tab);
     const goIdeas = () => handleNavigate(`${event.route}-ideas`);
     return (
-      <SiteProvider site={robohackSite(event)}>
+      <SiteProvider site={site}>
         <div key={language} className="min-h-screen bg-white text-[#0A1930] font-sans selection:bg-[#FFCD00] selection:text-[#0A1930] relative overflow-x-hidden">
           <RoboCursor />
-          <RoboHackNavbar event={event} activeRoute={currentRoute} onNavigate={handleNavigate} />
+          <Navbar activeTab={currentRoute} onNavigate={handleNavigate} onOpenRegister={() => goRegister()} />
           <main className="w-full">
-            {page === 'home' && <RoboHackPage event={event} onRegister={goRegister} onOpenIdeas={goIdeas} />}
+            {page === 'home' && (
+              <>
+                <RefHero onNavigate={handleNavigate} />
+                <RefHeroMarquee />
+                <RoboHackPage event={event} onRegister={goRegister} onOpenIdeas={goIdeas} />
+                <VolunteerCta onOpenVolunteer={() => goRegister('volunteer')} />
+              </>
+            )}
             {page === 'register' && (
               <IntakeRegisterPage key={registerInitialTab} initialTab={registerInitialTab} onNavigateHome={goHome} onNavigateVoting={goIdeas} />
             )}
             {page === 'ideas' && <IdeasVotingPage onNavigateHome={goHome} onNavigateSubmit={() => goRegister('submit-idea')} />}
           </main>
-          <RoboHackFooter event={event} onNavigate={handleNavigate} />
+          <RefFooter onNavigate={handleNavigate} />
           <VotePrompt onGoToVote={goIdeas} onSubmitIdea={() => goRegister('submit-idea')} />
         </div>
       </SiteProvider>
@@ -154,7 +175,7 @@ export function App() {
         {currentRoute === 'future-innovators' && (
           <>
             {/* 01. Programme hero */}
-            <RefHero onNavigate={handleNavigate} onOpenRegister={openRegister} />
+            <RefHero onNavigate={handleNavigate} />
 
             {/* 02. Partners ticker */}
             <RefHeroMarquee />
@@ -309,10 +330,7 @@ export function App() {
       </main>
 
       {/* ── Master Dark Footer with Verified Contacts ── */}
-      <RefFooter
-        onNavigate={handleNavigate}
-        onOpenRegister={() => handleNavigate('register')}
-      />
+      <RefFooter onNavigate={handleNavigate} />
 
       {/* ── Interactive Modals ── */}
       <EventDeckModal

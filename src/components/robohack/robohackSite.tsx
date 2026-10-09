@@ -7,8 +7,8 @@ import { PartnerForm } from './RoboHackPartnerForm';
 const cache = new WeakMap<RoboHackEvent, SiteConfig>();
 
 /**
- * Site settings for a RoboHack city site: the shared VFI forms and voting pages, locked
- * to the event's city, with the event's own wording, its own ideas and a partner form.
+ * Site settings for a RoboHack city site (e.g. vxo.iniac.se): the same VFI header, hero,
+ * footer, forms and voting, with the event's own name, routes, city and hackathon-only forms.
  */
 export function robohackSite(event: RoboHackEvent): SiteConfig {
   let site = cache.get(event);
@@ -21,19 +21,98 @@ export function robohackSite(event: RoboHackEvent): SiteConfig {
 
 function buildSite(event: RoboHackEvent): SiteConfig {
   const name = `${event.brand.name} ${event.brand.city}`;
-  const { location } = event;
+  const { location, route } = event;
+  const home = route;
+  const register = `${route}-register`;
+  const ideas = `${route}-ideas`;
+  const { dates, venue, poweredBy } = event.event;
 
   return {
     location,
     cityName: event.brand.city,
-    hackLabel: event.brand.name,
+    hackLabel: 'RoboHack',
     finalsLabel: `${event.event.name} in ${event.brand.city}`,
     organiser: `${name} / INIAC`,
-    ideasPath: pathForRoute(`${event.route}-ideas`),
+    ideasPath: pathForRoute(ideas),
     ideasFilter: { only: { countrySlug: location.countrySlug, citySlug: location.citySlug } },
+
+    nav: {
+      brand: name.toUpperCase(),
+      brandChip: '2026',
+      homeRoute: home,
+      registerRoute: register,
+      darkRoutes: [home],
+      links: [
+        { id: home, label: { en: 'Home', sv: 'Hem' } },
+        { id: `${home}#tracks`, label: { en: 'RoboHack', sv: 'RoboHack' } },
+        { id: `${home}#challenges`, label: { en: 'Challenges', sv: 'Utmaningar' } },
+        { id: ideas, label: { en: 'Ideas & Vote', sv: 'Idéer och röstning' } },
+        { id: register, label: { en: 'Register', sv: 'Registrering' } },
+        { id: `${home}#partners`, label: { en: 'Partners', sv: 'Partner' } },
+        { id: `${home}#site-footer`, label: { en: 'Contact', sv: 'Kontakt' } },
+      ],
+      registerLabel: { en: 'JOIN ROBOHACK', sv: 'VAR MED I ROBOHACK' },
+      registerShort: { en: 'REGISTER', sv: 'REGISTRERA' },
+      season: { en: `${event.brand.city}, Sweden · ${dates.en}`, sv: `${event.brand.city}, Sverige · ${dates.sv}` },
+    },
+
+    hero: {
+      badge: `${dates.en} · ${venue.en}`.toUpperCase(),
+      lines: event.hero.lines,
+      intro: event.hero.intro,
+      primary: { label: { en: 'BRING YOUR IDEA', sv: 'KOM MED DIN IDÉ' }, target: register, tab: 'submit-idea' },
+      secondary: { label: { en: 'JOIN ROBOHACK', sv: 'VAR MED I ROBOHACK' }, target: register, tab: 'hackathon' },
+      facts: event.hero.facts,
+    },
+
+    footer: {
+      title: `${name.toUpperCase()} 2026`,
+      description: event.hero.intro,
+      location: `${event.brand.city.toUpperCase()}, SWEDEN`,
+      audience: 'ROBOTICS · CODE · HACK',
+      programmeTitle: { en: 'ROBOHACK', sv: 'ROBOHACK' },
+      programmeLinks: [
+        { id: home, label: { en: 'Home', sv: 'Hem' } },
+        { id: `${home}#tracks`, label: { en: 'Three tracks', sv: 'Tre spår' } },
+        { id: `${home}#journey`, label: { en: 'The journey', sv: 'Resan' } },
+        { id: `${home}#challenges`, label: { en: 'Challenges', sv: 'Utmaningar' } },
+        { id: ideas, label: { en: 'Ideas & Vote', sv: 'Idéer och röstning' } },
+        { id: `${home}#details`, label: { en: 'Event details', sv: 'Praktisk info' } },
+      ],
+      orgTitle: { en: 'ORGANIZATION & CONTACT', sv: 'ORGANISATION OCH KONTAKT' },
+      orgLinks: [
+        { id: `${home}#partners`, label: { en: 'For companies & partners', sv: 'För företag och partner' } },
+        { id: `${home}#about`, label: { en: 'About the platform', sv: 'Om plattformen' } },
+      ],
+      email: 'contact@robokidovation.se',
+      orgLines: [poweredBy, `${event.brand.city}, Sweden`],
+      registerText: {
+        en: `Registration is open for ${event.event.name} at ${venue.en}, ${dates.en}.`,
+        sv: `Anmälan är öppen till ${event.event.name} på ${venue.sv}, ${dates.sv}.`,
+      },
+      register: { label: { en: 'JOIN ROBOHACK', sv: 'VAR MED I ROBOHACK' }, target: register, tab: 'hackathon' },
+      copyright: `© 2026 ${name.toUpperCase()} · INIAC`,
+      // City admins sign in on the iniac.se dashboard.
+      adminHref: 'https://iniac.se/auth',
+    },
+
+    volunteerCta: {
+      eyebrow: { en: `VOLUNTEERS // ${name.toUpperCase()}`, sv: `VOLONTÄRER // ${name.toUpperCase()}` },
+      title: { en: `Volunteer at ${name}`, sv: `Bli volontär på ${name}` },
+      body: {
+        en: `Help us run ${event.event.name} at ${venue.en} on ${dates.en}. Pick your role and your time.`,
+        sv: `Hjälp oss att genomföra ${event.event.name} på ${venue.sv} den ${dates.sv}. Välj din roll och din tid.`,
+      },
+      button: { en: 'REGISTER AS A VOLUNTEER', sv: 'ANMÄL DIG SOM VOLONTÄR' },
+    },
+
     intake: {
       eyebrow: `OFFICIAL PROGRAM INTAKE // ${name.toUpperCase()}`,
-      hackathonDesc: `Register a team for ${name}, ${event.event.dates.en} at ${event.event.venue.en}`,
+      // RoboHack only: no RoboKidovation workshop, demo or association forms.
+      tabs: ['submit-idea', 'hackathon', 'volunteer', 'partner'],
+      defaultTab: 'hackathon',
+      squadTitle: 'RoboHack Squad',
+      hackathonDesc: `Register a team for ${event.event.name}, ${dates.en} at ${venue.en}`,
       volunteerDesc: `Help run ${name} as a volunteer`,
       associationContact: 'the organisers',
       // The VFI fees and payment details belong to Västerås.
@@ -42,11 +121,11 @@ function buildSite(event: RoboHackEvent): SiteConfig {
         eventOptions: [
           {
             value: `yng-robohack-${location.citySlug}`,
-            en: `${name} (${event.event.dates.en})`,
-            sv: `${name} (${event.event.dates.sv})`,
+            en: `${name} (${dates.en})`,
+            sv: `${name} (${dates.sv})`,
           },
         ],
-        eyebrow: { en: 'OPTION 6 // VOLUNTEER', sv: 'ALTERNATIV 6 // VOLONTÄR' },
+        eyebrow: { en: 'OPTION 3 // VOLUNTEER', sv: 'ALTERNATIV 3 // VOLONTÄR' },
         intro: {
           en: `Help us run ${name}. All fields are required.`,
           sv: `Hjälp oss att genomföra ${name}. Alla fält är obligatoriska.`,
@@ -62,7 +141,7 @@ function buildSite(event: RoboHackEvent): SiteConfig {
           <div className="space-y-6">
             <div className="pb-4 border-b border-slate-200">
               <span className="text-[11px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase">
-                OPTION 7 // PARTNER
+                OPTION 4 // PARTNER
               </span>
               <h2 className="font-headline font-black text-2xl uppercase tracking-tight mt-1">{event.partners.cta.en}</h2>
               <p className="text-sm text-slate-600 mt-1">{event.partners.headline.en}</p>

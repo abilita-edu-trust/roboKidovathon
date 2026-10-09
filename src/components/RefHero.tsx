@@ -2,18 +2,21 @@ import React, { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import { roboPrecisionActionWide } from '../assets/images';
+import { useLanguage } from '../context/LanguageContext';
+import { useSite, pickLang } from '../context/SiteContext';
+import type { IntakeProgramTab } from '../pages/IntakeRegisterPage';
 
 const HERO_VIDEO_URL = 'https://res.cloudinary.com/joeek52k/video/upload/v1789013088/Blix-A-Thon_2nd_Edition_IIT_Bombay_Techfest___Blix_Robotix_1080P_60FPS.mp4';
 
 interface RefHeroProps {
-  onNavigate: (route: string) => void;
-  onOpenRegister: () => void;
+  /** Opens a route, optionally on one register form (the hero buttons come from the site). */
+  onNavigate: (route: string, tab?: IntakeProgramTab) => void;
 }
 
-export const RefHero: React.FC<RefHeroProps> = ({
-  onNavigate,
-  onOpenRegister,
-}) => {
+export const RefHero: React.FC<RefHeroProps> = ({ onNavigate }) => {
+  const { hero } = useSite();
+  const { language } = useLanguage();
+  const sv = language === 'sv';
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -79,7 +82,7 @@ export const RefHero: React.FC<RefHeroProps> = ({
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FFCD00] opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FFCD00]"></span>
               </span>
-              <span>5 DECEMBER 2026 · VÄSTERÅS, SWEDEN</span>
+              <span>{hero.badge}</span>
             </motion.div>
 
             {/* Main headline - refined & compact */}
@@ -87,15 +90,21 @@ export const RefHero: React.FC<RefHeroProps> = ({
               className="font-headline font-black uppercase text-white tracking-tight leading-[0.98]"
               style={{ fontSize: 'clamp(1.85rem, 4.2vw, 3.85rem)' }}
             >
-              Build ideas.<br />
-              Test them.<br />
-              <span className="text-[#FFCD00]">Take them further.</span>
+              {hero.lines.map((line, i) =>
+                i === hero.lines.length - 1 ? (
+                  <span key={line.en} className="text-[#FFCD00]">{pickLang(line, sv)}</span>
+                ) : (
+                  <React.Fragment key={line.en}>
+                    {pickLang(line, sv)}
+                    <br />
+                  </React.Fragment>
+                )
+              )}
             </h1>
 
             {/* Sub-copy - refined size */}
             <p className="text-xs sm:text-sm text-white/75 font-light leading-relaxed max-w-md">
-              Västerås Future Innovators — hands-on STEM robotics and the Young Inno Hack,
-              for schools, associations and independent teams — RoboKido Junior, Senior and GYM, the Young Inno Hack from grade 7 to university, and grades 1–2 as participants.
+              {pickLang(hero.intro, sv)}
             </p>
 
             {/* CTAs - compact & sharp with playful interactions */}
@@ -103,22 +112,22 @@ export const RefHero: React.FC<RefHeroProps> = ({
               <motion.button
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.96 }}
-                onClick={onOpenRegister}
+                onClick={() => onNavigate(hero.primary.target, hero.primary.tab)}
                 className="group relative overflow-hidden px-5 py-3 sm:px-6 sm:py-3 bg-[#FFCD00] hover:bg-[#E6B800] text-[#0A1930] font-syne font-black text-xs tracking-wider uppercase transition-all shadow-md hover:shadow-xl flex items-center justify-center gap-2"
               >
                 {/* Playful Light Sweep Shimmer */}
                 <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out pointer-events-none" />
-                <span>REGISTER SCHOOL, ASSOCIATION OR TEAM</span>
+                <span>{pickLang(hero.primary.label, sv)}</span>
                 <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
               </motion.button>
 
               <motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                onClick={() => onNavigate('events')}
+                onClick={() => onNavigate(hero.secondary.target, hero.secondary.tab)}
                 className="px-5 py-3 sm:px-6 sm:py-3 bg-white/10 hover:bg-white/20 text-white border border-white/25 hover:border-white/50 font-syne font-bold text-xs tracking-wider uppercase transition-all backdrop-blur-sm flex items-center justify-center gap-2 shadow-xs"
               >
-                <span>EXPLORE EVENTS</span>
+                <span>{pickLang(hero.secondary.label, sv)}</span>
               </motion.button>
             </div>
           </motion.div>
@@ -130,14 +139,7 @@ export const RefHero: React.FC<RefHeroProps> = ({
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-5 flex flex-wrap gap-2 items-end justify-start lg:justify-end"
           >
-            {[
-              { label: 'GRADES', value: '1–9 + GYM' },
-              { label: 'PRIZE POOL', value: 'SEK 3,000' },
-              { label: 'PROGRAMME', value: '20H STEM' },
-              { label: 'LGR22', value: 'CURRICULUM FIT' },
-              { label: 'ARENA', value: '244 × 122 CM' },
-              { label: 'FINAL DATE', value: 'DEC 5, 2026' },
-            ].map((fact) => (
+            {hero.facts.map((fact) => (
               <motion.div
                 key={fact.label}
                 whileHover={{

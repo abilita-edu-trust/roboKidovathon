@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ArrowRight, Globe } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { pathForRoute } from '../lib/routes';
+import { useSite, pickLang } from '../context/SiteContext';
 
 interface NavbarProps {
   activeTab: string;
@@ -19,6 +20,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { language, setLanguage, toggleLanguage } = useLanguage();
+  // The site (VFI or a city site like vxo.iniac.se) sets the name, menu and button text.
+  const { nav } = useSite();
+  const sv = language === 'sv';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,18 +44,9 @@ export const Navbar: React.FC<NavbarProps> = ({
     };
   }, [mobileMenuOpen]);
 
-  const navLinks = [
-    { id: 'future-innovators', label: language === 'sv' ? 'Hem' : 'Home' },
-    { id: 'challenges', label: language === 'sv' ? 'Tävling' : 'Competition' },
-    { id: 'events', label: language === 'sv' ? 'Evenemang' : 'Events' },
-    { id: 'register', label: language === 'sv' ? 'Registrering' : 'Register' },
-    { id: 'about', label: language === 'sv' ? 'Om oss' : 'About' },
-    { id: 'ibk', label: 'Indisk Barnklubb (IBK)' },
-    { id: 'ibk#contact', label: language === 'sv' ? 'Kontakt' : 'Contact' },
-  ];
+  const navLinks = nav.links.map((l) => ({ id: l.id, label: pickLang(l.label, sv) }));
 
-  const registerLabel =
-    language === 'sv' ? 'REGISTRERA SKOLA, FÖRENING ELLER LAG' : 'REGISTER SCHOOL, ASSOCIATION OR TEAM';
+  const registerLabel = pickLang(nav.registerLabel, sv);
 
   // Real links (shareable, open-in-new-tab) that navigate in-app on a plain click.
   const handleLinkClick = (e: React.MouseEvent, id: string) => {
@@ -66,7 +61,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     return pathForRoute(route) + (section ? `#${section}` : '');
   };
 
-  const isDarkHeader = (activeTab === 'ibk' || activeTab === 'future-innovators') && !isScrolled;
+  const isDarkHeader = nav.darkRoutes.includes(activeTab) && !isScrolled;
 
   return (
     <>
@@ -81,10 +76,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Brand Mark Logo */}
           <motion.a
-            href="/"
+            href={pathForRoute(nav.homeRoute)}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={(e) => handleLinkClick(e, 'future-innovators')}
+            onClick={(e) => handleLinkClick(e, nav.homeRoute)}
             className="text-left group focus:outline-none flex items-center gap-2.5"
           >
             {/* Swedish Flag / STEM Mark */}
@@ -100,7 +95,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   : 'text-[#0A1930] group-hover:text-[#006AA7]'
               }`}
             >
-              <span>VÄSTERÅS FUTURE INNOVATORS</span>
+              <span>{nav.brand}</span>
               <span
                 className={`font-mono-code font-bold text-[10px] leading-none px-1.5 py-0.5 border transition-colors ${
                   isDarkHeader
@@ -108,7 +103,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     : 'text-[#006AA7] bg-slate-100 border-slate-200'
                 }`}
               >
-                2026
+                {nav.brandChip}
               </span>
             </span>
           </motion.a>
@@ -198,13 +193,13 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             <motion.a
-              href={pathForRoute('register')}
+              href={pathForRoute(nav.registerRoute)}
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.96 }}
-              onClick={(e) => handleLinkClick(e, 'register')}
+              onClick={(e) => handleLinkClick(e, nav.registerRoute)}
               className="btn-pill-lime text-xs font-black py-2.5 px-4 2xl:px-5 whitespace-nowrap transition-all duration-200 shadow-md flex items-center gap-2 group relative overflow-hidden"
             >
-              <span className="xl:hidden">{language === 'sv' ? 'REGISTRERA' : 'REGISTER'}</span>
+              <span className="xl:hidden">{pickLang(nav.registerShort, sv)}</span>
               <span className="hidden xl:inline">{registerLabel}</span>
               <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
             </motion.a>
@@ -318,9 +313,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   </button>
 
                   <div className="p-3 bg-slate-50 border border-slate-200 text-[11px] font-mono-code text-slate-500 text-center">
-                    {language === 'sv'
-                      ? 'Västerås, Sverige · Höstterminen 2026'
-                      : 'Västerås, Sweden · Autumn 2026 Season'}
+                    {pickLang(nav.season, sv)}
                   </div>
                 </div>
               </div>

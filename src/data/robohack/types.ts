@@ -51,7 +51,8 @@ export interface RoboHackEvent {
   /** EU Skola city that every form entry is filed under. */
   location: { countrySlug: string; citySlug: string; countryName: string; cityName: string };
 
-  hero: { eyebrow: Bilingual; lines: Bilingual[]; intro: Bilingual; keywords: string[] };
+  /** Shown in the shared VFI video hero. */
+  hero: { lines: Bilingual[]; intro: Bilingual; facts: { label: string; value: string }[] };
   platform: { title: Bilingual; intro: Bilingual; flow: Bilingual[] };
   problem: {
     title: Bilingual;
