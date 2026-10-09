@@ -2,8 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Calendar, Check, MapPin } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
-import { useSite } from '../context/SiteContext';
-import { VoteYoungMindsSection } from '../components/VoteYoungMindsSection';
+import { CityDetailsSection, CityPathways, CityVoteSection, Eyebrow, Section, SectionTitle } from '../components/city/CitySections';
 import type { IntakeProgramTab } from './IntakeRegisterPage';
 import type { Bilingual, RoboHackEvent } from '../data/robohack/types';
 
@@ -15,41 +14,11 @@ interface RoboHackPageProps {
   onOpenIdeas: () => void;
 }
 
-const Eyebrow: React.FC<{ children: React.ReactNode; light?: boolean; className?: string }> = ({ children, light, className = '' }) => (
-  <span
-    className={`text-[10px] sm:text-[11px] font-mono-code font-bold tracking-[0.2em] uppercase block mb-2 ${
-      light ? 'text-[#FFCD00]' : 'text-[#006AA7]'
-    } ${className}`}
-  >
-    {children}
-  </span>
-);
-
-const SectionTitle: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
-  <h2 className={`font-headline font-black uppercase tracking-tight leading-[1.0] ${className}`} style={{ fontSize: 'clamp(2.2rem, 5vw, 4.2rem)' }}>
-    {children}
-  </h2>
-);
-
 const fadeUp = {
   initial: { opacity: 0, y: 30 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true },
   transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
-};
-
-const Section: React.FC<{ id: string; tone?: 'white' | 'gray' | 'blue' | 'navy'; children: React.ReactNode }> = ({ id, tone = 'white', children }) => {
-  const tones = {
-    white: 'bg-white text-[#0A1930]',
-    gray: 'bg-[#F8FAFC] text-[#0A1930] border-y border-slate-200',
-    blue: 'bg-[#006AA7] text-white',
-    navy: 'bg-[#0A1930] text-white',
-  };
-  return (
-    <section id={id} className={`w-full py-16 sm:py-20 px-4 sm:px-6 lg:px-10 scroll-mt-20 ${tones[tone]}`}>
-      <div className="max-w-[1400px] mx-auto space-y-10">{children}</div>
-    </section>
-  );
 };
 
 /** "A → B → C" as a row of chips. */
@@ -79,21 +48,9 @@ export const RoboHackPage: React.FC<RoboHackPageProps> = ({ event, onRegister, o
   const { language } = useLanguage();
   const sv = language === 'sv';
   const t = (b: Bilingual) => (sv ? b.sv || b.en : b.en);
-  const tbc = sv ? 'Meddelas senare' : 'TBC';
 
   const tracks = event.tracks.filter((track) => track.enabled);
-  const { intake } = useSite();
 
-  // The same seven forms as the register page, opened there.
-  const pathways: { tab: IntakeProgramTab; icon: string; title: Bilingual; desc: Bilingual }[] = [
-    { tab: 'workshop', icon: '🤖', title: { en: 'School Workshop', sv: 'Skolworkshop' }, desc: { en: 'Hands-on robotics workshop at your school', sv: 'Praktisk robotikworkshop på er skola' } },
-    { tab: 'demo', icon: '📢', title: { en: 'School Demo', sv: 'Skoldemo' }, desc: { en: 'A live robotics demo for your school', sv: 'En robotikdemo live på er skola' } },
-    { tab: 'association', icon: '🤝', title: { en: 'Group / Association', sv: 'Grupp / förening' }, desc: { en: 'Associations, clubs and community groups', sv: 'Föreningar, klubbar och grupper' } },
-    { tab: 'submit-idea', icon: '💡', title: { en: 'Bring Your Idea', sv: 'Kom med din idé' }, desc: { en: 'Text, drawing, voice note or video, then public voting', sv: 'Text, skiss, röstmeddelande eller video, sedan röstning' } },
-    { tab: 'hackathon', icon: '🏆', title: { en: 'Join the RoboHack', sv: 'Var med i RoboHack' }, desc: { en: `Register your team for ${event.event.dates.en}`, sv: `Anmäl ert lag till ${event.event.dates.sv}` } },
-    { tab: 'volunteer', icon: '🙋', title: { en: 'Volunteer', sv: 'Volontär' }, desc: { en: `Help run ${event.brand.name} ${event.brand.city}`, sv: `Hjälp till på ${event.brand.name} ${event.brand.city}` } },
-    { tab: 'partner', icon: '🏢', title: event.partners.cta, desc: { en: 'Problem statements, mentors, workshops or equipment', sv: 'Problemformuleringar, mentorer, workshoppar eller utrustning' } },
-  ];
 
   return (
     <>
@@ -365,80 +322,24 @@ export const RoboHackPage: React.FC<RoboHackPageProps> = ({ event, onRegister, o
         </div>
       </Section>
 
-      {/* ── 10. DETAILS ── */}
-      <Section id="details">
-        <div className="space-y-3">
-          <Eyebrow>{event.brand.city}</Eyebrow>
-          <SectionTitle>{sv ? 'Praktisk info' : 'Event details'}</SectionTitle>
-        </div>
-        <dl className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 border-t border-l border-slate-200">
-          {event.details.map((d) => (
-            <div key={d.label.en} className="p-5 sm:p-6 border-b border-r border-slate-200">
-              <dt className="text-[10px] font-mono-code font-bold uppercase tracking-widest text-slate-500">{t(d.label)}</dt>
-              <dd className={`mt-1 font-headline font-black text-xl uppercase tracking-tight ${d.value ? 'text-[#0A1930]' : 'text-slate-400'}`}>
-                {d.value ? t(d.value) : tbc}
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </Section>
-
       </div>
 
-      {/* ── 11. VOTE FOR AN IDEA (same voting as the VFI home page, this city's ideas) ── */}
-      <section id="vote-ideas" className="w-full bg-white text-[#0A1930] py-10 sm:py-14 px-4 sm:px-6 lg:px-10 scroll-mt-20">
-        <div className="max-w-[1400px] mx-auto">
-          <VoteYoungMindsSection onNavigateIdeas={onOpenIdeas} onNavigateSubmit={() => onRegister('submit-idea')} />
-        </div>
-      </section>
-
-      {/* ── 12. GET INVOLVED: the register page's forms ── */}
-      <div data-no-translate="true">
-        <Section id="join" tone="gray">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
-            <div className="lg:col-span-7 space-y-3">
-              <Eyebrow>{sv ? 'Var med' : 'Get involved'}</Eyebrow>
-              <SectionTitle>{sv ? 'Bygg något verkligt' : 'Build something real'}</SectionTitle>
-            </div>
-            <p className="lg:col-span-5 text-sm sm:text-base text-slate-600 font-light leading-relaxed">
-              {sv
-                ? 'Välj hur du vill vara med. Varje val öppnar sitt formulär.'
-                : 'Choose how you want to take part. Each option opens its form.'}
-            </p>
-          </div>
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
-            {pathways.filter((p) => !intake.tabs || intake.tabs.includes(p.tab)).map((p) => (
-              <button
-                key={p.tab}
-                type="button"
-                onClick={() => onRegister(p.tab)}
-                className="group text-left bg-white border-2 border-slate-200 hover:border-[#006AA7] p-4 sm:p-5 flex flex-col gap-2 transition-colors"
-              >
-                <span className="text-2xl" aria-hidden>{p.icon}</span>
-                <span className="font-headline font-black text-base uppercase tracking-tight">{t(p.title)}</span>
-                <span className="text-xs text-slate-500 leading-snug">{t(p.desc)}</span>
-                <span className="mt-auto pt-2 inline-flex items-center gap-1 text-[11px] font-mono-code font-bold uppercase text-[#006AA7]">
-                  {sv ? 'Öppna formuläret' : 'Open form'}
-                  <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-                </span>
-              </button>
-            ))}
-            <button
-              type="button"
-              onClick={onOpenIdeas}
-              className="group text-left bg-[#059669] hover:bg-[#047857] text-white p-4 sm:p-5 flex flex-col gap-2 transition-colors"
-            >
-              <span className="text-2xl" aria-hidden>⭐</span>
-              <span className="font-headline font-black text-base uppercase tracking-tight">{sv ? 'Idéer och röstning' : 'Ideas & Vote'}</span>
-              <span className="text-xs text-white/80 leading-snug">{sv ? 'Se idéerna och rösta på din favorit' : 'See the ideas and vote for your favourite'}</span>
-              <span className="mt-auto pt-2 inline-flex items-center gap-1 text-[11px] font-mono-code font-bold uppercase">
-                {sv ? 'Rösta' : 'Vote'}
-                <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-              </span>
-            </button>
-          </div>
-        </Section>
-      </div>
+      <CityDetailsSection details={event.details} />
+      <CityVoteSection onOpenIdeas={onOpenIdeas} onSubmitIdea={() => onRegister('submit-idea')} />
+      <CityPathways
+        onRegister={onRegister}
+        onOpenIdeas={onOpenIdeas}
+        overrides={{
+          hackathon: {
+            title: { en: 'Join the RoboHack', sv: 'Var med i RoboHack' },
+            desc: { en: `Register your team for ${event.event.dates.en}`, sv: `Anmäl ert lag till ${event.event.dates.sv}` },
+          },
+          volunteer: {
+            desc: { en: `Help run ${event.brand.name} ${event.brand.city}`, sv: `Hjälp till på ${event.brand.name} ${event.brand.city}` },
+          },
+          partner: { title: event.partners.cta },
+        }}
+      />
     </>
   );
 };

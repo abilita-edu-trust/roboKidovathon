@@ -39,6 +39,13 @@ Options -Indexes
   RewriteRule ^$ https://vxo.iniac.se/vxo [L,R=302]
 </IfModule>
 
+# ── esk.iniac.se: Eskilstuna Future Innovators; the root opens /esk ──
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_HOST} ^esk\.iniac\.se$ [NC]
+  RewriteRule ^$ https://esk.iniac.se/esk [L,R=302]
+</IfModule>
+
 # ── Force HTTPS ──
 <IfModule mod_rewrite.c>
   RewriteEngine On

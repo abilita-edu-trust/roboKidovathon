@@ -29,9 +29,7 @@ import { AdminIdeasCurationPage } from './pages/AdminIdeasCurationPage';
 import { AdminLoginGate } from './components/AdminLoginGate';
 import { IbkHomePage } from './pages/IbkHomePage';
 import { VolunteerCta } from './components/VolunteerCta';
-import { RoboHackPage } from './pages/RoboHackPage';
-import { robohackPageFor } from './data/robohack';
-import { robohackSite } from './components/robohack/robohackSite';
+import { cityPageFor } from './components/city/citySites';
 import { SiteProvider } from './context/SiteContext';
 
 import { EventDeckModal } from './components/EventDeckModal';
@@ -80,20 +78,20 @@ export function App() {
     return () => window.removeEventListener('popstate', onPopState);
   }, []);
 
-  // RoboHack city sites get their own tab title and description on all their pages.
-  const robohackEvent = robohackPageFor(currentRoute)?.event;
+  // City sites (vxo, esk) get their own tab title and description on all their pages.
+  const cityMeta = cityPageFor(currentRoute)?.city.meta;
   useEffect(() => {
-    if (!robohackEvent) return;
+    if (!cityMeta) return;
     const meta = document.querySelector('meta[name="description"]');
     const prevTitle = document.title;
     const prevDescription = meta?.getAttribute('content') ?? '';
-    document.title = robohackEvent.meta.title;
-    meta?.setAttribute('content', robohackEvent.meta.description);
+    document.title = cityMeta.title;
+    meta?.setAttribute('content', cityMeta.description);
     return () => {
       document.title = prevTitle;
       meta?.setAttribute('content', prevDescription);
     };
-  }, [robohackEvent]);
+  }, [cityMeta]);
 
   // Deep links to a section, e.g. /#contact.
   useEffect(() => {
@@ -121,15 +119,15 @@ export function App() {
 
   const goToVote = () => handleNavigate('future-innovators#vote-ideas');
 
-  // RoboHack city sites (e.g. vxo.iniac.se: /vxo, /vxo/register, /vxo/ideas) use the same
-  // components as VFI; the site settings give them the event's name, routes and city.
-  const robohack = robohackPageFor(currentRoute);
-  if (robohack) {
-    const { event, page } = robohack;
-    const site = robohackSite(event);
-    const goHome = () => handleNavigate(event.route);
+  // City sites (vxo.iniac.se, esk.iniac.se: /<city>, /<city>/register, /<city>/ideas) use
+  // the same components as VFI; their site settings give them their name, routes and city.
+  const cityPage = cityPageFor(currentRoute);
+  if (cityPage) {
+    const { city, page } = cityPage;
+    const { site, Home } = city;
+    const goHome = () => handleNavigate(city.route);
     const goRegister = (tab?: IntakeProgramTab) => handleNavigate(site.nav.registerRoute, tab);
-    const goIdeas = () => handleNavigate(`${event.route}-ideas`);
+    const goIdeas = () => handleNavigate(`${city.route}-ideas`);
     return (
       <SiteProvider site={site}>
         <div key={language} className="min-h-screen bg-white text-[#0A1930] font-sans selection:bg-[#FFCD00] selection:text-[#0A1930] relative overflow-x-hidden">
@@ -140,7 +138,7 @@ export function App() {
               <>
                 <RefHero onNavigate={handleNavigate} />
                 <RefHeroMarquee />
-                <RoboHackPage event={event} onRegister={goRegister} onOpenIdeas={goIdeas} />
+                <Home onRegister={goRegister} onOpenIdeas={goIdeas} />
                 <VolunteerCta onOpenVolunteer={() => goRegister('volunteer')} />
               </>
             )}

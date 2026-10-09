@@ -18,6 +18,9 @@ export const ROUTE_PATHS: Record<string, string> = {
   vxo: '/vxo',
   'vxo-register': '/vxo/register',
   'vxo-ideas': '/vxo/ideas',
+  esk: '/esk',
+  'esk-register': '/esk/register',
+  'esk-ideas': '/esk/ideas',
 };
 
 // Event subdomains that only show their own routes, so visitors stay on that event.
@@ -25,6 +28,7 @@ export const ROUTE_PATHS: Record<string, string> = {
 // subdomain's root to it).
 const HOST_ROUTES: Record<string, string[]> = {
   'vxo.iniac.se': ['vxo', 'vxo-register', 'vxo-ideas'],
+  'esk.iniac.se': ['esk', 'esk-register', 'esk-ideas'],
 };
 
 const hostRoutes = (): string[] | undefined => HOST_ROUTES[window.location.hostname.toLowerCase()];

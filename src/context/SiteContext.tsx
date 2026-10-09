@@ -117,6 +117,8 @@ export interface SiteConfig {
     defaultTab: IntakeProgramTab;
     /** Name of the hackathon team form, e.g. "Hackathon Squad". */
     squadTitle: string;
+    /** Text on the ideas track card; omitted = the Young Inno Hack text. */
+    ideasTrackDesc?: string;
     hackathonDesc: string;
     volunteerDesc: string;
     associationContact: string;
@@ -127,7 +129,7 @@ export interface SiteConfig {
 }
 
 /** Cities with their own site; their ideas are kept off the Västerås pages. */
-export const CITY_SITE_SLUGS = ['vaxjo'];
+export const CITY_SITE_SLUGS = ['vaxjo', 'eskilstuna'];
 
 export const VFI_SITE: SiteConfig = {
   location: null,

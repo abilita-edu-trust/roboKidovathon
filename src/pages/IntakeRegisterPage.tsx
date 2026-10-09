@@ -165,6 +165,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
   const optionNum = (tab: IntakeProgramTab) => offeredTabs.indexOf(tab) + 1;
   const formLabel = (tab: IntakeProgramTab) => `[FORM ${formTabs.indexOf(tab) + 1}/${formTabs.length}]`;
   const showRoboKido = offers('workshop') || offers('demo') || offers('association');
+  const showIdeasTrack = offers('submit-idea') || offers('hackathon');
   const [selectedProgram, setSelectedProgram] = useState<IntakeProgramTab>(
     offers(initialTab) ? initialTab : site.intake.defaultTab
   );
@@ -625,7 +626,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
           </div>
 
           {/* Cards Grid */}
-          <div className={`grid grid-cols-1 gap-5 ${showRoboKido ? 'md:grid-cols-2' : ''}`}>
+          <div className={`grid grid-cols-1 gap-5 ${showRoboKido && showIdeasTrack ? 'md:grid-cols-2' : ''}`}>
             {/* Card 1: Track 1 - RoboKidovation */}
             {showRoboKido && (
             <div
@@ -738,6 +739,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
             )}
 
             {/* Card 2: Track 2 - Young Inno Hack */}
+            {showIdeasTrack && (
             <div
               className={`p-6 border-2 transition-all relative ${
                 selectedProgram === 'submit-idea' || selectedProgram === 'hackathon'
@@ -755,11 +757,13 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                 {site.hackLabel}
               </h2>
               <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed mb-6">
-                Problem discovery, student multimodal idea submission (voice/picture/video), team formation, physical/digital prototypes, and arena finals.
+                {site.intake.ideasTrackDesc ??
+                  'Problem discovery, student multimodal idea submission (voice/picture/video), team formation, physical/digital prototypes, and arena finals.'}
               </p>
 
               {/* Action Buttons: Submit Idea & Register for Hackathon */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-100">
+                {offers('submit-idea') && (
                 <button
                   type="button"
                   onClick={() => handleSelectProgram('submit-idea')}
@@ -787,7 +791,9 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                     Submit future idea via text, diagram, voice note, or video pitch
                   </div>
                 </button>
+                )}
 
+                {offers('hackathon') && (
                 <button
                   type="button"
                   onClick={() => handleSelectProgram('hackathon')}
@@ -815,8 +821,10 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                     {site.intake.hackathonDesc}
                   </div>
                 </button>
+                )}
               </div>
             </div>
+            )}
           </div>
         </div>
 
