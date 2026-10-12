@@ -38,6 +38,10 @@ const THEMES = {
     callout: 'bg-[#F0F7FD] border-[#BAE6FD]',
     calloutIcon: 'bg-[#006AA7]/10 text-[#006AA7]',
     cta: 'hover:bg-sky-50 text-[#006AA7] border-[#006AA7]/30',
+    node: 'bg-sky-100 text-[#006AA7]',
+    nodeHighlight: 'bg-[#006AA7] text-white',
+    connector: 'bg-sky-200',
+    ctaSolid: 'text-[#006AA7] hover:bg-sky-50',
   },
   hack: {
     card: 'border-[#059669]',
@@ -52,20 +56,17 @@ const THEMES = {
     callout: 'bg-[#F0FDF4] border-[#BBF7D0]',
     calloutIcon: 'bg-[#059669]/10 text-[#059669]',
     cta: 'hover:bg-emerald-50 text-[#059669] border-[#059669]/30',
+    node: 'bg-emerald-100 text-[#059669]',
+    nodeHighlight: 'bg-[#059669] text-white',
+    connector: 'bg-emerald-200',
+    ctaSolid: 'text-[#059669] hover:bg-emerald-50',
   },
 } as const;
 
-// Steps sit in one row on wide screens; eight steps wrap into two rows of four.
-const STEP_COLS: Record<number, string> = {
-  4: 'sm:grid-cols-4 lg:grid-cols-4',
-  5: 'sm:grid-cols-3 lg:grid-cols-5',
-  6: 'sm:grid-cols-3 lg:grid-cols-6',
-  8: 'sm:grid-cols-4 lg:grid-cols-4',
-};
-
 interface PathwayCardProps extends PathwayContent {
   onCta: () => void;
-  /** Two cards side by side: steps go three to a row so titles and dates fit. */
+  /** Two cards side by side (vfi): a header over a 3-per-row step grid. A single card gets a
+   *  coloured panel beside a vertical timeline instead. */
   half?: boolean;
   /** Entrance delay, so two cards side by side arrive one after the other. */
   delay?: number;
@@ -75,6 +76,103 @@ export const PathwayCard: React.FC<PathwayCardProps> = ({
   theme, icon: Icon, title, tagline, intro, steps, callout, ctaLabel, onCta, half = false, delay = 0,
 }) => {
   const t = THEMES[theme];
+
+  if (!half) {
+    // Long journeys run as two timelines side by side on wide screens.
+    const split = steps.length > 6 ? Math.ceil(steps.length / 2) : steps.length;
+    const columns = split < steps.length ? [steps.slice(0, split), steps.slice(split)] : [steps];
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay }}
+        className={`bg-white border-2 ${t.card} shadow-xl overflow-hidden grid grid-cols-1 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]`}
+      >
+        <div className={`${t.header} text-white p-6 sm:p-8 flex flex-col gap-5`}>
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 bg-white/15 border border-white/25 flex items-center justify-center shrink-0 shadow-inner">
+              <Icon className="w-8 h-8 text-white" />
+            </div>
+            <div>
+              <h3 className="font-headline font-black text-3xl sm:text-4xl tracking-tight leading-none">{title}</h3>
+              <p className={`text-[11px] sm:text-xs font-mono-code font-bold uppercase tracking-[0.2em] ${t.tagline} mt-1.5`}>{tagline}</p>
+            </div>
+          </div>
+
+          <div className={`space-y-1 text-sm ${t.intro} font-light border-t border-white/15 pt-4`}>
+            {intro.map((line, i) => (
+              <p key={line} className={i > 0 ? 'text-white/85' : undefined}>
+                {line}
+              </p>
+            ))}
+          </div>
+
+          <div className="mt-auto space-y-4">
+            <div className="flex gap-3 bg-white/10 border border-white/20 p-4">
+              <Target className="w-5 h-5 shrink-0 text-white" />
+              <p className="text-sm leading-snug font-medium">{callout}</p>
+            </div>
+            <button
+              type="button"
+              onClick={onCta}
+              className={`group w-full sm:w-auto px-5 py-3 bg-white ${t.ctaSolid} text-xs font-bold font-syne uppercase tracking-wider transition-colors inline-flex items-center justify-center gap-2 shadow-md`}
+            >
+              <span>{ctaLabel}</span>
+              <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+            </button>
+          </div>
+        </div>
+
+        <div className={`p-6 sm:p-8 grid grid-cols-1 gap-x-8 ${columns.length > 1 ? 'lg:grid-cols-2' : ''}`}>
+          {columns.map((list, c) => (
+            // Steps spread over the card's full height, joined by one line behind the icons.
+            <ol key={c} className={`relative flex flex-col justify-between gap-5 h-full ${c > 0 ? 'pt-5 lg:pt-0' : ''}`}>
+              <span className={`absolute left-5 top-5 bottom-5 w-0.5 ${t.connector} ${c > 0 ? 'mt-5 lg:mt-0' : ''}`} aria-hidden />
+              {list.map((step, i) => {
+                const StepIcon = step.icon;
+                const n = c * split + i + 1;
+                return (
+                  <li key={step.title} className="relative flex gap-4 group">
+                    <span
+                      className={`relative z-10 w-10 h-10 shrink-0 flex items-center justify-center transition-transform duration-200 group-hover:scale-110 ${
+                        step.highlight ? t.nodeHighlight : t.node
+                      }`}
+                    >
+                      <StepIcon className="w-5 h-5" />
+                      <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#0A1930] text-white text-[9px] font-bold flex items-center justify-center">
+                        {n}
+                      </span>
+                    </span>
+                    <div
+                      className={`flex-1 min-w-0 flex flex-col gap-x-4 gap-y-1.5 pt-0.5 ${
+                        columns.length > 1 ? '' : 'sm:flex-row sm:items-start sm:justify-between'
+                      }`}
+                    >
+                      <div className="min-w-0">
+                        <h4 className="font-headline font-bold text-sm uppercase tracking-tight text-[#0A1930] leading-tight">{step.title}</h4>
+                        <p className="text-xs text-slate-500 leading-snug mt-0.5">{step.subtitle}</p>
+                      </div>
+                      {step.date && (
+                        <span
+                          className={`shrink-0 self-start px-2.5 py-1 text-[11px] font-mono-code font-bold whitespace-nowrap ${
+                            step.highlight ? t.pillHighlight : t.pill
+                          }`}
+                        >
+                          {step.date}
+                        </span>
+                      )}
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          ))}
+        </div>
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -110,7 +208,7 @@ export const PathwayCard: React.FC<PathwayCardProps> = ({
 
       {/* Steps */}
       <div className="p-5 sm:p-7 space-y-6 flex-1 flex flex-col justify-between">
-        <div className={`grid grid-cols-2 ${half ? 'sm:grid-cols-3' : STEP_COLS[steps.length] ?? STEP_COLS[6]} gap-3 sm:gap-3.5`}>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-3.5">
           {steps.map((step, i) => {
             const StepIcon = step.icon;
             return (
