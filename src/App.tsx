@@ -167,7 +167,9 @@ export function App() {
                     <div className="max-w-[1400px] mx-auto space-y-10">
                       <FutureInnovatorsBanner />
                       {city.pathway && (
-                        <PathwayCard {...city.pathway.content(language === 'sv')} onCta={() => handleNavigate(city.pathway!.target)} />
+                        <div id="journey" className="scroll-mt-24">
+                          <PathwayCard {...city.pathway.content(language === 'sv')} onCta={() => handleNavigate(city.pathway!.target)} />
+                        </div>
                       )}
                     </div>
                   </section>

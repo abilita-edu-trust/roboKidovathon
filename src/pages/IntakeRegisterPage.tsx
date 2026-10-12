@@ -211,8 +211,20 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
   const [customDate, setCustomDate] = useState('');
   const [customTime, setCustomTime] = useState('10:00');
   const [customEndTime, setCustomEndTime] = useState('12:30');
-  // Hackathon-only sites (no RoboKidovation forms) start at the hackathon's youngest level.
-  const [gradeGroup, setGradeGroup] = useState(GRADE_GROUP_OPTIONS[showRoboKido ? 1 : 2]);
+  // Grade labels only name the programmes this site runs: esk has no hackathon (and so no
+  // university level), vxo has no RoboKidovation (and so no grade 1–2 participant group).
+  const gradeOptions = GRADE_GROUP_OPTIONS.filter(
+    (g) => (offers('hackathon') || !g.startsWith('University')) && (showRoboKido || !g.startsWith('Årskurs 1–2')),
+  ).map((g) => {
+    let label = g;
+    if (!showRoboKido) label = label.replace(/RoboKido \w+ (\/|·) /, '');
+    if (!offers('hackathon')) label = label.replace(/ \/ Hackathon \w+/, '');
+    return label;
+  });
+  // Hackathon-only sites start at the hackathon's youngest level.
+  const [gradeGroup, setGradeGroup] = useState(
+    gradeOptions.find((g) => g.startsWith(showRoboKido ? 'Årskurs 3–6' : 'Årskurs 7–9')) ?? gradeOptions[0],
+  );
   const [studentCount, setStudentCount] = useState('25');
   // A class-sized default makes no sense for a 2–4 person squad; swap the untouched default.
   useEffect(() => {
@@ -1200,7 +1212,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                           onChange={(e) => setGradeGroup(e.target.value)}
                           className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-[#006AA7] text-xs sm:text-sm text-[#0A1930]"
                         >
-                          {GRADE_GROUP_OPTIONS.map((g) => (
+                          {gradeOptions.map((g) => (
                             <option key={g} value={g}>
                               {g}
                             </option>

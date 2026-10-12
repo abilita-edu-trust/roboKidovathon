@@ -101,6 +101,8 @@ export interface SiteConfig {
     studentsExtra?: string;
     /** Footnote under the dates. */
     note?: string;
+    /** Where the guide's Rules button goes; default the vfi Challenges page. */
+    rulesTarget?: string;
   };
   footer: {
     title: string;

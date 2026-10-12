@@ -111,6 +111,7 @@ export const eskilstunaSite: SiteConfig = {
     ],
     studentsExtra: 'Top 1–2 teams may qualify for flight tickets to the international stage (Apr 2027)*.',
     note: '* Flight ticket possibility for 1–2 teams (subject to rules & confirmation)',
+    rulesTarget: 'esk#teams-final-day',
   },
 
   footer: {

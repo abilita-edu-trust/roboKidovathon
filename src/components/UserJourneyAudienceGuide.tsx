@@ -26,9 +26,10 @@ export const UserJourneyAudienceGuide: React.FC<UserJourneyAudienceGuideProps> =
   onOpenRegister,
 }) => {
   const [activeAudience, setActiveAudience] = useState<AudienceType>('students');
-  const { journey } = useSite();
+  const { journey, intake } = useSite();
   // Sites without RoboKidovation dates (e.g. the RoboHack-only vxo) don't show the guide.
   if (!journey) return null;
+  const hasHackathon = !intake.tabs || intake.tabs.includes('hackathon');
 
   const audiences = [
     {
@@ -47,7 +48,9 @@ export const UserJourneyAudienceGuide: React.FC<UserJourneyAudienceGuideProps> =
         {
           num: 1,
           title: 'Discover the Competition',
-          desc: 'Explore Robo-Sprint, Robo-Precision, and the Young Inno Hack innovation arena.',
+          desc: hasHackathon
+            ? 'Explore Robo-Sprint, Robo-Precision, and the Young Inno Hack innovation arena.'
+            : 'Explore the Robo-Sprint and Robo-Precision challenges and pick your category.',
           badge: 'Explore Tracks',
         },
         {
@@ -257,7 +260,7 @@ export const UserJourneyAudienceGuide: React.FC<UserJourneyAudienceGuideProps> =
 
                 <button
                   type="button"
-                  onClick={() => onNavigate('challenges')}
+                  onClick={() => onNavigate(journey.rulesTarget ?? 'challenges')}
                   className="px-4 py-3.5 bg-transparent hover:bg-slate-100 text-slate-600 font-headline font-bold text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-1"
                 >
                   <span>Rules</span>
