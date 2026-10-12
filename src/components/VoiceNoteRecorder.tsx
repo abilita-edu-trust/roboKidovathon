@@ -54,7 +54,7 @@ export const VoiceNoteRecorder: React.FC<VoiceNoteRecorderProps> = ({ onAudioRea
       setIsRecording(true);
       setRecordingTime(0);
 
-      timerRef.current = setInterval(() => {
+      timerRef.current = window.setInterval(() => {
         setRecordingTime((prev) => prev + 1);
       }, 1000);
     } catch (err: any) {
