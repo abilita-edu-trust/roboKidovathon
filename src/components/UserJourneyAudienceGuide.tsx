@@ -9,6 +9,9 @@ import {
   Sparkles,
 } from 'lucide-react';
 import type { IntakeProgramTab } from '../pages/IntakeRegisterPage';
+import { useSite } from '../context/SiteContext';
+
+const DATE_DOTS = ['bg-[#FFCD00]', 'bg-[#006AA7]', 'bg-emerald-400', 'bg-sky-300'];
 
 
 interface UserJourneyAudienceGuideProps {
@@ -23,6 +26,9 @@ export const UserJourneyAudienceGuide: React.FC<UserJourneyAudienceGuideProps> =
   onOpenRegister,
 }) => {
   const [activeAudience, setActiveAudience] = useState<AudienceType>('students');
+  const { journey } = useSite();
+  // Sites without RoboKidovation dates (e.g. the RoboHack-only vxo) don't show the guide.
+  if (!journey) return null;
 
   const audiences = [
     {
@@ -64,8 +70,8 @@ export const UserJourneyAudienceGuide: React.FC<UserJourneyAudienceGuideProps> =
         },
         {
           num: 5,
-          title: 'Grand Finals & Elevation',
-          desc: 'Compete 2 Dec 2026 at IES Eskilstuna. Top 1–2 teams may qualify for flight tickets to International Stage (Apr 2027)*.',
+          title: journey.studentsExtra ? 'Grand Finals & Elevation' : 'Compete in the Final',
+          desc: `Compete in the Final ${journey.finals}.${journey.studentsExtra ? ` ${journey.studentsExtra}` : ''}`,
           badge: 'Arena Showdown',
         },
       ],
@@ -110,7 +116,7 @@ export const UserJourneyAudienceGuide: React.FC<UserJourneyAudienceGuideProps> =
         {
           num: 5,
           title: 'Finals Day Celebration',
-          desc: 'Attend the Finals on 2 Dec 2026 at IES Eskilstuna and celebrate student achievements.',
+          desc: `Attend the Final ${journey.finals} and celebrate student achievements.`,
           badge: 'Family Friendly',
         },
       ],
@@ -155,7 +161,7 @@ export const UserJourneyAudienceGuide: React.FC<UserJourneyAudienceGuideProps> =
         {
           num: 5,
           title: 'Represent Your School',
-          desc: 'Top 4 teams per school qualify for the Grand Finals on 2 Dec 2026 at IES Eskilstuna.',
+          desc: `Up to 4 teams per school or association qualify for the Final ${journey.finals}.`,
           badge: 'School Glory',
         },
       ],
@@ -297,31 +303,18 @@ export const UserJourneyAudienceGuide: React.FC<UserJourneyAudienceGuideProps> =
             {/* Confirmed dates highlight ribbon */}
             <div className="bg-[#0A1930] text-white p-5 sm:p-6 flex flex-col lg:flex-row items-center justify-between gap-4 border border-[#0A1930]">
               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 sm:gap-8 text-xs font-mono-code">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#FFCD00]" />
-                  <span className="text-slate-400 uppercase">Registration Opens:</span>
-                  <span className="text-white font-bold">12 Oct 2026</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#006AA7]" />
-                  <span className="text-slate-400 uppercase">School Demo:</span>
-                  <span className="text-white font-bold">16 Oct 2026</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                  <span className="text-slate-400 uppercase">Grand Finals:</span>
-                  <span className="text-white font-bold">2 Dec 2026 (IES Eskilstuna)</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-purple-400" />
-                  <span className="text-slate-400 uppercase">International Stage:</span>
-                  <span className="text-white font-bold">April 2027*</span>
-                </div>
+                {journey.dates.map((d, i) => (
+                  <div key={d.label} className="flex items-center gap-2">
+                    <span className={`w-2 h-2 rounded-full ${DATE_DOTS[i % DATE_DOTS.length]}`} />
+                    <span className="text-slate-400 uppercase">{d.label}:</span>
+                    <span className="text-white font-bold">{d.value}</span>
+                  </div>
+                ))}
               </div>
 
-              <div className="text-[11px] font-mono-code text-slate-400 text-center lg:text-right shrink-0">
-                * Flight ticket possibility for 1–2 teams (subject to rules &amp; confirmation)
-              </div>
+              {journey.note && (
+                <div className="text-[11px] font-mono-code text-slate-400 text-center lg:text-right shrink-0">{journey.note}</div>
+              )}
             </div>
 
           </motion.div>

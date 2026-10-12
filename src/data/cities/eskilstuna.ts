@@ -99,6 +99,17 @@ export const eskilstunaSite: SiteConfig = {
   },
 
   banner: '/esk.jpeg',
+  journey: {
+    finals: 'on 2 Dec 2026 at IES Eskilstuna',
+    dates: [
+      { label: 'Registration opens', value: '12 Oct 2026' },
+      { label: 'School demo', value: '16 Oct 2026' },
+      { label: 'Finals', value: '2 Dec 2026 (IES Eskilstuna)' },
+      { label: 'International stage', value: 'April 2027*' },
+    ],
+    studentsExtra: 'Top 1–2 teams may qualify for flight tickets to the international stage (Apr 2027)*.',
+    note: '* Flight ticket possibility for 1–2 teams (subject to rules & confirmation)',
+  },
 
   footer: {
     title: 'ESKILSTUNA FUTURE INNOVATORS 2026',

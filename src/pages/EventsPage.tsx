@@ -48,7 +48,7 @@ export const EventsPage: React.FC<EventsPageProps> = ({
           </h1>
 
           <p className="mt-4 text-sm sm:text-base text-slate-600 font-light max-w-2xl leading-relaxed">
-            Confirmed calendar for Future Innovators 2026: Registration opening on 12 October 2026, school demos on 16 October 2026, Grand Finals on 2 December 2026 at IES Eskilstuna, and international stage advancement in April 2027.
+            A clear timeline of the autumn season in Västerås: qualifiers in participating schools and associations on 12–25 November, then the Robo-Sprint City Final at Mälardalen International School (MISV) and the Young Inno Hack final presentations (venue to be confirmed) on 5 December 2026.
           </p>
         </motion.div>
 
@@ -164,20 +164,6 @@ export const EventsPage: React.FC<EventsPageProps> = ({
               </div>
             </motion.div>
           ))}
-        </div>
-
-        {/* ── INTERNATIONAL ELEVATION & FLIGHT TICKETS NOTE ── */}
-        <div className="p-6 bg-amber-50/90 border border-amber-200 text-amber-900 text-xs sm:text-sm font-mono-code leading-relaxed flex items-start gap-3">
-          <span className="text-xl">✈️</span>
-          <div>
-            <span className="font-bold uppercase tracking-wider text-amber-950 block mb-1">
-              * International Stage & Flight Tickets Policy
-            </span>
-            <span>
-              Top 1 or 2 winning teams from the Grand Finals on 2 December 2026 at IES Eskilstuna have the possibility of receiving sponsored flight tickets to compete at the International-level stage in April 2027.
-              This opportunity is subject to official competition rules, eligibility verification, and final partner confirmation.
-            </span>
-          </div>
         </div>
 
         {/* ── FINAL VENUE ── */}

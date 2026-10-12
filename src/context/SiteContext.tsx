@@ -92,6 +92,16 @@ export interface SiteConfig {
   };
   /** "<City> Future Innovators 2026" artwork above the programmes (a file in public/); its heading is part of the image. */
   banner?: string;
+  /** Dates for the students/parents/teachers guide on the home page; without it the guide is hidden. */
+  journey?: {
+    /** When and where the final is, read after "the Final", e.g. "on 5 Dec 2026 at MISV, Västerås". */
+    finals: string;
+    dates: { label: string; value: string }[];
+    /** Added to the students' last step, e.g. the international stage. */
+    studentsExtra?: string;
+    /** Footnote under the dates. */
+    note?: string;
+  };
   footer: {
     title: string;
     description: Bilingual;
@@ -163,24 +173,33 @@ export const VFI_SITE: SiteConfig = {
   },
 
   hero: {
-    badge: 'FINALS: 2 DECEMBER 2026 · IES ESKILSTUNA',
+    badge: '5 DECEMBER 2026 · VÄSTERÅS, SWEDEN',
     lines: [same('Build ideas.'), same('Test them.'), same('Take them further.')],
     intro: same(
-      'Future Innovators 2026 — hands-on STEM robotics and student innovation hackathons for schools, associations and independent teams. Join RoboKidovation (Grades 1–9 & Gymnasium) and Young Inno Hack.'
+      'Västerås Future Innovators — hands-on STEM robotics and the Young Inno Hack, for schools, associations and independent teams — RoboKido Junior, Senior and GYM, the Young Inno Hack from grade 7 to university, and grades 1–2 as participants.'
     ),
     primary: { label: same('REGISTER SCHOOL, ASSOCIATION OR TEAM'), target: 'register' },
     secondary: { label: same('EXPLORE EVENTS'), target: 'events' },
     facts: [
-      { label: 'REG OPENS', value: '12 OCT 2026' },
-      { label: 'SCHOOL DEMO', value: '16 OCT 2026' },
-      { label: 'FINALS', value: '2 DEC 2026' },
-      { label: 'VENUE', value: 'IES ESKILSTUNA' },
-      { label: 'NEXT STAGE', value: 'APRIL 2027' },
-      { label: 'FLIGHT TICKETS', value: 'TOP 1–2 TEAMS*' },
+      { label: 'GRADES', value: '1–9 + GYM' },
+      { label: 'PRIZE POOL', value: 'SEK 3,000' },
+      { label: 'PROGRAMME', value: '20H STEM' },
+      { label: 'LGR22', value: 'CURRICULUM FIT' },
+      { label: 'ARENA', value: '244 × 122 CM' },
+      { label: 'FINAL DATE', value: 'DEC 5, 2026' },
     ],
   },
 
   banner: '/ves.jpeg',
+  journey: {
+    finals: 'on 5 Dec 2026 at MISV, Västerås',
+    dates: [
+      { label: 'School demos', value: '1–14 Oct 2026' },
+      { label: 'School qualifiers', value: '12–25 Nov 2026' },
+      { label: 'Final', value: '5 Dec 2026 (MISV, Västerås)' },
+      { label: 'Young Inno Hack', value: '5 Dec 2026 (venue TBC)' },
+    ],
+  },
 
   footer: {
     title: 'VÄSTERÅS FUTURE INNOVATORS 2026',

@@ -677,7 +677,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                   audienceLabel: '🏆 FOR COMPETITION SQUADS',
                   title: site.intake.squadTitle,
                   subtitle: 'Championship Arena Squad',
-                  desc: site.intake.hackathonDesc || 'Register a student team of 2–4 members to compete in the live finals on 2 Dec 2026 at IES Eskilstuna.',
+                  desc: site.intake.hackathonDesc,
                   icon: '🏆',
                   badge: 'Arena Showdown',
                   targetUser: 'Student teams (2–4 members) ready for live competition',

@@ -13,17 +13,17 @@ export const VenueBanner: React.FC = () => {
       </div>
       <div className="lg:col-span-8 space-y-2">
         <span className="inline-block text-[10px] font-mono-code font-bold text-[#006AA7] uppercase tracking-wider">
-          CONFIRMED FINALS VENUE
+          FINAL VENUE
         </span>
         <h2 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#0A1930]">
-          IES Eskilstuna (Internationella Engelska Skolan)
+          Mälardalen International School
         </h2>
         <div className="flex items-center gap-2 text-slate-500">
           <MapPin className="w-4 h-4 text-[#006AA7]" />
-          <span className="text-xs sm:text-sm font-mono-code uppercase">Eskilstuna, Sweden · 2 December 2026</span>
+          <span className="text-xs sm:text-sm font-mono-code uppercase">Västerås, Sweden · December 5, 2026</span>
         </div>
         <p className="text-sm text-slate-600 font-light leading-relaxed max-w-2xl pt-1">
-          The Future Innovators Grand Finals will be hosted at IES Eskilstuna on 2 December 2026. Top qualifying teams will compete live in the tournament arena with the opportunity to qualify for the International-level stage in April 2027.
+          Both the Robo-Sprint City Final and the Young Inno Hack are hosted together at Mälardalen International School on December 5, 2026.
         </p>
       </div>
     </div>

@@ -6,11 +6,15 @@ import {
   Lightbulb,
   Target,
   Users,
+  Award,
   Trophy,
   Presentation,
   Cpu,
+  Wrench,
   Compass,
   Search,
+  Layers,
+  LineChart,
   Rocket,
   UserPlus,
   MapPin,
@@ -19,18 +23,14 @@ import { FutureInnovatorsBanner } from './FutureInnovatorsBanner';
 
 const VENUES: { label: string; name: string; detail?: string; image?: string; track: 'robo' | 'hack' }[] = [
   {
-    label: 'Competition Finals Venue',
-    name: 'IES Eskilstuna',
-    detail: 'Internationella Engelska Skolan Eskilstuna · 2 December 2026',
+    label: 'RoboKidovation Final Venue',
+    name: 'MISV',
+    detail: 'Mälardalen International School Västerås',
     image: '/venue.png',
     track: 'robo',
   },
-  {
-    label: 'Next Stage (International)',
-    name: 'Global Finals Stage',
-    detail: 'April 2027 · Possibility of flight tickets for top 1–2 teams (subject to official rules & confirmation)',
-    track: 'hack',
-  },
+  { label: 'Young Inno Hack Opening AW', name: 'TBD', detail: 'Opening After Work · venue to be announced', track: 'hack' },
+  { label: 'Young Inno Hack Final Venue', name: 'TBC', detail: 'Venue to be confirmed', track: 'hack' },
 ];
 
 interface RefTheExperienceProps {
@@ -42,89 +42,107 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
   onNavigate,
   onOpenRegister,
 }) => {
-  // Step definitions for RoboKidovation (Blue) — matches confirmed schedule
+  // Step definitions for RoboKidovation (Blue) — matches the official Västerås Future
+  // Innovators Robokidovation 2026 timeline flyer (School Demo → Final)
   const roboSteps = [
     {
       num: 1,
-      title: 'Registration Opens',
-      subtitle: 'Portal opens for schools, associations & independent teams',
-      date: '12 October 2026',
+      title: 'School Demo',
+      subtitle: 'See the robots, try simple challenges',
+      date: '1 – 14 October 2026',
       icon: Presentation,
       highlight: false,
     },
     {
       num: 2,
-      title: 'School Demo',
-      subtitle: 'Live robotics assembly, sensor trials & interactive challenges',
-      date: '16 October 2026',
+      title: 'Hands-On Workshop',
+      subtitle: 'Learn and build with real robots',
+      date: '15 – 28 October 2026',
       icon: Cpu,
       highlight: false,
     },
     {
       num: 3,
-      title: 'Hands-On Workshops',
-      subtitle: '20-hour STEM project & team robot engineering',
-      date: 'October – November 2026',
+      title: 'Team Formation',
+      subtitle: 'Form teams and start practising',
+      date: '29 October – 11 November 2026',
       icon: Users,
       highlight: false,
     },
     {
       num: 4,
-      title: 'Competition Finals',
-      subtitle: 'Official arena tournament at IES Eskilstuna',
-      date: '2 December 2026',
-      icon: Trophy,
-      highlight: true,
+      title: 'School Qualification',
+      subtitle: 'Internal challenge to select best teams',
+      date: '12 – 25 November 2026',
+      icon: Award,
+      highlight: false,
     },
     {
       num: 5,
-      title: 'International Opportunity',
-      subtitle: 'Possibility of flight tickets for 1–2 teams to compete internationally*',
-      date: 'April 2027',
-      icon: Rocket,
+      title: 'Final Preparation',
+      subtitle: 'Practise and get final-ready',
+      date: '26 November – 4 December 2026',
+      icon: Wrench,
+      highlight: false,
+    },
+    {
+      num: 6,
+      title: 'Västerås Future Innovators Final',
+      subtitle: 'Compete, showcase & celebrate innovation',
+      date: '5 December 2026',
+      icon: Trophy,
       highlight: true,
     },
   ];
 
-  // Step definitions for Young Inno Hack (Green) — matches official timeline
+  // Step definitions for Young Inno Hack (Green) — matches the official
+  // Track 2 Young Innovators Hackathon flyer (Listen → Select → Connect → Build → Demonstrate)
   const hackathonSteps = [
     {
       num: 1,
-      title: 'Registration & Listen',
-      subtitle: 'Registration opens; collect challenges and vision ideas',
-      date: '12 October 2026',
+      title: 'Listen',
+      subtitle: 'Collect ideas from schools',
+      date: '1 – 14 October 2026',
       icon: Compass,
       highlight: false,
     },
     {
       num: 2,
-      title: 'School Demo & Problem Selection',
-      subtitle: 'Identify key community and sustainability challenges',
-      date: '16 October 2026',
+      title: 'Select',
+      subtitle: 'Identify key challenges',
+      date: '15 – 28 October 2026',
       icon: Search,
       highlight: false,
     },
     {
       num: 3,
-      title: 'Team Formation & Mentorship',
-      subtitle: 'Connect student squads with industry and academic mentors',
-      date: 'Late October – November 2026',
+      title: 'Connect',
+      subtitle: 'Form mixed teams with mentors',
+      date: '29 October – 11 November 2026',
       icon: UserPlus,
       highlight: false,
     },
     {
       num: 4,
-      title: 'Grand Finals Showcase',
-      subtitle: 'Live prototype demonstrations & jury pitch at IES Eskilstuna',
-      date: '2 December 2026',
-      icon: Trophy,
-      highlight: true,
+      title: 'Build',
+      subtitle: 'Turn ideas into a prototype',
+      date: '12 – 25 November 2026',
+      icon: Layers,
+      highlight: false,
     },
     {
       num: 5,
-      title: 'International Elevation',
-      subtitle: 'Opportunity to advance to the April 2027 international stage*',
-      date: 'April 2027',
+      title: 'Prepare Pitch',
+      subtitle: 'Refine your solution and pitch',
+      date: '26 November – 4 December 2026',
+      icon: LineChart,
+      highlight: false,
+    },
+    {
+      num: 6,
+      title: 'Demonstrate',
+      subtitle: 'Present to the jury and win',
+      date: '5 December 2026',
       icon: Rocket,
       highlight: true,
     },
@@ -388,20 +406,6 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
           ))}
         </div>
 
-        {/* ── Official Rules & International Opportunity Note ── */}
-        <div className="p-4 bg-amber-50/80 border border-amber-200 text-amber-900 text-xs font-mono-code leading-relaxed flex items-start gap-3">
-          <span className="text-base leading-none">✈️</span>
-          <div>
-            <span className="font-bold uppercase tracking-wider text-amber-950 block mb-0.5">
-              * International Stage & Flight Tickets Policy
-            </span>
-            <span>
-              Top 1 or 2 winning teams may qualify for sponsored flight tickets to the International-level competition in April 2027.
-              This opportunity is subject to official competition rules, partner sponsorship allocation, and final coordinator confirmation.
-            </span>
-          </div>
-        </div>
-
         {/* ── 04. REGISTER CTA BAR (SECTION 3 CONVERSION ANCHOR) ── */}
         <div className="p-6 sm:p-8 bg-gradient-to-r from-[#0A1930] via-[#006AA7] to-[#0A1930] text-white flex flex-col lg:flex-row items-center justify-between gap-6 shadow-xl">
           <div className="space-y-1 text-center lg:text-left">
@@ -431,7 +435,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
 
         {/* ── 05. FOOTER SUB-STRIP ── */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 text-xs font-mono-code text-slate-400 border-t border-slate-200">
-          <span>// FUTURE INNOVATORS 2026</span>
+          <span>// VÄSTERÅS FUTURE INNOVATORS 2026</span>
 
           <div className="relative">
             <span className="font-handwriting text-lg sm:text-xl text-[#0A1930]">
@@ -441,7 +445,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
           </div>
 
           <span className="font-bold text-[#006AA7] tracking-wider">
-            FINALS: 2 DECEMBER 2026 · IES ESKILSTUNA
+            VÄSTERÅS | 5 DECEMBER 2026
           </span>
         </div>
 
