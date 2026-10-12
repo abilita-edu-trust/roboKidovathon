@@ -1,12 +1,10 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, ChevronDown } from 'lucide-react';
-import { roboPrecisionActionWide } from '../assets/images';
+import { arenaCourtReference } from '../assets/images';
 import { useLanguage } from '../context/LanguageContext';
 import { useSite, pickLang } from '../context/SiteContext';
 import type { IntakeProgramTab } from '../pages/IntakeRegisterPage';
-
-const HERO_VIDEO_URL = 'https://res.cloudinary.com/joeek52k/video/upload/v1789013088/Blix-A-Thon_2nd_Edition_IIT_Bombay_Techfest___Blix_Robotix_1080P_60FPS.mp4';
 
 interface RefHeroProps {
   /** Opens a route, optionally on one register form (the hero buttons come from the site). */
@@ -17,47 +15,31 @@ export const RefHero: React.FC<RefHeroProps> = ({ onNavigate }) => {
   const { hero } = useSite();
   const { language } = useLanguage();
   const sv = language === 'sv';
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    // Skip to competition/arena footage — avoids the opening person close-up
-    video.currentTime = 90;
-    video.play().catch((err) => {
-      console.log('Video autoplay error:', err);
-    });
-  }, []);
 
   return (
     <section className="relative w-full h-screen min-h-[640px] flex flex-col justify-end overflow-hidden select-none bg-[#070709]">
 
-      {/* ── FULL-SCREEN BACKGROUND VIDEO ── */}
-      {/* Wrapper clips letterbox bars; scale(1.38) pushes baked-in 132px black bars out of view */}
+      {/* ── FUTURE INNOVATORS 2026 HERO BANNER ARTWORK ── */}
       <div className="absolute inset-0 z-0 overflow-hidden bg-black">
-        <video
-          ref={videoRef}
-          autoPlay
-          loop
-          muted
-          playsInline
-          poster={roboPrecisionActionWide}
-          className="w-full h-full object-cover scale-[1.38] origin-center"
-          style={{ transform: 'scale(1.38)', transformOrigin: 'center center' }}
-        >
-          <source src={HERO_VIDEO_URL} type="video/mp4" />
-        </video>
+        <motion.img
+          initial={{ scale: 1.08 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+          src={arenaCourtReference}
+          alt="Future Innovators 2026 Competition Arena and Robotics Platform"
+          className="w-full h-full object-cover object-center"
+          loading="eager"
+        />
       </div>
 
       {/* ── GRADIENT SCRIM ── */}
       <div className="absolute inset-0 z-[1] pointer-events-none">
-        {/* Soft left fade — keeps headline readable while letting video shine */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-black/15 to-transparent" />
+        {/* Deep dark gradient scrim — ensures maximum contrast for text across all screen sizes */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-black/35" />
         {/* Bottom-up fade — grounds bottom content gently */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
         {/* Top subtle vignette */}
-        <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-black/20 to-transparent" />
+        <div className="absolute top-0 left-0 right-0 h-28 bg-gradient-to-b from-black/70 to-transparent" />
       </div>
 
       {/* ── CONTENT: pinned to bottom of screen ── */}

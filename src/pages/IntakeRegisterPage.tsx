@@ -15,7 +15,10 @@ import {
   Video,
   Image as ImageIcon,
   FileText,
-  Compass
+  Compass,
+  School,
+  GraduationCap,
+  Users,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { VoiceNoteRecorder } from '../components/VoiceNoteRecorder';
@@ -160,15 +163,18 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
   const offeredTabs: IntakeProgramTab[] =
     site.intake.tabs ?? ['workshop', 'demo', 'association', 'submit-idea', 'hackathon', 'volunteer'];
   const offers = (tab: IntakeProgramTab) => offeredTabs.includes(tab) && (tab !== 'partner' || !!extraForm);
-  // Numbering follows the order shown: registration forms first, then volunteer and partner.
-  const formTabs: IntakeProgramTab[] = offeredTabs.filter((t) => t !== 'volunteer' && t !== 'partner');
-  const optionNum = (tab: IntakeProgramTab) => offeredTabs.indexOf(tab) + 1;
-  const formLabel = (tab: IntakeProgramTab) => `[FORM ${formTabs.indexOf(tab) + 1}/${formTabs.length}]`;
   const showRoboKido = offers('workshop') || offers('demo') || offers('association');
-  const showIdeasTrack = offers('submit-idea') || offers('hackathon');
   const [selectedProgram, setSelectedProgram] = useState<IntakeProgramTab>(
     offers(initialTab) ? initialTab : site.intake.defaultTab
   );
+  type PathwayAudience = 'all' | 'schools' | 'students' | 'community';
+  const [pathwayAudience, setPathwayAudience] = useState<PathwayAudience>(() => {
+    const tab = offers(initialTab) ? initialTab : site.intake.defaultTab;
+    if (tab === 'workshop' || tab === 'demo') return 'schools';
+    if (tab === 'submit-idea' || tab === 'hackathon') return 'students';
+    if (tab === 'volunteer' || tab === 'association' || tab === 'partner') return 'community';
+    return 'all';
+  });
 
   // Location Fields (Country first, then City / Location)
   const [countrySlug, setCountrySlug] = useState(lockedLocation?.countrySlug ?? 'sweden');
@@ -304,9 +310,24 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
   const toggleIn = (list: string[], value: string, set: (v: string[]) => void) =>
     set(list.includes(value) ? list.filter((v) => v !== value) : [...list, value]);
 
+  useEffect(() => {
+    if (initialTab && offers(initialTab)) {
+      setSelectedProgram(initialTab);
+      setSubmitSuccess(false);
+      setSubmitError('');
+      if (initialTab === 'workshop' || initialTab === 'demo') setPathwayAudience('schools');
+      else if (initialTab === 'submit-idea' || initialTab === 'hackathon') setPathwayAudience('students');
+      else if (initialTab === 'volunteer' || initialTab === 'association' || initialTab === 'partner') setPathwayAudience('community');
+    }
+  }, [initialTab]);
+
   const handleSelectProgram = (program: IntakeProgramTab) => {
     setSelectedProgram(program);
     setSubmitSuccess(false);
+    setSubmitError('');
+    const url = new URL(window.location.href);
+    url.searchParams.set('tab', program);
+    window.history.replaceState(null, '', url.toString());
     setTimeout(() => {
       document.getElementById('intake-form-container')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 50);
@@ -316,13 +337,59 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
     e.preventDefault();
     setSubmitError('');
 
+    // Client-side validations with clear helper feedback
     if (!consentAgreed) {
-      setSubmitError('Please accept the consent checkbox to proceed.');
+      setSubmitError('Please accept the accuracy confirmation checkbox to proceed.');
+      document.getElementById('intake-form-container')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       return;
     }
-    if (isAssociation && associationWants.length === 0) {
-      setSubmitError('Please choose what your group would like to take part in.');
+
+    if (!gdprAgreed) {
+      setSubmitError('Please accept the GDPR data protection terms to proceed.');
+      document.getElementById('intake-form-container')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      setSubmitError('Please enter a valid email address (e.g. name@school.se).');
+      document.getElementById('intake-form-container')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+
+    if (selectedProgram === 'submit-idea') {
+      if (!studentName.trim()) {
+        setSubmitError('Please enter your name.');
+        document.getElementById('intake-form-container')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+      if (!schoolName.trim()) {
+        setSubmitError('Please enter your school or organization name.');
+        document.getElementById('intake-form-container')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+      if (!ideaTitle.trim()) {
+        setSubmitError('Please provide a title for your idea.');
+        document.getElementById('intake-form-container')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+    } else {
+      if (isAssociation && associationWants.length === 0) {
+        setSubmitError('Please choose what your group would like to take part in.');
+        document.getElementById('intake-form-container')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+      const requiredName = contactName;
+      if (!requiredName.trim()) {
+        setSubmitError('Please enter the contact person’s full name.');
+        document.getElementById('intake-form-container')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+      if ((applicantType === 'school' || isAssociation) && !schoolName.trim()) {
+        setSubmitError('Please enter the school or association name.');
+        document.getElementById('intake-form-container')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
     }
 
     setIsSubmitting(true);
@@ -496,339 +563,259 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
         </div>
 
         {/* ── TOP SECTION: TRACK CARDS (MATCHING THE 2 USER SCREENSHOTS) ── */}
-        <div className="mb-8">
-          <div className="text-center max-w-3xl mx-auto mb-8">
+        {/* ── TOP SECTION: STREAMLINED PARTICIPATION PATHWAY SELECTOR ── */}
+        <div id="pathway-selector-heading" className="mb-8 scroll-mt-24">
+          <div className="text-center max-w-3xl mx-auto mb-6">
             <div className="inline-flex items-center gap-2 text-[11px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase mb-2">
               <Sparkles className="w-3.5 h-3.5 text-[#FFCD00]" />
               <span>{site.intake.eyebrow}</span>
             </div>
             <h1 className="font-headline font-black text-3xl sm:text-4xl uppercase tracking-tight text-[#0A1930]">
-              Choose Your Program Pathway
+              Choose Your Registration Pathway
             </h1>
             <p className="text-xs sm:text-sm text-slate-600 mt-2 max-w-2xl mx-auto leading-relaxed">
-              {`${pathwaysSentence} Click any option below to load its customizable registration form directly underneath.`}
+              {`${pathwaysSentence} Select who is participating below to load the appropriate registration form directly underneath.`}
             </p>
           </div>
 
-          {/* Quick selector with clear explanations */}
-          <div
-            className={`mb-6 grid grid-cols-2 gap-2.5 ${
-              ({ 4: 'lg:grid-cols-4', 5: 'lg:grid-cols-5', 6: 'lg:grid-cols-6', 7: 'lg:grid-cols-7' } as Record<number, string>)[
-                offeredTabs.filter(offers).length
-              ] ?? 'lg:grid-cols-6'
-            }`}
-          >
-            {[
-              {
-                id: 'workshop' as const,
-                title: 'School Workshop',
-                subtitle: 'Classroom Robotics',
-                desc: 'Pick your custom date & time for a 20-hr hands-on workshop',
-                icon: '🤖',
-                theme: 'blue',
-              },
-              {
-                id: 'demo' as const,
-                title: 'School Demo',
-                subtitle: 'Auditorium Showcase',
-                desc: 'Schedule a live demo session & assembly robot trials',
-                icon: '📢',
-                theme: 'blue',
-              },
-              {
-                id: 'association' as const,
-                title: 'Group / Association',
-                subtitle: 'Associations & Clubs',
-                desc: 'Register an association, club or community group anywhere in Sweden',
-                icon: '🤝',
-                theme: 'blue',
-              },
-              {
-                id: 'submit-idea' as const,
-                title: 'Submit Idea',
-                subtitle: 'Student Innovation',
-                desc: 'Upload voice notes, drawings, or videos & compete in public voting',
-                icon: '💡',
-                theme: 'emerald',
-              },
-              {
-                id: 'hackathon' as const,
-                title: site.intake.squadTitle,
-                subtitle: 'Arena Competition',
-                desc: site.intake.hackathonDesc,
-                icon: '🏆',
-                theme: 'emerald',
-              },
-              {
-                id: 'volunteer' as const,
-                title: 'Volunteer',
-                subtitle: 'Work as a Volunteer',
-                desc: site.intake.volunteerDesc,
-                icon: '🙋',
-                theme: 'blue',
-              },
-              ...(extraForm
-                ? [
-                    {
-                      id: 'partner' as const,
-                      title: extraForm.title,
-                      subtitle: extraForm.subtitle,
-                      desc: extraForm.desc,
-                      icon: extraForm.icon,
-                      theme: 'blue',
-                    },
-                  ]
-                : []),
-            ]
-              .filter((p) => offers(p.id))
-              .map((p) => {
-              const active = selectedProgram === p.id;
-              return (
-                <button
-                  key={p.id}
-                  type="button"
-                  onClick={() => handleSelectProgram(p.id)}
-                  className={`p-3.5 text-left border-2 transition-all relative flex flex-col justify-between ${
-                    active
-                      ? p.theme === 'emerald'
-                        ? 'bg-emerald-800 text-white border-emerald-500 shadow-lg ring-2 ring-emerald-500/40'
-                        : 'bg-[#0A1930] text-white border-[#006AA7] shadow-lg ring-2 ring-[#006AA7]/40'
-                      : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-200'
-                  }`}
-                >
-                  <div>
-                    <div className="flex items-center justify-between text-[11px] font-mono-code font-bold mb-1">
-                      <span className="flex items-center gap-1">
-                        <span>{p.icon}</span>
-                        <span>OPTION {optionNum(p.id)}</span>
+          {/* ── AUDIENCE PERSONA FILTER TABS ── */}
+          <div className="mb-6">
+            <div className="flex flex-wrap items-center justify-center gap-2 max-w-3xl mx-auto">
+              {[
+                { id: 'all' as const, label: 'All Pathways', icon: Compass, count: offeredTabs.filter(offers).length },
+                { id: 'schools' as const, label: 'Schools & Educators', icon: School, note: 'Workshops & Demos' },
+                { id: 'students' as const, label: 'Students & Innovators', icon: GraduationCap, note: 'Ideas & Arena' },
+                { id: 'community' as const, label: 'Community & Volunteers', icon: Users, note: 'Clubs & Crew' },
+              ].map((aud) => {
+                const Icon = aud.icon;
+                const isSelected = pathwayAudience === aud.id;
+                return (
+                  <button
+                    key={aud.id}
+                    type="button"
+                    onClick={() => setPathwayAudience(aud.id)}
+                    className={`px-4 py-2.5 text-xs font-headline font-black uppercase tracking-wider flex items-center gap-2 transition-all border-2 rounded-none cursor-pointer ${
+                      isSelected
+                        ? 'bg-[#0A1930] text-[#FFCD00] border-[#0A1930] shadow-md ring-2 ring-[#006AA7]/30 scale-[1.02]'
+                        : 'bg-white hover:bg-slate-100 text-slate-700 border-slate-200'
+                    }`}
+                  >
+                    <Icon className={`w-4 h-4 ${isSelected ? 'text-[#FFCD00]' : 'text-slate-500'}`} />
+                    <span>{aud.label}</span>
+                    {aud.count !== undefined && (
+                      <span className={`text-[10px] font-mono-code px-1.5 py-0.2 rounded-xs ${
+                        isSelected ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
+                      }`}>
+                        {aud.count}
                       </span>
-                      {active ? (
-                        <span className="text-[10px] font-bold px-1.5 py-0.5 bg-[#FFCD00] text-[#0A1930] rounded-xs animate-pulse">
-                          ACTIVE FORM ↓
-                        </span>
-                      ) : (
-                        <span className="text-slate-400 text-[10px]">Click to open</span>
-                      )}
-                    </div>
-                    <div className="font-headline font-black text-sm uppercase tracking-tight">
-                      {p.title}
-                    </div>
-                    <div className={`text-[10px] font-mono-code font-semibold ${active ? 'text-[#FFCD00]' : 'text-[#006AA7]'}`}>
-                      {p.subtitle}
-                    </div>
-                  </div>
-                  <div className={`text-[11px] mt-2 line-clamp-2 leading-tight ${active ? 'text-slate-200' : 'text-slate-500'}`}>
-                    {p.desc}
-                  </div>
-                </button>
-              );
-            })}
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+            <p className="text-[11px] font-mono-code text-center text-slate-500 mt-2.5">
+              💡 Tip: Click your role above to quickly see only the options meant for you.
+            </p>
           </div>
 
-          {/* Cards Grid */}
-          <div className={`grid grid-cols-1 gap-5 ${showRoboKido && showIdeasTrack ? 'md:grid-cols-2' : ''}`}>
-            {/* Card 1: Track 1 - RoboKidovation */}
-            {showRoboKido && (
-            <div
-              className={`p-6 border-2 transition-all relative ${
-                selectedProgram === 'workshop' || selectedProgram === 'demo' || selectedProgram === 'association'
-                  ? 'border-[#006AA7] bg-white shadow-xl ring-2 ring-[#006AA7]/20'
-                  : 'border-slate-200 bg-white/80 hover:border-slate-300 shadow-sm'
-              }`}
-            >
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-[11px] font-mono-code font-bold uppercase tracking-wider text-slate-400">
-                  TRACK 1 // ROBOTICS & CURRICULUM
-                </span>
-                <span className="text-2xl">🤖</span>
-              </div>
-              <h2 className="font-headline font-black text-2xl uppercase tracking-tight text-[#0A1930] mb-2 flex items-center gap-2">
-                RoboKidovation
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed mb-6">
-                Hands-on school robotics learning, customizable calendar date & time selection, classroom build sessions, and competition pathway.
-              </p>
+          {/* ── REDESIGNED CLEAR PATHWAY CARDS ── */}
+          <div className="mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[
+                {
+                  id: 'workshop' as const,
+                  audience: 'schools' as const,
+                  audienceLabel: '🏫 FOR SCHOOLS & TEACHERS',
+                  title: 'School Workshop',
+                  subtitle: 'Classroom Robotics',
+                  desc: '20 hours of hands-on STEM robotics curriculum, rover hardware kits, and training brought directly to your school.',
+                  icon: '🤖',
+                  badge: 'Grades 1–9 & GYM',
+                  targetUser: 'Educators & schools booking classroom robotics',
+                  theme: 'blue' as const,
+                },
+                {
+                  id: 'demo' as const,
+                  audience: 'schools' as const,
+                  audienceLabel: '📢 FOR SCHOOL ASSEMBLIES',
+                  title: 'School Demo Session',
+                  subtitle: 'Auditorium Showcase',
+                  desc: 'Live robotics demonstration session and interactive robot challenge trials in your school assembly hall.',
+                  icon: '📢',
+                  badge: 'Live Assembly',
+                  targetUser: 'Schools wanting a live robotics showcase for the whole school',
+                  theme: 'blue' as const,
+                },
+                {
+                  id: 'submit-idea' as const,
+                  audience: 'students' as const,
+                  audienceLabel: '💡 FOR STUDENTS & YOUNG INVENTORS',
+                  title: 'Submit Innovation Idea',
+                  subtitle: 'Young Inno Hack Track',
+                  desc: 'Submit your solution for a real-world problem via drawing, photo, voice recording, text, or video. Qualifies for public voting!',
+                  icon: '💡',
+                  badge: 'Multimodal Pitch',
+                  targetUser: 'Individual students or creative youth duos',
+                  theme: 'emerald' as const,
+                },
+                {
+                  id: 'hackathon' as const,
+                  audience: 'students' as const,
+                  audienceLabel: '🏆 FOR COMPETITION SQUADS',
+                  title: site.intake.squadTitle,
+                  subtitle: 'Championship Arena Squad',
+                  desc: site.intake.hackathonDesc || 'Register a student team of 2–4 members to compete in the live finals on 2 Dec 2026 at IES Eskilstuna.',
+                  icon: '🏆',
+                  badge: 'Arena Showdown',
+                  targetUser: 'Student teams (2–4 members) ready for live competition',
+                  theme: 'emerald' as const,
+                },
+                {
+                  id: 'association' as const,
+                  audience: 'community' as const,
+                  audienceLabel: '🤝 FOR CLUBS & ASSOCIATIONS',
+                  title: 'Group / Association',
+                  subtitle: 'Community Youth Teams',
+                  desc: 'Register an after-school club, scout group, cultural association, or youth organization anywhere in Sweden.',
+                  icon: '🤝',
+                  badge: 'Community Intake',
+                  targetUser: 'Youth associations, after-school clubs, and non-profits',
+                  theme: 'blue' as const,
+                },
+                {
+                  id: 'volunteer' as const,
+                  audience: 'community' as const,
+                  audienceLabel: '🙋 FOR MENTORS & VOLUNTEERS',
+                  title: 'Volunteer Crew',
+                  subtitle: 'Event Support & Mentorship',
+                  desc: site.intake.volunteerDesc || 'Help guide young students, mentor workshop stations, and co-run championship event days.',
+                  icon: '🙋',
+                  badge: 'Join The Team',
+                  targetUser: 'Parents, university mentors, and STEM enthusiasts',
+                  theme: 'blue' as const,
+                },
+                ...(extraForm
+                  ? [
+                      {
+                        id: 'partner' as const,
+                        audience: 'community' as const,
+                        audienceLabel: '🤝 FOR PARTNER ORGANIZATIONS',
+                        title: extraForm.title,
+                        subtitle: extraForm.subtitle,
+                        desc: extraForm.desc,
+                        icon: extraForm.icon || '🤝',
+                        badge: 'Partner Intake',
+                        targetUser: 'Institutional and industry collaborators',
+                        theme: 'blue' as const,
+                      },
+                    ]
+                  : []),
+              ]
+                .filter((p) => offers(p.id))
+                .filter((p) => pathwayAudience === 'all' || p.audience === pathwayAudience)
+                .map((p) => {
+                  const active = selectedProgram === p.id;
+                  const isEmerald = p.theme === 'emerald';
+                  return (
+                    <button
+                      key={p.id}
+                      type="button"
+                      onClick={() => handleSelectProgram(p.id)}
+                      className={`p-5 text-left border-2 transition-all relative flex flex-col justify-between group shadow-xs cursor-pointer rounded-none ${
+                        active
+                          ? isEmerald
+                            ? 'bg-emerald-950 text-white border-emerald-400 ring-4 ring-emerald-500/25 shadow-lg'
+                            : 'bg-[#0A1930] text-white border-[#FFCD00] ring-4 ring-[#006AA7]/30 shadow-lg'
+                          : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-200 hover:border-slate-300'
+                      }`}
+                    >
+                      <div className="space-y-3">
+                        {/* Top Audience & Status Bar */}
+                        <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-inherit/20">
+                          <span
+                            className={`text-[10px] font-mono-code font-bold uppercase tracking-wider ${
+                              active
+                                ? 'text-[#FFCD00]'
+                                : isEmerald
+                                ? 'text-emerald-700'
+                                : 'text-[#006AA7]'
+                            }`}
+                          >
+                            {p.audienceLabel}
+                          </span>
+                          <span
+                            className={`text-[10px] font-mono-code font-bold px-2 py-0.5 rounded-none uppercase tracking-wider shrink-0 ${
+                              active
+                                ? 'bg-[#FFCD00] text-[#0A1930]'
+                                : 'bg-slate-100 text-slate-600'
+                            }`}
+                          >
+                            {active ? '✓ ACTIVE' : p.badge}
+                          </span>
+                        </div>
 
-              {/* Action Buttons: Workshop & Demo */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-100">
-                <button
-                  type="button"
-                  onClick={() => handleSelectProgram('workshop')}
-                  className={`p-3.5 text-left transition-all border-2 flex flex-col justify-between ${
-                    selectedProgram === 'workshop'
-                      ? 'bg-[#006AA7] text-white border-[#006AA7] shadow-md ring-2 ring-[#006AA7]/30'
-                      : 'bg-slate-50 hover:bg-slate-100 text-[#0A1930] border-slate-200'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-headline font-black text-sm uppercase tracking-wider">
-                      1. Workshop
-                    </span>
-                    {selectedProgram === 'workshop' ? (
-                      <span className="text-[10px] font-mono-code font-bold px-1.5 py-0.5 bg-[#FFCD00] text-[#0A1930]">
-                        FORM BELOW ↓
-                      </span>
-                    ) : (
-                      <span className="text-[10px] font-mono-code px-1.5 py-0.5 bg-slate-200 text-slate-700">
-                        Classroom
-                      </span>
-                    )}
-                  </div>
-                  <div className={`text-[11px] leading-tight ${selectedProgram === 'workshop' ? 'text-white/80' : 'text-slate-500'}`}>
-                    Hands-on 20-hr robotics curriculum & kits brought to your school
-                  </div>
-                </button>
+                        {/* Title & Icon */}
+                        <div className="flex items-start gap-3">
+                          <span className="text-3xl shrink-0 leading-none pt-0.5">{p.icon}</span>
+                          <div>
+                            <h3 className="font-headline font-black text-base sm:text-lg uppercase tracking-tight leading-snug">
+                              {p.title}
+                            </h3>
+                            <p
+                              className={`text-xs font-mono-code font-semibold ${
+                                active ? 'text-[#FFCD00]' : isEmerald ? 'text-emerald-600' : 'text-[#006AA7]'
+                              }`}
+                            >
+                              {p.subtitle}
+                            </p>
+                          </div>
+                        </div>
 
-                <button
-                  type="button"
-                  onClick={() => handleSelectProgram('demo')}
-                  className={`p-3.5 text-left transition-all border-2 flex flex-col justify-between ${
-                    selectedProgram === 'demo'
-                      ? 'bg-[#006AA7] text-white border-[#006AA7] shadow-md ring-2 ring-[#006AA7]/30'
-                      : 'bg-slate-50 hover:bg-slate-100 text-[#0A1930] border-slate-200'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-headline font-black text-sm uppercase tracking-wider">
-                      2. School Demo
-                    </span>
-                    {selectedProgram === 'demo' ? (
-                      <span className="text-[10px] font-mono-code font-bold px-1.5 py-0.5 bg-[#FFCD00] text-[#0A1930]">
-                        FORM BELOW ↓
-                      </span>
-                    ) : (
-                      <span className="text-[10px] font-mono-code px-1.5 py-0.5 bg-slate-200 text-slate-700">
-                        Assembly
-                      </span>
-                    )}
-                  </div>
-                  <div className={`text-[11px] leading-tight ${selectedProgram === 'demo' ? 'text-white/80' : 'text-slate-500'}`}>
-                    Live demonstration session & challenge trials in your auditorium
-                  </div>
-                </button>
+                        {/* Plain Description */}
+                        <p
+                          className={`text-xs leading-relaxed font-light ${
+                            active ? 'text-slate-200' : 'text-slate-600'
+                          }`}
+                        >
+                          {p.desc}
+                        </p>
+                      </div>
 
-                <button
-                  type="button"
-                  onClick={() => handleSelectProgram('association')}
-                  className={`sm:col-span-2 p-3.5 text-left transition-all border-2 flex flex-col justify-between ${
-                    selectedProgram === 'association'
-                      ? 'bg-[#006AA7] text-white border-[#006AA7] shadow-md ring-2 ring-[#006AA7]/30'
-                      : 'bg-slate-50 hover:bg-slate-100 text-[#0A1930] border-slate-200'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-headline font-black text-sm uppercase tracking-wider">
-                      3. Group / Association
-                    </span>
-                    {selectedProgram === 'association' ? (
-                      <span className="text-[10px] font-mono-code font-bold px-1.5 py-0.5 bg-[#FFCD00] text-[#0A1930]">
-                        FORM BELOW ↓
-                      </span>
-                    ) : (
-                      <span className="text-[10px] font-mono-code px-1.5 py-0.5 bg-slate-200 text-slate-700">
-                        Associations
-                      </span>
-                    )}
-                  </div>
-                  <div className={`text-[11px] leading-tight ${selectedProgram === 'association' ? 'text-white/80' : 'text-slate-500'}`}>
-                    Associations, clubs and community groups from anywhere in Sweden
-                  </div>
-                </button>
-              </div>
+                      {/* Best for & Action Footer */}
+                      <div className="pt-3 border-t border-inherit/15 mt-3 space-y-2.5">
+                        <div
+                          className={`text-[11px] font-mono-code ${
+                            active ? 'text-slate-300' : 'text-slate-500'
+                          }`}
+                        >
+                          <span className="font-bold">🎯 For:</span> {p.targetUser}
+                        </div>
+
+                        <div
+                          className={`text-xs font-headline font-black uppercase tracking-wider py-2 px-3 text-center flex items-center justify-center gap-1.5 transition-colors ${
+                            active
+                              ? 'bg-[#FFCD00] text-[#0A1930] shadow-sm'
+                              : 'bg-slate-100 group-hover:bg-[#006AA7] group-hover:text-white text-slate-700'
+                          }`}
+                        >
+                          {active ? (
+                            <span>✓ Form Active Below</span>
+                          ) : (
+                            <>
+                              <span>Select This Form</span>
+                              <ArrowRight className="w-3.5 h-3.5" />
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
             </div>
-            )}
-
-            {/* Card 2: Track 2 - Young Inno Hack */}
-            {showIdeasTrack && (
-            <div
-              className={`p-6 border-2 transition-all relative ${
-                selectedProgram === 'submit-idea' || selectedProgram === 'hackathon'
-                  ? 'border-emerald-600 bg-white shadow-xl ring-2 ring-emerald-600/20'
-                  : 'border-slate-200 bg-white/80 hover:border-slate-300 shadow-sm'
-              }`}
-            >
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-[11px] font-mono-code font-bold uppercase tracking-wider text-slate-400">
-                  {showRoboKido ? 'TRACK 2 // ' : ''}INNOVATION & ARENA
-                </span>
-                <span className="text-2xl">💡</span>
-              </div>
-              <h2 className="font-headline font-black text-2xl uppercase tracking-tight text-[#0A1930] mb-2 flex items-center gap-2">
-                {site.hackLabel}
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed mb-6">
-                {site.intake.ideasTrackDesc ??
-                  'Problem discovery, student multimodal idea submission (voice/picture/video), team formation, physical/digital prototypes, and arena finals.'}
-              </p>
-
-              {/* Action Buttons: Submit Idea & Register for Hackathon */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-100">
-                {offers('submit-idea') && (
-                <button
-                  type="button"
-                  onClick={() => handleSelectProgram('submit-idea')}
-                  className={`p-3.5 text-left transition-all border-2 flex flex-col justify-between ${
-                    selectedProgram === 'submit-idea'
-                      ? 'bg-emerald-600 text-white border-emerald-600 shadow-md ring-2 ring-emerald-600/30'
-                      : 'bg-slate-50 hover:bg-slate-100 text-[#0A1930] border-slate-200'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-headline font-black text-sm uppercase tracking-wider">
-                      {optionNum('submit-idea')}. Submit Idea
-                    </span>
-                    {selectedProgram === 'submit-idea' ? (
-                      <span className="text-[10px] font-mono-code font-bold px-1.5 py-0.5 bg-[#FFCD00] text-[#0A1930]">
-                        FORM BELOW ↓
-                      </span>
-                    ) : (
-                      <span className="text-[10px] font-mono-code px-1.5 py-0.5 bg-slate-200 text-slate-700">
-                        Multimodal
-                      </span>
-                    )}
-                  </div>
-                  <div className={`text-[11px] leading-tight ${selectedProgram === 'submit-idea' ? 'text-white/80' : 'text-slate-500'}`}>
-                    Submit future idea via text, diagram, voice note, or video pitch
-                  </div>
-                </button>
-                )}
-
-                {offers('hackathon') && (
-                <button
-                  type="button"
-                  onClick={() => handleSelectProgram('hackathon')}
-                  className={`p-3.5 text-left transition-all border-2 flex flex-col justify-between ${
-                    selectedProgram === 'hackathon'
-                      ? 'bg-emerald-600 text-white border-emerald-600 shadow-md ring-2 ring-emerald-600/30'
-                      : 'bg-slate-50 hover:bg-slate-100 text-[#0A1930] border-slate-200'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-headline font-black text-sm uppercase tracking-wider">
-                      {optionNum('hackathon')}. {site.intake.squadTitle}
-                    </span>
-                    {selectedProgram === 'hackathon' ? (
-                      <span className="text-[10px] font-mono-code font-bold px-1.5 py-0.5 bg-[#FFCD00] text-[#0A1930]">
-                        FORM BELOW ↓
-                      </span>
-                    ) : (
-                      <span className="text-[10px] font-mono-code px-1.5 py-0.5 bg-slate-200 text-slate-700">
-                        Compete
-                      </span>
-                    )}
-                  </div>
-                  <div className={`text-[11px] leading-tight ${selectedProgram === 'hackathon' ? 'text-white/80' : 'text-slate-500'}`}>
-                    {site.intake.hackathonDesc}
-                  </div>
-                </button>
-                )}
-              </div>
-            </div>
-            )}
           </div>
         </div>
 
-        {/* ── DYNAMIC INLINE FORM CONTAINER (APPEARS IMMEDIATELY BELOW THE CARDS) ── */}
+        {/* ── DYNAMIC INLINE FORM CONTAINER ── */}
         <div
           id="intake-form-container"
           className={`bg-white border-2 border-t-8 shadow-xl p-6 sm:p-10 text-[#0A1930] relative scroll-mt-24 ${
@@ -851,71 +838,36 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
             extraForm.render()
           ) : !submitSuccess ? (
             <div>
-              {/* Form Active Banner */}
-              <div className="mb-6 p-4 border border-slate-200 bg-slate-50 flex flex-wrap items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <div className={`w-3 h-3 rounded-full animate-ping ${
-                    selectedProgram === 'submit-idea' || selectedProgram === 'hackathon' ? 'bg-emerald-500' : 'bg-[#006AA7]'
-                  }`} />
-                  <div>
-                    <div className="text-xs font-mono-code font-bold uppercase tracking-wider text-slate-500">
-                      Currently Active Intake Form
-                    </div>
-                    <div className="font-headline font-black text-base uppercase text-[#0A1930]">
-                      {selectedProgram === 'workshop' && `Option ${optionNum('workshop')}: School Workshop Booking`}
-                      {selectedProgram === 'demo' && `Option ${optionNum('demo')}: Live School Demo Session`}
-                      {selectedProgram === 'association' && `Option ${optionNum('association')}: Group / Association Registration`}
-                      {selectedProgram === 'submit-idea' && `Option ${optionNum('submit-idea')}: Student Idea Submission (Voice / Drawing / Video)`}
-                      {selectedProgram === 'hackathon' && `Option ${optionNum('hackathon')}: ${site.hackLabel} Squad Registration`}
-                    </div>
-                  </div>
-                </div>
-                <div className="text-xs font-mono-code text-slate-500">
-                  Customizable Calendar Dates & Times
-                </div>
-              </div>
-
-              {/* Form Header Badge */}
-              <div className="mb-6 pb-4 border-b border-slate-200">
-                <div className="flex flex-wrap items-center justify-between gap-2">
+              {/* Unified Clean Form Header */}
+              <div className="mb-8 pb-6 border-b border-slate-200">
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                   <div className={`inline-flex items-center gap-2 text-xs font-mono-code font-bold tracking-wider uppercase ${isHack ? 'text-[#059669]' : 'text-[#006AA7]'}`}>
-                    {selectedProgram === 'workshop' && <span>{formLabel('workshop')} // WORKSHOP BOOKING INTAKE</span>}
-                    {selectedProgram === 'demo' && <span>{formLabel('demo')} // SCHOOL DEMO SESSION REQUEST</span>}
-                    {selectedProgram === 'association' && <span>{formLabel('association')} // GROUP / ASSOCIATION REGISTRATION</span>}
-                    {selectedProgram === 'submit-idea' && (
-                      <span className="text-emerald-700">
-                        {formLabel('submit-idea')} // STUDENT IDEA SUBMISSION (PICTURE / VOICE / TEXT / VIDEO)
-                      </span>
-                    )}
-                    {selectedProgram === 'hackathon' && (
-                      <span className="text-emerald-700">
-                        {formLabel('hackathon')} // {site.hackLabel.toUpperCase()} PARTICIPATION
-                      </span>
-                    )}
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span>Official Registration Intake · Season 2026</span>
                   </div>
                   <span className="text-[11px] font-mono-code text-slate-500">
-                    Customizable Scheduling & Multi-City EU Skola Intake
+                    Finals: 2 Dec 2026 @ IES Eskilstuna
                   </span>
                 </div>
 
-                <h3 className="font-headline font-black text-2xl uppercase tracking-tight text-[#0A1930] mt-1">
-                  {selectedProgram === 'workshop' && 'Book Hands-On Robotics Workshop'}
-                  {selectedProgram === 'demo' && 'Request School Demo & Overview Session'}
-                  {selectedProgram === 'association' && 'Register Your Group or Association'}
-                  {selectedProgram === 'submit-idea' && 'Submit Your Future Innovation Idea'}
-                  {selectedProgram === 'hackathon' && `Register Squad for ${site.hackLabel}`}
+                <h3 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#0A1930] mt-1">
+                  {selectedProgram === 'workshop' && '🤖 Book Hands-On Robotics Workshop'}
+                  {selectedProgram === 'demo' && '📢 Request School Demonstration Session'}
+                  {selectedProgram === 'association' && '🤝 Register Group or Association'}
+                  {selectedProgram === 'submit-idea' && '💡 Submit Your Future Innovation Idea'}
+                  {selectedProgram === 'hackathon' && `🏆 Register Squad for ${site.hackLabel}`}
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-600 mt-1">
+                <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl leading-relaxed">
                   {selectedProgram === 'workshop' &&
-                    'Select your custom preferred calendar date and time. An admin coordinator will review and approve.'}
+                    'Select your custom preferred calendar date and time. We bring all hardware kits, mats, and 20-hr curriculum to your school.'}
                   {selectedProgram === 'demo' &&
-                    'Bring an interactive robotics demonstration straight to your auditorium or classroom.'}
+                    'Bring an interactive robotics demonstration straight to your school auditorium or assembly hall.'}
                   {selectedProgram === 'association' &&
-                    `For associations, clubs and community groups in Sweden. Tell us about your children and what you would like — ${site.intake.associationContact} will contact you to plan it.`}
+                    `For associations, clubs and community groups in Sweden. Tell us about your group — ${site.intake.associationContact} will contact you to coordinate.'`}
                   {selectedProgram === 'submit-idea' &&
-                    'Express your vision with multimodal options: write it down, upload blueprints/photos, record a voice note, or attach a video!'}
+                    'Express your vision with drawings, blueprints, photos, voice notes, text, or video to qualify for public voting!'}
                   {selectedProgram === 'hackathon' &&
-                    'Form your hacker squad and tackle real-world challenges in environment, smart cities, and education.'}
+                    'Form your student squad (2–4 members) to tackle real-world innovation challenges in the live arena finals.'}
                 </p>
               </div>
 
@@ -1682,8 +1634,12 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                 </div>
 
                 {submitError && (
-                  <div className="p-3 bg-red-50 border border-red-200 flex items-center gap-2 text-xs font-mono-code text-red-600">
-                    <AlertCircle className="w-4 h-4 shrink-0" />
+                  <div
+                    id="submit-error-banner"
+                    role="alert"
+                    className="p-4 bg-red-50 border-2 border-red-300 flex items-center gap-3 text-xs sm:text-sm font-mono-code font-semibold text-red-700 shadow-xs animate-shake"
+                  >
+                    <AlertCircle className="w-5 h-5 shrink-0 text-red-600" />
                     <span>{submitError}</span>
                   </div>
                 )}
@@ -1692,7 +1648,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`w-full py-4 px-6 text-white font-headline font-black text-sm tracking-wider uppercase transition-all shadow-md flex items-center justify-center gap-2 disabled:opacity-50 ${
+                  className={`w-full py-4 px-6 text-white font-headline font-black text-sm tracking-wider uppercase transition-all shadow-md flex items-center justify-center gap-2.5 disabled:opacity-50 active:scale-[0.99] ${
                     selectedProgram === 'submit-idea' || selectedProgram === 'hackathon'
                       ? 'bg-emerald-600 hover:bg-emerald-700'
                       : 'bg-[#006AA7] hover:bg-[#013A63]'
@@ -1700,14 +1656,18 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                 >
                   {isSubmitting ? (
                     <span className="inline-flex items-center gap-2">
-                      <span className="w-4 h-4 border-2 border-white/30 border-t-white animate-spin" />
-                      <span>Transmitting Registration...</span>
+                      <span className="w-4 h-4 border-2 border-white/30 border-t-white animate-spin rounded-full" />
+                      <span>
+                        {selectedProgram === 'submit-idea'
+                          ? 'Uploading Media & Submitting Idea...'
+                          : 'Transmitting Registration...'}
+                      </span>
                     </span>
                   ) : (
                     <>
                       <span>
                         {selectedProgram === 'workshop' && 'Submit Workshop Booking Request'}
-                        {selectedProgram === 'demo' && 'Request School Demo'}
+                        {selectedProgram === 'demo' && 'Request School Demo Session'}
                         {selectedProgram === 'association' && 'Register Group / Association'}
                         {selectedProgram === 'submit-idea' && 'Submit Idea for Review'}
                         {selectedProgram === 'hackathon' && 'Register Hacker Squad'}
