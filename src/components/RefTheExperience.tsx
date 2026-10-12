@@ -1,10 +1,8 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import {
   ArrowRight,
   Bot,
   Lightbulb,
-  Target,
   Users,
   Award,
   Trophy,
@@ -20,6 +18,7 @@ import {
   MapPin,
 } from 'lucide-react';
 import { FutureInnovatorsBanner } from './FutureInnovatorsBanner';
+import { PathwayCard } from './PathwayCard';
 
 const VENUES: { label: string; name: string; detail?: string; image?: string; track: 'robo' | 'hack' }[] = [
   {
@@ -161,210 +160,48 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
         {/* ── 02. TWO PRIMARY EVENT PATHWAY CARDS ── */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
 
-          {/* ════════════════════════════════════════════════════════════════
-              CARD 01: ROBOKIDOVATION (BLUE THEME)
-             ════════════════════════════════════════════════════════════════ */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="bg-white border-2 border-[#006AA7] shadow-xl overflow-hidden flex flex-col justify-between hover:shadow-2xl transition-all duration-300"
-          >
-            {/* Blue Card Top Header Banner */}
-            <div className="bg-[#006AA7] text-white p-6 sm:p-7 flex flex-col items-start gap-4">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 bg-white/15 border border-white/25 flex items-center justify-center text-white shrink-0 shadow-inner">
-                  <Bot className="w-8 h-8 text-white" />
-                </div>
-                <div>
-                  <h3 className="font-headline font-black text-2xl sm:text-3xl text-white tracking-tight leading-none whitespace-nowrap">
-                    RoboKidovation
-                  </h3>
-                  <p className="text-[11px] sm:text-xs font-mono-code font-bold uppercase tracking-[0.2em] text-sky-200 mt-1">
-                    LEARN. TEST. IMPROVE. COMPETE.
-                  </p>
-                </div>
-              </div>
+          <PathwayCard
+            theme="robo"
+            icon={Bot}
+            title="RoboKidovation"
+            tagline="LEARN. TEST. IMPROVE. COMPETE."
+            intro={[
+              'Hands-on robotics challenge for teams from schools and associations.',
+              'No previous experience needed.',
+              'Junior: grades 3–6 · Senior: grades 7–9 · GYM: programmable bot.',
+            ]}
+            steps={roboSteps}
+            callout={
+              <>
+                From school workshops and internal competitions, up to <span className="font-bold text-[#006AA7]">4 teams</span> from each participating school or association qualify for the Västerås RoboKidovation Final on <span className="font-bold text-[#006AA7]">5 December 2026</span>.
+              </>
+            }
+            ctaLabel="EXPLORE TRACK"
+            onCta={() => onNavigate('challenges')}
+            half
+          />
 
-              <div className="text-xs sm:text-sm text-sky-100 font-light w-full border-t border-white/15 pt-3">
-                <p>Hands-on robotics challenge for teams from schools and associations.</p>
-                <p className="text-white/80">No previous experience needed.</p>
-                <p className="text-white/80">Junior: grades 3–6 · Senior: grades 7–9 · GYM: programmable bot.</p>
-              </div>
-            </div>
-
-            {/* Blue Card 6 Step Flow: NO IMAGES, ICONS ONLY, NO ARROWS */}
-            <div className="p-5 sm:p-7 space-y-6 flex-1 flex flex-col justify-between">
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-3.5">
-                {roboSteps.map((step) => {
-                  const StepIcon = step.icon;
-                  return (
-                    <div
-                      key={step.num}
-                      className="bg-[#F6FAFD] border border-sky-100 p-3.5 flex flex-col justify-between items-center text-center space-y-3 hover:bg-sky-50/70 hover:border-sky-300 transition-all duration-200 shadow-2xs group"
-                    >
-                      {/* Step Number */}
-                      <div className="w-7 h-7 bg-[#006AA7] text-white flex items-center justify-center font-headline font-bold text-xs shadow-xs group-hover:scale-110 transition-transform">
-                        {step.num}
-                      </div>
-
-                      {/* Step Icon (Pure Vector Icon, NO Images) */}
-                      <div className="w-12 h-12 bg-sky-100/70 text-[#006AA7] flex items-center justify-center group-hover:bg-[#006AA7] group-hover:text-white transition-colors duration-200">
-                        <StepIcon className="w-6 h-6" />
-                      </div>
-
-                      {/* Step Title & Subtitle */}
-                      <div className="space-y-1 min-h-[52px] flex flex-col justify-center">
-                        <h4 className="font-headline font-bold text-xs sm:text-sm text-[#0A1930] leading-tight">
-                          {step.title}
-                        </h4>
-                        <p className="text-[11px] text-slate-500 font-normal leading-tight">
-                          {step.subtitle}
-                        </p>
-                      </div>
-
-                      {/* Step Date Pill */}
-                      <div
-                        className={`w-full py-1.5 px-2 text-[10px] sm:text-[11px] font-mono-code font-bold tracking-tight text-center ${
-                          step.highlight
-                            ? 'bg-[#006AA7] text-white shadow-xs'
-                            : 'bg-sky-100/80 text-[#006AA7]'
-                        }`}
-                      >
-                        {step.date}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Blue Card Bottom Target Callout */}
-              <div className="bg-[#F0F7FD] border border-[#BAE6FD] p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 bg-[#006AA7]/10 flex items-center justify-center text-[#006AA7] shrink-0">
-                    <Target className="w-5 h-5" />
-                  </div>
-                  <p className="text-xs sm:text-sm text-[#0A1930] leading-snug font-medium">
-                    From school workshops and internal competitions, up to <span className="font-bold text-[#006AA7]">4 teams</span> from each participating school or association qualify for the Västerås RoboKidovation Final on <span className="font-bold text-[#006AA7]">5 December 2026</span>.
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
-                  <button
-                    onClick={() => onNavigate('challenges')}
-                    className="w-full sm:w-auto px-4 py-2.5 bg-white hover:bg-sky-50 text-[#006AA7] border border-[#006AA7]/30 text-xs font-bold font-syne uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-2xs"
-                  >
-                    <span>EXPLORE TRACK</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* ════════════════════════════════════════════════════════════════
-              CARD 02: YOUNG INNO HACK (GREEN THEME)
-             ════════════════════════════════════════════════════════════════ */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="bg-white border-2 border-[#059669] shadow-xl overflow-hidden flex flex-col justify-between hover:shadow-2xl transition-all duration-300"
-          >
-            {/* Green Card Top Header Banner */}
-            <div className="bg-[#059669] text-white p-6 sm:p-7 flex flex-col items-start gap-4">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 bg-white/15 border border-white/25 flex items-center justify-center text-white shrink-0 shadow-inner">
-                  <Lightbulb className="w-8 h-8 text-white" />
-                </div>
-                <div>
-                  <h3 className="font-headline font-black text-2xl sm:text-3xl text-white tracking-tight leading-none whitespace-nowrap">
-                    Young Inno Hack
-                  </h3>
-                  <p className="text-[11px] sm:text-xs font-mono-code font-bold uppercase tracking-[0.2em] text-emerald-200 mt-1">
-                    IDEAS TODAY. A BRIGHTER TOMORROW.
-                  </p>
-                </div>
-              </div>
-
-              <div className="text-xs sm:text-sm text-emerald-100 font-light w-full border-t border-white/15 pt-3">
-                <p>A one-day innovation challenge solving real-world problems.</p>
-                <p className="text-white/80">Develop a concept and pitch to the jury.</p>
-                <p className="text-white/80">Basic: grades 7–9 · Medium: gymnasiet · Advanced: university students.</p>
-              </div>
-            </div>
-
-            {/* Green Card 6 Step Flow: NO IMAGES, ICONS ONLY, NO ARROWS */}
-            <div className="p-5 sm:p-7 space-y-6 flex-1 flex flex-col justify-between">
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-3.5">
-                {hackathonSteps.map((step) => {
-                  const StepIcon = step.icon;
-                  return (
-                    <div
-                      key={step.num}
-                      className="bg-[#F4FAF6] border border-emerald-100 p-3.5 flex flex-col justify-between items-center text-center space-y-3 hover:bg-emerald-50/70 hover:border-emerald-300 transition-all duration-200 shadow-2xs group"
-                    >
-                      {/* Step Number */}
-                      <div className="w-7 h-7 bg-[#059669] text-white flex items-center justify-center font-headline font-bold text-xs shadow-xs group-hover:scale-110 transition-transform">
-                        {step.num}
-                      </div>
-
-                      {/* Step Icon (Pure Vector Icon, NO Images) */}
-                      <div className="w-12 h-12 bg-emerald-100/70 text-[#059669] flex items-center justify-center group-hover:bg-[#059669] group-hover:text-white transition-colors duration-200">
-                        <StepIcon className="w-6 h-6" />
-                      </div>
-
-                      {/* Step Title & Subtitle */}
-                      <div className="space-y-1 min-h-[52px] flex flex-col justify-center">
-                        <h4 className="font-headline font-bold text-xs sm:text-sm text-[#0A1930] leading-tight">
-                          {step.title}
-                        </h4>
-                        <p className="text-[11px] text-slate-500 font-normal leading-tight">
-                          {step.subtitle}
-                        </p>
-                      </div>
-
-                      {/* Step Date Pill */}
-                      <div
-                        className={`w-full py-1.5 px-2 text-[10px] sm:text-[11px] font-mono-code font-bold tracking-tight text-center ${
-                          step.highlight
-                            ? 'bg-[#059669] text-white shadow-xs'
-                            : 'bg-emerald-100/80 text-[#059669]'
-                        }`}
-                      >
-                        {step.date}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Green Card Bottom Target Callout */}
-              <div className="bg-[#F0FDF4] border border-[#BBF7D0] p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 bg-[#059669]/10 flex items-center justify-center text-[#059669] shrink-0">
-                    <Target className="w-5 h-5" />
-                  </div>
-                  <p className="text-xs sm:text-sm text-[#0A1930] leading-snug font-medium">
-                    Students work on real-world challenges around science, technology, sustainability and innovation. The final presentations take place on <span className="font-bold text-[#059669]">5 December 2026</span>.
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
-                  <button
-                    onClick={() => onNavigate('workflow')}
-                    className="w-full sm:w-auto px-4 py-2.5 bg-white hover:bg-emerald-50 text-[#059669] border border-[#059669]/30 text-xs font-bold font-syne uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-2xs"
-                  >
-                    <span>EXPLORE TRACK</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
+          <PathwayCard
+            theme="hack"
+            icon={Lightbulb}
+            title="Young Inno Hack"
+            tagline="IDEAS TODAY. A BRIGHTER TOMORROW."
+            intro={[
+              'A one-day innovation challenge solving real-world problems.',
+              'Develop a concept and pitch to the jury.',
+              'Basic: grades 7–9 · Medium: gymnasiet · Advanced: university students.',
+            ]}
+            steps={hackathonSteps}
+            callout={
+              <>
+                Students work on real-world challenges around science, technology, sustainability and innovation. The final presentations take place on <span className="font-bold text-[#059669]">5 December 2026</span>.
+              </>
+            }
+            ctaLabel="EXPLORE TRACK"
+            onCta={() => onNavigate('workflow')}
+            half
+            delay={0.15}
+          />
         </div>
 
         {/* ── 03. VENUES ── */}

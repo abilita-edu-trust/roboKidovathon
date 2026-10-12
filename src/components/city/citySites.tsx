@@ -8,8 +8,10 @@ import type { IntakeProgramTab } from '../../pages/IntakeRegisterPage';
 import { RoboHackPage } from '../../pages/RoboHackPage';
 import { RoboKidoCityHome } from '../../pages/RoboKidoCityHome';
 import { vaxjo } from '../../data/robohack';
-import { eskilstunaSite, ESKILSTUNA_DETAILS, ESKILSTUNA_META } from '../../data/cities/eskilstuna';
+import { eskilstunaPathway, eskilstunaSite, ESKILSTUNA_DETAILS, ESKILSTUNA_META } from '../../data/cities/eskilstuna';
 import { robohackSite } from '../robohack/robohackSite';
+import { robohackPathway } from '../robohack/robohackPathway';
+import type { PathwayContent } from '../PathwayCard';
 
 export interface CityHomeProps {
   onRegister: (tab?: IntakeProgramTab) => void;
@@ -24,6 +26,8 @@ export interface CitySite {
   site: SiteConfig;
   /** Sections between the hero/logo marquee and the volunteer banner on the home page. */
   Home: React.FC<CityHomeProps>;
+  /** The programme card under the city banner (the same card as on vfi), and where its button goes. */
+  pathway?: { content: (sv: boolean) => PathwayContent; target: string };
 }
 
 export const CITY_SITES: Record<string, CitySite> = {
@@ -33,6 +37,7 @@ export const CITY_SITES: Record<string, CitySite> = {
     meta: vaxjo.meta,
     site: robohackSite(vaxjo),
     Home: (props) => <RoboHackPage event={vaxjo} {...props} />,
+    pathway: { content: (sv) => robohackPathway(vaxjo, sv), target: 'vxo#tracks' },
   },
   // esk.iniac.se — Eskilstuna Future Innovators (RoboKidovation + ideas)
   esk: {
@@ -40,6 +45,7 @@ export const CITY_SITES: Record<string, CitySite> = {
     meta: ESKILSTUNA_META,
     site: eskilstunaSite,
     Home: (props) => <RoboKidoCityHome details={ESKILSTUNA_DETAILS} {...props} />,
+    pathway: { content: eskilstunaPathway, target: 'esk#teams-final-day' },
   },
 };
 

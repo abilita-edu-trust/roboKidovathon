@@ -1,6 +1,8 @@
 // Eskilstuna Future Innovators (esk.iniac.se): the VFI site, RoboKidovation only, with
-// ideas & voting. Dates and venue are not confirmed yet; fill them in here when they are.
+// ideas & voting. Dates and venue live here (details, hero, guide dates and the programme card).
+import { Bot, Cpu, Presentation, Rocket, Trophy, Users } from 'lucide-react';
 import type { SiteConfig } from '../../context/SiteContext';
+import type { PathwayContent } from '../../components/PathwayCard';
 import type { CityDetail } from '../../components/city/CitySections';
 import { pathForRoute } from '../../lib/routes';
 
@@ -180,3 +182,60 @@ export const eskilstunaSite: SiteConfig = {
     },
   },
 };
+
+/** The RoboKidovation card under the Eskilstuna banner, with Eskilstuna's own dates. */
+export const eskilstunaPathway = (sv: boolean): PathwayContent => ({
+  theme: 'robo',
+  icon: Bot,
+  title: 'RoboKidovation',
+  tagline: sv ? 'LÄR. TESTA. FÖRBÄTTRA. TÄVLA.' : 'LEARN. TEST. IMPROVE. COMPETE.',
+  intro: sv
+    ? [
+        'Praktisk robotikutmaning för lag från skolor och föreningar.',
+        'Inga förkunskaper krävs.',
+        'Junior: åk 3–6 · Senior: åk 7–9 · GYM: programmerbar robot.',
+      ]
+    : [
+        'Hands-on robotics challenge for teams from schools and associations.',
+        'No previous experience needed.',
+        'Junior: grades 3–6 · Senior: grades 7–9 · GYM: programmable bot.',
+      ],
+  steps: [
+    {
+      title: sv ? 'Anmälan öppnar' : 'Registration opens',
+      subtitle: sv ? 'För skolor, föreningar och fristående lag' : 'For schools, associations and independent teams',
+      date: sv ? '12 okt 2026' : '12 Oct 2026',
+      icon: Presentation,
+    },
+    {
+      title: sv ? 'Skoldemo' : 'School demo',
+      subtitle: sv ? 'Se robotarna och prova utmaningar' : 'See the robots and try the challenges',
+      date: sv ? '16 okt 2026' : '16 Oct 2026',
+      icon: Cpu,
+    },
+    {
+      title: sv ? 'Workshoppar' : 'Hands-on workshops',
+      subtitle: sv ? 'Lagen bildas på första workshoppen' : 'Teams form at the first workshop',
+      date: sv ? 'okt–nov 2026' : 'Oct–Nov 2026',
+      icon: Users,
+    },
+    {
+      title: sv ? 'Final' : 'Competition final',
+      subtitle: sv ? 'Arenatävling på IES Eskilstuna' : 'Arena tournament at IES Eskilstuna',
+      date: sv ? '2 dec 2026' : '2 Dec 2026',
+      icon: Trophy,
+      highlight: true,
+    },
+    {
+      title: sv ? 'Internationellt steg' : 'International stage',
+      subtitle: sv ? 'Flygbiljetter möjliga för 1–2 lag*' : 'Flight tickets possible for 1–2 teams*',
+      date: sv ? 'april 2027' : 'April 2027',
+      icon: Rocket,
+      highlight: true,
+    },
+  ],
+  callout: sv
+    ? 'Upp till 4 lag från varje deltagande skola eller förening går vidare till finalen den 2 december 2026 på IES Eskilstuna.'
+    : 'Up to 4 teams from each participating school or association qualify for the final on 2 December 2026 at IES Eskilstuna.',
+  ctaLabel: sv ? 'UTFORSKA ROBOKIDOVATION' : 'EXPLORE ROBOKIDOVATION',
+});

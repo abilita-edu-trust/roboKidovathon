@@ -211,31 +211,6 @@ export const RoboHackPage: React.FC<RoboHackPageProps> = ({ event, onRegister, o
         </div>
       </Section>
 
-      {/* ── 6. JOURNEY ── */}
-      <Section id="journey">
-        <div className="space-y-3">
-          <Eyebrow>{sv ? `${event.journey.length} steg` : `${event.journey.length} steps`}</Eyebrow>
-          <SectionTitle>{sv ? 'Resan' : 'The journey'}</SectionTitle>
-        </div>
-        <ol className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {event.journey.map((step, i) => {
-            const Icon = step.icon;
-            return (
-              <motion.li key={step.title.en} {...fadeUp} transition={{ ...fadeUp.transition, delay: (i % 4) * 0.08 }} className="bg-[#F8FAFC] border border-slate-200 p-5 flex flex-col gap-3">
-                <div className="flex items-center justify-between">
-                  <span className="w-9 h-9 bg-[#006AA7] text-white flex items-center justify-center">
-                    <Icon className="w-5 h-5" />
-                  </span>
-                  <span className="font-mono-code font-bold text-xs text-slate-400">{String(i + 1).padStart(2, '0')}</span>
-                </div>
-                <h3 className="font-headline font-black text-lg uppercase tracking-tight leading-tight">{t(step.title)}</h3>
-                <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed">{t(step.description)}</p>
-              </motion.li>
-            );
-          })}
-        </ol>
-      </Section>
-
       {/* ── 7. CHALLENGES ── */}
       <Section id="challenges" tone="gray">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">

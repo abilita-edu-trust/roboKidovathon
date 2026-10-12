@@ -4,6 +4,7 @@ import { RefHero } from './components/RefHero';
 import { RefHeroMarquee } from './components/RefHeroMarquee';
 import { RefTheExperience } from './components/RefTheExperience';
 import { FutureInnovatorsBanner } from './components/FutureInnovatorsBanner';
+import { PathwayCard } from './components/PathwayCard';
 import { RefWorkflowMindMap } from './components/RefWorkflowMindMap';
 import { RefTrackComparison } from './components/RefTrackComparison';
 import { RefKioskShowcase } from './components/RefKioskShowcase';
@@ -160,11 +161,14 @@ export function App() {
 
                 <UserJourneyAudienceGuide onNavigate={handleNavigate} onOpenRegister={() => goRegister()} />
 
-                {/* City banner: "<City> Future Innovators 2026" over the city skyline */}
-                {site.banner && (
+                {/* City banner over the skyline, then this city's programme card (as on vfi) */}
+                {(site.banner || city.pathway) && (
                   <section className="w-full bg-gradient-to-b from-[#F2F8FD] to-white px-4 sm:px-6 lg:px-10 pt-14 sm:pt-20 pb-2">
-                    <div className="max-w-[1400px] mx-auto">
+                    <div className="max-w-[1400px] mx-auto space-y-10">
                       <FutureInnovatorsBanner />
+                      {city.pathway && (
+                        <PathwayCard {...city.pathway.content(language === 'sv')} onCta={() => handleNavigate(city.pathway!.target)} />
+                      )}
                     </div>
                   </section>
                 )}
