@@ -8,6 +8,7 @@ import type { RoboHackEvent } from './types';
 
 export const vaxjo: RoboHackEvent = {
   route: 'vxo',
+  banner: '/vxo.jpeg',
   meta: {
     title: 'YNG RoboHack Växjö',
     description:

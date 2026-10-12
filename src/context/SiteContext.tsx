@@ -90,6 +90,8 @@ export interface SiteConfig {
     secondary: SiteAction;
     facts: { label: string; value: string }[];
   };
+  /** "<City> Future Innovators 2026" artwork above the programmes (a file in public/); its heading is part of the image. */
+  banner?: string;
   footer: {
     title: string;
     description: Bilingual;
@@ -177,6 +179,8 @@ export const VFI_SITE: SiteConfig = {
       { label: 'FLIGHT TICKETS', value: 'TOP 1–2 TEAMS*' },
     ],
   },
+
+  banner: '/ves.jpeg',
 
   footer: {
     title: 'VÄSTERÅS FUTURE INNOVATORS 2026',

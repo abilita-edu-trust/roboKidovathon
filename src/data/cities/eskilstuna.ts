@@ -98,6 +98,8 @@ export const eskilstunaSite: SiteConfig = {
     ],
   },
 
+  banner: '/esk.jpeg',
+
   footer: {
     title: 'ESKILSTUNA FUTURE INNOVATORS 2026',
     description: {

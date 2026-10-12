@@ -15,6 +15,7 @@ import {
   UserPlus,
   MapPin,
 } from 'lucide-react';
+import { FutureInnovatorsBanner } from './FutureInnovatorsBanner';
 
 const VENUES: { label: string; name: string; detail?: string; image?: string; track: 'robo' | 'hack' }[] = [
   {
@@ -134,61 +135,10 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
       id="choose-experience"
       className="w-full bg-gradient-to-b from-[#F2F8FD] via-[#F8FBFE] to-white text-[#0A1930] py-16 sm:py-24 px-4 sm:px-6 lg:px-10 select-none relative overflow-hidden border-t border-slate-200"
     >
-      {/* ── AMBIENT SKYLINE BACKGROUND SILHOUETTE ── */}
-      <div className="absolute top-0 inset-x-0 h-96 pointer-events-none opacity-[0.08] overflow-hidden flex items-end justify-center">
-        <svg
-          viewBox="0 0 1440 280"
-          className="w-full h-full object-cover text-[#006AA7]"
-          fill="currentColor"
-          preserveAspectRatio="none"
-        >
-          {/* Västerås style church spire, towers and cityscape silhouette */}
-          <path d="M0,280 L0,230 L90,230 L90,190 L120,190 L120,230 L220,230 L220,160 L240,160 L240,120 L245,60 L250,120 L250,160 L280,160 L280,230 L380,230 L380,200 L430,200 L430,230 L550,230 L550,175 L590,175 L590,230 L700,230 L700,180 L740,180 L750,100 L760,180 L790,180 L790,230 L880,230 L880,195 L930,195 L930,230 L1020,230 L1020,150 L1060,150 L1060,230 L1180,230 L1180,210 L1220,210 L1220,230 L1320,230 L1320,170 L1360,170 L1360,230 L1440,230 L1440,280 Z" />
-          <circle cx="1090" cy="90" r="46" fill="#FFCD00" opacity="0.3" />
-        </svg>
-      </div>
-
       <div className="max-w-[1560px] mx-auto space-y-12 relative z-10">
 
-        {/* ── 01. TOP SECTION HEADER ── */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-2 border-b border-slate-200/80">
-          <div className="space-y-1">
-            <span className="text-xs sm:text-sm font-mono-code font-bold tracking-[0.25em] text-[#006AA7] uppercase block">
-              VÄSTERÅS
-            </span>
-            <h2
-              className="font-headline font-black uppercase tracking-tight text-[#0A1930] leading-[0.95]"
-              style={{ fontSize: 'clamp(2.5rem, 5.5vw, 4.6rem)' }}
-            >
-              FUTURE INNOVATORS <span className="text-[#006AA7]">2026</span>
-            </h2>
-            <p className="text-sm sm:text-base font-bold text-slate-700 uppercase tracking-wider pt-1">
-              TWO PATHWAYS. ONE BRIGHTER TOMORROW.
-            </p>
-          </div>
-
-          {/* Center/Right handwritten motto + badge */}
-          <div className="flex flex-col sm:flex-row lg:items-end gap-6 sm:gap-12">
-            <div className="relative">
-              <span className="font-handwriting text-2xl sm:text-3xl text-[#006AA7] italic tracking-wide block">
-                Learn · Build · Innovate · Compete
-              </span>
-              <svg className="w-48 h-3 text-[#FFCD00] -mt-1" viewBox="0 0 200 12" fill="none">
-                <path d="M2 9C60 2 140 2 198 9" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
-              </svg>
-            </div>
-
-            <div className="text-left lg:text-right">
-              <span className="text-[11px] font-mono-code font-bold tracking-widest text-slate-400 uppercase block">
-                REAL IDEAS.
-              </span>
-              <span className="text-xs font-mono-code font-extrabold tracking-widest text-[#006AA7] uppercase block">
-                BRIGHTER TOMORROWS.
-              </span>
-              <div className="w-10 h-0.5 bg-[#006AA7] ml-0 lg:ml-auto mt-1" />
-            </div>
-          </div>
-        </div>
+        {/* ── 01. CITY BANNER: "<City> Future Innovators 2026" over the city skyline ── */}
+        <FutureInnovatorsBanner />
 
         {/* ── 02. TWO PRIMARY EVENT PATHWAY CARDS ── */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">

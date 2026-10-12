@@ -3,6 +3,7 @@ import { Navbar } from './components/Navbar';
 import { RefHero } from './components/RefHero';
 import { RefHeroMarquee } from './components/RefHeroMarquee';
 import { RefTheExperience } from './components/RefTheExperience';
+import { FutureInnovatorsBanner } from './components/FutureInnovatorsBanner';
 import { RefWorkflowMindMap } from './components/RefWorkflowMindMap';
 import { RefTrackComparison } from './components/RefTrackComparison';
 import { RefKioskShowcase } from './components/RefKioskShowcase';
@@ -158,6 +159,15 @@ export function App() {
                 </section>
 
                 <UserJourneyAudienceGuide onNavigate={handleNavigate} onOpenRegister={() => goRegister()} />
+
+                {/* City banner: "<City> Future Innovators 2026" over the city skyline */}
+                {site.banner && (
+                  <section className="w-full bg-gradient-to-b from-[#F2F8FD] to-white px-4 sm:px-6 lg:px-10 pt-14 sm:pt-20 pb-2">
+                    <div className="max-w-[1400px] mx-auto">
+                      <FutureInnovatorsBanner />
+                    </div>
+                  </section>
+                )}
                 <Home onRegister={goRegister} onOpenIdeas={goIdeas} />
                 <VolunteerCta onOpenVolunteer={() => goRegister('volunteer')} />
               </>

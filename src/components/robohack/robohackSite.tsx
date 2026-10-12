@@ -65,6 +65,8 @@ function buildSite(event: RoboHackEvent): SiteConfig {
       facts: event.hero.facts,
     },
 
+    banner: event.banner,
+
     footer: {
       title: `${name.toUpperCase()} 2026`,
       description: event.hero.intro,

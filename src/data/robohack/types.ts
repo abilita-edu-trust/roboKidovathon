@@ -48,6 +48,8 @@ export interface RoboHackEvent {
   /** Browser tab title and meta description while the page is open. */
   meta: { title: string; description: string };
   brand: { name: string; city: string };
+  /** "<City> Future Innovators 2026" artwork in public/, shown above the home sections. */
+  banner?: string;
   /** EU Skola city that every form entry is filed under. */
   location: { countrySlug: string; citySlug: string; countryName: string; cityName: string };
 
