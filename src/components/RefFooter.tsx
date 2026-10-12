@@ -1,20 +1,22 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, MapPin, ShieldCheck, Mail } from 'lucide-react';
-import { PARTNER_LOGOS } from '../data/roboData';
+import { PARTNER_LOGOS, PartnerLogo } from '../data/roboData';
 import { useLanguage } from '../context/LanguageContext';
 import { useSite, pickLang } from '../context/SiteContext';
 import type { IntakeProgramTab } from '../pages/IntakeRegisterPage';
 
 interface RefFooterProps {
   onNavigate: (route: string, tab?: IntakeProgramTab) => void;
+  onSelectPartner?: (partner: PartnerLogo) => void;
 }
 
 /** Site footer; the site (VFI or a city site like vxo.iniac.se) sets its text and links. */
-export const RefFooter: React.FC<RefFooterProps> = ({ onNavigate }) => {
+export const RefFooter: React.FC<RefFooterProps> = ({ onNavigate, onSelectPartner }) => {
   const { footer } = useSite();
   const { language } = useLanguage();
   const sv = language === 'sv';
+
 
   return (
     <footer id="site-footer" className="w-full bg-[#013A63] text-white pt-16 pb-12 px-3 sm:px-6 border-t border-white/10 select-none scroll-mt-24">
@@ -106,16 +108,19 @@ export const RefFooter: React.FC<RefFooterProps> = ({ onNavigate }) => {
         {/* Partner Logos Row */}
         <div className="pt-10 border-t border-white/10 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
           {PARTNER_LOGOS.map((logo) => (
-            <div
+            <button
               key={logo.name}
-              className="bg-white px-4 py-2.5 flex items-center justify-center opacity-90 hover:opacity-100 transition-opacity"
+              type="button"
+              onClick={() => onSelectPartner?.(logo)}
+              title={logo.url ? `Explore ${logo.name} (Preview)` : logo.name}
+              className="bg-white px-4 py-2.5 flex items-center justify-center opacity-90 hover:opacity-100 hover:scale-105 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FFCD00] rounded-sm cursor-pointer"
             >
               <img
                 src={logo.file}
                 alt={logo.name}
                 className="h-7 sm:h-8 w-auto object-contain"
               />
-            </div>
+            </button>
           ))}
         </div>
 

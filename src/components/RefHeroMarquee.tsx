@@ -1,7 +1,11 @@
 import React from 'react';
-import { PARTNER_LOGOS } from '../data/roboData';
+import { PARTNER_LOGOS, PartnerLogo } from '../data/roboData';
 
-export const RefHeroMarquee: React.FC = () => {
+interface RefHeroMarqueeProps {
+  onSelectPartner?: (partner: PartnerLogo) => void;
+}
+
+export const RefHeroMarquee: React.FC<RefHeroMarqueeProps> = ({ onSelectPartner }) => {
   // Triple-duplicate for a seamless infinite loop across all screen sizes
   const items = [...PARTNER_LOGOS, ...PARTNER_LOGOS, ...PARTNER_LOGOS];
 
@@ -13,9 +17,12 @@ export const RefHeroMarquee: React.FC = () => {
 
       <div className="animate-marquee-track group-hover:[animation-play-state:paused] flex items-center gap-12 sm:gap-16 md:gap-20">
         {items.map((logo, idx) => (
-          <div
+          <button
             key={`${logo.name}-${idx}`}
-            className="flex-shrink-0 flex flex-col items-center gap-1.5 cursor-pointer transition-all duration-300 hover:scale-110 hover:-translate-y-1"
+            type="button"
+            onClick={() => onSelectPartner?.(logo)}
+            title={logo.url ? `Explore ${logo.name} (Preview)` : logo.name}
+            className="flex-shrink-0 flex flex-col items-center gap-1.5 cursor-pointer transition-all duration-300 hover:scale-110 hover:-translate-y-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FFCD00] rounded-sm p-1"
           >
             <img
               src={logo.file}
@@ -25,9 +32,10 @@ export const RefHeroMarquee: React.FC = () => {
             <span className="text-[9px] sm:text-[10px] font-mono-code font-bold text-slate-400 group-hover:text-slate-600 uppercase tracking-widest whitespace-nowrap">
               {logo.role}
             </span>
-          </div>
+          </button>
         ))}
       </div>
     </div>
   );
 };
+

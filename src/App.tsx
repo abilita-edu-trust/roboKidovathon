@@ -33,6 +33,9 @@ import { cityPageFor } from './components/city/citySites';
 import { SiteProvider } from './context/SiteContext';
 
 import { EventDeckModal } from './components/EventDeckModal';
+import { UserJourneyAudienceGuide } from './components/UserJourneyAudienceGuide';
+import { PartnerPreviewModal } from './components/PartnerPreviewModal';
+import type { PartnerLogo } from './data/roboData';
 import { RoboCursor } from './components/RoboCursor';
 import { useLanguage } from './context/LanguageContext';
 import { initialRouteFromLocation, pathForRoute, routeFromPath } from './lib/routes';
@@ -54,6 +57,14 @@ export function App() {
   const [currentRoute, setCurrentRoute] = useState<string>(initial.route);
   const [registerInitialTab, setRegisterInitialTab] = useState<IntakeProgramTab>(() => toRegisterTab(initial.tab));
   const [isDeckOpen, setIsDeckOpen] = useState<boolean>(false);
+  const [previewPartner, setPreviewPartner] = useState<{ name: string; url: string; role?: string } | null>(null);
+
+  const handleSelectPartner = (partner: PartnerLogo) => {
+    if (partner.url) {
+      setPreviewPartner({ name: partner.name, url: partner.url, role: partner.role });
+    }
+  };
+
 
   // Rewrite legacy `?route=` links to their real path once, keeping other params (e.g. ?idea=).
   useEffect(() => {
@@ -137,7 +148,16 @@ export function App() {
             {page === 'home' && (
               <>
                 <RefHero onNavigate={handleNavigate} />
-                <RefHeroMarquee />
+                <RefHeroMarquee onSelectPartner={handleSelectPartner} />
+
+                {/* Meet Us At — confirmed bookings + live stats */}
+                <section className="w-full bg-white text-[#0A1930] py-14 sm:py-16 px-4 sm:px-6 lg:px-10">
+                  <div className="max-w-[1560px] mx-auto">
+                    <CollaboratorsMarquee onNavigate={handleNavigate} />
+                  </div>
+                </section>
+
+                <UserJourneyAudienceGuide onNavigate={handleNavigate} onOpenRegister={() => goRegister()} />
                 <Home onRegister={goRegister} onOpenIdeas={goIdeas} />
                 <VolunteerCta onOpenVolunteer={() => goRegister('volunteer')} />
               </>
@@ -147,8 +167,16 @@ export function App() {
             )}
             {page === 'ideas' && <IdeasVotingPage onNavigateHome={goHome} onNavigateSubmit={() => goRegister('submit-idea')} />}
           </main>
-          <RefFooter onNavigate={handleNavigate} />
+          <RefFooter onNavigate={handleNavigate} onSelectPartner={handleSelectPartner} />
           <VotePrompt onGoToVote={goIdeas} onSubmitIdea={() => goRegister('submit-idea')} />
+          {/* Partner Preview Modal */}
+          <PartnerPreviewModal
+            isOpen={Boolean(previewPartner)}
+            onClose={() => setPreviewPartner(null)}
+            partnerName={previewPartner?.name || ''}
+            url={previewPartner?.url || ''}
+            role={previewPartner?.role}
+          />
         </div>
       </SiteProvider>
     );
@@ -176,7 +204,7 @@ export function App() {
             <RefHero onNavigate={handleNavigate} />
 
             {/* 02. Partners ticker */}
-            <RefHeroMarquee />
+            <RefHeroMarquee onSelectPartner={handleSelectPartner} />
 
             {/* 03. Meet Us At — confirmed bookings + live stats */}
             <section className="w-full bg-white text-[#0A1930] py-14 sm:py-16 px-4 sm:px-6 lg:px-10">
@@ -185,8 +213,12 @@ export function App() {
               </div>
             </section>
 
+            {/* 03b. Target Audiences & 5-Step Clear Journey (Students, Parents, Teachers) */}
+            <UserJourneyAudienceGuide onNavigate={handleNavigate} onOpenRegister={openRegister} />
+
             {/* 04. Two pathways, the one official timeline, and venues */}
             <RefTheExperience onNavigate={handleNavigate} onOpenRegister={openRegister} />
+
 
             {/* 04a. RoboKidovation categories, teams, workshops and final-day format */}
             <RoboKidoTeamsFinalDay />
@@ -328,13 +360,22 @@ export function App() {
       </main>
 
       {/* ── Master Dark Footer with Verified Contacts ── */}
-      <RefFooter onNavigate={handleNavigate} />
+      <RefFooter onNavigate={handleNavigate} onSelectPartner={handleSelectPartner} />
 
       {/* ── Interactive Modals ── */}
       <EventDeckModal
         isOpen={isDeckOpen}
         onClose={() => setIsDeckOpen(false)}
       />
+
+      <PartnerPreviewModal
+        isOpen={Boolean(previewPartner)}
+        onClose={() => setPreviewPartner(null)}
+        partnerName={previewPartner?.name || ''}
+        url={previewPartner?.url || ''}
+        role={previewPartner?.role}
+      />
+
 
       {currentRoute !== 'admin' && (
         <VotePrompt onGoToVote={goToVote} onSubmitIdea={() => handleNavigate('register', 'submit-idea')} />

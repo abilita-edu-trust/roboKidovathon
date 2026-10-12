@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Bot, Calendar, Clock, Lightbulb, MapPin, Users } from 'lucide-react';
+import { arenaCourtReference } from '../assets/images';
 import { useLanguage } from '../context/LanguageContext';
 import type { IntakeProgramTab } from './IntakeRegisterPage';
 import { ParticipationFees } from '../components/ParticipationFees';
@@ -115,19 +116,13 @@ export const IbkHomePage: React.FC<IbkHomePageProps> = ({ onNavigate }) => {
     <div data-no-translate="true" className={`w-full bg-white text-[#0A1930] transition-opacity duration-300 ${ready ? 'opacity-100' : 'opacity-0'}`}>
       {/* ── 1. WELCOME TO IBK ── */}
       <section className="relative w-full min-h-[640px] lg:min-h-[min(100vh,960px)] flex flex-col overflow-hidden bg-[#0A1930] text-white pt-32 sm:pt-36 pb-16 sm:pb-20 px-4 sm:px-6 lg:px-10">
-        {c.hero.video && (
-          <video
-            key={c.hero.video}
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover"
-            src={mediaUrl(c.hero.video)}
-          />
-        )}
-        {/* Flat scrim keeps the headline readable over the video */}
-        <div className="absolute inset-0 bg-[#0A1930]/60 pointer-events-none" />
+        <img
+          src={arenaCourtReference}
+          alt="Future Innovators 2026 Competition Arena and Robotics Platform"
+          className="absolute inset-0 w-full h-full object-cover object-center"
+        />
+        {/* Flat scrim keeps the headline readable over the banner */}
+        <div className="absolute inset-0 bg-[#0A1930]/75 pointer-events-none" />
         {/* IBK logo, centred in the open space above the headline */}
         <div className="relative z-10 flex-1 flex items-center justify-center pb-8 sm:pb-10">
           {c.hero.logo && (

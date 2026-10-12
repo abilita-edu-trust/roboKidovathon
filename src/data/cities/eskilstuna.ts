@@ -12,14 +12,36 @@ export const ESKILSTUNA_META = {
     'Eskilstuna Future Innovators 2026 — hands-on RoboKidovation robotics for schools, associations and independent teams in Eskilstuna.',
 };
 
-// null renders as "TBC".
+// Confirmed event details:
+// - Registration opening: 12 October 2026
+// - School demo: 16 October 2026
+// - Finals: 2 December 2026, IES Eskilstuna
+// - International-level opportunity: April 2027 (flight ticket possibility for 1-2 teams, subject to official rules)
 export const ESKILSTUNA_DETAILS: CityDetail[] = [
-  { label: { en: 'Dates', sv: 'Datum' }, value: null },
-  { label: { en: 'Venue', sv: 'Plats' }, value: null },
-  { label: { en: 'Programme', sv: 'Program' }, value: { en: 'RoboKidovation', sv: 'RoboKidovation' } },
-  { label: { en: 'Categories', sv: 'Kategorier' }, value: { en: 'Junior · Senior · GYM', sv: 'Junior · Senior · GYM' } },
-  { label: { en: 'Who can join', sv: 'Vem kan delta' }, value: { en: 'Grades 1–9 & Gymnasium', sv: 'Årskurs 1–9 och gymnasiet' } },
-  { label: { en: 'Fees', sv: 'Avgifter' }, value: null },
+  {
+    label: { en: 'Key Dates', sv: 'Viktiga datum' },
+    value: {
+      en: 'Registration opens: 12 Oct 2026 · School Demo: 16 Oct 2026 · Finals: 2 Dec 2026',
+      sv: 'Anmälan öppnar: 12 okt 2026 · Skoldemo: 16 okt 2026 · Final: 2 dec 2026',
+    },
+  },
+  {
+    label: { en: 'Venue', sv: 'Plats' },
+    value: {
+      en: 'IES Eskilstuna (Internationella Engelska Skolan Eskilstuna)',
+      sv: 'IES Eskilstuna (Internationella Engelska Skolan Eskilstuna)',
+    },
+  },
+  { label: { en: 'Programme', sv: 'Program' }, value: { en: 'RoboKidovation STEM Robotics', sv: 'RoboKidovation STEM-robotik' } },
+  { label: { en: 'Categories', sv: 'Kategorier' }, value: { en: 'Junior (Gr 3–6) · Senior (Gr 7–9) · GYM', sv: 'Junior (åk 3–6) · Senior (åk 7–9) · GYM' } },
+  { label: { en: 'Who can join', sv: 'Vem kan delta' }, value: { en: 'Grades 1–9 & Gymnasium (Grades 1–2 as participants)', sv: 'Årskurs 1–9 och gymnasiet (åk 1–2 som deltagare)' } },
+  {
+    label: { en: 'International Stage', sv: 'Internationellt steg' },
+    value: {
+      en: 'April 2027 — Possibility of flight tickets for 1–2 winning teams (subject to official rules & confirmation)',
+      sv: 'April 2027 — Möjlighet till flygbiljetter för 1–2 vinnande lag (villkorat officiella regler och bekräftelse)',
+    },
+  },
 ];
 
 export const eskilstunaSite: SiteConfig = {
@@ -51,7 +73,7 @@ export const eskilstunaSite: SiteConfig = {
   },
 
   hero: {
-    badge: 'ESKILSTUNA, SWEDEN · DATES TO BE CONFIRMED',
+    badge: 'FINALS: 2 DEC 2026 · IES ESKILSTUNA, SWEDEN',
     lines: [
       { en: 'Build ideas.', sv: 'Bygg idéer.' },
       { en: 'Test them.', sv: 'Testa dem.' },
@@ -67,12 +89,12 @@ export const eskilstunaSite: SiteConfig = {
     },
     secondary: { label: { en: 'EXPLORE ROBOKIDOVATION', sv: 'UTFORSKA ROBOKIDOVATION' }, target: 'esk#teams-final-day' },
     facts: [
-      { label: 'GRADES', value: '1–9 + GYM' },
-      { label: 'CATEGORIES', value: 'JUNIOR · SENIOR · GYM' },
-      { label: 'PROGRAMME', value: '20H STEM' },
-      { label: 'LGR22', value: 'CURRICULUM FIT' },
-      { label: 'ARENA', value: '244 × 122 CM' },
-      { label: 'DATES', value: 'TO BE CONFIRMED' },
+      { label: 'REG OPENS', value: '12 OCT 2026' },
+      { label: 'SCHOOL DEMO', value: '16 OCT 2026' },
+      { label: 'FINALS DATE', value: '2 DEC 2026' },
+      { label: 'VENUE', value: 'IES ESKILSTUNA' },
+      { label: 'NEXT STAGE', value: 'APRIL 2027' },
+      { label: 'FLIGHT TICKETS', value: 'TOP 1–2 TEAMS*' },
     ],
   },
 
