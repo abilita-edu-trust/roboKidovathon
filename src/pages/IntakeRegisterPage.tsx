@@ -168,6 +168,11 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
     offers(initialTab) ? initialTab : site.intake.defaultTab
   );
   type PathwayAudience = 'all' | 'schools' | 'students' | 'community';
+  const AUDIENCE_TABS: Record<Exclude<PathwayAudience, 'all'>, IntakeProgramTab[]> = {
+    schools: ['workshop', 'demo'],
+    students: ['submit-idea', 'hackathon'],
+    community: ['volunteer', 'association', 'partner'],
+  };
   const [pathwayAudience, setPathwayAudience] = useState<PathwayAudience>(() => {
     const tab = offers(initialTab) ? initialTab : site.intake.defaultTab;
     if (tab === 'workshop' || tab === 'demo') return 'schools';
@@ -209,6 +214,10 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
   // Hackathon-only sites (no RoboKidovation forms) start at the hackathon's youngest level.
   const [gradeGroup, setGradeGroup] = useState(GRADE_GROUP_OPTIONS[showRoboKido ? 1 : 2]);
   const [studentCount, setStudentCount] = useState('25');
+  // A class-sized default makes no sense for a 2–4 person squad; swap the untouched default.
+  useEffect(() => {
+    setStudentCount((c) => (selectedProgram === 'hackathon' ? (c === '25' ? '' : c) : c === '' ? '25' : c));
+  }, [selectedProgram]);
 
   // Submit Idea Specific Fields
   const [studentName, setStudentName] = useState('');
@@ -487,8 +496,8 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
           student_count: studentCount,
           preferred_date: customDate ? `Custom Date: ${customDate}` : 'To be confirmed',
           custom_date: customDate || null,
-          custom_time: customTime || null,
-          time_range: formattedTimeRange,
+          custom_time: selectedProgram === 'hackathon' ? null : customTime || null,
+          time_range: selectedProgram === 'hackathon' ? null : formattedTimeRange,
           workshop_slot: 'custom',
           grade_group: gradeGroup,
           consent_agreed: consentAgreed,
@@ -586,7 +595,11 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                 { id: 'schools' as const, label: 'Schools & Educators', icon: School, note: 'Workshops & Demos' },
                 { id: 'students' as const, label: 'Students & Innovators', icon: GraduationCap, note: 'Ideas & Arena' },
                 { id: 'community' as const, label: 'Community & Volunteers', icon: Users, note: 'Clubs & Crew' },
-              ].map((aud) => {
+              ]
+                // Each role shows how many forms it has; roles with none on this site are left out.
+                .map((aud) => (aud.id === 'all' ? aud : { ...aud, count: AUDIENCE_TABS[aud.id].filter(offers).length }))
+                .filter((aud) => aud.count !== 0)
+                .map((aud) => {
                 const Icon = aud.icon;
                 const isSelected = pathwayAudience === aud.id;
                 return (
@@ -845,9 +858,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                     <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
                     <span>Official Registration Intake · Season 2026</span>
                   </div>
-                  <span className="text-[11px] font-mono-code text-slate-500">
-                    Finals: 2 Dec 2026 @ IES Eskilstuna
-                  </span>
+                  <span className="text-[11px] font-mono-code text-slate-500">{site.hero.badge}</span>
                 </div>
 
                 <h3 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#0A1930] mt-1">
@@ -1123,14 +1134,16 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                   </div>
                 )}
 
-                {/* ── SECTION C: CUSTOMIZABLE DATE & TIME (FOR WORKSHOP, DEMO, ASSOCIATION, HACKATHON) ── */}
+                {/* ── SECTION C: DATE & TIME (WORKSHOP, DEMO, ASSOCIATION); squads only give grade and size,
+                     since the event date is fixed ── */}
                 {selectedProgram !== 'submit-idea' && (
                   <div className={`p-4 border space-y-4 ${isHack ? 'bg-emerald-50/50 border-emerald-200' : 'bg-sky-50/50 border-sky-200'}`}>
                     <div className={`flex items-center gap-2 text-xs font-headline font-bold uppercase tracking-wider ${isHack ? 'text-[#059669]' : 'text-[#006AA7]'}`}>
-                      <Calendar className="w-4 h-4" />
-                      <span>Date & time / Datum och tid</span>
+                      {selectedProgram === 'hackathon' ? <Users className="w-4 h-4" /> : <Calendar className="w-4 h-4" />}
+                      <span>{selectedProgram === 'hackathon' ? 'Your squad / Ditt lag' : 'Date & time / Datum och tid'}</span>
                     </div>
 
+                    {selectedProgram !== 'hackathon' && (
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       {/* Customizable Date Picker */}
                       <div>
@@ -1174,6 +1187,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                         />
                       </div>
                     </div>
+                    )}
 
                     {/* Grade Group & Cohort Count */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
@@ -1196,13 +1210,17 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
 
                       <div>
                         <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
-                          {isAssociation ? 'Number of children / Antal barn' : 'Number of students / Antal elever'}
+                          {isAssociation
+                            ? 'Number of children / Antal barn'
+                            : selectedProgram === 'hackathon'
+                            ? 'Squad size (2–4) / Antal i laget'
+                            : 'Number of students / Antal elever'}
                         </label>
                         <input
                           type="text"
                           value={studentCount}
                           onChange={(e) => setStudentCount(e.target.value)}
-                          placeholder="e.g. 25"
+                          placeholder={selectedProgram === 'hackathon' ? 'e.g. 4' : 'e.g. 25'}
                           className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-[#006AA7] text-xs sm:text-sm text-[#0A1930]"
                         />
                       </div>

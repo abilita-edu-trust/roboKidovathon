@@ -25,6 +25,15 @@ export const VotePrompt: React.FC<VotePromptProps> = ({ onGoToVote, onSubmitIdea
   const [ideas, setIdeas] = useState<IdeaSubmission[] | null>(null);
   const [voted, setVoted] = useState<Record<string, boolean>>({});
   const [voting, setVoting] = useState<string | null>(null);
+  // The floating button waits until the visitor scrolls past the hero, so it never covers it.
+  const [pastHero, setPastHero] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setPastHero(window.scrollY > window.innerHeight * 0.6);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   useEffect(() => {
     let alreadyShown = false;
@@ -92,7 +101,11 @@ export const VotePrompt: React.FC<VotePromptProps> = ({ onGoToVote, onSubmitIdea
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed bottom-5 left-5 z-[60] flex items-center gap-2 px-4 py-3 bg-[#059669] hover:bg-[#047857] text-white font-syne font-black text-xs uppercase tracking-wider shadow-xl transition-colors"
+        tabIndex={pastHero ? 0 : -1}
+        aria-hidden={!pastHero}
+        className={`fixed bottom-5 left-5 z-[60] flex items-center gap-2 px-4 py-3 bg-[#059669] hover:bg-[#047857] text-white font-syne font-black text-xs uppercase tracking-wider shadow-xl transition-all duration-300 hover:-translate-y-0.5 ${
+          pastHero ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+        }`}
         aria-label="Vote for an idea"
       >
         <Heart className="w-4 h-4 fill-white" />

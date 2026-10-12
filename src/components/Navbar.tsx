@@ -199,8 +199,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={(e) => handleLinkClick(e, nav.registerRoute)}
               className="btn-pill-lime text-xs font-black py-2.5 px-4 2xl:px-5 whitespace-nowrap transition-all duration-200 shadow-md flex items-center gap-2 group relative overflow-hidden"
             >
-              <span className="xl:hidden">{pickLang(nav.registerShort, sv)}</span>
-              <span className="hidden xl:inline">{registerLabel}</span>
+              {/* The long label only fits next to the full menu on wide screens */}
+              <span className="2xl:hidden">{pickLang(nav.registerShort, sv)}</span>
+              <span className="hidden 2xl:inline">{registerLabel}</span>
               <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
             </motion.a>
           </div>

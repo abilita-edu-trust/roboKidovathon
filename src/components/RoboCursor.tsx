@@ -329,7 +329,8 @@ export const RoboCursor: React.FC = () => {
 
   if (!enabled || !isVisible) {
     return (
-      <div className="fixed bottom-3 right-3 z-50 pointer-events-auto">
+      // Touch screens have no cursor, so the toggle is desktop only
+      <div className="fixed bottom-3 right-3 z-50 pointer-events-auto hidden md:block">
         <button
           onClick={toggleEnabled}
           title="Enable Robot Cursor"
@@ -481,7 +482,7 @@ export const RoboCursor: React.FC = () => {
       </div>
 
       {/* ── 3. BOTTOM-RIGHT CORNER COMPANION WIDGET ── */}
-      <div className="fixed bottom-3 right-3 z-50 pointer-events-auto flex items-center gap-1.5">
+      <div className="fixed bottom-3 right-3 z-50 pointer-events-auto hidden md:flex items-center gap-1.5">
         {/* Robot Pose Mode Toggle */}
         <button
           onClick={cyclePoseMode}

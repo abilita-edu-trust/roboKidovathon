@@ -178,7 +178,7 @@ export function App() {
             {page === 'ideas' && <IdeasVotingPage onNavigateHome={goHome} onNavigateSubmit={() => goRegister('submit-idea')} />}
           </main>
           <RefFooter onNavigate={handleNavigate} onSelectPartner={handleSelectPartner} />
-          <VotePrompt onGoToVote={goIdeas} onSubmitIdea={() => goRegister('submit-idea')} />
+          {page === 'home' && <VotePrompt onGoToVote={goIdeas} onSubmitIdea={() => goRegister('submit-idea')} />}
           {/* Partner Preview Modal */}
           <PartnerPreviewModal
             isOpen={Boolean(previewPartner)}
@@ -246,7 +246,6 @@ export function App() {
                 <VoteYoungMindsSection
                   onNavigateIdeas={() => handleNavigate('ideas')}
                   onNavigateSubmit={() => handleNavigate('register', 'submit-idea')}
-                  onNavigateAdmin={() => handleNavigate('admin')}
                 />
               </div>
             </section>
@@ -355,7 +354,6 @@ export function App() {
           <IdeasVotingPage
             onNavigateHome={() => handleNavigate('future-innovators')}
             onNavigateSubmit={() => handleNavigate('register', 'submit-idea')}
-            onNavigateAdmin={() => handleNavigate('admin')}
           />
         )}
 
@@ -387,7 +385,8 @@ export function App() {
       />
 
 
-      {currentRoute !== 'admin' && (
+      {/* Not over the forms or the voting page itself */}
+      {!['admin', 'ideas', 'register'].includes(currentRoute) && (
         <VotePrompt onGoToVote={goToVote} onSubmitIdea={() => handleNavigate('register', 'submit-idea')} />
       )}
 
