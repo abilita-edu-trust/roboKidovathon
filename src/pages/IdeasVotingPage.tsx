@@ -582,6 +582,8 @@ export const IdeasVotingPage: React.FC<IdeasVotingPageProps> = ({
                         <button
                           type="button"
                           onClick={toggleAudio}
+                          aria-label={isPlayingAudio ? 'Pause voice note' : 'Play voice note'}
+                          title={isPlayingAudio ? 'Pause voice note' : 'Play voice note'}
                           className="w-10 h-10 rounded-full bg-[#006AA7] hover:bg-[#013A63] text-white flex items-center justify-center transition-colors shadow"
                         >
                           {isPlayingAudio ? (

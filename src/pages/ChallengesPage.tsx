@@ -442,6 +442,8 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
                 </h3>
                 <button
                   onClick={() => setZoomImage(null)}
+                  aria-label="Close"
+                  title="Close"
                   className="p-2 text-slate-500 hover:text-[#0A1930] hover:bg-slate-200 transition-colors"
                 >
                   <X className="w-5 h-5" />

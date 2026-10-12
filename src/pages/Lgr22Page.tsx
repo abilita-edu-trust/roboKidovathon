@@ -158,6 +158,9 @@ export const Lgr22Page: React.FC<Lgr22PageProps> = ({
                     </span>
                     <button
                       onClick={() => togglePathway(pathway.id)}
+                      aria-expanded={isOpen}
+                      aria-label={isOpen ? 'Hide details' : 'Show details'}
+                      title={isOpen ? 'Hide details' : 'Show details'}
                       className="p-1 text-slate-400 hover:text-[#0A1930]"
                     >
                       <motion.div animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.25 }}>

@@ -2646,6 +2646,8 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                 <button
                   type="button"
                   onClick={() => setInspectingItem(null)}
+                  aria-label="Close"
+                  title="Close"
                   className="p-1 hover:bg-slate-100 text-slate-500 hover:text-slate-800"
                 >
                   <X className="w-5 h-5" />
@@ -2844,6 +2846,8 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
               <button
                 type="button"
                 onClick={() => setShowAnalyticsModal(false)}
+                aria-label="Close"
+                title="Close"
                 className="text-slate-400 hover:text-slate-700"
               >
                 <X className="w-5 h-5" />
