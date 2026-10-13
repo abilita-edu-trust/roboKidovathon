@@ -116,7 +116,12 @@ export interface SiteConfig {
     email: string;
     orgLines: string[];
     registerText: Bilingual;
-    register: SiteAction;
+    /** null hides the button (emptied in the Site CMS). */
+    register: SiteAction | null;
+    /** Heading over the register text; default "REGISTER". */
+    registerTitle?: Bilingual;
+    /** Line next to the copyright; default the hardware/GDPR line. */
+    complianceLine?: Bilingual;
     copyright: string;
     /** External admin login; null = the in-app admin portal. */
     adminHref: string | null;

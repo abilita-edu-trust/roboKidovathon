@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Navbar } from './components/Navbar';
 import { RefWorkflowMindMap } from './components/RefWorkflowMindMap';
 import { RefTrackComparison } from './components/RefTrackComparison';
@@ -26,6 +26,7 @@ import { cityPageFor } from './components/city/citySites';
 import { SiteProvider, VFI_SITE } from './context/SiteContext';
 import { HomeSections, type SectionEnv } from './content/registry';
 import { useSiteDocument } from './content/useSiteDocument';
+import { applyFrame } from './content/sections/frame';
 
 import { EventDeckModal } from './components/EventDeckModal';
 import { PartnerPreviewModal } from './components/PartnerPreviewModal';
@@ -157,10 +158,14 @@ export function App() {
   // The site's CMS document (iniac.se Site CMS) over its built-in defaults.
   const { sections, ready } = useSiteDocument(sectionEnv);
   const fadeIn = `transition-opacity duration-300 ${ready ? 'opacity-100' : 'opacity-0'}`;
+  // Header and footer from the same document, on every page of the site.
+  const site = useMemo(() => applyFrame(baseSite, sections, language === 'sv'), [baseSite, sections, language]);
+  /** Header/footer links may point to other sites. */
+  const navigateOrOpen = (target: string, tab?: IntakeProgramTab) =>
+    isExternalHref(target) ? goHref(target) : handleNavigate(target, tab);
 
   if (cityPage) {
     const { city, page } = cityPage;
-    const { site } = city;
     const goHome = () => handleNavigate(city.route);
     const goRegister = (tab?: IntakeProgramTab) => handleNavigate(site.nav.registerRoute, tab);
     const goIdeas = () => handleNavigate(`${city.route}-ideas`);
@@ -168,7 +173,7 @@ export function App() {
       <SiteProvider site={site}>
         <div key={language} className={`min-h-screen bg-white text-[#0A1930] font-sans selection:bg-[#FFCD00] selection:text-[#0A1930] relative overflow-x-hidden ${fadeIn}`}>
           <RoboCursor />
-          <Navbar activeTab={currentRoute} onNavigate={handleNavigate} onOpenRegister={() => goRegister()} />
+          <Navbar activeTab={currentRoute} onNavigate={navigateOrOpen} onOpenRegister={() => goRegister()} />
           <main className="w-full">
             {page === 'home' && <HomeSections env={sectionEnv} sections={sections} />}
             {page === 'register' && (
@@ -176,7 +181,7 @@ export function App() {
             )}
             {page === 'ideas' && <IdeasVotingPage onNavigateHome={goHome} onNavigateSubmit={() => goRegister('submit-idea')} />}
           </main>
-          <RefFooter onNavigate={handleNavigate} onSelectPartner={handleSelectPartner} />
+          <RefFooter onNavigate={navigateOrOpen} onSelectPartner={handleSelectPartner} />
           {page === 'home' && <VotePrompt onGoToVote={goIdeas} onSubmitIdea={() => goRegister('submit-idea')} />}
           {/* Partner Preview Modal */}
           <PartnerPreviewModal
@@ -192,6 +197,7 @@ export function App() {
   }
 
   return (
+    <SiteProvider site={site}>
     <div key={language} className={`min-h-screen bg-white text-[#0A1930] font-sans selection:bg-[#FFCD00] selection:text-[#0A1930] relative overflow-x-hidden ${fadeIn}`}>
       {/* ── Custom Animated Robot Cursor ── */}
       <RoboCursor />
@@ -199,7 +205,7 @@ export function App() {
       {/* ── 0. Floating Responsive Header ── */}
       <Navbar
         activeTab={currentRoute}
-        onNavigate={handleNavigate}
+        onNavigate={navigateOrOpen}
         onOpenRegister={openRegister}
       />
 
@@ -320,7 +326,7 @@ export function App() {
       </main>
 
       {/* ── Master Dark Footer with Verified Contacts ── */}
-      <RefFooter onNavigate={handleNavigate} onSelectPartner={handleSelectPartner} />
+      <RefFooter onNavigate={navigateOrOpen} onSelectPartner={handleSelectPartner} />
 
       {/* ── Interactive Modals ── */}
       <EventDeckModal
@@ -343,6 +349,7 @@ export function App() {
       )}
 
     </div>
+    </SiteProvider>
   );
 }
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ArrowRight, Globe } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
-import { pathForRoute } from '../lib/routes';
+import { isExternalHref, pathForRoute } from '../lib/routes';
 import { useSite, pickLang } from '../context/SiteContext';
 
 interface NavbarProps {
@@ -53,10 +53,16 @@ export const Navbar: React.FC<NavbarProps> = ({
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
     e.preventDefault();
     setMobileMenuOpen(false);
+    if (isExternalHref(id)) {
+      if (/^https?:/i.test(id)) window.open(id, '_blank', 'noopener,noreferrer');
+      else window.location.href = id;
+      return;
+    }
     onNavigate(id);
   };
 
   const hrefFor = (id: string) => {
+    if (isExternalHref(id)) return id;
     const [route, section] = id.split('#');
     return pathForRoute(route) + (section ? `#${section}` : '');
   };
@@ -116,11 +122,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                 : 'bg-slate-100 border border-slate-200'
             }`}
           >
-            {navLinks.map((item) => {
+            {navLinks.map((item, index) => {
               const isActive = activeTab === item.id;
               return (
                 <a
-                  key={item.id}
+                  key={`${item.id}-${index}`}
                   href={hrefFor(item.id)}
                   onClick={(e) => handleLinkClick(e, item.id)}
                   className={`relative px-2.5 2xl:px-3 py-1.5 text-xs font-display font-medium tracking-wide whitespace-nowrap transition-all duration-200 ${
@@ -251,7 +257,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     const isActive = activeTab === item.id;
                     return (
                       <motion.a
-                        key={item.id}
+                        key={`${item.id}-${idx}`}
                         href={hrefFor(item.id)}
                         initial={{ opacity: 0, x: -16 }}
                         animate={{ opacity: 1, x: 0 }}

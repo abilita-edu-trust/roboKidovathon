@@ -27,6 +27,9 @@ import {
   RoboHackAbout, RoboHackChallenges, RoboHackEventSection, RoboHackPartners, RoboHackProblem, RoboHackProgrammes, RoboHackTracks,
 } from '../pages/RoboHackPage';
 import { FIXED_FIRST, FIXED_LAST, type SectionDoc } from './document';
+import {
+  footerDefaults, headerDefaults, heroDefaults, volunteerDefaults, type FooterData, type HeaderData, type HeroData, type VolunteerData,
+} from './sections/frame';
 
 /** What a section needs from the page around it. */
 export interface SectionEnv {
@@ -45,18 +48,19 @@ export interface SectionEnv {
 
 type AnyData = Record<string, unknown>;
 
-export interface SectionDef<D extends AnyData = AnyData> {
+export interface SectionDef<D = AnyData> {
   defaults: (env: SectionEnv) => D;
   render: (data: D, env: SectionEnv, section: SectionDoc) => React.ReactNode;
 }
 
-const def = <D extends AnyData>(d: SectionDef<D>): SectionDef => d as unknown as SectionDef;
+const def = <D,>(d: SectionDef<D>): SectionDef => d as unknown as SectionDef;
 const none = () => ({});
 
 export const SECTION_DEFS: Record<string, SectionDef> = {
-  header: def({ defaults: none, render: () => null }),
-  footer: def({ defaults: none, render: () => null }),
-  hero: def({ defaults: none, render: (_d, env) => <RefHero onNavigate={env.navigate} /> }),
+  // Header and footer render around every page of the site (applyFrame), not in the home sections.
+  header: def<HeaderData>({ defaults: (env) => headerDefaults(env.config), render: () => null }),
+  footer: def<FooterData>({ defaults: (env) => footerDefaults(env.config), render: () => null }),
+  hero: def<HeroData>({ defaults: (env) => heroDefaults(env.config), render: (d, env) => <RefHero data={d} go={env.go} /> }),
   partners: def({ defaults: none, render: (_d, env) => <RefHeroMarquee onSelectPartner={env.selectPartner} /> }),
   'meet-us': def({
     defaults: none,
@@ -114,7 +118,7 @@ export const SECTION_DEFS: Record<string, SectionDef> = {
   challenges: def({ defaults: none, render: (_d, env) => env.city?.event && <RoboHackChallenges event={env.city.event} onRegister={env.register} /> }),
   programmes: def({ defaults: none, render: (_d, env) => env.city?.event && <RoboHackProgrammes event={env.city.event} onRegister={env.register} /> }),
   'partners-ask': def({ defaults: none, render: (_d, env) => env.city?.event && <RoboHackPartners event={env.city.event} onRegister={env.register} /> }),
-  volunteer: def({ defaults: none, render: (_d, env) => <VolunteerCta onOpenVolunteer={() => env.register('volunteer')} /> }),
+  volunteer: def<VolunteerData>({ defaults: (env) => volunteerDefaults(env.config), render: (d, env) => <VolunteerCta data={d} go={env.go} /> }),
   'read-more': def({ defaults: none, render: (_d, env) => <FutureInnovatorsDetailLinks onNavigate={env.navigate} /> }),
 };
 
