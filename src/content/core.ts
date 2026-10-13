@@ -47,3 +47,14 @@ export function mergeData<T>(base: T, saved: unknown): T {
   if (base === undefined) return saved as T;
   return typeof saved === typeof base ? (saved as T) : base;
 }
+
+/**
+ * A CMS text with placeholders such as "{count}" filled in. The pieces stay separate text nodes, the same as
+ * JSX `text {value} text`, so the site-wide translator (vfi) sees exactly the text it saw before.
+ */
+export function fill(text: string, values: Record<string, string | number>): (string | number)[] {
+  return text.split(/(\{\w+\})/).filter((piece) => piece !== '').map((piece) => {
+    const key = /^\{(\w+)\}$/.exec(piece)?.[1];
+    return key !== undefined && key in values ? values[key] : piece;
+  });
+}

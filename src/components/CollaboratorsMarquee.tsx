@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useInView } from 'framer-motion';
 import { CalendarClock, MapPin, School } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { useT } from '../content/useT';
+import type { MeetUsData } from '../content/sections/live';
 
 interface ApprovedSchool {
   school_name: string;
@@ -55,18 +57,6 @@ const CountUpStat: React.FC<{ target: number; label: string; inView: boolean; ac
   );
 };
 
-const SLOT_LABELS: Record<string, string> = {
-  morning: 'Morning',
-  afternoon: 'Afternoon',
-};
-
-const KIND_LABELS: Record<string, string> = {
-  demo: 'Demo',
-  workshop: 'Workshop',
-  hackathon: 'Young Inno Hack',
-  association: 'Association',
-};
-
 // Drops the trailing "(…)" note, e.g. "09:00–11:30 (2.5 hours)" → "09:00–11:30".
 const stripNote = (s?: string | null) => (s ? s.replace(/\s*\([^)]*\)\s*$/, '').trim() : '');
 
@@ -80,17 +70,19 @@ const cleanDate = (s?: string | null) => {
   return text;
 };
 
-const bookingLabel = (school: ApprovedSchool) => {
+type Labels = Record<string, string>;
+
+const bookingLabel = (school: ApprovedSchool, slots: Labels) => {
   const date = cleanDate(school.preferred_date);
-  const slot = school.workshop_slot ? SLOT_LABELS[school.workshop_slot] ?? '' : '';
+  const slot = school.workshop_slot ? slots[school.workshop_slot] ?? '' : '';
   const time = stripNote(school.time_range);
   const slotText = slot && time ? `${slot} (${time})` : slot || time;
   return [date, slotText].filter(Boolean).join(' · ');
 };
 
-const SchoolChip: React.FC<{ school: ApprovedSchool }> = ({ school }) => {
-  const booking = bookingLabel(school);
-  const kind = school.form_type ? KIND_LABELS[school.form_type] : undefined;
+const SchoolChip: React.FC<{ school: ApprovedSchool; slots: Labels; kinds: Labels }> = ({ school, slots, kinds }) => {
+  const booking = bookingLabel(school, slots);
+  const kind = school.form_type ? kinds[school.form_type] : undefined;
   return (
     <div className="flex-shrink-0 group flex items-center gap-3 px-6 py-3.5 sm:py-4 bg-[#0A1930] hover:bg-[#006AA7] border border-[#0A1930] shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5">
       <div className="w-8 h-8 sm:w-9 sm:h-9 bg-white/10 flex items-center justify-center text-[#FFCD00] shrink-0">
@@ -125,10 +117,19 @@ const SchoolChip: React.FC<{ school: ApprovedSchool }> = ({ school }) => {
 };
 
 interface CollaboratorsMarqueeProps {
-  onNavigate?: (tab: string, sub?: any) => void;
+  /** Headings and labels from the Site CMS; the bookings and counts are live. */
+  data: MeetUsData;
 }
 
-export const CollaboratorsMarquee: React.FC<CollaboratorsMarqueeProps> = () => {
+export const CollaboratorsMarquee: React.FC<CollaboratorsMarqueeProps> = ({ data }) => {
+  const { t } = useT();
+  const slots: Labels = { morning: t(data.morning), afternoon: t(data.afternoon) };
+  const kinds: Labels = {
+    demo: t(data.kinds.demo),
+    workshop: t(data.kinds.workshop),
+    hackathon: t(data.kinds.hackathon),
+    association: t(data.kinds.association),
+  };
   const [schools, setSchools] = useState<ApprovedSchool[]>([]);
   const [stats, setStats] = useState<RegistrationStats | null>(null);
   const [ideasCount, setIdeasCount] = useState<number>(0);
@@ -188,10 +189,10 @@ export const CollaboratorsMarquee: React.FC<CollaboratorsMarqueeProps> = () => {
     <div ref={sectionRef} className="space-y-8">
       <div className="text-center space-y-2">
         <span className="block text-[11px] font-mono-code font-bold tracking-[0.25em] text-[#006AA7] uppercase">
-          Workshops &amp; demos near you
+          {t(data.eyebrow)}
         </span>
         <h2 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#0A1930]">
-          Meet Us At
+          {t(data.title)}
         </h2>
       </div>
 
@@ -202,14 +203,14 @@ export const CollaboratorsMarquee: React.FC<CollaboratorsMarqueeProps> = () => {
 
           <div className="animate-marquee-track group-hover:[animation-play-state:paused] flex items-center gap-4 sm:gap-5">
             {marqueeItems.map((school, idx) => (
-              <SchoolChip key={`${school.school_name}-${idx}`} school={school} />
+              <SchoolChip key={`${school.school_name}-${idx}`} school={school} slots={slots} kinds={kinds} />
             ))}
           </div>
         </div>
       ) : schools.length > 0 ? (
         <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-5">
           {schools.map((school, idx) => (
-            <SchoolChip key={`${school.school_name}-${idx}`} school={school} />
+            <SchoolChip key={`${school.school_name}-${idx}`} school={school} slots={slots} kinds={kinds} />
           ))}
         </div>
       ) : null}
@@ -221,19 +222,19 @@ export const CollaboratorsMarquee: React.FC<CollaboratorsMarqueeProps> = () => {
             <div className="inline-flex divide-x divide-slate-200 border border-slate-200 bg-white shadow-xs">
               <CountUpStat
                 target={studentsCount}
-                label="Students Registered"
+                label={t(data.studentsLabel)}
                 inView={isInView}
                 accentClass="text-[#006AA7]"
               />
               <CountUpStat
                 target={schoolsCount}
-                label="Schools Registered"
+                label={t(data.schoolsLabel)}
                 inView={isInView}
                 accentClass="text-[#0A1930]"
               />
               <CountUpStat
                 target={displayIdeasCount}
-                label="Ideas Submitted"
+                label={t(data.ideasLabel)}
                 inView={isInView}
                 accentClass="text-emerald-600"
               />

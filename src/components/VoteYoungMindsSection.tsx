@@ -19,19 +19,26 @@ import {
   hasVotedLocally
 } from '../lib/ideasService';
 import { useSite } from '../context/SiteContext';
+import { fill } from '../content/core';
+import { useT } from '../content/useT';
+import { voteDefaults, type VoteData } from '../content/sections/live';
 
 interface VoteYoungMindsSectionProps {
   onNavigateIdeas: () => void;
   onNavigateSubmit: () => void;
   onNavigateAdmin?: () => void;
+  /** Headings, labels and buttons from the Site CMS; the ideas are live. */
+  data?: VoteData;
 }
 
 export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
   onNavigateIdeas,
   onNavigateSubmit,
   onNavigateAdmin,
+  data = voteDefaults(),
 }) => {
   const site = useSite();
+  const { t } = useT();
   const [ideas, setIdeas] = useState<IdeaSubmission[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedSegregation, setSelectedSegregation] = useState<string>('all');
@@ -131,13 +138,13 @@ export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
         <div>
           <div className="inline-flex items-center gap-2 text-[11px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase mb-1.5">
             <Sparkles className="w-3.5 h-3.5 text-[#FFCD00]" />
-            <span>COMMUNITY VOTING ARENA // {site.cityName.toUpperCase()}</span>
+            <span>{fill(t(data.eyebrow), { city: site.cityName.toUpperCase() })}</span>
           </div>
           <h3 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#0A1930]">
-            Vote for an Idea of Young Minds
+            {t(data.title)}
           </h3>
           <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-xl">
-            Explore innovations submitted by students across schools. Listen to voice notes, inspect blueprints, and vote to propel the best ideas to {site.finalsLabel}!
+            {fill(t(data.intro), { finals: site.finalsLabel })}
           </p>
         </div>
 
@@ -147,14 +154,14 @@ export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
             onClick={onNavigateSubmit}
             className="py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-headline font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-sm transition-all"
           >
-            <span>+ Submit Idea</span>
+            <span>{t(data.submitButton)}</span>
           </button>
           <button
             type="button"
             onClick={onNavigateIdeas}
             className="py-2.5 px-4 bg-[#0A1930] hover:bg-[#006AA7] text-white font-headline font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-sm transition-all"
           >
-            <span>All Ideas Arena</span>
+            <span>{t(data.allIdeasButton)}</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -165,7 +172,7 @@ export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
         {/* Category Segregation Pills */}
         <div className="flex flex-wrap items-center gap-1.5">
           <span className="text-[11px] font-mono-code text-slate-500 uppercase mr-1">
-            Category:
+            {t(data.categoryLabel)}
           </span>
           <button
             type="button"
@@ -176,7 +183,7 @@ export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
                 : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
             }`}
           >
-            All Segregations
+            {t(data.allCategories)}
           </button>
           {segregations.map((cat) => (
             <button
@@ -210,21 +217,21 @@ export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
       {loading ? (
         <div className="py-12 text-center text-slate-500 font-mono-code text-xs">
           <span className="inline-block w-4 h-4 border-2 border-[#006AA7] border-t-transparent animate-spin mr-2" />
-          Loading young minds' ideas...
+          {t(data.loading)}
         </div>
       ) : filteredIdeas.length === 0 ? (
         <div className="p-8 bg-slate-50 border border-slate-200 text-center">
           <p className="font-headline font-bold text-sm text-slate-700 uppercase">
-            No ideas in this segregation yet
+            {t(data.emptyTitle)}
           </p>
           <p className="text-xs text-slate-500 mt-1">
-            Be the first school student to submit an idea in this category!
+            {t(data.emptyText)}
           </p>
           <button
             onClick={onNavigateSubmit}
             className="mt-3 py-2 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-headline font-bold text-xs uppercase"
           >
-            Submit Student Idea
+            {t(data.emptyButton)}
           </button>
         </div>
       ) : (
@@ -250,14 +257,14 @@ export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
                     <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 text-slate-400 p-4 text-center">
                       <ImageIcon className="w-8 h-8 mb-1.5 opacity-60 text-slate-400" />
                       <span className="text-[10px] font-mono-code uppercase text-slate-500">
-                        Concept Blueprint
+                        {t(data.noPhoto)}
                       </span>
                     </div>
                   )}
 
                   {/* Category Badge */}
                   <span className="absolute top-2.5 left-2.5 px-2 py-0.5 bg-[#0A1930]/85 backdrop-blur-sm text-white text-[10px] font-mono-code font-bold uppercase tracking-wider">
-                    {idea.category || 'Innovation'}
+                    {idea.category || t(data.defaultCategory)}
                   </span>
 
                   {/* Vote Count Pill */}
@@ -267,7 +274,7 @@ export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
                         hasVoted ? 'text-red-500 fill-red-500' : 'text-slate-400'
                       }`}
                     />
-                    <span>{idea.votes_count || 0} votes</span>
+                    <span>{fill(t(data.votes), { n: idea.votes_count || 0 })}</span>
                   </div>
                 </div>
 
@@ -290,7 +297,7 @@ export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
                     </h4>
 
                     <p className="text-xs text-slate-600 line-clamp-2 mt-1 font-light leading-relaxed">
-                      {idea.idea_description || 'Student concept submission.'}
+                      {idea.idea_description || t(data.defaultDescription)}
                     </p>
                   </div>
 
@@ -299,7 +306,7 @@ export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
                     <div className="p-2 bg-sky-50 border border-sky-200 flex items-center justify-between text-xs">
                       <div className="flex items-center gap-2 text-[#006AA7] font-semibold text-[11px]">
                         <Volume2 className="w-3.5 h-3.5" />
-                        <span>{isPlaying ? 'Playing pitch audio...' : 'Voice Note Pitch'}</span>
+                        <span>{isPlaying ? t(data.playing) : t(data.voiceNote)}</span>
                       </div>
                       <button
                         type="button"
@@ -307,7 +314,7 @@ export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
                         className="py-1 px-2.5 bg-[#006AA7] hover:bg-[#013A63] text-white text-[10px] font-headline font-bold uppercase flex items-center gap-1 transition-colors"
                       >
                         {isPlaying ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
-                        <span>{isPlaying ? 'Pause' : 'Listen'}</span>
+                        <span>{isPlaying ? t(data.pause) : t(data.listen)}</span>
                       </button>
                     </div>
                   )}
@@ -325,14 +332,14 @@ export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
                       }`}
                     >
                       <Heart className={`w-3.5 h-3.5 ${hasVoted ? 'fill-current' : ''}`} />
-                      <span>{hasVoted ? 'Voted' : 'Vote for this Idea'}</span>
+                      <span>{hasVoted ? t(data.voted) : t(data.voteButton)}</span>
                     </button>
 
                     <button
                       type="button"
                       onClick={() => handleCopyLink(idea)}
                       className="p-2.5 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 transition-colors"
-                      title="Copy campaign link"
+                      title={t(data.copyLink)}
                     >
                       {copiedId === idea.id ? (
                         <Check className="w-4 h-4 text-emerald-600" />
@@ -353,13 +360,13 @@ export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
         <div className="space-y-1 text-center sm:text-left">
           <div className="inline-flex items-center gap-1.5 text-[10px] font-mono-code font-bold tracking-widest text-[#FFCD00] uppercase">
             <Trophy className="w-3.5 h-3.5 text-[#FFCD00]" />
-            <span>TOP 10 LEADERBOARD & FULL ARENA</span>
+            <span>{t(data.bannerEyebrow)}</span>
           </div>
           <h4 className="font-headline font-black text-lg sm:text-xl uppercase tracking-tight">
-            Want to see all {ideas.length} student innovations?
+            {fill(t(data.bannerTitle), { count: ideas.length })}
           </h4>
           <p className="text-xs text-slate-300 font-light">
-            Head to the full public voting arena to view the ranked leaderboard, search by school, and support young innovators.
+            {t(data.bannerText)}
           </p>
         </div>
 
@@ -368,7 +375,7 @@ export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
           onClick={onNavigateIdeas}
           className="w-full sm:w-auto py-3.5 px-6 bg-[#FFCD00] hover:bg-[#E6B800] text-[#0A1930] font-headline font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-md shrink-0 transition-transform active:scale-95"
         >
-          <span>View All Ideas & Leaderboard</span>
+          <span>{t(data.bannerButton)}</span>
           <ArrowRight className="w-4 h-4" />
         </button>
       </div>

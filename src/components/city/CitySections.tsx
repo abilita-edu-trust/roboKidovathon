@@ -5,6 +5,7 @@ import { ArrowRight } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useSite, pickLang, type Bilingual } from '../../context/SiteContext';
 import { VoteYoungMindsSection } from '../VoteYoungMindsSection';
+import type { VoteData } from '../../content/sections/live';
 import type { IntakeProgramTab } from '../../pages/IntakeRegisterPage';
 
 export const Eyebrow: React.FC<{ children: React.ReactNode; light?: boolean; className?: string }> = ({ children, light, className = '' }) => (
@@ -71,10 +72,10 @@ export const CityDetailsSection: React.FC<{ details: CityDetail[] }> = ({ detail
 };
 
 /** The VFI "Vote for an idea of young minds" section, showing this city's ideas. */
-export const CityVoteSection: React.FC<{ onOpenIdeas: () => void; onSubmitIdea: () => void }> = ({ onOpenIdeas, onSubmitIdea }) => (
+export const CityVoteSection: React.FC<{ onOpenIdeas: () => void; onSubmitIdea: () => void; data: VoteData }> = ({ onOpenIdeas, onSubmitIdea, data }) => (
   <section id="vote-ideas" className="w-full bg-white text-[#0A1930] py-10 sm:py-14 px-4 sm:px-6 lg:px-10 scroll-mt-20">
     <div className="max-w-[1400px] mx-auto">
-      <VoteYoungMindsSection onNavigateIdeas={onOpenIdeas} onNavigateSubmit={onSubmitIdea} />
+      <VoteYoungMindsSection onNavigateIdeas={onOpenIdeas} onNavigateSubmit={onSubmitIdea} data={data} />
     </div>
   </section>
 );

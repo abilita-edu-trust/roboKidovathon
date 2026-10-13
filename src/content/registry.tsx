@@ -34,6 +34,10 @@ import {
   feesDefaults, partnersDefaults, readMoreDefaults, toPartnerLogos, type FeesData, type PartnersData, type ReadMoreData,
 } from './sections/simple';
 import { useT } from './useT';
+import { journeyDefaults, type JourneyData } from './sections/journey';
+import {
+  meetUsDefaults, voteDefaults, winnersDefaults, type MeetUsData, type VoteData, type WinnersData,
+} from './sections/live';
 
 /** What a section needs from the page around it. */
 export interface SectionEnv {
@@ -66,26 +70,27 @@ export const SECTION_DEFS: Record<string, SectionDef> = {
   footer: def<FooterData>({ defaults: (env) => footerDefaults(env.config), render: () => null }),
   hero: def<HeroData>({ defaults: (env) => heroDefaults(env.config), render: (d, env) => <RefHero data={d} go={env.go} /> }),
   partners: def<PartnersData>({ defaults: partnersDefaults, render: (d, env) => <PartnersMarquee data={d} env={env} /> }),
-  'meet-us': def({
-    defaults: none,
-    render: (_d, env) => (
+  'meet-us': def<MeetUsData>({
+    defaults: meetUsDefaults,
+    render: (d) => (
       <section className="w-full bg-white text-[#0A1930] py-14 sm:py-16 px-4 sm:px-6 lg:px-10">
         <div className="max-w-[1560px] mx-auto">
-          <CollaboratorsMarquee onNavigate={env.navigate} />
+          <CollaboratorsMarquee data={d} />
         </div>
       </section>
     ),
   }),
-  journey: def({
-    defaults: none,
-    render: (_d, env) => <UserJourneyAudienceGuide onNavigate={env.navigate} onOpenRegister={() => env.register()} />,
+  journey: def<JourneyData>({
+    // Sites without season dates (vxo) leave the journey section out of their defaults.
+    defaults: (env) => journeyDefaults(env.config) ?? ({ audiences: [], dates: [] } as unknown as JourneyData),
+    render: (d, env) => <UserJourneyAudienceGuide data={d} go={env.go} />,
   }),
   experience: def({
     defaults: none,
     render: (_d, env) => <RefTheExperience onNavigate={env.navigate} onOpenRegister={() => env.register()} />,
   }),
   programme: def({ defaults: none, render: (_d, env) => <CityProgramme env={env} /> }),
-  winners: def({ defaults: none, render: () => <HackathonWinners /> }),
+  winners: def<WinnersData>({ defaults: winnersDefaults, render: (d) => <HackathonWinners data={d} /> }),
   teams: def({ defaults: none, render: () => <RoboKidoTeamsFinalDay /> }),
   fees: def<FeesData>({
     defaults: feesDefaults,
@@ -97,15 +102,15 @@ export const SECTION_DEFS: Record<string, SectionDef> = {
       </section>
     ),
   }),
-  vote: def({
-    defaults: none,
-    render: (_d, env) =>
+  vote: def<VoteData>({
+    defaults: voteDefaults,
+    render: (d, env) =>
       env.city ? (
-        <CityVoteSection onOpenIdeas={env.ideas} onSubmitIdea={() => env.register('submit-idea')} />
+        <CityVoteSection onOpenIdeas={env.ideas} onSubmitIdea={() => env.register('submit-idea')} data={d} />
       ) : (
         <section id="vote-ideas" className="w-full bg-white text-[#0A1930] py-10 sm:py-14 px-4 sm:px-6 lg:px-10 scroll-mt-20">
           <div className="max-w-[1560px] mx-auto">
-            <VoteYoungMindsSection onNavigateIdeas={env.ideas} onNavigateSubmit={() => env.register('submit-idea')} />
+            <VoteYoungMindsSection onNavigateIdeas={env.ideas} onNavigateSubmit={() => env.register('submit-idea')} data={d} />
           </div>
         </section>
       ),
@@ -160,7 +165,7 @@ export function defaultSections(env: SectionEnv): SectionDoc[] {
   const offersHackathon = !config.intake.tabs || config.intake.tabs.includes('hackathon');
   const middle = city
     ? [
-        'hero', 'partners', 'meet-us', 'journey',
+        'hero', 'partners', 'meet-us', ...(config.journey ? ['journey'] : []),
         ...(config.banner || city.pathway ? ['programme'] : []),
         ...(offersHackathon ? ['winners'] : []),
         ...city.home, 'jury', 'speakers', 'volunteer',
