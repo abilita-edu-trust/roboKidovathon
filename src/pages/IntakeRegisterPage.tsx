@@ -1595,7 +1595,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                             placeholder="Grade / Åk"
                             aria-label={`Member ${i + 1} grade`}
                             maxLength={50}
-                            className="w-24 px-3 py-2.5 bg-white border border-slate-300 focus:border-emerald-600 text-xs sm:text-sm text-[#0A1930]"
+                            className="w-28 sm:w-32 px-3 py-2.5 bg-white border border-slate-300 focus:border-emerald-600 text-xs sm:text-sm text-[#0A1930]"
                           />
                           {squadMembers.length > 2 && (
                             <button
