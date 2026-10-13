@@ -5,6 +5,7 @@ import { RefHeroMarquee } from './components/RefHeroMarquee';
 import { RefTheExperience } from './components/RefTheExperience';
 import { FutureInnovatorsBanner } from './components/FutureInnovatorsBanner';
 import { PathwayCard } from './components/PathwayCard';
+import { HackathonWinners } from './components/HackathonWinners';
 import { RefWorkflowMindMap } from './components/RefWorkflowMindMap';
 import { RefTrackComparison } from './components/RefTrackComparison';
 import { RefKioskShowcase } from './components/RefKioskShowcase';
@@ -174,6 +175,7 @@ export function App() {
                     </div>
                   </section>
                 )}
+                {(!site.intake.tabs || site.intake.tabs.includes('hackathon')) && <HackathonWinners />}
                 <Home onRegister={goRegister} onOpenIdeas={goIdeas} />
                 <VolunteerCta onOpenVolunteer={() => goRegister('volunteer')} />
               </>
@@ -234,6 +236,9 @@ export function App() {
 
             {/* 04. Two pathways, the one official timeline, and venues */}
             <RefTheExperience onNavigate={handleNavigate} onOpenRegister={openRegister} />
+
+            {/* 04-. Published hackathon winners (nothing until an admin publishes) */}
+            <HackathonWinners />
 
 
             {/* 04a. RoboKidovation categories, teams, workshops and final-day format */}
