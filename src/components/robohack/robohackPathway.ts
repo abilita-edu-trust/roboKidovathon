@@ -1,9 +1,9 @@
 import { Lightbulb } from 'lucide-react';
-import type { PathwayContent } from '../PathwayCard';
+import type { PathwaySource } from '../../content/sections/programmes';
 import type { Bilingual, RoboHackEvent } from '../../data/robohack/types';
 
 /** The hackathon card under a RoboHack city's banner: the event's journey, ending on its dates. */
-export function robohackPathway(event: RoboHackEvent, sv: boolean): PathwayContent {
+export function robohackPathway(event: RoboHackEvent, sv: boolean): PathwaySource {
   const t = (b: Bilingual) => (sv ? b.sv || b.en : b.en);
   const { name, title, intro, dates, venue } = event.event;
   const tracks = event.tracks.filter((track) => track.enabled).map((track) => t(track.title));

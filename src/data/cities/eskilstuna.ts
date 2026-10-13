@@ -2,7 +2,7 @@
 // ideas & voting. Dates and venue live here (details, hero, guide dates and the programme card).
 import { Bot, Cpu, Presentation, Rocket, Trophy, Users } from 'lucide-react';
 import type { SiteConfig } from '../../context/SiteContext';
-import type { PathwayContent } from '../../components/PathwayCard';
+import type { PathwaySource } from '../../content/sections/programmes';
 import type { CityDetail } from '../../components/city/CitySections';
 import { pathForRoute } from '../../lib/routes';
 
@@ -185,7 +185,7 @@ export const eskilstunaSite: SiteConfig = {
 };
 
 /** The RoboKidovation card under the Eskilstuna banner, with Eskilstuna's own dates. */
-export const eskilstunaPathway = (sv: boolean): PathwayContent => ({
+export const eskilstunaPathway = (sv: boolean): PathwaySource => ({
   theme: 'robo',
   icon: Bot,
   title: 'RoboKidovation',

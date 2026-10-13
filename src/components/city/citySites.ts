@@ -10,7 +10,7 @@ import { vaxjo } from '../../data/robohack';
 import { eskilstunaPathway, eskilstunaSite, ESKILSTUNA_DETAILS, ESKILSTUNA_META } from '../../data/cities/eskilstuna';
 import { robohackSite } from '../robohack/robohackSite';
 import { robohackPathway } from '../robohack/robohackPathway';
-import type { PathwayContent } from '../PathwayCard';
+import type { PathwaySource } from '../../content/sections/programmes';
 
 export interface CitySite {
   /** Home route, e.g. 'vxo'; the site also has '<route>-register' and '<route>-ideas'. */
@@ -27,7 +27,7 @@ export interface CitySite {
   /** Site-specific texts on the "Get involved" cards. */
   joinOverrides?: Partial<Record<IntakeProgramTab, { title?: Bilingual; desc?: Bilingual }>>;
   /** The programme card under the city banner (the same card as on vfi), and where its button goes. */
-  pathway?: { content: (sv: boolean) => PathwayContent; target: string };
+  pathway?: { content: (sv: boolean) => PathwaySource; target: string };
 }
 
 export const CITY_SITES: Record<string, CitySite> = {

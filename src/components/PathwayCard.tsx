@@ -1,28 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Target, type LucideIcon } from 'lucide-react';
-
-export interface PathwayStep {
-  title: string;
-  subtitle: string;
-  /** Shown as a pill under the step; steps without a fixed date leave it out. */
-  date?: string;
-  icon: LucideIcon;
-  highlight?: boolean;
-}
-
-/** A programme card's content: RoboKidovation (blue) or a hackathon (green). */
-export interface PathwayContent {
-  theme: 'robo' | 'hack';
-  icon: LucideIcon;
-  title: string;
-  tagline: string;
-  /** First line in full colour, the rest a little dimmer. */
-  intro: string[];
-  steps: PathwayStep[];
-  callout: React.ReactNode;
-  ctaLabel: string;
-}
+import { ArrowRight, Target } from 'lucide-react';
+import { useT } from '../content/useT';
+import { siteIcon } from '../content/icons';
+import { richText } from '../content/richText';
+import { hasLabel } from '../content/sections/frame';
+import type { PathwayData } from '../content/sections/programmes';
 
 const THEMES = {
   robo: {
@@ -42,6 +25,7 @@ const THEMES = {
     nodeHighlight: 'bg-[#006AA7] text-white',
     connector: 'bg-sky-200',
     ctaSolid: 'text-[#006AA7] hover:bg-sky-50',
+    bold: 'font-bold text-[#006AA7]',
   },
   hack: {
     card: 'border-[#059669]',
@@ -60,11 +44,14 @@ const THEMES = {
     nodeHighlight: 'bg-[#059669] text-white',
     connector: 'bg-emerald-200',
     ctaSolid: 'text-[#059669] hover:bg-emerald-50',
+    bold: 'font-bold text-[#059669]',
   },
 } as const;
 
-interface PathwayCardProps extends PathwayContent {
-  onCta: () => void;
+interface PathwayCardProps {
+  /** The card from the Site CMS: RoboKidovation (theme "robo", blue) or a hackathon ("hack", green). */
+  data: PathwayData;
+  onCta: (href: string) => void;
   /** Two cards side by side (vfi): a header over a 3-per-row step grid. A single card gets a
    *  coloured panel beside a vertical timeline instead. */
   half?: boolean;
@@ -72,10 +59,18 @@ interface PathwayCardProps extends PathwayContent {
   delay?: number;
 }
 
-export const PathwayCard: React.FC<PathwayCardProps> = ({
-  theme, icon: Icon, title, tagline, intro, steps, callout, ctaLabel, onCta, half = false, delay = 0,
-}) => {
-  const t = THEMES[theme];
+export const PathwayCard: React.FC<PathwayCardProps> = ({ data, onCta: go, half = false, delay = 0 }) => {
+  const { t: tr } = useT();
+  const t = THEMES[data.theme === 'hack' ? 'hack' : 'robo'];
+  const Icon = siteIcon(data.icon);
+  const title = tr(data.title);
+  const tagline = tr(data.tagline);
+  const intro = data.intro.map(tr);
+  const steps = data.steps.map((s) => ({ icon: siteIcon(s.icon), title: tr(s.title), subtitle: tr(s.subtitle), date: tr(s.date), highlight: s.highlight }));
+  const callout = richText(tr(data.callout), t.bold);
+  const ctaLabel = tr(data.cta.label);
+  const showCta = hasLabel(data.cta);
+  const onCta = () => go(data.cta.href);
 
   if (!half) {
     // Long journeys run as two timelines side by side on wide screens.
@@ -102,7 +97,7 @@ export const PathwayCard: React.FC<PathwayCardProps> = ({
 
           <div className={`space-y-1 text-sm ${t.intro} font-light border-t border-white/15 pt-4`}>
             {intro.map((line, i) => (
-              <p key={line} className={i > 0 ? 'text-white/85' : undefined}>
+              <p key={i} className={i > 0 ? 'text-white/85' : undefined}>
                 {line}
               </p>
             ))}
@@ -113,6 +108,7 @@ export const PathwayCard: React.FC<PathwayCardProps> = ({
               <Target className="w-5 h-5 shrink-0 text-white" />
               <p className="text-sm leading-snug font-medium">{callout}</p>
             </div>
+            {showCta && (
             <button
               type="button"
               onClick={onCta}
@@ -121,6 +117,7 @@ export const PathwayCard: React.FC<PathwayCardProps> = ({
               <span>{ctaLabel}</span>
               <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
             </button>
+            )}
           </div>
         </div>
 
@@ -133,7 +130,7 @@ export const PathwayCard: React.FC<PathwayCardProps> = ({
                 const StepIcon = step.icon;
                 const n = c * split + i + 1;
                 return (
-                  <li key={step.title} className="relative flex gap-4 group">
+                  <li key={i} className="relative flex gap-4 group">
                     <span
                       className={`relative z-10 w-10 h-10 shrink-0 flex items-center justify-center transition-transform duration-200 group-hover:scale-110 ${
                         step.highlight ? t.nodeHighlight : t.node
@@ -199,7 +196,7 @@ export const PathwayCard: React.FC<PathwayCardProps> = ({
 
         <div className={`text-xs sm:text-sm ${t.intro} font-light w-full border-t border-white/15 pt-3`}>
           {intro.map((line, i) => (
-            <p key={line} className={i > 0 ? 'text-white/80' : undefined}>
+            <p key={i} className={i > 0 ? 'text-white/80' : undefined}>
               {line}
             </p>
           ))}
@@ -213,7 +210,7 @@ export const PathwayCard: React.FC<PathwayCardProps> = ({
             const StepIcon = step.icon;
             return (
               <div
-                key={step.title}
+                key={i}
                 className={`${t.step} border p-3.5 flex flex-col items-center text-center gap-3 transition-all duration-200 shadow-2xs group`}
               >
                 <div className={`w-7 h-7 ${t.num} text-white flex items-center justify-center font-headline font-bold text-xs shadow-xs group-hover:scale-110 transition-transform`}>
@@ -248,6 +245,7 @@ export const PathwayCard: React.FC<PathwayCardProps> = ({
             </div>
             <p className="text-xs sm:text-sm text-[#0A1930] leading-snug font-medium">{callout}</p>
           </div>
+          {showCta && (
           <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
             <button
               type="button"
@@ -258,6 +256,7 @@ export const PathwayCard: React.FC<PathwayCardProps> = ({
               <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
             </button>
           </div>
+          )}
         </div>
       </div>
     </motion.div>

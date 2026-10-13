@@ -1,19 +1,21 @@
 // Icons the Site CMS can choose for cards and steps. Keep in sync with SITE_ICON_NAMES in the
 // iniac.se admin (src/lib/contentFields.ts).
 import {
-  Award, Baby, BookOpen, Bird, Bot, Building2, Cake, Calendar, CalendarDays, Camera, ClipboardCheck, Clock, Code2, Cpu, Drama,
-  EyeOff, Flag, Flame, FlaskConical, Gamepad2, Gauge, Ghost, Gift, Globe2, GraduationCap, HandHeart, Handshake, Heart, Home,
-  Image, Info, Leaf, Lightbulb, Link, Mail, MapPin, Megaphone, Mic, Music, Palette, PartyPopper, PenTool, Phone, Presentation,
-  Puzzle, RefreshCw, Rocket, School, Smile, Sparkles, Star, Sun, Target, Ticket, Timer, TreePine, Trophy, UserCheck, Users,
-  Video, Wrench, type LucideIcon,
+  Award, Baby, Bird, BookOpen, Bot, Building2, Cake, Calendar, CalendarDays, Camera, ClipboardCheck, Clock,
+  Code2, Compass, Cpu, Drama, Eye, EyeOff, Flag, Flame, FlaskConical, Gamepad2, Gauge, Ghost, Gift, Globe2,
+  GraduationCap, Hammer, HandHeart, Handshake, Heart, Home, Image, Info, Layers, Leaf, Lightbulb, LineChart, Link,
+  Mail, MapPin, Megaphone, Mic, Music, Palette, PartyPopper, PenTool, Phone, Presentation, Puzzle, RefreshCw, Rocket,
+  Scale, School, Search, Smile, Sparkles, Star, Sun, Target, Ticket, Timer, TreePine, Trophy, UserCheck, UserPlus,
+  Users, Video, Wrench, type LucideIcon,
 } from 'lucide-react';
 
 export const SITE_ICONS: Record<string, LucideIcon> = {
-  Award, Baby, BookOpen, Bird, Bot, Building2, Cake, Calendar, CalendarDays, Camera, ClipboardCheck, Clock, Code2, Cpu, Drama,
-  EyeOff, Flag, Flame, FlaskConical, Gamepad2, Gauge, Ghost, Gift, Globe2, GraduationCap, HandHeart, Handshake, Heart, Home,
-  Image, Info, Leaf, Lightbulb, Link, Mail, MapPin, Megaphone, Mic, Music, Palette, PartyPopper, PenTool, Phone, Presentation,
-  Puzzle, RefreshCw, Rocket, School, Smile, Sparkles, Star, Sun, Target, Ticket, Timer, TreePine, Trophy, UserCheck, Users,
-  Video, Wrench,
+  Award, Baby, Bird, BookOpen, Bot, Building2, Cake,
+  Calendar, CalendarDays, Camera, ClipboardCheck, Clock, Code2, Compass, Cpu, Drama, Eye, EyeOff, Flag, Flame,
+  FlaskConical, Gamepad2, Gauge, Ghost, Gift, Globe2, GraduationCap, Hammer, HandHeart, Handshake, Heart, Home,
+  Image, Info, Layers, Leaf, Lightbulb, LineChart, Link, Mail, MapPin, Megaphone, Mic, Music, Palette, PartyPopper,
+  PenTool, Phone, Presentation, Puzzle, RefreshCw, Rocket, Scale, School, Search, Smile, Sparkles, Star, Sun, Target,
+  Ticket, Timer, TreePine, Trophy, UserCheck, UserPlus, Users, Video, Wrench,
 };
 
 /** The icon for a CMS icon name; unknown names show a sparkle. */

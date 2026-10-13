@@ -6,8 +6,8 @@ import { useSite } from '../context/SiteContext';
  * The site's "<City> Future Innovators 2026" skyline artwork. Its heading, tagline and motto
  * are painted into the image, so the real heading is kept for screen readers only.
  */
-export const FutureInnovatorsBanner: React.FC = () => {
-  const { banner, cityName } = useSite();
+export const FutureInnovatorsBanner: React.FC<{ src: string }> = ({ src: banner }) => {
+  const { cityName } = useSite();
   if (!banner) return null;
 
   return (

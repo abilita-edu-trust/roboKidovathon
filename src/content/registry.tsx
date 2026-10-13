@@ -34,6 +34,7 @@ import {
   feesDefaults, partnersDefaults, readMoreDefaults, toPartnerLogos, type FeesData, type PartnersData, type ReadMoreData,
 } from './sections/simple';
 import { useT } from './useT';
+import { experienceDefaults, programmeDefaults, type ExperienceData, type ProgrammeData } from './sections/programmes';
 import { journeyDefaults, type JourneyData } from './sections/journey';
 import {
   meetUsDefaults, voteDefaults, winnersDefaults, type MeetUsData, type VoteData, type WinnersData,
@@ -85,11 +86,12 @@ export const SECTION_DEFS: Record<string, SectionDef> = {
     defaults: (env) => journeyDefaults(env.config) ?? ({ audiences: [], dates: [] } as unknown as JourneyData),
     render: (d, env) => <UserJourneyAudienceGuide data={d} go={env.go} />,
   }),
-  experience: def({
-    defaults: none,
-    render: (_d, env) => <RefTheExperience onNavigate={env.navigate} onOpenRegister={() => env.register()} />,
+  experience: def<ExperienceData>({ defaults: (env) => experienceDefaults(env.config), render: (d, env) => <RefTheExperience data={d} go={env.go} /> }),
+  programme: def<ProgrammeData>({
+    // Only cities with a programme card have this section by default.
+    defaults: (env) => programmeDefaults(env.config, env.city) ?? (null as unknown as ProgrammeData),
+    render: (d, env) => <CityProgramme data={d} env={env} />,
   }),
-  programme: def({ defaults: none, render: (_d, env) => <CityProgramme env={env} /> }),
   winners: def<WinnersData>({ defaults: winnersDefaults, render: (d) => <HackathonWinners data={d} /> }),
   teams: def({ defaults: none, render: () => <RoboKidoTeamsFinalDay /> }),
   fees: def<FeesData>({
@@ -139,23 +141,16 @@ const PartnersMarquee: React.FC<{ data: PartnersData; env: SectionEnv }> = ({ da
 };
 
 /** City banner over the skyline, then the city's programme card (as on vfi). */
-const CityProgramme: React.FC<{ env: SectionEnv }> = ({ env }) => {
-  const { language } = useLanguage();
-  const pathway = env.city?.pathway;
-  if (!env.config.banner && !pathway) return null;
-  return (
-    <section className="w-full bg-gradient-to-b from-[#F2F8FD] to-white px-4 sm:px-6 lg:px-10 pt-14 sm:pt-20 pb-2">
-      <div className="max-w-[1400px] mx-auto space-y-10">
-        <FutureInnovatorsBanner />
-        {pathway && (
-          <div id="journey" className="scroll-mt-24">
-            <PathwayCard {...pathway.content(language === 'sv')} onCta={() => env.navigate(pathway.target)} />
-          </div>
-        )}
+const CityProgramme: React.FC<{ data: ProgrammeData; env: SectionEnv }> = ({ data, env }) => (
+  <section className="w-full bg-gradient-to-b from-[#F2F8FD] to-white px-4 sm:px-6 lg:px-10 pt-14 sm:pt-20 pb-2">
+    <div className="max-w-[1400px] mx-auto space-y-10">
+      <FutureInnovatorsBanner src={data.banner} />
+      <div id="journey" className="scroll-mt-24">
+        <PathwayCard data={data.card} onCta={env.go} />
       </div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);
 
 const VFI_HOME = ['hero', 'partners', 'meet-us', 'journey', 'experience', 'winners', 'teams', 'fees', 'vote', 'jury', 'speakers', 'volunteer', 'read-more'];
 
@@ -166,7 +161,7 @@ export function defaultSections(env: SectionEnv): SectionDoc[] {
   const middle = city
     ? [
         'hero', 'partners', 'meet-us', ...(config.journey ? ['journey'] : []),
-        ...(config.banner || city.pathway ? ['programme'] : []),
+        ...(city.pathway ? ['programme'] : []),
         ...(offersHackathon ? ['winners'] : []),
         ...city.home, 'jury', 'speakers', 'volunteer',
       ]
