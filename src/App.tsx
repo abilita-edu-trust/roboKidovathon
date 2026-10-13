@@ -32,6 +32,7 @@ import { AdminIdeasCurationPage } from './pages/AdminIdeasCurationPage';
 import { AdminLoginGate } from './components/AdminLoginGate';
 import { IbkHomePage } from './pages/IbkHomePage';
 import { VolunteerCta } from './components/VolunteerCta';
+import { SitePeopleSections } from './components/SitePeopleSections';
 import { cityPageFor } from './components/city/citySites';
 import { SiteProvider } from './context/SiteContext';
 
@@ -177,6 +178,7 @@ export function App() {
                 )}
                 {(!site.intake.tabs || site.intake.tabs.includes('hackathon')) && <HackathonWinners />}
                 <Home onRegister={goRegister} onOpenIdeas={goIdeas} />
+                <SitePeopleSections site={city.route} />
                 <VolunteerCta onOpenVolunteer={() => goRegister('volunteer')} />
               </>
             )}
@@ -260,6 +262,9 @@ export function App() {
                 />
               </div>
             </section>
+
+            {/* 05b. Jury and Speakers (edited in the iniac.se Site CMS) */}
+            <SitePeopleSections site="vfi" />
 
             {/* 06. Volunteer call-to-action */}
             <VolunteerCta onOpenVolunteer={() => handleNavigate('register', 'volunteer')} />
