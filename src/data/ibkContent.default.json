@@ -18,6 +18,15 @@
       { "label": { "en": "Based in", "sv": "Hemort" }, "value": { "en": "Västerås", "sv": "Västerås" } }
     ]
   },
+  "marquee": {
+    "logos": [
+      { "name": "Indisk BarnKlubb (IBK) Västerås", "logo": "/ibk logo.png", "role": { "en": "Co-host", "sv": "Medarrangör" }, "href": "https://iniac.se" },
+      { "name": "INIAC", "logo": "/iniac logo.png", "role": { "en": "Programme & Pedagogy Partner", "sv": "Program- och pedagogikpartner" }, "href": "https://iniac.se" },
+      { "name": "SkillSkolan", "logo": "/skillskolan logo.png", "role": { "en": "Education Delivery Partner", "sv": "Utbildningspartner" }, "href": "https://iniac.se" },
+      { "name": "Blix", "logo": "/blix a thon logo.png", "role": { "en": "Technology & Kit Partner", "sv": "Teknik- och kitpartner" }, "href": "https://iniac.se" },
+      { "name": "ABF Västerås", "logo": "/ibk-assets/abf.png", "role": { "en": "Venue Partner", "sv": "Lokalpartner" }, "href": "https://iniac.se" }
+    ]
+  },
 
   "events": {
     "title": { "en": "Upcoming events", "sv": "Kommande evenemang" },

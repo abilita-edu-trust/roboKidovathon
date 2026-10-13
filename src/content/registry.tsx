@@ -30,6 +30,10 @@ import { FIXED_FIRST, FIXED_LAST, type SectionDoc } from './document';
 import {
   footerDefaults, headerDefaults, heroDefaults, volunteerDefaults, type FooterData, type HeaderData, type HeroData, type VolunteerData,
 } from './sections/frame';
+import {
+  feesDefaults, partnersDefaults, readMoreDefaults, toPartnerLogos, type FeesData, type PartnersData, type ReadMoreData,
+} from './sections/simple';
+import { useT } from './useT';
 
 /** What a section needs from the page around it. */
 export interface SectionEnv {
@@ -61,7 +65,7 @@ export const SECTION_DEFS: Record<string, SectionDef> = {
   header: def<HeaderData>({ defaults: (env) => headerDefaults(env.config), render: () => null }),
   footer: def<FooterData>({ defaults: (env) => footerDefaults(env.config), render: () => null }),
   hero: def<HeroData>({ defaults: (env) => heroDefaults(env.config), render: (d, env) => <RefHero data={d} go={env.go} /> }),
-  partners: def({ defaults: none, render: (_d, env) => <RefHeroMarquee onSelectPartner={env.selectPartner} /> }),
+  partners: def<PartnersData>({ defaults: partnersDefaults, render: (d, env) => <PartnersMarquee data={d} env={env} /> }),
   'meet-us': def({
     defaults: none,
     render: (_d, env) => (
@@ -83,12 +87,12 @@ export const SECTION_DEFS: Record<string, SectionDef> = {
   programme: def({ defaults: none, render: (_d, env) => <CityProgramme env={env} /> }),
   winners: def({ defaults: none, render: () => <HackathonWinners /> }),
   teams: def({ defaults: none, render: () => <RoboKidoTeamsFinalDay /> }),
-  fees: def({
-    defaults: none,
-    render: () => (
+  fees: def<FeesData>({
+    defaults: feesDefaults,
+    render: (d) => (
       <section className="w-full bg-white px-4 sm:px-6 lg:px-10 pb-12">
         <div className="max-w-[1560px] mx-auto">
-          <ParticipationFees />
+          <ParticipationFees data={d} />
         </div>
       </section>
     ),
@@ -119,10 +123,15 @@ export const SECTION_DEFS: Record<string, SectionDef> = {
   programmes: def({ defaults: none, render: (_d, env) => env.city?.event && <RoboHackProgrammes event={env.city.event} onRegister={env.register} /> }),
   'partners-ask': def({ defaults: none, render: (_d, env) => env.city?.event && <RoboHackPartners event={env.city.event} onRegister={env.register} /> }),
   volunteer: def<VolunteerData>({ defaults: (env) => volunteerDefaults(env.config), render: (d, env) => <VolunteerCta data={d} go={env.go} /> }),
-  'read-more': def({ defaults: none, render: (_d, env) => <FutureInnovatorsDetailLinks onNavigate={env.navigate} /> }),
+  'read-more': def<ReadMoreData>({ defaults: readMoreDefaults, render: (d, env) => <FutureInnovatorsDetailLinks data={d} go={env.go} /> }),
 };
 
 export const KNOWN_SECTION_TYPES = new Set(Object.keys(SECTION_DEFS));
+
+const PartnersMarquee: React.FC<{ data: PartnersData; env: SectionEnv }> = ({ data, env }) => {
+  const { sv } = useT();
+  return <RefHeroMarquee logos={toPartnerLogos(data.logos, sv)} onSelectPartner={env.selectPartner} />;
+};
 
 /** City banner over the skyline, then the city's programme card (as on vfi). */
 const CityProgramme: React.FC<{ env: SectionEnv }> = ({ env }) => {

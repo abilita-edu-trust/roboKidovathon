@@ -211,7 +211,7 @@ export function App() {
 
       {/* ── Page Router ── */}
       <main className="w-full">
-        {currentRoute === 'ibk' && <IbkHomePage onNavigate={handleNavigate} />}
+        {currentRoute === 'ibk' && <IbkHomePage onNavigate={handleNavigate} onSelectPartner={handleSelectPartner} />}
 
         {/* Home: the sections from the Site CMS, in their saved order */}
         {currentRoute === 'future-innovators' && <HomeSections env={sectionEnv} sections={sections} />}

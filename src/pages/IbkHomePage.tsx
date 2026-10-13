@@ -5,11 +5,15 @@ import { arenaCourtReference } from '../assets/images';
 import { useLanguage } from '../context/LanguageContext';
 import type { IntakeProgramTab } from './IntakeRegisterPage';
 import { ParticipationFees } from '../components/ParticipationFees';
+import { RefHeroMarquee } from '../components/RefHeroMarquee';
+import type { PartnerLogo } from '../data/roboData';
 import { useIbkContent, ibkIcon, mediaUrl, type Bilingual } from '../lib/ibkContent';
 import { hrefToTarget, isExternalHref } from '../lib/routes';
 
 interface IbkHomePageProps {
   onNavigate: (route: string, tab?: IntakeProgramTab) => void;
+  /** Opens a partner's preview from the logo marquee. */
+  onSelectPartner?: (partner: PartnerLogo) => void;
 }
 
 type LinkData = { label: Bilingual; href: string };
@@ -68,7 +72,7 @@ const StatTiles: React.FC<{ stats: { big: Bilingual; small: Bilingual }[]; t: (b
   </div>
 );
 
-export const IbkHomePage: React.FC<IbkHomePageProps> = ({ onNavigate }) => {
+export const IbkHomePage: React.FC<IbkHomePageProps> = ({ onNavigate, onSelectPartner }) => {
   const { language } = useLanguage();
   const sv = language === 'sv';
   const t = (b: Bilingual | undefined) => (b ? (sv ? b.sv || b.en : b.en) : '');
@@ -171,6 +175,12 @@ export const IbkHomePage: React.FC<IbkHomePageProps> = ({ onNavigate }) => {
           </motion.div>
         </div>
       </section>
+
+      {/* ── Partner logos (the same marquee as the Future Innovators sites; edited in the IBK CMS) ── */}
+      <RefHeroMarquee
+        logos={c.marquee.logos.filter((l) => l.logo).map((l) => ({ name: l.name, file: mediaUrl(l.logo), role: t(l.role), url: l.href }))}
+        onSelectPartner={onSelectPartner}
+      />
 
       {/* ── 2. UPCOMING EVENTS ── */}
       <section id="activities" className="w-full py-16 sm:py-20 px-4 sm:px-6 lg:px-10 scroll-mt-20">

@@ -1,13 +1,16 @@
 import React from 'react';
-import { PARTNER_LOGOS, PartnerLogo } from '../data/roboData';
+import type { PartnerLogo } from '../data/roboData';
 
 interface RefHeroMarqueeProps {
+  /** The logos, from the Site CMS (or the IBK CMS on /ibk). */
+  logos: PartnerLogo[];
   onSelectPartner?: (partner: PartnerLogo) => void;
 }
 
-export const RefHeroMarquee: React.FC<RefHeroMarqueeProps> = ({ onSelectPartner }) => {
+export const RefHeroMarquee: React.FC<RefHeroMarqueeProps> = ({ logos, onSelectPartner }) => {
+  if (!logos.length) return null;
   // Triple-duplicate for a seamless infinite loop across all screen sizes
-  const items = [...PARTNER_LOGOS, ...PARTNER_LOGOS, ...PARTNER_LOGOS];
+  const items = [...logos, ...logos, ...logos];
 
   return (
     <div className="w-full overflow-hidden bg-white border-b border-slate-100 py-5 select-none relative group">

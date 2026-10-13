@@ -3,6 +3,7 @@
 // read it, so every site uses the same components with its own routes, city and wording.
 import React, { createContext, useContext } from 'react';
 import type { IntakeProgramTab } from '../pages/IntakeRegisterPage';
+import type { PartnerLogo } from '../data/roboData';
 
 export type Bilingual = { en: string; sv: string };
 
@@ -122,6 +123,8 @@ export interface SiteConfig {
     registerTitle?: Bilingual;
     /** Line next to the copyright; default the hardware/GDPR line. */
     complianceLine?: Bilingual;
+    /** Partner logos row; default the built-in partner list (the Site CMS uses the Partners section's logos). */
+    logos?: PartnerLogo[];
     copyright: string;
     /** External admin login; null = the in-app admin portal. */
     adminHref: string | null;

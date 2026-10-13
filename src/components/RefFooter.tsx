@@ -109,9 +109,9 @@ export const RefFooter: React.FC<RefFooterProps> = ({ onNavigate, onSelectPartne
 
         {/* Partner Logos Row */}
         <div className="pt-10 border-t border-white/10 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
-          {PARTNER_LOGOS.map((logo) => (
+          {(footer.logos ?? PARTNER_LOGOS).map((logo, i) => (
             <button
-              key={logo.name}
+              key={i}
               type="button"
               onClick={() => onSelectPartner?.(logo)}
               title={logo.url ? `Explore ${logo.name} (Preview)` : logo.name}

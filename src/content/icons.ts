@@ -1,0 +1,27 @@
+// Icons the Site CMS can choose for cards and steps. Keep in sync with SITE_ICON_NAMES in the
+// iniac.se admin (src/lib/contentFields.ts).
+import {
+  Award, Baby, BookOpen, Bird, Bot, Building2, Cake, Calendar, CalendarDays, Camera, ClipboardCheck, Clock, Code2, Cpu, Drama,
+  EyeOff, Flag, Flame, FlaskConical, Gamepad2, Gauge, Ghost, Gift, Globe2, GraduationCap, HandHeart, Handshake, Heart, Home,
+  Image, Info, Leaf, Lightbulb, Link, Mail, MapPin, Megaphone, Mic, Music, Palette, PartyPopper, PenTool, Phone, Presentation,
+  Puzzle, RefreshCw, Rocket, School, Smile, Sparkles, Star, Sun, Target, Ticket, Timer, TreePine, Trophy, UserCheck, Users,
+  Video, Wrench, type LucideIcon,
+} from 'lucide-react';
+
+export const SITE_ICONS: Record<string, LucideIcon> = {
+  Award, Baby, BookOpen, Bird, Bot, Building2, Cake, Calendar, CalendarDays, Camera, ClipboardCheck, Clock, Code2, Cpu, Drama,
+  EyeOff, Flag, Flame, FlaskConical, Gamepad2, Gauge, Ghost, Gift, Globe2, GraduationCap, HandHeart, Handshake, Heart, Home,
+  Image, Info, Leaf, Lightbulb, Link, Mail, MapPin, Megaphone, Mic, Music, Palette, PartyPopper, PenTool, Phone, Presentation,
+  Puzzle, RefreshCw, Rocket, School, Smile, Sparkles, Star, Sun, Target, Ticket, Timer, TreePine, Trophy, UserCheck, Users,
+  Video, Wrench,
+};
+
+/** The icon for a CMS icon name; unknown names show a sparkle. */
+export const siteIcon = (name: string | undefined): LucideIcon => (name && SITE_ICONS[name]) || Sparkles;
+
+/** The CMS name of an icon used in the built-in content. */
+export const iconName = (icon: LucideIcon): string => {
+  const found = Object.entries(SITE_ICONS).find(([, I]) => I === icon);
+  if (!found) throw new Error(`Icon ${icon.displayName ?? '?'} is not in SITE_ICONS`);
+  return found[0];
+};

@@ -5,6 +5,7 @@ import type { IntakeProgramTab } from '../../pages/IntakeRegisterPage';
 import { hrefToTarget, isExternalHref, pathForRoute } from '../../lib/routes';
 import { bi, pick, type Bi, type CmsLink } from '../core';
 import type { SectionDoc } from '../document';
+import { toPartnerLogos, type PartnersData } from './simple';
 
 /** A route target (`route` or `route#section`, optionally on a register form) as a site path. */
 export const targetToHref = (target: string, tab?: string | null): string => {
@@ -129,6 +130,7 @@ const dataOf = <T,>(sections: SectionDoc[], type: string) => sections.find((s) =
 export function applyFrame(c: SiteConfig, sections: SectionDoc[], sv: boolean): SiteConfig {
   const h = dataOf<HeaderData>(sections, 'header');
   const f = dataOf<FooterData>(sections, 'footer');
+  const partners = dataOf<PartnersData>(sections, 'partners');
   return {
     ...c,
     nav: h
@@ -160,6 +162,7 @@ export function applyFrame(c: SiteConfig, sections: SectionDoc[], sv: boolean): 
           register: hasLabel(f.register) ? actionOf(f.register) : null,
           copyright: pick(f.copyright, sv),
           complianceLine: f.complianceLine,
+          logos: partners ? toPartnerLogos(partners.logos, sv) : undefined,
         }
       : c.footer,
   };
