@@ -10,6 +10,7 @@ import { DEFAULT_SITE_CONTENT } from '../data/siteContent.default';
 import { PeopleBlock } from '../components/SitePeopleSections';
 import type { PeopleSection } from '../lib/siteContent';
 import { RefHero } from '../components/RefHero';
+import { MediaBlock, mediaDefaults, type MediaData } from '../components/MediaBlock';
 import { RefHeroMarquee } from '../components/RefHeroMarquee';
 import { CollaboratorsMarquee } from '../components/CollaboratorsMarquee';
 import { UserJourneyAudienceGuide } from '../components/UserJourneyAudienceGuide';
@@ -34,6 +35,13 @@ import {
   feesDefaults, partnersDefaults, readMoreDefaults, toPartnerLogos, type FeesData, type PartnersData, type ReadMoreData,
 } from './sections/simple';
 import { useT } from './useT';
+import type { RoboHackEvent } from '../data/robohack/types';
+import {
+  rhAboutDefaults, rhChallengesDefaults, rhEventDefaults, rhPartnersDefaults, rhProblemDefaults, rhProgrammesDefaults, rhTracksDefaults,
+  type RhAboutData, type RhChallengesData, type RhEventData, type RhPartnersData, type RhProblemData, type RhProgrammesData, type RhTracksData,
+} from './sections/robohack';
+import { detailsDefaults, joinDefaults, type DetailsData, type JoinData } from './sections/city';
+import { teamsDefaults, type TeamsData } from './sections/teams';
 import { experienceDefaults, programmeDefaults, type ExperienceData, type ProgrammeData } from './sections/programmes';
 import { journeyDefaults, type JourneyData } from './sections/journey';
 import {
@@ -63,7 +71,8 @@ export interface SectionDef<D = AnyData> {
 }
 
 const def = <D,>(d: SectionDef<D>): SectionDef => d as unknown as SectionDef;
-const none = () => ({});
+/** A RoboHack section's default from the site's event (empty for sites without one). */
+const ev = <D,>(env: SectionEnv, build: (e: RoboHackEvent) => D): D => (env.city?.event ? build(env.city.event) : ({} as D));
 
 export const SECTION_DEFS: Record<string, SectionDef> = {
   // Header and footer render around every page of the site (applyFrame), not in the home sections.
@@ -93,7 +102,7 @@ export const SECTION_DEFS: Record<string, SectionDef> = {
     render: (d, env) => <CityProgramme data={d} env={env} />,
   }),
   winners: def<WinnersData>({ defaults: winnersDefaults, render: (d) => <HackathonWinners data={d} /> }),
-  teams: def({ defaults: none, render: () => <RoboKidoTeamsFinalDay /> }),
+  teams: def<TeamsData>({ defaults: teamsDefaults, render: (d) => <RoboKidoTeamsFinalDay data={d} /> }),
   fees: def<FeesData>({
     defaults: feesDefaults,
     render: (d) => (
@@ -117,18 +126,18 @@ export const SECTION_DEFS: Record<string, SectionDef> = {
         </section>
       ),
   }),
-  details: def({ defaults: none, render: (_d, env) => <CityDetailsSection details={env.city?.details ?? []} /> }),
-  join: def({
-    defaults: none,
-    render: (_d, env) => <CityPathways onRegister={env.register} onOpenIdeas={env.ideas} overrides={env.city?.joinOverrides} />,
-  }),
-  about: def({ defaults: none, render: (_d, env) => env.city?.event && <RoboHackAbout event={env.city.event} onRegister={env.register} /> }),
-  problem: def({ defaults: none, render: (_d, env) => env.city?.event && <RoboHackProblem event={env.city.event} onRegister={env.register} /> }),
-  event: def({ defaults: none, render: (_d, env) => env.city?.event && <RoboHackEventSection event={env.city.event} onRegister={env.register} /> }),
-  tracks: def({ defaults: none, render: (_d, env) => env.city?.event && <RoboHackTracks event={env.city.event} onRegister={env.register} /> }),
-  challenges: def({ defaults: none, render: (_d, env) => env.city?.event && <RoboHackChallenges event={env.city.event} onRegister={env.register} /> }),
-  programmes: def({ defaults: none, render: (_d, env) => env.city?.event && <RoboHackProgrammes event={env.city.event} onRegister={env.register} /> }),
-  'partners-ask': def({ defaults: none, render: (_d, env) => env.city?.event && <RoboHackPartners event={env.city.event} onRegister={env.register} /> }),
+  details: def<DetailsData>({ defaults: (env) => detailsDefaults(env.config, env.city), render: (d) => <CityDetailsSection data={d} /> }),
+  join: def<JoinData>({ defaults: (env) => joinDefaults(env.config, env.city), render: (d, env) => <CityPathways data={d} go={env.go} /> }),
+  // RoboHack event sections (vxo); only sites with an event have them.
+  about: def<RhAboutData>({ defaults: (env) => ev(env, (e) => rhAboutDefaults(e)), render: (d, env) => <RoboHackAbout data={d} go={env.go} /> }),
+  problem: def<RhProblemData>({ defaults: (env) => ev(env, (e) => rhProblemDefaults(e, env.config)), render: (d, env) => <RoboHackProblem data={d} go={env.go} /> }),
+  event: def<RhEventData>({ defaults: (env) => ev(env, (e) => rhEventDefaults(e, env.config)), render: (d, env) => <RoboHackEventSection data={d} go={env.go} /> }),
+  tracks: def<RhTracksData>({ defaults: (env) => ev(env, (e) => rhTracksDefaults(e, env.config)), render: (d, env) => <RoboHackTracks data={d} go={env.go} /> }),
+  challenges: def<RhChallengesData>({ defaults: (env) => ev(env, (e) => rhChallengesDefaults(e)), render: (d, env) => <RoboHackChallenges data={d} go={env.go} /> }),
+  programmes: def<RhProgrammesData>({ defaults: (env) => ev(env, (e) => rhProgrammesDefaults(e)), render: (d, env) => <RoboHackProgrammes data={d} go={env.go} /> }),
+  'partners-ask': def<RhPartnersData>({ defaults: (env) => ev(env, (e) => rhPartnersDefaults(e, env.config)), render: (d, env) => <RoboHackPartners data={d} go={env.go} /> }),
+  // Added by editors anywhere in the order; never part of the defaults.
+  media: def<MediaData>({ defaults: mediaDefaults, render: (d, env, section) => <MediaBlock id={section.id} data={d} go={env.go} /> }),
   volunteer: def<VolunteerData>({ defaults: (env) => volunteerDefaults(env.config), render: (d, env) => <VolunteerCta data={d} go={env.go} /> }),
   'read-more': def<ReadMoreData>({ defaults: readMoreDefaults, render: (d, env) => <FutureInnovatorsDetailLinks data={d} go={env.go} /> }),
 };

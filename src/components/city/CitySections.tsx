@@ -2,11 +2,11 @@
 // headings, the event-details grid, the vote section and the "get involved" options.
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
-import { useLanguage } from '../../context/LanguageContext';
-import { useSite, pickLang, type Bilingual } from '../../context/SiteContext';
+import type { Bilingual } from '../../context/SiteContext';
 import { VoteYoungMindsSection } from '../VoteYoungMindsSection';
 import type { VoteData } from '../../content/sections/live';
-import type { IntakeProgramTab } from '../../pages/IntakeRegisterPage';
+import { useT } from '../../content/useT';
+import type { DetailsData, JoinData } from '../../content/sections/city';
 
 export const Eyebrow: React.FC<{ children: React.ReactNode; light?: boolean; className?: string }> = ({ children, light, className = '' }) => (
   <span
@@ -44,24 +44,22 @@ export interface CityDetail {
   value: Bilingual | null;
 }
 
-/** "Event details" grid; unconfirmed values show TBC. */
-export const CityDetailsSection: React.FC<{ details: CityDetail[] }> = ({ details }) => {
-  const { language } = useLanguage();
-  const sv = language === 'sv';
-  const { cityName } = useSite();
+/** "Event details" grid from the Site CMS; empty values show the "not confirmed" text. */
+export const CityDetailsSection: React.FC<{ data: DetailsData }> = ({ data }) => {
+  const { t } = useT();
   return (
     <div data-no-translate="true">
       <Section id="details">
         <div className="space-y-3">
-          <Eyebrow>{cityName}</Eyebrow>
-          <SectionTitle>{sv ? 'Praktisk info' : 'Event details'}</SectionTitle>
+          <Eyebrow>{t(data.eyebrow)}</Eyebrow>
+          <SectionTitle>{t(data.title)}</SectionTitle>
         </div>
         <dl className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 border-t border-l border-slate-200">
-          {details.map((d) => (
-            <div key={d.label.en} className="p-5 sm:p-6 border-b border-r border-slate-200">
-              <dt className="text-[10px] font-mono-code font-bold uppercase tracking-widest text-slate-500">{pickLang(d.label, sv)}</dt>
-              <dd className={`mt-1 font-headline font-black text-xl uppercase tracking-tight ${d.value ? 'text-[#0A1930]' : 'text-slate-400'}`}>
-                {d.value ? pickLang(d.value, sv) : sv ? 'Meddelas senare' : 'TBC'}
+          {data.rows.map((d, i) => (
+            <div key={i} className="p-5 sm:p-6 border-b border-r border-slate-200">
+              <dt className="text-[10px] font-mono-code font-bold uppercase tracking-widest text-slate-500">{t(d.label)}</dt>
+              <dd className={`mt-1 font-headline font-black text-xl uppercase tracking-tight ${t(d.value) ? 'text-[#0A1930]' : 'text-slate-400'}`}>
+                {t(d.value) || t(data.tbc)}
               </dd>
             </div>
           ))}
@@ -80,57 +78,39 @@ export const CityVoteSection: React.FC<{ onOpenIdeas: () => void; onSubmitIdea: 
   </section>
 );
 
-const PATHWAYS: { tab: IntakeProgramTab; icon: string; title: Bilingual; desc: Bilingual }[] = [
-  { tab: 'workshop', icon: '🤖', title: { en: 'School Workshop', sv: 'Skolworkshop' }, desc: { en: 'Hands-on robotics workshop at your school', sv: 'Praktisk robotikworkshop på er skola' } },
-  { tab: 'demo', icon: '📢', title: { en: 'School Demo', sv: 'Skoldemo' }, desc: { en: 'A live robotics demo for your school', sv: 'En robotikdemo live på er skola' } },
-  { tab: 'association', icon: '🤝', title: { en: 'Group / Association', sv: 'Grupp / förening' }, desc: { en: 'Associations, clubs and community groups', sv: 'Föreningar, klubbar och grupper' } },
-  { tab: 'submit-idea', icon: '💡', title: { en: 'Bring Your Idea', sv: 'Kom med din idé' }, desc: { en: 'Text, drawing, voice note or video, then public voting', sv: 'Text, skiss, röstmeddelande eller video, sedan röstning' } },
-  { tab: 'hackathon', icon: '🏆', title: { en: 'Join the Hackathon', sv: 'Var med i hackathonet' }, desc: { en: 'Register your team', sv: 'Anmäl ert lag' } },
-  { tab: 'volunteer', icon: '🙋', title: { en: 'Volunteer', sv: 'Volontär' }, desc: { en: 'Help run the events', sv: 'Hjälp till på evenemangen' } },
-  { tab: 'partner', icon: '🏢', title: { en: 'Become a Partner', sv: 'Bli partner' }, desc: { en: 'Problem statements, mentors, workshops or equipment', sv: 'Problemformuleringar, mentorer, workshoppar eller utrustning' } },
-];
-
 const GRID_COLS: Record<number, string> = { 3: 'lg:grid-cols-3', 4: 'lg:grid-cols-4', 5: 'lg:grid-cols-5', 6: 'lg:grid-cols-3' };
 
-/** "Get involved": one card per form the site offers (opening the register page), plus Ideas & Vote. */
-export const CityPathways: React.FC<{
-  onRegister: (tab?: IntakeProgramTab) => void;
-  onOpenIdeas: () => void;
-  /** Site-specific titles and descriptions, e.g. the RoboHack dates. */
-  overrides?: Partial<Record<IntakeProgramTab, { title?: Bilingual; desc?: Bilingual }>>;
-}> = ({ onRegister, onOpenIdeas, overrides = {} }) => {
-  const { language } = useLanguage();
-  const sv = language === 'sv';
-  const { intake } = useSite();
-  const offered = PATHWAYS.filter((p) => !intake.tabs || intake.tabs.includes(p.tab)).map((p) => ({ ...p, ...overrides[p.tab] }));
-  const showIdeas = offered.some((p) => p.tab === 'submit-idea');
-  const cards = offered.length + (showIdeas ? 1 : 0);
+/** "Get involved": one card per form (opening the register page), plus Ideas & Vote; all from the Site CMS. */
+export const CityPathways: React.FC<{ data: JoinData; go: (href: string) => void }> = ({ data, go }) => {
+  const { t } = useT();
+  const showIdeas = data.ideas.visible;
+  const cards = data.cards.length + (showIdeas ? 1 : 0);
 
   return (
     <div data-no-translate="true">
       <Section id="join" tone="gray">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
           <div className="lg:col-span-7 space-y-3">
-            <Eyebrow>{sv ? 'Var med' : 'Get involved'}</Eyebrow>
-            <SectionTitle>{sv ? 'Bygg något verkligt' : 'Build something real'}</SectionTitle>
+            <Eyebrow>{t(data.eyebrow)}</Eyebrow>
+            <SectionTitle>{t(data.title)}</SectionTitle>
           </div>
           <p className="lg:col-span-5 text-sm sm:text-base text-slate-600 font-light leading-relaxed">
-            {sv ? 'Välj hur du vill vara med. Varje val öppnar sitt formulär.' : 'Choose how you want to take part. Each option opens its form.'}
+            {t(data.intro)}
           </p>
         </div>
         <div className={`grid grid-cols-2 gap-3 ${GRID_COLS[cards] ?? 'lg:grid-cols-4'}`}>
-          {offered.map((p) => (
+          {data.cards.map((p, i) => (
             <button
-              key={p.tab}
+              key={i}
               type="button"
-              onClick={() => onRegister(p.tab)}
+              onClick={() => go(p.href)}
               className="group text-left bg-white border-2 border-slate-200 hover:border-[#006AA7] p-4 sm:p-5 flex flex-col gap-2 transition-colors"
             >
-              <span className="text-2xl" aria-hidden>{p.icon}</span>
-              <span className="font-headline font-black text-base uppercase tracking-tight">{pickLang(p.title, sv)}</span>
-              <span className="text-xs text-slate-500 leading-snug">{pickLang(p.desc, sv)}</span>
+              <span className="text-2xl" aria-hidden>{p.emoji}</span>
+              <span className="font-headline font-black text-base uppercase tracking-tight">{t(p.title)}</span>
+              <span className="text-xs text-slate-500 leading-snug">{t(p.desc)}</span>
               <span className="mt-auto pt-2 inline-flex items-center gap-1 text-[11px] font-mono-code font-bold uppercase text-[#006AA7]">
-                {sv ? 'Öppna formuläret' : 'Open form'}
+                {t(data.openForm)}
                 <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
               </span>
             </button>
@@ -138,14 +118,14 @@ export const CityPathways: React.FC<{
           {showIdeas && (
             <button
               type="button"
-              onClick={onOpenIdeas}
+              onClick={() => go(data.ideas.href)}
               className="group text-left bg-[#059669] hover:bg-[#047857] text-white p-4 sm:p-5 flex flex-col gap-2 transition-colors"
             >
-              <span className="text-2xl" aria-hidden>⭐</span>
-              <span className="font-headline font-black text-base uppercase tracking-tight">{sv ? 'Idéer och röstning' : 'Ideas & Vote'}</span>
-              <span className="text-xs text-white/80 leading-snug">{sv ? 'Se idéerna och rösta på din favorit' : 'See the ideas and vote for your favourite'}</span>
+              <span className="text-2xl" aria-hidden>{data.ideas.emoji}</span>
+              <span className="font-headline font-black text-base uppercase tracking-tight">{t(data.ideas.title)}</span>
+              <span className="text-xs text-white/80 leading-snug">{t(data.ideas.desc)}</span>
               <span className="mt-auto pt-2 inline-flex items-center gap-1 text-[11px] font-mono-code font-bold uppercase">
-                {sv ? 'Rösta' : 'Vote'}
+                {t(data.ideas.button)}
                 <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
               </span>
             </button>
