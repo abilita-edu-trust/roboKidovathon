@@ -1,9 +1,9 @@
 import React from 'react';
-import { useLanguage } from '../context/LanguageContext';
 import { pickLang } from '../context/SiteContext';
-import { initials, isPeople, useSiteContent, type PeopleSection } from '../lib/siteContent';
+import { initials, type PeopleSection } from '../lib/siteContent';
 
-const PeopleBlock: React.FC<{ section: PeopleSection; sv: boolean }> = ({ section, sv }) => {
+/** One people section (Jury, Speakers, …): a grid of cards, or its "announced soon" text while empty. */
+export const PeopleBlock: React.FC<{ section: PeopleSection; sv: boolean }> = ({ section, sv }) => {
   const intro = pickLang(section.intro, sv);
   return (
     <section id={section.id} data-no-translate="true" className="w-full bg-white text-[#0A1930] py-12 sm:py-16 px-4 sm:px-6 lg:px-10 scroll-mt-20">
@@ -42,19 +42,5 @@ const PeopleBlock: React.FC<{ section: PeopleSection; sv: boolean }> = ({ sectio
         )}
       </div>
     </section>
-  );
-};
-
-/** The people sections of a city website's home page (Jury, Speakers, …) in the order set in the Site CMS. */
-export const SitePeopleSections: React.FC<{ site: string }> = ({ site }) => {
-  const { language } = useLanguage();
-  const sv = language === 'sv';
-  const content = useSiteContent(site);
-  return (
-    <>
-      {content.sections.filter(isPeople).filter((s) => s.visible).map((s) => (
-        <PeopleBlock key={s.id} section={s} sv={sv} />
-      ))}
-    </>
   );
 };

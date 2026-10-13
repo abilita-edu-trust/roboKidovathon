@@ -77,29 +77,43 @@ export const initials = (name: string) =>
 
 const cache = new Map<string, SiteContent>();
 
-/** The live content of a site; the default until the database answers. */
-export function useSiteContent(site: string): SiteContent {
+/**
+ * The live content of a site; the default until the database answers. `ready` turns true once the
+ * database answered, failed, or took longer than 2.5 s, so pages can wait briefly instead of flashing
+ * the default first.
+ */
+export function useSiteContentState(site: string): { content: SiteContent; ready: boolean } {
   const [content, setContent] = useState<SiteContent>(() => cache.get(site) ?? DEFAULT_SITE_CONTENT);
+  const [ready, setReady] = useState<boolean>(() => cache.has(site) || !isSupabaseConfigured);
 
   useEffect(() => {
     if (!isSupabaseConfigured) return;
     let active = true;
+    const timeout = setTimeout(() => active && setReady(true), 2500);
     supabase
       .from('eu_skola_site_content')
       .select('content')
       .eq('site', site)
       .maybeSingle()
       .then(({ data, error }: { data: { content: unknown } | null; error: unknown }) => {
-        if (!active || error || !data?.content) return;
-        const next = normalizeContent(data.content);
-        cache.set(site, next);
-        setContent(next);
+        if (!active) return;
+        if (!error && data?.content) {
+          const next = normalizeContent(data.content);
+          cache.set(site, next);
+          setContent(next);
+        }
+        setReady(true);
       })
-      .catch(() => undefined);
+      .catch(() => active && setReady(true));
     return () => {
       active = false;
+      clearTimeout(timeout);
     };
   }, [site]);
 
-  return content;
+  return { content, ready };
+}
+
+export function useSiteContent(site: string): SiteContent {
+  return useSiteContentState(site).content;
 }

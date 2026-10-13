@@ -1,21 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Navbar } from './components/Navbar';
-import { RefHero } from './components/RefHero';
-import { RefHeroMarquee } from './components/RefHeroMarquee';
-import { RefTheExperience } from './components/RefTheExperience';
-import { FutureInnovatorsBanner } from './components/FutureInnovatorsBanner';
-import { PathwayCard } from './components/PathwayCard';
-import { HackathonWinners } from './components/HackathonWinners';
 import { RefWorkflowMindMap } from './components/RefWorkflowMindMap';
 import { RefTrackComparison } from './components/RefTrackComparison';
 import { RefKioskShowcase } from './components/RefKioskShowcase';
 import { RefCompetitionFlow } from './components/RefCompetitionFlow';
-import { CollaboratorsMarquee } from './components/CollaboratorsMarquee';
-import { VoteYoungMindsSection } from './components/VoteYoungMindsSection';
 import { VotePrompt } from './components/VotePrompt';
 import { RefWorkshopTapeBanner } from './components/RefWorkshopTapeBanner';
 import { RefFooter } from './components/RefFooter';
-import { FutureInnovatorsDetailLinks } from './components/FutureInnovatorsDetailLinks';
 import { ParticipationFees } from './components/ParticipationFees';
 import { RoboKidoTeamsFinalDay } from './components/RoboKidoTeamsFinalDay';
 
@@ -31,18 +22,17 @@ import { IdeasVotingPage } from './pages/IdeasVotingPage';
 import { AdminIdeasCurationPage } from './pages/AdminIdeasCurationPage';
 import { AdminLoginGate } from './components/AdminLoginGate';
 import { IbkHomePage } from './pages/IbkHomePage';
-import { VolunteerCta } from './components/VolunteerCta';
-import { SitePeopleSections } from './components/SitePeopleSections';
 import { cityPageFor } from './components/city/citySites';
-import { SiteProvider } from './context/SiteContext';
+import { SiteProvider, VFI_SITE } from './context/SiteContext';
+import { HomeSections, type SectionEnv } from './content/registry';
+import { useSiteDocument } from './content/useSiteDocument';
 
 import { EventDeckModal } from './components/EventDeckModal';
-import { UserJourneyAudienceGuide } from './components/UserJourneyAudienceGuide';
 import { PartnerPreviewModal } from './components/PartnerPreviewModal';
 import type { PartnerLogo } from './data/roboData';
 import { RoboCursor } from './components/RoboCursor';
 import { useLanguage } from './context/LanguageContext';
-import { initialRouteFromLocation, pathForRoute, routeFromPath } from './lib/routes';
+import { hrefToTarget, initialRouteFromLocation, isExternalHref, pathForRoute, routeFromPath } from './lib/routes';
 
 const REGISTER_TABS: IntakeProgramTab[] = ['workshop', 'demo', 'association', 'submit-idea', 'hackathon', 'volunteer', 'partner'];
 /** The VFI register page and the RoboHack city register pages (e.g. 'vxo-register'). */
@@ -134,54 +124,53 @@ export function App() {
 
   const goToVote = () => handleNavigate('future-innovators#vote-ideas');
 
+  /** Follows a link from the Site CMS: a page of this site, or https:, mailto:, tel:. */
+  const goHref = useCallback(
+    (href: string) => {
+      if (!href) return;
+      if (isExternalHref(href)) {
+        if (/^https?:/i.test(href)) window.open(href, '_blank', 'noopener,noreferrer');
+        else window.location.href = href;
+        return;
+      }
+      const { target, tab } = hrefToTarget(href);
+      handleNavigate(target, REGISTER_TABS.includes(tab as IntakeProgramTab) ? (tab as IntakeProgramTab) : undefined);
+    },
+    [handleNavigate]
+  );
+
   // City sites (vxo.iniac.se, esk.iniac.se: /<city>, /<city>/register, /<city>/ideas) use
   // the same components as VFI; their site settings give them their name, routes and city.
   const cityPage = cityPageFor(currentRoute);
+  const homeCity = cityPage?.city;
+  const baseSite = homeCity ? homeCity.site : VFI_SITE;
+  const sectionEnv: SectionEnv = {
+    siteKey: homeCity ? homeCity.route : 'vfi',
+    config: baseSite,
+    city: homeCity,
+    navigate: handleNavigate,
+    register: (tab) => handleNavigate(baseSite.nav.registerRoute, tab),
+    ideas: () => handleNavigate(homeCity ? `${homeCity.route}-ideas` : 'ideas'),
+    go: goHref,
+    selectPartner: handleSelectPartner,
+  };
+  // The site's CMS document (iniac.se Site CMS) over its built-in defaults.
+  const { sections, ready } = useSiteDocument(sectionEnv);
+  const fadeIn = `transition-opacity duration-300 ${ready ? 'opacity-100' : 'opacity-0'}`;
+
   if (cityPage) {
     const { city, page } = cityPage;
-    const { site, Home } = city;
+    const { site } = city;
     const goHome = () => handleNavigate(city.route);
     const goRegister = (tab?: IntakeProgramTab) => handleNavigate(site.nav.registerRoute, tab);
     const goIdeas = () => handleNavigate(`${city.route}-ideas`);
     return (
       <SiteProvider site={site}>
-        <div key={language} className="min-h-screen bg-white text-[#0A1930] font-sans selection:bg-[#FFCD00] selection:text-[#0A1930] relative overflow-x-hidden">
+        <div key={language} className={`min-h-screen bg-white text-[#0A1930] font-sans selection:bg-[#FFCD00] selection:text-[#0A1930] relative overflow-x-hidden ${fadeIn}`}>
           <RoboCursor />
           <Navbar activeTab={currentRoute} onNavigate={handleNavigate} onOpenRegister={() => goRegister()} />
           <main className="w-full">
-            {page === 'home' && (
-              <>
-                <RefHero onNavigate={handleNavigate} />
-                <RefHeroMarquee onSelectPartner={handleSelectPartner} />
-
-                {/* Meet Us At — confirmed bookings + live stats */}
-                <section className="w-full bg-white text-[#0A1930] py-14 sm:py-16 px-4 sm:px-6 lg:px-10">
-                  <div className="max-w-[1560px] mx-auto">
-                    <CollaboratorsMarquee onNavigate={handleNavigate} />
-                  </div>
-                </section>
-
-                <UserJourneyAudienceGuide onNavigate={handleNavigate} onOpenRegister={() => goRegister()} />
-
-                {/* City banner over the skyline, then this city's programme card (as on vfi) */}
-                {(site.banner || city.pathway) && (
-                  <section className="w-full bg-gradient-to-b from-[#F2F8FD] to-white px-4 sm:px-6 lg:px-10 pt-14 sm:pt-20 pb-2">
-                    <div className="max-w-[1400px] mx-auto space-y-10">
-                      <FutureInnovatorsBanner />
-                      {city.pathway && (
-                        <div id="journey" className="scroll-mt-24">
-                          <PathwayCard {...city.pathway.content(language === 'sv')} onCta={() => handleNavigate(city.pathway!.target)} />
-                        </div>
-                      )}
-                    </div>
-                  </section>
-                )}
-                {(!site.intake.tabs || site.intake.tabs.includes('hackathon')) && <HackathonWinners />}
-                <Home onRegister={goRegister} onOpenIdeas={goIdeas} />
-                <SitePeopleSections site={city.route} />
-                <VolunteerCta onOpenVolunteer={() => goRegister('volunteer')} />
-              </>
-            )}
+            {page === 'home' && <HomeSections env={sectionEnv} sections={sections} />}
             {page === 'register' && (
               <IntakeRegisterPage key={registerInitialTab} initialTab={registerInitialTab} onNavigateHome={goHome} onNavigateVoting={goIdeas} />
             )}
@@ -203,7 +192,7 @@ export function App() {
   }
 
   return (
-    <div key={language} className="min-h-screen bg-white text-[#0A1930] font-sans selection:bg-[#FFCD00] selection:text-[#0A1930] relative overflow-x-hidden">
+    <div key={language} className={`min-h-screen bg-white text-[#0A1930] font-sans selection:bg-[#FFCD00] selection:text-[#0A1930] relative overflow-x-hidden ${fadeIn}`}>
       {/* ── Custom Animated Robot Cursor ── */}
       <RoboCursor />
       
@@ -218,61 +207,8 @@ export function App() {
       <main className="w-full">
         {currentRoute === 'ibk' && <IbkHomePage onNavigate={handleNavigate} />}
 
-        {currentRoute === 'future-innovators' && (
-          <>
-            {/* 01. Programme hero */}
-            <RefHero onNavigate={handleNavigate} />
-
-            {/* 02. Partners ticker */}
-            <RefHeroMarquee onSelectPartner={handleSelectPartner} />
-
-            {/* 03. Meet Us At — confirmed bookings + live stats */}
-            <section className="w-full bg-white text-[#0A1930] py-14 sm:py-16 px-4 sm:px-6 lg:px-10">
-              <div className="max-w-[1560px] mx-auto">
-                <CollaboratorsMarquee onNavigate={handleNavigate} />
-              </div>
-            </section>
-
-            {/* 03b. Target Audiences & 5-Step Clear Journey (Students, Parents, Teachers) */}
-            <UserJourneyAudienceGuide onNavigate={handleNavigate} onOpenRegister={openRegister} />
-
-            {/* 04. Two pathways, the one official timeline, and venues */}
-            <RefTheExperience onNavigate={handleNavigate} onOpenRegister={openRegister} />
-
-            {/* 04-. Published hackathon winners (nothing until an admin publishes) */}
-            <HackathonWinners />
-
-
-            {/* 04a. RoboKidovation categories, teams, workshops and final-day format */}
-            <RoboKidoTeamsFinalDay />
-
-            {/* 04b. Participation fees, next to the registration call-to-action */}
-            <section className="w-full bg-white px-4 sm:px-6 lg:px-10 pb-12">
-              <div className="max-w-[1560px] mx-auto">
-                <ParticipationFees />
-              </div>
-            </section>
-
-            {/* 05. Vote for an idea of young minds */}
-            <section id="vote-ideas" className="w-full bg-white text-[#0A1930] py-10 sm:py-14 px-4 sm:px-6 lg:px-10 scroll-mt-20">
-              <div className="max-w-[1560px] mx-auto">
-                <VoteYoungMindsSection
-                  onNavigateIdeas={() => handleNavigate('ideas')}
-                  onNavigateSubmit={() => handleNavigate('register', 'submit-idea')}
-                />
-              </div>
-            </section>
-
-            {/* 05b. Jury and Speakers (edited in the iniac.se Site CMS) */}
-            <SitePeopleSections site="vfi" />
-
-            {/* 06. Volunteer call-to-action */}
-            <VolunteerCta onOpenVolunteer={() => handleNavigate('register', 'volunteer')} />
-
-            {/* 07. Detailed rules, curriculum and equipment live on their own pages */}
-            <FutureInnovatorsDetailLinks onNavigate={handleNavigate} />
-          </>
-        )}
+        {/* Home: the sections from the Site CMS, in their saved order */}
+        {currentRoute === 'future-innovators' && <HomeSections env={sectionEnv} sections={sections} />}
 
         {currentRoute === 'challenges' && (
           <ChallengesPage

@@ -2,21 +2,15 @@
 // components with its own SiteConfig (name, menu, routes, city, forms) and home sections.
 // To add a city: a config here, its three routes in ROUTE_PATHS and HOST_ROUTES
 // (lib/routes.ts), and a host rule in public/.htaccess.
-import React from 'react';
-import type { SiteConfig } from '../../context/SiteContext';
+import type { Bilingual, SiteConfig } from '../../context/SiteContext';
 import type { IntakeProgramTab } from '../../pages/IntakeRegisterPage';
-import { RoboHackPage } from '../../pages/RoboHackPage';
-import { RoboKidoCityHome } from '../../pages/RoboKidoCityHome';
+import type { RoboHackEvent } from '../../data/robohack/types';
+import type { CityDetail } from './CitySections';
 import { vaxjo } from '../../data/robohack';
 import { eskilstunaPathway, eskilstunaSite, ESKILSTUNA_DETAILS, ESKILSTUNA_META } from '../../data/cities/eskilstuna';
 import { robohackSite } from '../robohack/robohackSite';
 import { robohackPathway } from '../robohack/robohackPathway';
 import type { PathwayContent } from '../PathwayCard';
-
-export interface CityHomeProps {
-  onRegister: (tab?: IntakeProgramTab) => void;
-  onOpenIdeas: () => void;
-}
 
 export interface CitySite {
   /** Home route, e.g. 'vxo'; the site also has '<route>-register' and '<route>-ideas'. */
@@ -24,8 +18,14 @@ export interface CitySite {
   /** Browser tab title and meta description on all the site's pages. */
   meta: { title: string; description: string };
   site: SiteConfig;
-  /** Sections between the hero/logo marquee and the volunteer banner on the home page. */
-  Home: React.FC<CityHomeProps>;
+  /** The city's own home sections (registry types), in their default order between the programme card and the Jury. */
+  home: string[];
+  /** Rows of the "Event details" section; null values show as TBC. */
+  details: CityDetail[];
+  /** The RoboHack event behind the RoboHack sections (vxo). */
+  event?: RoboHackEvent;
+  /** Site-specific texts on the "Get involved" cards. */
+  joinOverrides?: Partial<Record<IntakeProgramTab, { title?: Bilingual; desc?: Bilingual }>>;
   /** The programme card under the city banner (the same card as on vfi), and where its button goes. */
   pathway?: { content: (sv: boolean) => PathwayContent; target: string };
 }
@@ -36,7 +36,19 @@ export const CITY_SITES: Record<string, CitySite> = {
     route: 'vxo',
     meta: vaxjo.meta,
     site: robohackSite(vaxjo),
-    Home: (props) => <RoboHackPage event={vaxjo} {...props} />,
+    home: ['about', 'problem', 'event', 'tracks', 'challenges', 'programmes', 'partners-ask', 'details', 'vote', 'join'],
+    details: vaxjo.details,
+    event: vaxjo,
+    joinOverrides: {
+      hackathon: {
+        title: { en: 'Join the RoboHack', sv: 'Var med i RoboHack' },
+        desc: { en: `Register your team for ${vaxjo.event.dates.en}`, sv: `Anmäl ert lag till ${vaxjo.event.dates.sv}` },
+      },
+      volunteer: {
+        desc: { en: `Help run ${vaxjo.brand.name} ${vaxjo.brand.city}`, sv: `Hjälp till på ${vaxjo.brand.name} ${vaxjo.brand.city}` },
+      },
+      partner: { title: vaxjo.partners.cta },
+    },
     pathway: { content: (sv) => robohackPathway(vaxjo, sv), target: 'vxo#tracks' },
   },
   // esk.iniac.se — Eskilstuna Future Innovators (RoboKidovation + ideas)
@@ -44,7 +56,8 @@ export const CITY_SITES: Record<string, CitySite> = {
     route: 'esk',
     meta: ESKILSTUNA_META,
     site: eskilstunaSite,
-    Home: (props) => <RoboKidoCityHome details={ESKILSTUNA_DETAILS} {...props} />,
+    home: ['teams', 'details', 'vote', 'join'],
+    details: ESKILSTUNA_DETAILS,
     pathway: { content: eskilstunaPathway, target: 'esk#teams-final-day' },
   },
 };
