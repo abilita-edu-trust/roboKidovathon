@@ -267,6 +267,13 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
     'Coding & Software',
   ]);
   const [hackerChallengeDomain, setHackerChallengeDomain] = useState('Sustainable Cities & Climate');
+  // Squad members (2–4) on the hackathon form; saved with the registration.
+  const [squadMembers, setSquadMembers] = useState<{ full_name: string; grade: string }[]>([
+    { full_name: '', grade: '' },
+    { full_name: '', grade: '' },
+  ]);
+  const setSquadMember = (i: number, field: 'full_name' | 'grade', value: string) =>
+    setSquadMembers((list) => list.map((m, j) => (j === i ? { ...m, [field]: value } : m)));
 
   // Consent & GDPR
   const [consentAgreed, setConsentAgreed] = useState(false);
@@ -374,6 +381,15 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email.trim())) {
       setSubmitError('Please enter a valid email address (e.g. name@school.se).');
+      document.getElementById('intake-form-container')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+
+    const namedMembers = squadMembers
+      .map((m) => ({ full_name: m.full_name.trim(), grade: m.grade.trim() || null }))
+      .filter((m) => m.full_name);
+    if (selectedProgram === 'hackathon' && namedMembers.length < 2) {
+      setSubmitError('Add at least 2 squad members with their names. / Lägg till minst 2 lagmedlemmar med namn.');
       document.getElementById('intake-form-container')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       return;
     }
@@ -505,7 +521,8 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
               : isAssociation
               ? 'association-group-programme'
               : `${lockedLocation?.citySlug ?? 'vasteras'}-school-workshop`,
-          student_count: studentCount,
+          student_count: selectedProgram === 'hackathon' ? String(namedMembers.length) : studentCount,
+          members: selectedProgram === 'hackathon' ? namedMembers : undefined,
           preferred_date: customDate ? `Custom Date: ${customDate}` : 'To be confirmed',
           custom_date: customDate || null,
           custom_time: selectedProgram === 'hackathon' ? null : customTime || null,
@@ -1220,22 +1237,20 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                         </select>
                       </div>
 
+                      {selectedProgram !== 'hackathon' && (
                       <div>
                         <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-1">
-                          {isAssociation
-                            ? 'Number of children / Antal barn'
-                            : selectedProgram === 'hackathon'
-                            ? 'Squad size (2–4) / Antal i laget'
-                            : 'Number of students / Antal elever'}
+                          {isAssociation ? 'Number of children / Antal barn' : 'Number of students / Antal elever'}
                         </label>
                         <input
                           type="text"
                           value={studentCount}
                           onChange={(e) => setStudentCount(e.target.value)}
-                          placeholder={selectedProgram === 'hackathon' ? 'e.g. 4' : 'e.g. 25'}
+                          placeholder="e.g. 25"
                           className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-[#006AA7] text-xs sm:text-sm text-[#0A1930]"
                         />
                       </div>
+                      )}
                     </div>
                   </div>
                 )}
@@ -1556,6 +1571,54 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                     <div className="flex items-center gap-2 text-xs font-headline font-bold text-emerald-900 uppercase tracking-wider">
                       <Compass className="w-4 h-4 text-emerald-600" />
                       <span>Squad profile / Lagprofil</span>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700">
+                        Squad members (2–4) / Lagmedlemmar (2–4) *
+                      </label>
+                      {squadMembers.map((m, i) => (
+                        <div key={i} className="flex gap-2">
+                          <input
+                            type="text"
+                            value={m.full_name}
+                            onChange={(e) => setSquadMember(i, 'full_name', e.target.value)}
+                            placeholder={`Member ${i + 1}: full name / Fullständigt namn`}
+                            aria-label={`Member ${i + 1} name`}
+                            maxLength={200}
+                            className="flex-1 px-3.5 py-2.5 bg-white border border-slate-300 focus:border-emerald-600 text-xs sm:text-sm text-[#0A1930]"
+                          />
+                          <input
+                            type="text"
+                            value={m.grade}
+                            onChange={(e) => setSquadMember(i, 'grade', e.target.value)}
+                            placeholder="Grade / Åk"
+                            aria-label={`Member ${i + 1} grade`}
+                            maxLength={50}
+                            className="w-24 px-3 py-2.5 bg-white border border-slate-300 focus:border-emerald-600 text-xs sm:text-sm text-[#0A1930]"
+                          />
+                          {squadMembers.length > 2 && (
+                            <button
+                              type="button"
+                              onClick={() => setSquadMembers((list) => list.filter((_, j) => j !== i))}
+                              aria-label={`Remove member ${i + 1}`}
+                              title="Remove"
+                              className="px-3 border border-slate-300 text-slate-500 hover:text-red-600 hover:border-red-300 text-sm"
+                            >
+                              ×
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                      {squadMembers.length < 4 && (
+                        <button
+                          type="button"
+                          onClick={() => setSquadMembers((list) => [...list, { full_name: '', grade: '' }])}
+                          className="text-xs font-mono-code font-bold uppercase text-emerald-700 hover:underline"
+                        >
+                          + Add member / Lägg till medlem
+                        </button>
+                      )}
                     </div>
 
                     <div>
