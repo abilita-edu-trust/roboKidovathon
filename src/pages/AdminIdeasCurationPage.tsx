@@ -2379,7 +2379,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                     </h2>
                   </div>
                   <span className="text-xs font-mono-code text-slate-500">
-                    Dec 5 Challenge Cohorts & Squads
+                    Dec 4–5 Challenge Cohorts & Squads
                   </span>
                 </div>
 
@@ -2483,7 +2483,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                             <div className="font-headline font-bold text-slate-800">
                               Young Innovators Challenge
                             </div>
-                            <div className="text-slate-500">5 Dec 2026 Final · venue TBC</div>
+                            <div className="text-slate-500">4–5 Dec 2026 Final · venue TBC</div>
                           </div>
 
                           <div>

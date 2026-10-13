@@ -94,7 +94,7 @@ export interface SiteConfig {
   banner?: string;
   /** Dates for the students/parents/teachers guide on the home page; without it the guide is hidden. */
   journey?: {
-    /** When and where the final is, read after "the Final", e.g. "on 5 Dec 2026 at MISV, Västerås". */
+    /** When and where the final is, read after "the Final", e.g. "on 4–5 Dec 2026 at MISV, Västerås". */
     finals: string;
     dates: { label: string; value: string }[];
     /** Added to the students' last step, e.g. the international stage. */
@@ -175,7 +175,7 @@ export const VFI_SITE: SiteConfig = {
   },
 
   hero: {
-    badge: '5 DECEMBER 2026 · VÄSTERÅS, SWEDEN',
+    badge: '4–5 DECEMBER 2026 · VÄSTERÅS, SWEDEN',
     lines: [same('Build ideas.'), same('Test them.'), same('Take them further.')],
     intro: same(
       'Västerås Future Innovators — hands-on STEM robotics and the Young Inno Hack, for schools, associations and independent teams — RoboKido Junior, Senior and GYM, the Young Inno Hack from grade 7 to university, and grades 1–2 as participants.'
@@ -188,18 +188,18 @@ export const VFI_SITE: SiteConfig = {
       { label: 'PROGRAMME', value: '20H STEM' },
       { label: 'LGR22', value: 'CURRICULUM FIT' },
       { label: 'ARENA', value: '244 × 122 CM' },
-      { label: 'FINAL DATE', value: 'DEC 5, 2026' },
+      { label: 'FINAL DATE', value: 'DEC 4–5, 2026' },
     ],
   },
 
   banner: '/ves.jpeg',
   journey: {
-    finals: 'on 5 Dec 2026 at MISV, Västerås',
+    finals: 'on 4–5 Dec 2026 at MISV, Västerås',
     dates: [
       { label: 'School demos', value: '1–14 Oct 2026' },
       { label: 'School qualifiers', value: '12–25 Nov 2026' },
-      { label: 'Final', value: '5 Dec 2026 (MISV, Västerås)' },
-      { label: 'Young Inno Hack', value: '5 Dec 2026 (venue TBC)' },
+      { label: 'Final', value: '4–5 Dec 2026 (MISV, Västerås)' },
+      { label: 'Young Inno Hack', value: '4–5 Dec 2026 (venue TBC)' },
     ],
   },
 
@@ -229,7 +229,7 @@ export const VFI_SITE: SiteConfig = {
     email: 'contact@robokidovation.se',
     orgLines: ['Indisk BarnKlubb (IBK) Västerås & INIAC', 'Västerås, Sweden'],
     registerText: same(
-      'Registration is open for schools, associations and independent teams ahead of the 12–25 November qualifiers and the 5 December 2026 Final.'
+      'Registration is open for schools, associations and independent teams ahead of the 12–25 November qualifiers and the 4–5 December 2026 Final.'
     ),
     register: { label: same('REGISTER SCHOOL, ASSOCIATION OR TEAM'), target: 'register' },
     copyright: '© 2026 VÄSTERÅS FUTURE INNOVATORS · INDISK BARNKLUBB VÄSTERÅS',
@@ -250,7 +250,7 @@ export const VFI_SITE: SiteConfig = {
     eyebrow: 'OFFICIAL PROGRAM INTAKE // VÄSTERÅS 2026',
     defaultTab: 'workshop',
     squadTitle: 'Hackathon Squad',
-    hackathonDesc: 'Register a student team for the Young Inno Hack final on 5 Dec (venue to be confirmed)',
+    hackathonDesc: 'Register a student team for the Young Inno Hack final on 4–5 Dec (venue to be confirmed)',
     volunteerDesc: 'Help run Västerås Future Innovators events as a volunteer',
     associationContact: 'the IBK team',
     showFees: true,

@@ -144,7 +144,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
                 <MapPin className="w-4 h-4 text-[#006AA7]" />
                 <span>MÄLARDALEN INTERNATIONAL SCHOOL, VÄSTERÅS</span>
               </span>
-              <span className="font-bold text-[#0A1930]">DECEMBER 5, 2026</span>
+              <span className="font-bold text-[#0A1930]">DECEMBER 4–5, 2026</span>
             </div>
           </motion.div>
         </div>

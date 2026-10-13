@@ -8,8 +8,8 @@ type Option = { value: string; en: string; sv: string };
 
 // Stored values are English and shared with the EU Skola admin filters.
 export const VOLUNTEER_EVENTS: Option[] = [
-  { value: 'robo-sprint-city-final', en: 'Robo-Sprint City Final (5 Dec 2026)', sv: 'Robo-Sprint stadsfinal (5 dec 2026)' },
-  { value: 'young-inno-hack', en: 'Young Inno Hack (5 Dec 2026)', sv: 'Young Inno Hack (5 dec 2026)' },
+  { value: 'robo-sprint-city-final', en: 'Robo-Sprint City Final (4–5 Dec 2026)', sv: 'Robo-Sprint stadsfinal (4–5 dec 2026)' },
+  { value: 'young-inno-hack', en: 'Young Inno Hack (4–5 Dec 2026)', sv: 'Young Inno Hack (4–5 dec 2026)' },
   { value: 'school-workshops-demos', en: 'In-school workshops & demos', sv: 'Workshoppar och demos på skolor' },
   { value: 'any-vfi-event', en: 'Any VFI event', sv: 'Valfritt VFI-evenemang' },
 ];

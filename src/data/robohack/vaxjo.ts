@@ -12,7 +12,7 @@ export const vaxjo: RoboHackEvent = {
   meta: {
     title: 'YNG RoboHack Växjö',
     description:
-      'YNG RoboHack Växjö, 20–21 November 2026 at Linnaeus University. One event, three tracks: Robotics, Code and Hack. You see the problem, you bring the idea, we help you build it.',
+      'YNG RoboHack Växjö, 21–22 November 2026 at Linnaeus University. One event, three tracks: Robotics, Code and Hack. You see the problem, you bring the idea, we help you build it.',
   },
   brand: { name: 'YNG RoboHack', city: 'Växjö' },
   location: { countrySlug: 'sweden', citySlug: 'vaxjo', countryName: 'Sweden', cityName: 'Växjö' },
@@ -28,7 +28,7 @@ export const vaxjo: RoboHackEvent = {
       sv: 'En innovationsplattform för unga där nyfikenhet blir STEM-lärande, idéer blir prototyper och unga blir framtidens innovatörer.',
     },
     facts: [
-      { label: 'DATES', value: '20–21 NOV 2026' },
+      { label: 'DATES', value: '21–22 NOV 2026' },
       { label: 'VENUE', value: 'LINNAEUS UNIVERSITY' },
       { label: 'TRACKS', value: 'ROBOTICS · CODE · HACK' },
       { label: 'FOR', value: 'STUDENTS & YOUNG INNOVATORS' },
@@ -126,7 +126,7 @@ export const vaxjo: RoboHackEvent = {
     },
     name: 'RoboHack 2026',
     venue: { en: 'Linnaeus University, Växjö', sv: 'Linnéuniversitetet, Växjö' },
-    dates: { en: '20–21 November 2026', sv: '20–21 november 2026' },
+    dates: { en: '21–22 November 2026', sv: '21–22 november 2026' },
     poweredBy: 'INIAC × LNU AI Society',
   },
 
@@ -360,7 +360,7 @@ export const vaxjo: RoboHackEvent = {
 
   // Fill in each value as it is confirmed. null renders as "TBC".
   details: [
-    { label: { en: 'Dates', sv: 'Datum' }, value: { en: '20–21 November 2026', sv: '20–21 november 2026' } },
+    { label: { en: 'Dates', sv: 'Datum' }, value: { en: '21–22 November 2026', sv: '21–22 november 2026' } },
     { label: { en: 'Venue', sv: 'Plats' }, value: { en: 'Linnaeus University, Växjö', sv: 'Linnéuniversitetet, Växjö' } },
     { label: { en: 'Tracks', sv: 'Spår' }, value: { en: 'Robotics · Code · Hack', sv: 'Robotik · Kod · Hack' } },
     {

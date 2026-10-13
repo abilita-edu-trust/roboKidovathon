@@ -61,7 +61,7 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
       badge: 'STAGE 03 · FINALS',
       title: 'GRAND FINALE',
       tagline: 'Compete at the highest level.',
-      timing: 'DECEMBER 5, 2026',
+      timing: 'DECEMBER 4–5, 2026',
       icon: Trophy,
       image: roboPrecisionArenaEmpty,
       imageTag: 'CHAMPIONSHIP VENUE',
@@ -344,7 +344,7 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
         {/* ── SECTION FOOTER ── */}
         <div className="pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-slate-500 text-xs font-mono-code uppercase font-semibold">
           <span>PATHWAY: CLASSROOM (20H) ⟶ LOCAL QUALIFIER ⟶ VÄSTERÅS FINALS</span>
-          <span>DECEMBER 5, 2026 · LIVE AUDIENCE EVENT</span>
+          <span>DECEMBER 4–5, 2026 · LIVE AUDIENCE EVENT</span>
         </div>
 
       </div>

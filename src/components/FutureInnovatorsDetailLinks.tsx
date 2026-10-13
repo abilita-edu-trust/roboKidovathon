@@ -28,7 +28,7 @@ const LINKS = [
     route: 'events',
     icon: Calendar,
     title: 'Events & final',
-    text: 'The season timeline, qualifiers and the 5 December 2026 Final.',
+    text: 'The season timeline, qualifiers and the 4–5 December 2026 Final.',
   },
 ];
 

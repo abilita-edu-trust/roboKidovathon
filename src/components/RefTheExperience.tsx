@@ -80,7 +80,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
       num: 5,
       title: 'Final Preparation',
       subtitle: 'Practise and get final-ready',
-      date: '26 November – 4 December 2026',
+      date: '26 November – 3 December 2026',
       icon: Wrench,
       highlight: false,
     },
@@ -88,7 +88,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
       num: 6,
       title: 'Västerås Future Innovators Final',
       subtitle: 'Compete, showcase & celebrate innovation',
-      date: '5 December 2026',
+      date: '4–5 December 2026',
       icon: Trophy,
       highlight: true,
     },
@@ -133,7 +133,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
       num: 5,
       title: 'Prepare Pitch',
       subtitle: 'Refine your solution and pitch',
-      date: '26 November – 4 December 2026',
+      date: '26 November – 3 December 2026',
       icon: LineChart,
       highlight: false,
     },
@@ -141,7 +141,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
       num: 6,
       title: 'Demonstrate',
       subtitle: 'Present to the jury and win',
-      date: '5 December 2026',
+      date: '4–5 December 2026',
       icon: Rocket,
       highlight: true,
     },
@@ -173,7 +173,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
             steps={roboSteps}
             callout={
               <>
-                From school workshops and internal competitions, up to <span className="font-bold text-[#006AA7]">4 teams</span> from each participating school or association qualify for the Västerås RoboKidovation Final on <span className="font-bold text-[#006AA7]">5 December 2026</span>.
+                From school workshops and internal competitions, up to <span className="font-bold text-[#006AA7]">4 teams</span> from each participating school or association qualify for the Västerås RoboKidovation Final on <span className="font-bold text-[#006AA7]">4–5 December 2026</span>.
               </>
             }
             ctaLabel="EXPLORE TRACK"
@@ -194,7 +194,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
             steps={hackathonSteps}
             callout={
               <>
-                Students work on real-world challenges around science, technology, sustainability and innovation. The final presentations take place on <span className="font-bold text-[#059669]">5 December 2026</span>.
+                Students work on real-world challenges around science, technology, sustainability and innovation. The final presentations take place on <span className="font-bold text-[#059669]">4–5 December 2026</span>.
               </>
             }
             ctaLabel="EXPLORE TRACK"
@@ -282,7 +282,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({
           </div>
 
           <span className="font-bold text-[#006AA7] tracking-wider">
-            VÄSTERÅS | 5 DECEMBER 2026
+            VÄSTERÅS | 4–5 DECEMBER 2026
           </span>
         </div>
 

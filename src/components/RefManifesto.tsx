@@ -27,7 +27,7 @@ export const RefManifesto: React.FC<RefManifestoProps> = ({ onNavigate }) => {
     },
     {
       icon: Trophy,
-      title: 'Grand Finale, Dec 5',
+      title: 'Grand Finale, Dec 4–5',
       badge: 'CITY FINAL · SEK 3,000',
       desc: 'School qualifier champions compete live in Västerås for SEK 3,000 in prizes, trophies, and certificates.',
       action: 'Event Details',
