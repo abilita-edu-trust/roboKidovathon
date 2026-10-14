@@ -53,7 +53,7 @@ const Consent: React.FC<{ checked: boolean; onChange: (v: boolean) => void; chil
 
 /** "Become a Partner" form for a RoboHack city site; shown as option 7 on its register page. */
 export const PartnerForm: React.FC<{ event: RoboHackEvent }> = ({ event }) => {
-  const { L, T } = useT();
+  const { L, T, sv } = useT();
 
   const [organisation, setOrganisation] = useState('');
   const [name, setName] = useState('');
@@ -82,6 +82,7 @@ export const PartnerForm: React.FC<{ event: RoboHackEvent }> = ({ event }) => {
     try {
       const { data, error: rpcError } = await supabase.rpc('submit_eu_skola_partner', {
         payload: {
+          language: sv ? 'sv' : 'en',
           country_slug: event.location.countrySlug,
           city_slug: event.location.citySlug,
           organisation,

@@ -29,6 +29,8 @@ export interface IdeaSubmission {
 
 export interface SubmitIdeaPayload {
   student_name: string;
+  /** Site language when sent; the receipt email uses it. */
+  language?: 'en' | 'sv';
   student_age?: number | string;
   student_grade?: string;
   contact_email: string;

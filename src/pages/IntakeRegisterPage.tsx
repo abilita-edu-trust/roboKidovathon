@@ -503,6 +503,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
         }
 
         const res = await submitIdea({
+          language,
           student_name: studentName,
           student_age: studentAge,
           student_grade: studentGrade,
@@ -542,6 +543,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
         const finalSchool = isOrg ? schoolName : teamName ? `${teamName} (Team)` : schoolName;
 
         const payload = {
+          language,
           registration_type: isAssociation ? 'school' : applicantType,
           country_slug: countrySlug,
           city_slug: isCustomCity ? 'custom' : citySlug,
@@ -2012,7 +2014,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
               <p className="mt-2 text-xs sm:text-sm text-slate-600 max-w-lg leading-relaxed font-light">
                 {selectedProgram === 'submit-idea'
                   ? `Your idea has been securely recorded and mapped to your school admin panel for review. Once approved by the coordinator, it will appear on the public "View Ideas & Vote" page!`
-                  : `Your booking request has been forwarded to the municipal coordinator. The coordinator will contact you at ${email} to confirm.`}
+                  : `Your booking request has been forwarded to the municipal coordinator. A receipt is on its way to ${email}, and the coordinator will contact you to confirm.`}
               </p>
 
               {/* Public Reference Token Badge */}

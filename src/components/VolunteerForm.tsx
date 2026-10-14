@@ -121,6 +121,7 @@ export const VolunteerForm: React.FC<VolunteerFormProps> = ({
     setIsSubmitting(true);
     try {
       const payload = {
+        language,
         full_name: fullName,
         email,
         phone,
