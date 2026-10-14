@@ -197,6 +197,9 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
     const estoniaCount =
       registrations.filter((r) => r.country_slug === 'estonia').length +
       ideas.filter((i) => i.country_slug === 'estonia').length;
+    const germanyCount =
+      registrations.filter((r) => r.country_slug === 'germany').length +
+      ideas.filter((i) => i.country_slug === 'germany').length;
 
     return {
       totalWorkshops: workshops.length,
@@ -219,6 +222,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
       denmarkCount,
       latviaCount,
       estoniaCount,
+      germanyCount,
     };
   }, [registrations, ideas]);
 
@@ -1077,6 +1081,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                   { id: 'denmark', label: '🇩🇰 Denmark' },
                   { id: 'latvia', label: '🇱🇻 Latvia' },
                   { id: 'estonia', label: '🇪🇪 Estonia' },
+                  { id: 'germany', label: '🇩🇪 Germany' },
                 ].map((c) => (
                   <button
                     key={c.id}
@@ -2901,7 +2906,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
               <span className="text-xs font-headline font-bold uppercase text-slate-700">
                 Geographic Distribution
               </span>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs">
                 <div className="p-2.5 bg-slate-50 border border-slate-200 flex items-center justify-between">
                   <span>🇸🇪 Sweden</span>
                   <span className="font-bold">{stats.swedenCount}</span>
@@ -2917,6 +2922,10 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                 <div className="p-2.5 bg-slate-50 border border-slate-200 flex items-center justify-between">
                   <span>🇪🇪 Estonia</span>
                   <span className="font-bold">{stats.estoniaCount}</span>
+                </div>
+                <div className="p-2.5 bg-slate-50 border border-slate-200 flex items-center justify-between">
+                  <span>🇩🇪 Germany</span>
+                  <span className="font-bold">{stats.germanyCount}</span>
                 </div>
               </div>
             </div>

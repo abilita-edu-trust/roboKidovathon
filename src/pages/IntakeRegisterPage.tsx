@@ -10,12 +10,13 @@ import {
   Lightbulb,
   Upload,
   ArrowRight,
+  ArrowLeft,
+  Compass,
   Share2,
   Check,
   Video,
   Image as ImageIcon,
   FileText,
-  Compass,
   School,
   GraduationCap,
   Users,
@@ -27,27 +28,45 @@ import { VolunteerForm } from '../components/VolunteerForm';
 import { GRADE_GROUP_OPTIONS } from '../data/vfiFacts';
 import { ParticipationFees } from '../components/ParticipationFees';
 import { useSite } from '../context/SiteContext';
+import { useLanguage } from '../context/LanguageContext';
 
 // 'partner' only exists on city sites that provide an extra form (see SiteConfig.intake.extraForm).
 export type IntakeProgramTab = 'workshop' | 'demo' | 'association' | 'submit-idea' | 'hackathon' | 'volunteer' | 'partner';
 
+// The register page is a three-step wizard: who is registering → which programme → the form.
+type Audience = 'schools' | 'students' | 'community';
+type WizardStep = 1 | 2 | 3;
+const AUDIENCE_TABS: Record<Audience, IntakeProgramTab[]> = {
+  schools: ['workshop', 'demo'],
+  students: ['submit-idea', 'hackathon'],
+  community: ['association', 'volunteer', 'partner'],
+};
+const AUDIENCE_ORDER: Audience[] = ['schools', 'students', 'community'];
+const audienceOf = (tab: IntakeProgramTab): Audience =>
+  AUDIENCE_ORDER.find((a) => AUDIENCE_TABS[a].includes(tab)) ?? 'schools';
+
 interface IntakeRegisterPageProps {
-  initialTab?: IntakeProgramTab;
+  /** A programme to open straight away (a ?tab= link); null starts at step 1. */
+  initialTab?: IntakeProgramTab | null;
   onNavigateHome: () => void;
   onNavigateVoting?: () => void;
 }
 
+// Every city here needs a row in eu_skola_cities with the same slug, or its entries land
+// in the country's first city on the EU Skola dashboard (submit_eu_skola_registration).
 export const COUNTRIES = [
   { slug: 'sweden', name: 'Sweden', defaultCity: 'vasteras' },
   { slug: 'denmark', name: 'Denmark', defaultCity: 'copenhagen' },
   { slug: 'latvia', name: 'Latvia', defaultCity: 'riga' },
   { slug: 'estonia', name: 'Estonia', defaultCity: 'tallinn' },
+  { slug: 'germany', name: 'Germany', defaultCity: 'leipzig' },
 ];
 
 export const CITIES_BY_COUNTRY: Record<string, { slug: string; name: string }[]> = {
   sweden: [
     { slug: 'vasteras', name: 'Västerås' },
     { slug: 'eskilstuna', name: 'Eskilstuna' },
+    { slug: 'vaxjo', name: 'Växjö' },
     { slug: 'uppsala', name: 'Uppsala' },
     { slug: 'stockholm', name: 'Stockholm' },
     { slug: 'gavle', name: 'Gävle' },
@@ -58,6 +77,11 @@ export const CITIES_BY_COUNTRY: Record<string, { slug: string; name: string }[]>
     { slug: 'ventspils', name: 'Ventspils' },
   ],
   estonia: [{ slug: 'tallinn', name: 'Tallinn' }],
+  germany: [
+    { slug: 'leipzig', name: 'Leipzig' },
+    { slug: 'zwickau', name: 'Zwickau' },
+    { slug: 'dresden', name: 'Dresden' },
+  ],
 };
 
 type Choice = { value: string; label: string };
@@ -151,7 +175,7 @@ const ChoiceGroup: React.FC<{
 };
 
 export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
-  initialTab = 'workshop',
+  initialTab = null,
   onNavigateHome,
   onNavigateVoting,
 }) => {
@@ -164,22 +188,23 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
     site.intake.tabs ?? ['workshop', 'demo', 'association', 'submit-idea', 'hackathon', 'volunteer'];
   const offers = (tab: IntakeProgramTab) => offeredTabs.includes(tab) && (tab !== 'partner' || !!extraForm);
   const showRoboKido = offers('workshop') || offers('demo') || offers('association');
+  const { language } = useLanguage();
+  const L = (en: string, sv: string) => (language === 'sv' ? sv : en);
+
+  // Wizard: a ?tab= link opens that form (step 3); otherwise the visitor first says who is
+  // registering (step 1), then picks a programme (step 2). Steps with one choice are skipped.
+  const optionsFor = (a: Audience) => AUDIENCE_TABS[a].filter(offers);
+  const shownAudiences = AUDIENCE_ORDER.filter((a) => optionsFor(a).length > 0);
+  const startTab: IntakeProgramTab | null = initialTab && offers(initialTab) ? initialTab : null;
+  const onlyAudience = shownAudiences.length === 1 ? shownAudiences[0] : null;
+  const onlyTab = onlyAudience && optionsFor(onlyAudience).length === 1 ? optionsFor(onlyAudience)[0] : null;
   const [selectedProgram, setSelectedProgram] = useState<IntakeProgramTab>(
-    offers(initialTab) ? initialTab : site.intake.defaultTab
+    startTab ?? onlyTab ?? site.intake.defaultTab
   );
-  type PathwayAudience = 'all' | 'schools' | 'students' | 'community';
-  const AUDIENCE_TABS: Record<Exclude<PathwayAudience, 'all'>, IntakeProgramTab[]> = {
-    schools: ['workshop', 'demo'],
-    students: ['submit-idea', 'hackathon'],
-    community: ['volunteer', 'association', 'partner'],
-  };
-  const [pathwayAudience, setPathwayAudience] = useState<PathwayAudience>(() => {
-    const tab = offers(initialTab) ? initialTab : site.intake.defaultTab;
-    if (tab === 'workshop' || tab === 'demo') return 'schools';
-    if (tab === 'submit-idea' || tab === 'hackathon') return 'students';
-    if (tab === 'volunteer' || tab === 'association' || tab === 'partner') return 'community';
-    return 'all';
-  });
+  const [audience, setAudience] = useState<Audience | null>(
+    startTab ? audienceOf(startTab) : onlyAudience
+  );
+  const [step, setStep] = useState<WizardStep>(startTab || onlyTab ? 3 : onlyAudience ? 2 : 1);
 
   // Location Fields (Country first, then City / Location)
   const [countrySlug, setCountrySlug] = useState(lockedLocation?.countrySlug ?? 'sweden');
@@ -319,18 +344,6 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
     }
   };
 
-  const pathwayNames: Record<IntakeProgramTab, string> = {
-    workshop: 'Hands-on Workshops',
-    demo: 'Live School Demos',
-    association: 'Groups & Associations',
-    'submit-idea': 'Student Idea Submissions',
-    hackathon: `${site.intake.squadTitle}s`,
-    volunteer: 'Volunteering',
-    partner: extraForm?.title ?? 'Partners',
-  };
-  const shownPathways = offeredTabs.filter(offers).map((t) => pathwayNames[t]);
-  const pathwaysSentence = `We offer ${shownPathways.length} pathways: ${shownPathways.slice(0, -1).join(', ')}, and ${shownPathways[shownPathways.length - 1]}.`;
-
   const isHack = selectedProgram === 'submit-idea' || selectedProgram === 'hackathon';
   const isAssociation = selectedProgram === 'association';
   const showInterestCard = applicantType === 'student' && (selectedProgram === 'workshop' || selectedProgram === 'demo');
@@ -338,27 +351,53 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
   const toggleIn = (list: string[], value: string, set: (v: string[]) => void) =>
     set(list.includes(value) ? list.filter((v) => v !== value) : [...list, value]);
 
-  useEffect(() => {
-    if (initialTab && offers(initialTab)) {
-      setSelectedProgram(initialTab);
-      setSubmitSuccess(false);
-      setSubmitError('');
-      if (initialTab === 'workshop' || initialTab === 'demo') setPathwayAudience('schools');
-      else if (initialTab === 'submit-idea' || initialTab === 'hackathon') setPathwayAudience('students');
-      else if (initialTab === 'volunteer' || initialTab === 'association' || initialTab === 'partner') setPathwayAudience('community');
-    }
-  }, [initialTab]);
+  // ── Wizard navigation ── The URL carries ?tab= only while a form is open, so a shared or
+  // reloaded link lands on the same form; steps 1–2 drop it.
+  const syncTabParam = (tab: IntakeProgramTab | null) => {
+    const url = new URL(window.location.href);
+    if (tab) url.searchParams.set('tab', tab);
+    else url.searchParams.delete('tab');
+    window.history.replaceState(null, '', url.toString());
+  };
+  const scrollToWizard = () =>
+    setTimeout(() => {
+      document.getElementById('register-wizard')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
 
-  const handleSelectProgram = (program: IntakeProgramTab) => {
+  const openForm = (program: IntakeProgramTab) => {
     setSelectedProgram(program);
+    setAudience(audienceOf(program));
     setSubmitSuccess(false);
     setSubmitError('');
-    const url = new URL(window.location.href);
-    url.searchParams.set('tab', program);
-    window.history.replaceState(null, '', url.toString());
-    setTimeout(() => {
-      document.getElementById('intake-form-container')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 50);
+    setStep(3);
+    syncTabParam(program);
+    scrollToWizard();
+  };
+
+  const chooseAudience = (a: Audience) => {
+    setAudience(a);
+    const options = optionsFor(a);
+    if (options.length === 1) return openForm(options[0]);
+    setStep(2);
+    syncTabParam(null);
+    scrollToWizard();
+  };
+
+  /** Step 3 → 2 (or → 1 when step 2 had a single choice); step 2 → 1. */
+  const goBack = () => {
+    const toStep: WizardStep = step === 3 && audience && optionsFor(audience).length > 1 ? 2 : 1;
+    if (toStep === 1 && onlyAudience) return; // nothing to choose on step 1
+    setStep(toStep);
+    syncTabParam(null);
+    scrollToWizard();
+  };
+  const goToStep = (target: WizardStep) => {
+    if (target >= step) return;
+    if (target === 1 && onlyAudience) return;
+    if (target === 2 && (!audience || optionsFor(audience).length < 2)) return;
+    setStep(target);
+    syncTabParam(null);
+    scrollToWizard();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -579,6 +618,192 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
     setTimeout(() => setCopiedLink(false), 2500);
   };
 
+  // ── Wizard copy ── Step 1 cards (who is registering) and step 2 cards (which programme).
+  // "asks" lists what each form really asks for; "next" matches the confirmation screens.
+  const audienceCopy: Record<Audience, { icon: typeof School; eyebrow: string; title: string; text: string; question: string; hint: string }> = {
+    schools: {
+      icon: School,
+      eyebrow: L('I represent a school', 'Jag representerar en skola'),
+      title: L('Schools & Educators', 'Skolor & lärare'),
+      text: L(
+        'Teachers, school leaders and coordinators who want robotics for their pupils.',
+        'Lärare, skolledare och samordnare som vill ge sina elever robotik.'
+      ),
+      question: L('What would you like for your school?', 'Vad vill ni boka till er skola?'),
+      hint: L(
+        'Pick one. You can come back afterwards and book the other one too.',
+        'Välj ett alternativ. Du kan komma tillbaka efteråt och boka det andra också.'
+      ),
+    },
+    students: {
+      icon: GraduationCap,
+      eyebrow: L('I am a student', 'Jag är elev'),
+      title: L('Students & Innovators', 'Elever & innovatörer'),
+      text: L(
+        'Students with an idea for a better future, and teams that want to compete.',
+        'Elever med en idé för en bättre framtid, och lag som vill tävla.'
+      ),
+      question: L('How do you want to take part?', 'Hur vill du delta?'),
+      hint: L(
+        'Pick one. You can do both: just send them one at a time.',
+        'Välj ett alternativ. Du kan göra båda – skicka in dem en i taget.'
+      ),
+    },
+    community: {
+      icon: Users,
+      eyebrow: L('I want to get involved', 'Jag vill engagera mig'),
+      title: L('Community & Volunteers', 'Föreningar & volontärer'),
+      text: L(
+        'Groups, clubs, volunteers and partners who want to take part or help out.',
+        'Grupper, klubbar, volontärer och partner som vill delta eller hjälpa till.'
+      ),
+      question: L('How would you like to get involved?', 'Hur vill du engagera dig?'),
+      hint: L('Pick the option that fits you.', 'Välj det alternativ som passar dig.'),
+    },
+  };
+
+  const coordinatorNext = L(
+    'Your request goes to the city coordinator, who contacts you to confirm the details.',
+    'Förfrågan går till stadens samordnare, som kontaktar dig för att bekräfta detaljerna.'
+  );
+  const schoolAsks = L(
+    'Your school (or group), a contact person, a preferred date and time, the grade group and the number of students.',
+    'Er skola (eller grupp), en kontaktperson, önskat datum och tid, årskurs och antal elever.'
+  );
+  type ProgramCard = {
+    icon: string; title: string; subtitle: string; desc: string; badge: string;
+    forWho: string; asks: string; next: string; theme: 'blue' | 'emerald';
+  };
+  const programById: Record<IntakeProgramTab, ProgramCard> = {
+    workshop: {
+      icon: '🤖',
+      title: L('School Workshop', 'Skolworkshop'),
+      subtitle: L('Classroom Robotics', 'Robotik i klassrummet'),
+      desc: L(
+        '20 hours of hands-on STEM robotics curriculum, rover hardware kits, and training brought directly to your school.',
+        '20 timmar praktisk STEM-robotik med läroplan, rover-kit och utbildning – direkt till er skola.'
+      ),
+      badge: L('Grades 1–9 & GYM', 'Åk 1–9 & gymnasiet'),
+      forWho: L('Teachers and schools booking robotics for a class.', 'Lärare och skolor som vill boka robotik för en klass.'),
+      asks: schoolAsks,
+      next: coordinatorNext,
+      theme: 'blue',
+    },
+    demo: {
+      icon: '📢',
+      title: L('School Demo Session', 'Demopass på skolan'),
+      subtitle: L('Auditorium Showcase', 'Visning i aulan'),
+      desc: L(
+        'Live robotics demonstration session and interactive robot challenge trials in your school assembly hall.',
+        'En live-demonstration av robotik och interaktiva robotutmaningar i skolans aula.'
+      ),
+      badge: L('Live Assembly', 'Live i aulan'),
+      forWho: L('Schools that want a live robotics show for the whole school.', 'Skolor som vill ha en robotikvisning för hela skolan.'),
+      asks: schoolAsks,
+      next: coordinatorNext,
+      theme: 'blue',
+    },
+    'submit-idea': {
+      icon: '💡',
+      title: L('Submit Innovation Idea', 'Skicka in en innovationsidé'),
+      subtitle: 'Young Inno Hack',
+      desc: L(
+        'Submit your solution for a real-world problem via drawing, photo, voice recording, text, or video. Approved ideas go to public voting.',
+        'Skicka in din lösning på ett verkligt problem som teckning, foto, röstinspelning, text eller video. Godkända idéer går vidare till publik röstning.'
+      ),
+      badge: L('Multimodal Pitch', 'Pitch i valfri form'),
+      forWho: L('Individual students or two students together.', 'Enskilda elever eller två elever tillsammans.'),
+      asks: L(
+        'Your name, age and school, your idea and the problem it solves. You can add a drawing, photo, voice note or video.',
+        'Ditt namn, ålder och skola, din idé och problemet den löser. Du kan lägga till en teckning, ett foto, ett röstmeddelande eller en video.'
+      ),
+      next: L(
+        'A coordinator reviews your idea. Once approved, it appears on the public ideas page where people can vote.',
+        'En samordnare granskar din idé. När den är godkänd visas den på den publika idésidan där alla kan rösta.'
+      ),
+      theme: 'emerald',
+    },
+    hackathon: {
+      icon: '🏆',
+      title: site.intake.squadTitle,
+      subtitle: L('Championship Arena Squad', 'Lag till tävlingsarenan'),
+      desc: site.intake.hackathonDesc,
+      badge: L('Arena Showdown', 'Tävling'),
+      forWho: L('Student teams of 2–4 members ready for a live competition.', 'Elevlag med 2–4 medlemmar som är redo för en live-tävling.'),
+      asks: L(
+        'Your school or team, a contact person and the 2–4 members of your squad with their grades.',
+        'Er skola eller ert lag, en kontaktperson och lagets 2–4 medlemmar med årskurs.'
+      ),
+      next: L(
+        'The coordinator reviews your squad and contacts you with the next steps.',
+        'Samordnaren granskar er anmälan och kontaktar er med nästa steg.'
+      ),
+      theme: 'emerald',
+    },
+    association: {
+      icon: '🤝',
+      title: L('Group / Association', 'Grupp / förening'),
+      subtitle: L('Community Youth Teams', 'Ungdomsgrupper i föreningar'),
+      desc: L(
+        'Register an after-school club, scout group, cultural association or youth organisation.',
+        'Anmäl en fritidsklubb, scoutgrupp, kulturförening eller ungdomsorganisation.'
+      ),
+      badge: L('Community Intake', 'Föreningsanmälan'),
+      forWho: L('Youth associations, after-school clubs and non-profits.', 'Ungdomsföreningar, fritidsklubbar och ideella organisationer.'),
+      asks: L(
+        "Your group's name and type, what you would like to take part in, a contact person, a preferred date and the number of children.",
+        'Gruppens namn och typ, vad ni vill delta i, en kontaktperson, önskat datum och antal barn.'
+      ),
+      next: L(
+        `${site.intake.associationContact.charAt(0).toUpperCase()}${site.intake.associationContact.slice(1)} will contact you to coordinate.`,
+        'Vi kontaktar er för att samordna.'
+      ),
+      theme: 'blue',
+    },
+    volunteer: {
+      icon: '🙋',
+      title: L('Volunteer Crew', 'Volontärteam'),
+      subtitle: L('Event Support & Mentorship', 'Eventstöd och mentorskap'),
+      desc: site.intake.volunteerDesc || L(
+        'Help guide young students, mentor workshop stations, and co-run championship event days.',
+        'Hjälp unga elever, var mentor vid workshopstationer och hjälp till att driva tävlingsdagarna.'
+      ),
+      badge: L('Join The Team', 'Bli en del av teamet'),
+      forWho: L('Parents, university mentors and STEM enthusiasts.', 'Föräldrar, universitetsmentorer och STEM-entusiaster.'),
+      asks: L(
+        'Your name and contact details, city, languages, T-shirt size and any volunteering experience. Under 18s also add a parent or guardian.',
+        'Ditt namn och kontaktuppgifter, stad, språk, T-shirtstorlek och eventuell volontärerfarenhet. Är du under 18 anger du även en vårdnadshavare.'
+      ),
+      next: L('The team contacts you by email with the next steps.', 'Teamet kontaktar dig via e-post med nästa steg.'),
+      theme: 'blue',
+    },
+    partner: {
+      icon: extraForm?.icon || '🤝',
+      title: extraForm?.title ?? L('Partner', 'Partner'),
+      subtitle: extraForm?.subtitle ?? '',
+      desc: extraForm?.desc ?? '',
+      badge: L('Partner Intake', 'Partneranmälan'),
+      forWho: L('Companies, institutions and organisations that want to collaborate.', 'Företag, institutioner och organisationer som vill samarbeta.'),
+      asks: L(
+        'Your organisation, a contact person and how you would like to take part.',
+        'Er organisation, en kontaktperson och hur ni vill delta.'
+      ),
+      next: L('The team contacts you to talk about the partnership.', 'Teamet kontaktar er för att prata om samarbetet.'),
+      theme: 'blue',
+    },
+  };
+
+  const wizardSteps: { n: WizardStep; label: string }[] = [
+    { n: 1, label: L('Who is registering', 'Vem anmäler') },
+    { n: 2, label: L('Choose programme', 'Välj program') },
+    { n: 3, label: L('Your details', 'Dina uppgifter') },
+  ];
+  // Step 3's Back goes somewhere only when an earlier step had a real choice.
+  const canGoBack = !(onlyAudience && optionsFor(onlyAudience).length === 1);
+  const canStartOver = !onlyAudience && !!audience && optionsFor(audience).length > 1;
+  const stepClickable = (n: WizardStep) =>
+    n < step && (n === 1 ? !onlyAudience : !!audience && optionsFor(audience).length > 1);
+
   return (
     <div className="w-full min-h-screen bg-[#F8FAFC] text-[#0A1930] pt-24 pb-20 px-3 sm:px-6">
       <div className="max-w-5xl mx-auto">
@@ -600,264 +825,260 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
           )}
         </div>
 
-        {/* ── TOP SECTION: TRACK CARDS (MATCHING THE 2 USER SCREENSHOTS) ── */}
-        {/* ── TOP SECTION: STREAMLINED PARTICIPATION PATHWAY SELECTOR ── */}
-        <div id="pathway-selector-heading" className="mb-8 scroll-mt-24">
+        {/* ── REGISTRATION WIZARD: 1 who is registering → 2 which programme → 3 the form ── */}
+        <div id="register-wizard" className="mb-6 scroll-mt-24">
           <div className="text-center max-w-3xl mx-auto mb-6">
             <div className="inline-flex items-center gap-2 text-[11px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase mb-2">
               <Sparkles className="w-3.5 h-3.5 text-[#FFCD00]" />
               <span>{site.intake.eyebrow}</span>
             </div>
             <h1 className="font-headline font-black text-3xl sm:text-4xl uppercase tracking-tight text-[#0A1930]">
-              Choose Your Registration Pathway
+              {step === 1
+                ? L('Who is registering?', 'Vem anmäler sig?')
+                : step === 2 && audience
+                ? audienceCopy[audience].question
+                : L('Your details', 'Dina uppgifter')}
             </h1>
             <p className="text-xs sm:text-sm text-slate-600 mt-2 max-w-2xl mx-auto leading-relaxed">
-              {`${pathwaysSentence} Select who is participating below to load the appropriate registration form directly underneath.`}
+              {step === 1
+                ? L(
+                    'Choose the option that fits you best. Next you pick a programme, then fill in a short form. You can go back at any step.',
+                    'Välj det alternativ som passar dig bäst. Sedan väljer du program och fyller i ett kort formulär. Du kan gå tillbaka i varje steg.'
+                  )
+                : step === 2 && audience
+                ? audienceCopy[audience].hint
+                : L(
+                    'Fill in the form below. Fields marked * are required.',
+                    'Fyll i formuläret nedan. Fält markerade med * är obligatoriska.'
+                  )}
             </p>
           </div>
 
-          {/* ── AUDIENCE PERSONA FILTER TABS ── */}
-          <div className="mb-6">
-            <div className="flex flex-wrap items-center justify-center gap-2 max-w-3xl mx-auto">
-              {[
-                { id: 'all' as const, label: 'All Pathways', icon: Compass, count: offeredTabs.filter(offers).length },
-                { id: 'schools' as const, label: 'Schools & Educators', icon: School, note: 'Workshops & Demos' },
-                { id: 'students' as const, label: 'Students & Innovators', icon: GraduationCap, note: 'Ideas & Arena' },
-                { id: 'community' as const, label: 'Community & Volunteers', icon: Users, note: 'Clubs & Crew' },
-              ]
-                // Each role shows how many forms it has; roles with none on this site are left out.
-                .map((aud) => (aud.id === 'all' ? aud : { ...aud, count: AUDIENCE_TABS[aud.id].filter(offers).length }))
-                .filter((aud) => aud.count !== 0)
-                .map((aud) => {
-                const Icon = aud.icon;
-                const isSelected = pathwayAudience === aud.id;
+          {/* Step indicator */}
+          <ol className="flex items-center max-w-2xl mx-auto mb-8" aria-label={L('Registration steps', 'Steg i anmälan')}>
+            {wizardSteps.map((s, i) => {
+              const done = s.n < step;
+              const current = s.n === step;
+              return (
+                <li key={s.n} className={`flex items-center ${i < wizardSteps.length - 1 ? 'flex-1' : ''}`}>
+                  <button
+                    type="button"
+                    disabled={!stepClickable(s.n)}
+                    onClick={() => goToStep(s.n)}
+                    aria-current={current ? 'step' : undefined}
+                    className="flex items-center gap-2 disabled:cursor-default enabled:hover:opacity-80"
+                  >
+                    <span
+                      className={`w-7 h-7 shrink-0 flex items-center justify-center text-xs font-mono-code font-bold border-2 ${
+                        current
+                          ? 'bg-[#0A1930] text-[#FFCD00] border-[#0A1930]'
+                          : done
+                          ? 'bg-[#006AA7] text-white border-[#006AA7]'
+                          : 'bg-white text-slate-400 border-slate-300'
+                      }`}
+                    >
+                      {done ? <Check className="w-3.5 h-3.5" /> : s.n}
+                    </span>
+                    <span
+                      className={`text-[10px] sm:text-[11px] font-headline font-bold uppercase tracking-wider text-left leading-tight ${
+                        current ? 'text-[#0A1930]' : done ? 'text-[#006AA7]' : 'text-slate-400'
+                      } ${current ? '' : 'hidden sm:inline'}`}
+                    >
+                      {s.label}
+                    </span>
+                  </button>
+                  {i < wizardSteps.length - 1 && (
+                    <span className={`flex-1 h-0.5 mx-2 sm:mx-3 ${done ? 'bg-[#006AA7]' : 'bg-slate-200'}`} />
+                  )}
+                </li>
+              );
+            })}
+          </ol>
+
+          {/* ── STEP 1: WHO IS REGISTERING ── */}
+          {step === 1 && (
+            <div
+              className={`grid grid-cols-1 gap-4 ${
+                shownAudiences.length >= 3 ? 'md:grid-cols-3' : 'md:grid-cols-2 max-w-3xl mx-auto'
+              }`}
+            >
+              {shownAudiences.map((a) => {
+                const copy = audienceCopy[a];
+                const Icon = copy.icon;
+                const emerald = a === 'students';
                 return (
                   <button
-                    key={aud.id}
+                    key={a}
                     type="button"
-                    onClick={() => setPathwayAudience(aud.id)}
-                    className={`px-4 py-2.5 text-xs font-headline font-black uppercase tracking-wider flex items-center gap-2 transition-all border-2 rounded-none cursor-pointer ${
-                      isSelected
-                        ? 'bg-[#0A1930] text-[#FFCD00] border-[#0A1930] shadow-md ring-2 ring-[#006AA7]/30 scale-[1.02]'
-                        : 'bg-white hover:bg-slate-100 text-slate-700 border-slate-200'
-                    }`}
+                    onClick={() => chooseAudience(a)}
+                    className="group p-6 text-left bg-white border-2 border-slate-200 hover:border-[#0A1930] hover:shadow-lg transition-all flex flex-col cursor-pointer"
                   >
-                    <Icon className={`w-4 h-4 ${isSelected ? 'text-[#FFCD00]' : 'text-slate-500'}`} />
-                    <span>{aud.label}</span>
-                    {aud.count !== undefined && (
-                      <span className={`text-[10px] font-mono-code px-1.5 py-0.2 rounded-xs ${
-                        isSelected ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
-                      }`}>
-                        {aud.count}
+                    <span
+                      className={`w-12 h-12 flex items-center justify-center mb-4 ${
+                        emerald ? 'bg-emerald-50 text-emerald-700' : 'bg-sky-50 text-[#006AA7]'
+                      }`}
+                    >
+                      <Icon className="w-6 h-6" />
+                    </span>
+                    <span
+                      className={`text-[10px] font-mono-code font-bold uppercase tracking-wider ${
+                        emerald ? 'text-emerald-700' : 'text-[#006AA7]'
+                      }`}
+                    >
+                      {copy.eyebrow}
+                    </span>
+                    <h2 className="font-headline font-black text-xl uppercase tracking-tight text-[#0A1930] mt-1">
+                      {copy.title}
+                    </h2>
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mt-2">{copy.text}</p>
+                    <div className="mt-4 pt-3 border-t border-slate-100">
+                      <span className="block text-[10px] font-mono-code font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+                        {L('You can choose', 'Du kan välja')}
                       </span>
-                    )}
+                      <ul className="space-y-1">
+                        {optionsFor(a).map((t) => (
+                          <li key={t} className="text-xs text-slate-700 flex items-center gap-2">
+                            <span aria-hidden="true">{programById[t].icon}</span>
+                            <span>{programById[t].title}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="mt-auto pt-5">
+                      <div className="w-full py-2.5 px-3 text-xs font-headline font-black uppercase tracking-wider flex items-center justify-center gap-1.5 bg-slate-100 text-slate-700 group-hover:bg-[#0A1930] group-hover:text-[#FFCD00] transition-colors">
+                        <span>{L('This is me', 'Det här är jag')}</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </div>
+                    </div>
                   </button>
                 );
               })}
             </div>
-            <p className="text-[11px] font-mono-code text-center text-slate-500 mt-2.5">
-              💡 Tip: Click your role above to quickly see only the options meant for you.
-            </p>
-          </div>
+          )}
 
-          {/* ── REDESIGNED CLEAR PATHWAY CARDS ── */}
-          <div className="mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {[
-                {
-                  id: 'workshop' as const,
-                  audience: 'schools' as const,
-                  audienceLabel: '🏫 FOR SCHOOLS & TEACHERS',
-                  title: 'School Workshop',
-                  subtitle: 'Classroom Robotics',
-                  desc: '20 hours of hands-on STEM robotics curriculum, rover hardware kits, and training brought directly to your school.',
-                  icon: '🤖',
-                  badge: 'Grades 1–9 & GYM',
-                  targetUser: 'Educators & schools booking classroom robotics',
-                  theme: 'blue' as const,
-                },
-                {
-                  id: 'demo' as const,
-                  audience: 'schools' as const,
-                  audienceLabel: '📢 FOR SCHOOL ASSEMBLIES',
-                  title: 'School Demo Session',
-                  subtitle: 'Auditorium Showcase',
-                  desc: 'Live robotics demonstration session and interactive robot challenge trials in your school assembly hall.',
-                  icon: '📢',
-                  badge: 'Live Assembly',
-                  targetUser: 'Schools wanting a live robotics showcase for the whole school',
-                  theme: 'blue' as const,
-                },
-                {
-                  id: 'submit-idea' as const,
-                  audience: 'students' as const,
-                  audienceLabel: '💡 FOR STUDENTS & YOUNG INVENTORS',
-                  title: 'Submit Innovation Idea',
-                  subtitle: 'Young Inno Hack Track',
-                  desc: 'Submit your solution for a real-world problem via drawing, photo, voice recording, text, or video. Qualifies for public voting!',
-                  icon: '💡',
-                  badge: 'Multimodal Pitch',
-                  targetUser: 'Individual students or creative youth duos',
-                  theme: 'emerald' as const,
-                },
-                {
-                  id: 'hackathon' as const,
-                  audience: 'students' as const,
-                  audienceLabel: '🏆 FOR COMPETITION SQUADS',
-                  title: site.intake.squadTitle,
-                  subtitle: 'Championship Arena Squad',
-                  desc: site.intake.hackathonDesc,
-                  icon: '🏆',
-                  badge: 'Arena Showdown',
-                  targetUser: 'Student teams (2–4 members) ready for live competition',
-                  theme: 'emerald' as const,
-                },
-                {
-                  id: 'association' as const,
-                  audience: 'community' as const,
-                  audienceLabel: '🤝 FOR CLUBS & ASSOCIATIONS',
-                  title: 'Group / Association',
-                  subtitle: 'Community Youth Teams',
-                  desc: 'Register an after-school club, scout group, cultural association, or youth organization anywhere in Sweden.',
-                  icon: '🤝',
-                  badge: 'Community Intake',
-                  targetUser: 'Youth associations, after-school clubs, and non-profits',
-                  theme: 'blue' as const,
-                },
-                {
-                  id: 'volunteer' as const,
-                  audience: 'community' as const,
-                  audienceLabel: '🙋 FOR MENTORS & VOLUNTEERS',
-                  title: 'Volunteer Crew',
-                  subtitle: 'Event Support & Mentorship',
-                  desc: site.intake.volunteerDesc || 'Help guide young students, mentor workshop stations, and co-run championship event days.',
-                  icon: '🙋',
-                  badge: 'Join The Team',
-                  targetUser: 'Parents, university mentors, and STEM enthusiasts',
-                  theme: 'blue' as const,
-                },
-                ...(extraForm
-                  ? [
-                      {
-                        id: 'partner' as const,
-                        audience: 'community' as const,
-                        audienceLabel: '🤝 FOR PARTNER ORGANIZATIONS',
-                        title: extraForm.title,
-                        subtitle: extraForm.subtitle,
-                        desc: extraForm.desc,
-                        icon: extraForm.icon || '🤝',
-                        badge: 'Partner Intake',
-                        targetUser: 'Institutional and industry collaborators',
-                        theme: 'blue' as const,
-                      },
-                    ]
-                  : []),
-              ]
-                .filter((p) => offers(p.id))
-                .filter((p) => pathwayAudience === 'all' || p.audience === pathwayAudience)
-                .map((p) => {
-                  const active = selectedProgram === p.id;
-                  const isEmerald = p.theme === 'emerald';
+          {/* ── STEP 2: WHICH PROGRAMME ── */}
+          {step === 2 && audience && (
+            <div>
+              <div className="flex items-center justify-between gap-3 mb-4">
+                {!onlyAudience ? (
+                  <button
+                    type="button"
+                    onClick={goBack}
+                    className="inline-flex items-center gap-1.5 py-2 px-3 text-xs font-headline font-bold uppercase tracking-wider border border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
+                  >
+                    <ArrowLeft className="w-3.5 h-3.5" />
+                    <span>{L('Back', 'Tillbaka')}</span>
+                  </button>
+                ) : (
+                  <span />
+                )}
+                <span className="text-[11px] font-mono-code font-bold text-slate-500 uppercase tracking-wider">
+                  {audienceCopy[audience].title}
+                </span>
+              </div>
+              <div
+                className={`grid grid-cols-1 gap-4 ${
+                  optionsFor(audience).length >= 3 ? 'md:grid-cols-2 lg:grid-cols-3' : 'md:grid-cols-2'
+                }`}
+              >
+                {optionsFor(audience).map((t) => {
+                  const p = programById[t];
+                  const emerald = p.theme === 'emerald';
                   return (
                     <button
-                      key={p.id}
+                      key={t}
                       type="button"
-                      onClick={() => handleSelectProgram(p.id)}
-                      className={`p-5 text-left border-2 transition-all relative flex flex-col justify-between group shadow-xs cursor-pointer rounded-none ${
-                        active
-                          ? isEmerald
-                            ? 'bg-emerald-950 text-white border-emerald-400 ring-4 ring-emerald-500/25 shadow-lg'
-                            : 'bg-[#0A1930] text-white border-[#FFCD00] ring-4 ring-[#006AA7]/30 shadow-lg'
-                          : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-200 hover:border-slate-300'
-                      }`}
+                      onClick={() => openForm(t)}
+                      className="group p-6 text-left bg-white border-2 border-slate-200 hover:border-[#0A1930] hover:shadow-lg transition-all flex flex-col cursor-pointer"
                     >
-                      <div className="space-y-3">
-                        {/* Top Audience & Status Bar */}
-                        <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-inherit/20">
-                          <span
-                            className={`text-[10px] font-mono-code font-bold uppercase tracking-wider ${
-                              active
-                                ? 'text-[#FFCD00]'
-                                : isEmerald
-                                ? 'text-emerald-700'
-                                : 'text-[#006AA7]'
-                            }`}
-                          >
-                            {p.audienceLabel}
-                          </span>
-                          <span
-                            className={`text-[10px] font-mono-code font-bold px-2 py-0.5 rounded-none uppercase tracking-wider shrink-0 ${
-                              active
-                                ? 'bg-[#FFCD00] text-[#0A1930]'
-                                : 'bg-slate-100 text-slate-600'
-                            }`}
-                          >
-                            {active ? '✓ ACTIVE' : p.badge}
-                          </span>
-                        </div>
-
-                        {/* Title & Icon */}
+                      <div className="flex items-start justify-between gap-3">
                         <div className="flex items-start gap-3">
-                          <span className="text-3xl shrink-0 leading-none pt-0.5">{p.icon}</span>
+                          <span className="text-3xl shrink-0 leading-none pt-0.5" aria-hidden="true">{p.icon}</span>
                           <div>
-                            <h3 className="font-headline font-black text-base sm:text-lg uppercase tracking-tight leading-snug">
+                            <h2 className="font-headline font-black text-lg uppercase tracking-tight text-[#0A1930] leading-snug">
                               {p.title}
-                            </h3>
-                            <p
-                              className={`text-xs font-mono-code font-semibold ${
-                                active ? 'text-[#FFCD00]' : isEmerald ? 'text-emerald-600' : 'text-[#006AA7]'
-                              }`}
-                            >
-                              {p.subtitle}
-                            </p>
+                            </h2>
+                            {p.subtitle && (
+                              <p className={`text-xs font-mono-code font-semibold ${emerald ? 'text-emerald-600' : 'text-[#006AA7]'}`}>
+                                {p.subtitle}
+                              </p>
+                            )}
                           </div>
                         </div>
-
-                        {/* Plain Description */}
-                        <p
-                          className={`text-xs leading-relaxed font-light ${
-                            active ? 'text-slate-200' : 'text-slate-600'
-                          }`}
-                        >
-                          {p.desc}
-                        </p>
+                        <span className="text-[10px] font-mono-code font-bold px-2 py-0.5 uppercase tracking-wider bg-slate-100 text-slate-600 shrink-0">
+                          {p.badge}
+                        </span>
                       </div>
-
-                      {/* Best for & Action Footer */}
-                      <div className="pt-3 border-t border-inherit/15 mt-3 space-y-2.5">
+                      {p.desc && <p className="text-sm text-slate-700 leading-relaxed mt-4">{p.desc}</p>}
+                      <dl className="mt-4 pt-4 border-t border-slate-100 space-y-3 text-xs">
+                        {[
+                          { k: L('Who it is for', 'Passar för'), v: p.forWho },
+                          { k: L('The form asks for', 'Formuläret frågar efter'), v: p.asks },
+                          { k: L('What happens next', 'Vad händer sedan'), v: p.next },
+                        ].map(({ k, v }) => (
+                          <div key={k}>
+                            <dt className="text-[10px] font-mono-code font-bold uppercase tracking-wider text-slate-500">{k}</dt>
+                            <dd className="text-slate-700 leading-relaxed mt-0.5">{v}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                      <div className="mt-auto pt-5">
                         <div
-                          className={`text-[11px] font-mono-code ${
-                            active ? 'text-slate-300' : 'text-slate-500'
+                          className={`w-full py-2.5 px-3 text-xs font-headline font-black uppercase tracking-wider flex items-center justify-center gap-1.5 bg-slate-100 text-slate-700 transition-colors group-hover:text-white ${
+                            emerald ? 'group-hover:bg-emerald-600' : 'group-hover:bg-[#006AA7]'
                           }`}
                         >
-                          <span className="font-bold">🎯 For:</span> {p.targetUser}
-                        </div>
-
-                        <div
-                          className={`text-xs font-headline font-black uppercase tracking-wider py-2 px-3 text-center flex items-center justify-center gap-1.5 transition-colors ${
-                            active
-                              ? 'bg-[#FFCD00] text-[#0A1930] shadow-sm'
-                              : 'bg-slate-100 group-hover:bg-[#006AA7] group-hover:text-white text-slate-700'
-                          }`}
-                        >
-                          {active ? (
-                            <span>✓ Form Active Below</span>
-                          ) : (
-                            <>
-                              <span>Select This Form</span>
-                              <ArrowRight className="w-3.5 h-3.5" />
-                            </>
-                          )}
+                          <span>{L('Continue with this', 'Fortsätt med detta')}</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
                         </div>
                       </div>
                     </button>
                   );
                 })}
+              </div>
             </div>
-          </div>
+          )}
+
+          {/* ── STEP 3: what was chosen, with a way back ── */}
+          {step === 3 && (
+            <div className="flex flex-wrap items-center justify-between gap-3 p-3 sm:p-4 bg-white border border-slate-200">
+              <div className="flex items-center gap-3 min-w-0">
+                {canGoBack && (
+                  <button
+                    type="button"
+                    onClick={goBack}
+                    className="inline-flex items-center gap-1.5 py-2 px-3 text-xs font-headline font-bold uppercase tracking-wider border border-slate-300 text-slate-700 hover:bg-slate-50 shrink-0"
+                  >
+                    <ArrowLeft className="w-3.5 h-3.5" />
+                    <span>{L('Back', 'Tillbaka')}</span>
+                  </button>
+                )}
+                <div className="min-w-0">
+                  {audience && (
+                    <span className="block text-[10px] font-mono-code font-bold uppercase tracking-wider text-slate-500">
+                      {audienceCopy[audience].title}
+                    </span>
+                  )}
+                  <span className="block font-headline font-black text-sm uppercase tracking-tight text-[#0A1930]">
+                    {programById[selectedProgram].icon} {programById[selectedProgram].title}
+                  </span>
+                </div>
+              </div>
+              {canStartOver && (
+                <button
+                  type="button"
+                  onClick={() => goToStep(1)}
+                  className="text-xs font-mono-code font-bold uppercase tracking-wider text-[#006AA7] hover:underline"
+                >
+                  {L('Start over', 'Börja om')}
+                </button>
+              )}
+            </div>
+          )}
         </div>
 
-        {/* ── DYNAMIC INLINE FORM CONTAINER ── */}
+        {/* ── DYNAMIC INLINE FORM CONTAINER (step 3) ── */}
+        {step === 3 && (
         <div
           id="intake-form-container"
           className={`bg-white border-2 border-t-8 shadow-xl p-6 sm:p-10 text-[#0A1930] relative scroll-mt-24 ${
@@ -1791,7 +2012,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
               <p className="mt-2 text-xs sm:text-sm text-slate-600 max-w-lg leading-relaxed font-light">
                 {selectedProgram === 'submit-idea'
                   ? `Your idea has been securely recorded and mapped to your school admin panel for review. Once approved by the coordinator, it will appear on the public "View Ideas & Vote" page!`
-                  : `Your booking request has been forwarded to the municipal coordinator. An email confirmation has been sent to ${email}.`}
+                  : `Your booking request has been forwarded to the municipal coordinator. The coordinator will contact you at ${email} to confirm.`}
               </p>
 
               {/* Public Reference Token Badge */}
@@ -1852,10 +2073,21 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
                 >
                   Submit Another Request
                 </button>
+
+                {canStartOver && (
+                  <button
+                    type="button"
+                    onClick={() => goToStep(1)}
+                    className="py-3 px-5 bg-white hover:bg-slate-50 border border-slate-300 text-[#0A1930] text-xs font-headline font-bold uppercase tracking-wider transition-colors"
+                  >
+                    {L('Register for something else', 'Anmäl till något annat')}
+                  </button>
+                )}
               </div>
             </div>
           )}
         </div>
+        )}
       </div>
     </div>
   );

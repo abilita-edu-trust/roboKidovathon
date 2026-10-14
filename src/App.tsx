@@ -38,8 +38,9 @@ import { hrefToTarget, initialRouteFromLocation, isExternalHref, pathForRoute, r
 const REGISTER_TABS: IntakeProgramTab[] = ['workshop', 'demo', 'association', 'submit-idea', 'hackathon', 'volunteer', 'partner'];
 /** The VFI register page and the RoboHack city register pages (e.g. 'vxo-register'). */
 const isRegisterRoute = (route: string) => route === 'register' || route.endsWith('-register');
-const toRegisterTab = (tab: string | null): IntakeProgramTab =>
-  REGISTER_TABS.includes(tab as IntakeProgramTab) ? (tab as IntakeProgramTab) : 'workshop';
+/** A valid ?tab= opens that form; anything else starts the register wizard at step 1 (null). */
+const toRegisterTab = (tab: string | null): IntakeProgramTab | null =>
+  REGISTER_TABS.includes(tab as IntakeProgramTab) ? (tab as IntakeProgramTab) : null;
 
 const scrollToSection = (id: string) => {
   // Wait for the newly routed page to render before scrolling.
@@ -50,7 +51,7 @@ export function App() {
   const { language } = useLanguage();
   const [initial] = useState(initialRouteFromLocation);
   const [currentRoute, setCurrentRoute] = useState<string>(initial.route);
-  const [registerInitialTab, setRegisterInitialTab] = useState<IntakeProgramTab>(() => toRegisterTab(initial.tab));
+  const [registerInitialTab, setRegisterInitialTab] = useState<IntakeProgramTab | null>(() => toRegisterTab(initial.tab));
   const [isDeckOpen, setIsDeckOpen] = useState<boolean>(false);
   const [previewPartner, setPreviewPartner] = useState<{ name: string; url: string; role?: string } | null>(null);
 
@@ -108,9 +109,9 @@ export function App() {
   const handleNavigate = useCallback((target: string, tab?: IntakeProgramTab) => {
     const [route, section] = target.split('#');
     if (tab) setRegisterInitialTab(tab);
-    else if (isRegisterRoute(route)) setRegisterInitialTab('workshop');
+    else if (isRegisterRoute(route)) setRegisterInitialTab(null);
 
-    const query = isRegisterRoute(route) && tab && tab !== 'workshop' ? `?tab=${tab}` : '';
+    const query = isRegisterRoute(route) && tab ? `?tab=${tab}` : '';
     const url = pathForRoute(route) + query + (section ? `#${section}` : '');
     if (url !== window.location.pathname + window.location.search + window.location.hash) {
       window.history.pushState(null, '', url);
@@ -177,7 +178,7 @@ export function App() {
           <main className="w-full">
             {page === 'home' && <HomeSections env={sectionEnv} sections={sections} />}
             {page === 'register' && (
-              <IntakeRegisterPage key={registerInitialTab} initialTab={registerInitialTab} onNavigateHome={goHome} onNavigateVoting={goIdeas} />
+              <IntakeRegisterPage key={registerInitialTab ?? 'start'} initialTab={registerInitialTab} onNavigateHome={goHome} onNavigateVoting={goIdeas} />
             )}
             {page === 'ideas' && <IdeasVotingPage onNavigateHome={goHome} onNavigateSubmit={() => goRegister('submit-idea')} />}
           </main>
@@ -301,7 +302,7 @@ export function App() {
 
         {currentRoute === 'register' && (
           <IntakeRegisterPage
-            key={registerInitialTab}
+            key={registerInitialTab ?? 'start'}
             initialTab={registerInitialTab}
             onNavigateHome={() => handleNavigate('future-innovators')}
             onNavigateVoting={() => handleNavigate('ideas')}
