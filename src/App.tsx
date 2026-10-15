@@ -18,6 +18,7 @@ import { AboutPage } from './pages/AboutPage';
 import { Lgr22Page } from './pages/Lgr22Page';
 import { EventsPage } from './pages/EventsPage';
 import { IntakeRegisterPage, IntakeProgramTab } from './pages/IntakeRegisterPage';
+import { REGISTER_TABS } from './pages/register/flow';
 import { IdeasVotingPage } from './pages/IdeasVotingPage';
 import { AdminIdeasCurationPage } from './pages/AdminIdeasCurationPage';
 import { AdminLoginGate } from './components/AdminLoginGate';
@@ -35,7 +36,6 @@ import { RoboCursor } from './components/RoboCursor';
 import { useLanguage } from './context/LanguageContext';
 import { hrefToTarget, initialRouteFromLocation, isExternalHref, pathForRoute, routeFromPath } from './lib/routes';
 
-const REGISTER_TABS: IntakeProgramTab[] = ['workshop', 'demo', 'association', 'submit-idea', 'hackathon', 'volunteer', 'partner'];
 /** The VFI register page and the RoboHack city register pages (e.g. 'vxo-register'). */
 const isRegisterRoute = (route: string) => route === 'register' || route.endsWith('-register');
 /** A valid ?tab= opens that form; anything else starts the register wizard at step 1 (null). */

@@ -159,14 +159,32 @@ export const eskilstunaSite: SiteConfig = {
 
   intake: {
     eyebrow: 'OFFICIAL PROGRAM INTAKE // ESKILSTUNA 2026',
-    // RoboKidovation forms plus ideas and volunteering; no hackathon.
-    tabs: ['workshop', 'demo', 'association', 'submit-idea', 'volunteer'],
-    defaultTab: 'workshop',
-    squadTitle: 'Hackathon Squad',
-    ideasTrackDesc:
-      'Share your idea for a better school, city or future as text, a drawing, a voice note or a video, then let the public vote.',
-    hackathonDesc: '',
-    volunteerDesc: `Help run ${NAME} events as a volunteer`,
+    // RoboKidovation, ideas and the community; no hackathon.
+    tabs: ['workshop', 'demo', 'association', 'competition', 'submit-idea', 'volunteer', 'mentor', 'partner', 'community'],
+    programmes: [
+      {
+        id: 'robo',
+        title: { en: 'RoboKidovation', sv: 'RoboKidovation' },
+        subtitle: { en: 'School robotics · Grades 1–9 & GYM', sv: 'Skolrobotik · åk 1–9 och gymnasiet' },
+        date: { en: '2 December 2026', sv: '2 december 2026' },
+        venue: { en: 'IES Eskilstuna', sv: 'IES Eskilstuna' },
+        image: '/register/robokidovation.jpg',
+      },
+      {
+        id: 'ideas',
+        title: { en: 'Bring your idea', sv: 'Kom med din idé' },
+        subtitle: {
+          en: 'Share your idea for a better school, city or future, then let the public vote.',
+          sv: 'Dela din idé för en bättre skola, stad eller framtid och låt alla rösta.',
+        },
+        image: '/register/hackathon.jpg',
+      },
+      {
+        id: 'community',
+        title: { en: 'Join the Innovation Community', sv: 'Gå med i innovationsgemenskapen' },
+        subtitle: { en: 'Volunteer, mentor, partner or stay connected.', sv: 'Bli volontär, mentor eller partner, eller håll kontakten.' },
+      },
+    ],
     associationContact: 'the organisers',
     // The VFI fees and payment details belong to Västerås.
     showFees: false,

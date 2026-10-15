@@ -1,7 +1,6 @@
 import type { SiteConfig } from '../../context/SiteContext';
 import type { RoboHackEvent } from '../../data/robohack/types';
 import { pathForRoute } from '../../lib/routes';
-import { PartnerForm } from './RoboHackPartnerForm';
 
 // One settings object per event, so consumers see a stable reference across renders.
 const cache = new WeakMap<RoboHackEvent, SiteConfig>();
@@ -110,12 +109,19 @@ function buildSite(event: RoboHackEvent): SiteConfig {
 
     intake: {
       eyebrow: `OFFICIAL PROGRAM INTAKE // ${name.toUpperCase()}`,
-      // RoboHack only: no RoboKidovation workshop, demo or association forms.
+      // RoboHack only. Volunteer and partner are not in the questions, but the site's
+      // volunteer and partner buttons still open those forms.
       tabs: ['submit-idea', 'hackathon', 'volunteer', 'partner'],
-      defaultTab: 'hackathon',
-      squadTitle: 'RoboHack Squad',
-      hackathonDesc: `Register a team for ${event.event.name}, ${dates.en} at ${venue.en}`,
-      volunteerDesc: `Help run ${name} as a volunteer`,
+      programmes: [
+        {
+          id: 'hack',
+          title: { en: event.event.name, sv: event.event.name },
+          subtitle: { en: 'Robotics · Code · Hack', sv: 'Robotik · kod · hack' },
+          date: dates,
+          venue,
+          image: '/register/hackathon.jpg',
+        },
+      ],
       associationContact: 'the organisers',
       // The VFI fees and payment details belong to Västerås.
       showFees: false,
@@ -134,24 +140,7 @@ function buildSite(event: RoboHackEvent): SiteConfig {
         },
         teamName: event.brand.name,
       },
-      extraForm: {
-        title: event.partners.cta.en,
-        subtitle: 'Companies & Partners',
-        desc: 'Bring problem statements, mentors, workshops, equipment or sponsorship',
-        icon: '🏢',
-        render: () => (
-          <div className="space-y-6">
-            <div className="pb-4 border-b border-slate-200">
-              <span className="text-[11px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase">
-                OPTION 4 // PARTNER
-              </span>
-              <h2 className="font-headline font-black text-2xl uppercase tracking-tight mt-1">{event.partners.cta.en}</h2>
-              <p className="text-sm text-slate-600 mt-1">{event.partners.headline.en}</p>
-            </div>
-            <PartnerForm event={event} />
-          </div>
-        ),
-      },
+      partnerWays: event.partners.ways,
     },
   };
 }

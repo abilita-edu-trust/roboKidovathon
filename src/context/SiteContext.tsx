@@ -2,7 +2,7 @@
 // site such as vxo.iniac.se. The shared components (header, hero, footer, forms, voting)
 // read it, so every site uses the same components with its own routes, city and wording.
 import React, { createContext, useContext } from 'react';
-import type { IntakeProgramTab } from '../pages/IntakeRegisterPage';
+import type { IntakeProgramTab, RegisterProgramme } from '../pages/register/flow';
 import type { PartnerLogo } from '../data/roboData';
 
 export type Bilingual = { en: string; sv: string };
@@ -29,15 +29,6 @@ export interface IntakeVolunteerConfig {
   eyebrow: Bilingual;
   intro: Bilingual;
   teamName: string;
-}
-
-/** An extra option on the register page, e.g. "Become a Partner" on vxo.iniac.se. */
-export interface IntakeExtraForm {
-  title: string;
-  subtitle: string;
-  desc: string;
-  icon: string;
-  render: () => React.ReactNode;
 }
 
 /** A link target: a route id or `route#section`. */
@@ -133,20 +124,16 @@ export interface SiteConfig {
 
   intake: {
     eyebrow: string;
-    /** Forms offered on the register page, in order; omitted = all six VFI forms. */
+    /** Forms this site accepts (in its questions and by ?tab= link); omitted = every form. */
     tabs?: IntakeProgramTab[];
-    /** Form opened when none (or one not offered here) is asked for. */
-    defaultTab: IntakeProgramTab;
-    /** Name of the hackathon team form, e.g. "Hackathon Squad". */
-    squadTitle: string;
-    /** Text on the ideas track card; omitted = the Young Inno Hack text. */
-    ideasTrackDesc?: string;
-    hackathonDesc: string;
-    volunteerDesc: string;
+    /** Step-1 cards of the register questions, in order; with one, step 1 is skipped. */
+    programmes: RegisterProgramme[];
+    /** Who contacts associations, e.g. "the IBK team". */
     associationContact: string;
     showFees: boolean;
     volunteer?: IntakeVolunteerConfig;
-    extraForm?: IntakeExtraForm;
+    /** Ways a partner can help, on the partner form; omitted = the general list. */
+    partnerWays?: Bilingual[];
   };
 }
 
@@ -256,10 +243,29 @@ export const VFI_SITE: SiteConfig = {
 
   intake: {
     eyebrow: 'OFFICIAL PROGRAM INTAKE // VÄSTERÅS 2026',
-    defaultTab: 'workshop',
-    squadTitle: 'Hackathon Squad',
-    hackathonDesc: 'Register a student team for the Young Inno Hack final on 4–5 Dec (venue to be confirmed)',
-    volunteerDesc: 'Help run Västerås Future Innovators events as a volunteer',
+    programmes: [
+      {
+        id: 'robo',
+        title: same('RoboKidovation'),
+        subtitle: { en: 'School robotics · Grades 1–9 & GYM', sv: 'Skolrobotik · åk 1–9 och gymnasiet' },
+        date: { en: '4–5 December 2026', sv: '4–5 december 2026' },
+        venue: same('MISV, Västerås'),
+        image: '/register/robokidovation.jpg',
+      },
+      {
+        id: 'hack',
+        title: same('Young Inno Hack'),
+        subtitle: { en: 'Ideas and squads · Grade 7 to university', sv: 'Idéer och lag · åk 7 till universitet' },
+        date: { en: '4–5 December 2026', sv: '4–5 december 2026' },
+        venue: { en: 'Venue to be confirmed', sv: 'Lokal meddelas senare' },
+        image: '/register/hackathon.jpg',
+      },
+      {
+        id: 'community',
+        title: { en: 'Join the Innovation Community', sv: 'Gå med i innovationsgemenskapen' },
+        subtitle: { en: 'Volunteer, mentor, partner or stay connected.', sv: 'Bli volontär, mentor eller partner, eller håll kontakten.' },
+      },
+    ],
     associationContact: 'the IBK team',
     showFees: true,
   },
