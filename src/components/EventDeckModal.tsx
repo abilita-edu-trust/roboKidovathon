@@ -22,7 +22,8 @@ export const EventDeckModal: React.FC<EventDeckModalProps> = ({ isOpen, onClose 
     setSubmitError('');
     setIsSubmitting(true);
 
-    const { error } = await supabase.from('prospectus_downloads').insert({ email });
+    // log_prospectus_download() checks the email and rate-limits; the table is not public.
+    const { error } = await supabase.rpc('log_prospectus_download', { p_email: email });
 
     setIsSubmitting(false);
 

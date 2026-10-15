@@ -87,17 +87,25 @@ export function markVotedLocally(ideaId: string) {
   }
 }
 
-/** Upload media file to Supabase storage 'idea-media' bucket */
+/**
+ * Uploads a photo, voice note or video for an idea. Visitors can't write to storage
+ * directly: the idea-upload-url edge function hands out a one-time signed link
+ * (rate-limited; the bucket allows 50 MB of image/audio/video).
+ */
 export async function uploadIdeaMedia(file: File, folder: 'photos' | 'audio' | 'videos'): Promise<string> {
-  const ext = file.name.split('.').pop() || 'dat';
-  const cleanName = `${folder}/${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${ext}`;
-  
-  const { data, error } = await supabase.storage
+  const fromName = file.name.includes('.') ? file.name.split('.').pop() : '';
+  const ext = (fromName || file.type.split('/')[1]?.split(';')[0] || '').toLowerCase();
+
+  const { data, error: linkError } = await supabase.functions.invoke('idea-upload-url', { body: { folder, ext } });
+  const link = data as { path: string; token: string } | null;
+  if (linkError || !link?.token) {
+    console.error('Upload link error:', linkError ?? link);
+    throw new Error('This file could not be uploaded. Use a photo, voice note or video under 50 MB.');
+  }
+
+  const { data: uploaded, error } = await supabase.storage
     .from('idea-media')
-    .upload(cleanName, file, {
-      cacheControl: '3600',
-      upsert: false
-    });
+    .uploadToSignedUrl(link.path, link.token, file, { contentType: file.type || undefined });
 
   if (error) {
     console.error('Storage upload error:', error);
@@ -106,7 +114,7 @@ export async function uploadIdeaMedia(file: File, folder: 'photos' | 'audio' | '
 
   const { data: publicUrlData } = supabase.storage
     .from('idea-media')
-    .getPublicUrl(data.path);
+    .getPublicUrl(uploaded.path);
 
   return publicUrlData.publicUrl;
 }
@@ -155,6 +163,9 @@ export async function voteForIdea(ideaId: string) {
 
   if (error) {
     console.error('Vote for idea error:', error);
+    if (/Too many requests/.test(error.message)) {
+      throw new Error('Too many votes from this network today. Please try again tomorrow.');
+    }
     throw new Error(error.message || 'Failed to register vote');
   }
 

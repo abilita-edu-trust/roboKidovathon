@@ -244,7 +244,17 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
       scrollToWizard();
     } catch (err) {
       console.error('Registration error:', err);
-      setError(L('Something went wrong while submitting. Please try again.', 'Något gick fel vid inskickningen. Försök igen.'));
+      const msg = err instanceof Error ? err.message : '';
+      setError(
+        /Too many requests/.test(msg)
+          ? L(
+              'Too many submissions from this email or network. Please try again in an hour.',
+              'För många anmälningar från den här e-postadressen eller det här nätverket. Försök igen om en timme.',
+            )
+          : /too long|must be a web address|must be an uploaded file|could not be uploaded/.test(msg)
+          ? msg
+          : L('Something went wrong while submitting. Please try again.', 'Något gick fel vid inskickningen. Försök igen.'),
+      );
     } finally {
       setBusy(false);
     }
