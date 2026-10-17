@@ -62,6 +62,8 @@ Options -Indexes
   RewriteBase /
   # /ibk is an app page; serve it even if an old ibk/ asset folder is left on the server
   RewriteRule ^ibk/?$ /ibk.html [L]
+  # /register is an app page; the public/register/ image folder must not answer it (403)
+  RewriteRule ^register/?$ /index.html [L]
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
