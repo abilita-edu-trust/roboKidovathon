@@ -24,6 +24,7 @@ import { AdminIdeasCurationPage } from './pages/AdminIdeasCurationPage';
 import { AdminLoginGate } from './components/AdminLoginGate';
 import { IbkHomePage } from './pages/IbkHomePage';
 import { cityPageFor } from './components/city/citySites';
+import { SITE_META } from './data/siteMeta';
 import { SiteProvider, VFI_SITE } from './context/SiteContext';
 import { HomeSections, type SectionEnv } from './content/registry';
 import { useSiteDocument } from './content/useSiteDocument';
@@ -85,20 +86,13 @@ export function App() {
     return () => window.removeEventListener('popstate', onPopState);
   }, []);
 
-  // City sites (vxo, esk) get their own tab title and description on all their pages.
-  const cityMeta = cityPageFor(currentRoute)?.city.meta;
+  // Tab title and description of the site the page belongs to (vfi, a city site, or IBK);
+  // the built page per site carries the same text for link previews.
+  const pageMeta = cityPageFor(currentRoute)?.city.meta ?? (currentRoute === 'ibk' ? SITE_META.ibk : SITE_META.vfi);
   useEffect(() => {
-    if (!cityMeta) return;
-    const meta = document.querySelector('meta[name="description"]');
-    const prevTitle = document.title;
-    const prevDescription = meta?.getAttribute('content') ?? '';
-    document.title = cityMeta.title;
-    meta?.setAttribute('content', cityMeta.description);
-    return () => {
-      document.title = prevTitle;
-      meta?.setAttribute('content', prevDescription);
-    };
-  }, [cityMeta]);
+    document.title = pageMeta.title;
+    document.querySelector('meta[name="description"]')?.setAttribute('content', pageMeta.description);
+  }, [pageMeta]);
 
   // Deep links to a section, e.g. /#contact.
   useEffect(() => {

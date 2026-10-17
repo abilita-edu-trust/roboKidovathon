@@ -1,19 +1,16 @@
 // YNG RoboHack Växjö — the first RoboHack event. To launch another city, copy this file,
-// change the content, and register it in ./index.ts (plus ROUTE_PATHS and .htaccess).
+// change the content, and register it in ./index.ts (plus ROUTE_PATHS, SITE_META and .htaccess).
 import {
   Bot, Code2, Rocket, School, Eye, Lightbulb, BookOpen, Hammer, FlaskConical, Megaphone,
   Compass, Target, Users, Mic, Scale, Trophy,
 } from 'lucide-react';
 import type { RoboHackEvent } from './types';
+import { SITE_META } from '../siteMeta';
 
 export const vaxjo: RoboHackEvent = {
   route: 'vxo',
   banner: '/vxo.jpeg',
-  meta: {
-    title: 'YNG RoboHack Växjö',
-    description:
-      'YNG RoboHack Växjö, 21–22 November 2026 at Linnaeus University. One event, three tracks: Robotics, Code and Hack. You see the problem, you bring the idea, we help you build it.',
-  },
+  meta: SITE_META.vxo,
   brand: { name: 'YNG RoboHack', city: 'Växjö' },
   location: { countrySlug: 'sweden', citySlug: 'vaxjo', countryName: 'Sweden', cityName: 'Växjö' },
 

@@ -53,15 +53,26 @@ Options -Indexes
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 </IfModule>
 
-# ── SPA fallback: serve index.html for any path that isn't a real file/dir ──
+# ── SPA fallback: serve the app for any path that isn't a real file/dir ──
+# Each site gets its own copy of index.html (esk.html, vxo.html, ibk.html) carrying its
+# title, description and link-preview image, because LinkedIn/WhatsApp/Facebook don't run
+# JavaScript. The names come from SITE_META_PAGES in src/data/siteMeta.ts.
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
   # /ibk is an app page; serve it even if an old ibk/ asset folder is left on the server
-  RewriteRule ^ibk/?$ /index.html [L]
+  RewriteRule ^ibk/?$ /ibk.html [L]
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
+  # esk.iniac.se, and /esk/* on any host
+  RewriteCond %{HTTP_HOST} ^esk\.iniac\.se$ [NC,OR]
+  RewriteCond %{REQUEST_URI} ^/esk(/|$) [NC]
+  RewriteRule ^ /esk.html [L]
+  # vxo.iniac.se, and /vxo/* on any host
+  RewriteCond %{HTTP_HOST} ^vxo\.iniac\.se$ [NC,OR]
+  RewriteCond %{REQUEST_URI} ^/vxo(/|$) [NC]
+  RewriteRule ^ /vxo.html [L]
   RewriteRule ^ /index.html [L]
 </IfModule>
 
@@ -78,8 +89,8 @@ Options -Indexes
 <IfModule mod_expires.c>
   ExpiresActive On
 
-  # index.html must always be revalidated so deploys are picked up
-  <FilesMatch "^index\.html$">
+  # the site pages (index.html, esk.html, …) must always be revalidated so deploys are picked up
+  <FilesMatch "\.html$">
     ExpiresDefault "access plus 0 seconds"
   </FilesMatch>
 
@@ -90,7 +101,7 @@ Options -Indexes
 </IfModule>
 
 <IfModule mod_headers.c>
-  <FilesMatch "^index\.html$">
+  <FilesMatch "\.html$">
     Header set Cache-Control "no-cache, no-store, must-revalidate"
   </FilesMatch>
   <FilesMatch "\.(js|css|woff2?|ttf|eot|svg|png|jpe?g|gif|webp|ico)$">

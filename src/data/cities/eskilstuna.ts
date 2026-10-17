@@ -8,12 +8,6 @@ import { pathForRoute } from '../../lib/routes';
 
 const NAME = 'Eskilstuna Future Innovators';
 
-export const ESKILSTUNA_META = {
-  title: 'Eskilstuna Future Innovators 2026',
-  description:
-    'Eskilstuna Future Innovators 2026 — hands-on RoboKidovation robotics for schools, associations and independent teams in Eskilstuna.',
-};
-
 // Confirmed event details:
 // - Registration opening: 12 October 2026
 // - School demo: 16 October 2026

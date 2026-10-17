@@ -1,13 +1,15 @@
 // City sites served from this app on their own subdomains. Each runs the same VFI
 // components with its own SiteConfig (name, menu, routes, city, forms) and home sections.
 // To add a city: a config here, its three routes in ROUTE_PATHS and HOST_ROUTES
-// (lib/routes.ts), and a host rule in public/.htaccess.
+// (lib/routes.ts), its title and preview image in SITE_META and SITE_META_PAGES
+// (data/siteMeta.ts), and host rules in public/.htaccess (root redirect + its page).
 import type { Bilingual, SiteConfig } from '../../context/SiteContext';
 import type { IntakeProgramTab } from '../../pages/IntakeRegisterPage';
 import type { RoboHackEvent } from '../../data/robohack/types';
 import type { CityDetail } from './CitySections';
 import { vaxjo } from '../../data/robohack';
-import { eskilstunaPathway, eskilstunaSite, ESKILSTUNA_DETAILS, ESKILSTUNA_META } from '../../data/cities/eskilstuna';
+import { eskilstunaPathway, eskilstunaSite, ESKILSTUNA_DETAILS } from '../../data/cities/eskilstuna';
+import { SITE_META } from '../../data/siteMeta';
 import { robohackSite } from '../robohack/robohackSite';
 import { robohackPathway } from '../robohack/robohackPathway';
 import type { PathwaySource } from '../../content/sections/programmes';
@@ -15,7 +17,7 @@ import type { PathwaySource } from '../../content/sections/programmes';
 export interface CitySite {
   /** Home route, e.g. 'vxo'; the site also has '<route>-register' and '<route>-ideas'. */
   route: string;
-  /** Browser tab title and meta description on all the site's pages. */
+  /** Title and description on all the site's pages: its entry in SITE_META (data/siteMeta.ts). */
   meta: { title: string; description: string };
   site: SiteConfig;
   /** The city's own home sections (registry types), in their default order between the programme card and the Jury. */
@@ -54,7 +56,7 @@ export const CITY_SITES: Record<string, CitySite> = {
   // esk.iniac.se — Eskilstuna Future Innovators (RoboKidovation + ideas)
   esk: {
     route: 'esk',
-    meta: ESKILSTUNA_META,
+    meta: SITE_META.esk,
     site: eskilstunaSite,
     home: ['teams', 'details', 'vote', 'join'],
     details: ESKILSTUNA_DETAILS,

@@ -45,7 +45,7 @@ export interface RoboHackDetail {
 export interface RoboHackEvent {
   /** Route id, e.g. 'vxo'. Must also exist in ROUTE_PATHS. */
   route: string;
-  /** Browser tab title and meta description while the page is open. */
+  /** Title and description on all the event's pages: its entry in SITE_META (data/siteMeta.ts). */
   meta: { title: string; description: string };
   brand: { name: string; city: string };
   /** "<City> Future Innovators 2026" artwork in public/, shown above the home sections. */
