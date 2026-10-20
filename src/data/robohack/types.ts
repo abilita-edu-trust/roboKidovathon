@@ -50,7 +50,7 @@ export interface RoboHackEvent {
   brand: { name: string; city: string };
   /** "<City> Future Innovators 2026" artwork in public/, shown above the home sections. */
   banner?: string;
-  /** EU Skola city that every form entry is filed under. */
+  /** Fut Inno city that every form entry is filed under. */
   location: { countrySlug: string; citySlug: string; countryName: string; cityName: string };
 
   /** Shown in the shared VFI video hero. */

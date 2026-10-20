@@ -2048,8 +2048,8 @@ export const svTranslations: Record<string, string> = {
   'EN': 'EN',
   'OF': 'AV',
   'en': 'en',
-  // EU Skola registration IDs + collaborators booking slot
-  'YOUR EU SKOLA REGISTRATION ID': 'DITT EU SKOLA-REGISTRERINGS-ID',
+  // Fut Inno registration IDs + collaborators booking slot
+  'YOUR FUT INNO REGISTRATION ID': 'DITT FUT INNO-REGISTRERINGS-ID',
   'Team name (optional)': 'Lagnamn (valfritt)',
   'Leave empty if registering alone': 'Lämna tomt om du anmäler dig ensam',
   'A confirmation email will be sent to': 'Ett bekräftelsemejl skickas till',

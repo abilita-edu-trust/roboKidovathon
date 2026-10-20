@@ -4,7 +4,7 @@ import { DEFAULT_SITE_CONTENT } from '../data/siteContent.default';
 
 /**
  * The editable home sections of a city website (Jury, Speakers, …), edited in the iniac.se admin
- * (Site CMS; table `eu_skola_site_content`, one row per site: vfi, esk, vxo, …). The built-in default
+ * (Site CMS; table `fut_inno_site_content`, one row per site: vfi, esk, vxo, …). The built-in default
  * shows until the database answers, and whenever it can't be reached.
  */
 export type Bilingual = { en: string; sv: string };
@@ -91,7 +91,7 @@ export function useSiteContentState(site: string): { content: SiteContent; ready
     let active = true;
     const timeout = setTimeout(() => active && setReady(true), 2500);
     supabase
-      .from('eu_skola_site_content')
+      .from('fut_inno_site_content')
       .select('content')
       .eq('site', site)
       .maybeSingle()

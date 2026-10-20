@@ -1,5 +1,5 @@
 // "Become a partner" (Community path; vxo also links straight to it). Stored as a partner
-// request for the site's city (submit_eu_skola_partner).
+// request for the site's city (submit_fut_inno_partner).
 import React from 'react';
 import { supabase } from '../../../lib/supabase';
 import type { Bilingual } from '../../../context/SiteContext';
@@ -66,7 +66,7 @@ export const partnerForm: FormDef = {
   },
   submit: async (v, ctx) => {
     const loc = resolveLocation(v, ctx.site);
-    const { data, error } = await supabase.rpc('submit_eu_skola_partner', {
+    const { data, error } = await supabase.rpc('submit_fut_inno_partner', {
       payload: {
         language: ctx.language,
         country_slug: loc.country_slug,

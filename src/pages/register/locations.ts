@@ -1,5 +1,5 @@
-// Every city here needs a row in eu_skola_cities with the same slug, or its entries land
-// in the country's first city on the EU Skola dashboard (submit_eu_skola_registration).
+// Every city here needs a row in fut_inno_cities with the same slug, or its entries land
+// in the country's first city on the Fut Inno dashboard (submit_fut_inno_registration).
 export const COUNTRIES = [
   { slug: 'sweden', name: 'Sweden', defaultCity: 'vasteras' },
   { slug: 'denmark', name: 'Denmark', defaultCity: 'copenhagen' },

@@ -370,7 +370,7 @@ export const chipLabels = (values: unknown, options: ChipOption[], sv: boolean) 
 
 /** School bookings, groups, squads, teams and community sign-ups (registrations table). */
 export async function submitRegistration(payload: Record<string, unknown>): Promise<string> {
-  const { data, error } = await supabase.rpc('submit_eu_skola_registration', { payload });
+  const { data, error } = await supabase.rpc('submit_fut_inno_registration', { payload });
   if (error) throw new Error(error.message || 'Failed to submit registration');
   return (data as string) || '';
 }

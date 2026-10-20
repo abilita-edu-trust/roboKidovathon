@@ -31,7 +31,7 @@ Progress shows "Step n of N". Last two steps: the form, then Review → Submit.
 | Hackathon × Participate | squad (theme = challenge area); individual may be a squad of 1 | form_type hackathon |
 | Hackathon × Register idea, esk ideas | idea (theme = area) | idea_submissions |
 | Volunteer / Mentor | volunteer form; Mentor pre-selects the new mentor role | volunteer_registrations |
-| Partner | partner form (vxo's, now on every site) | eu_skola_partners |
+| Partner | partner form (vxo's, now on every site) | fut_inno_partners |
 | Join community | new: name, email, phone, organisation, interests | form_type community |
 
 Theme cards use our idea areas and challenge areas. Accuracy and GDPR boxes sit on the Review step.
