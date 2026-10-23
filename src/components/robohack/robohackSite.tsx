@@ -48,7 +48,7 @@ function buildSite(event: RoboHackEvent): SiteConfig {
         { id: ideas, label: { en: 'Ideas & Vote', sv: 'Idéer och röstning' } },
         { id: register, label: { en: 'Register', sv: 'Registrering' } },
         { id: `${home}#partners`, label: { en: 'Partners', sv: 'Partner' } },
-        { id: `${home}#site-footer`, label: { en: 'Contact', sv: 'Kontakt' } },
+        { id: `${home}#contact-us`, label: { en: 'Contact', sv: 'Kontakt' } },
       ],
       registerLabel: { en: 'JOIN ROBOHACK', sv: 'VAR MED I ROBOHACK' },
       registerShort: { en: 'REGISTER', sv: 'REGISTRERA' },
@@ -85,7 +85,7 @@ function buildSite(event: RoboHackEvent): SiteConfig {
         { id: `${home}#partners`, label: { en: 'For companies & partners', sv: 'För företag och partner' } },
         { id: `${home}#about`, label: { en: 'About the platform', sv: 'Om plattformen' } },
       ],
-      email: 'contact@robokidovation.se',
+      email: 'contact@iniac.se',
       orgLines: [poweredBy, `${event.brand.city}, Sweden`],
       registerText: {
         en: `Registration is open for ${event.event.name} at ${venue.en}, ${dates.en}.`,

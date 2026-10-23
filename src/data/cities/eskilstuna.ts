@@ -61,7 +61,7 @@ export const eskilstunaSite: SiteConfig = {
       { id: 'esk-ideas', label: { en: 'Ideas & Vote', sv: 'Idéer och röstning' } },
       { id: 'esk-register', label: { en: 'Register', sv: 'Registrering' } },
       { id: 'esk#details', label: { en: 'Details', sv: 'Praktisk info' } },
-      { id: 'esk#site-footer', label: { en: 'Contact', sv: 'Kontakt' } },
+      { id: 'esk#contact-us', label: { en: 'Contact', sv: 'Kontakt' } },
     ],
     registerLabel: { en: 'REGISTER SCHOOL, ASSOCIATION OR TEAM', sv: 'REGISTRERA SKOLA, FÖRENING ELLER LAG' },
     registerShort: { en: 'REGISTER', sv: 'REGISTRERA' },
@@ -126,7 +126,7 @@ export const eskilstunaSite: SiteConfig = {
     ],
     orgTitle: { en: 'ORGANIZATION & CONTACT', sv: 'ORGANISATION OCH KONTAKT' },
     orgLinks: [{ id: 'esk#join', label: { en: 'Ways to take part', sv: 'Sätt att vara med' } }],
-    email: 'contact@robokidovation.se',
+    email: 'contact@iniac.se',
     orgLines: ['INIAC', 'Eskilstuna, Sweden'],
     registerText: {
       en: 'Registration is open for schools, associations and independent teams in Eskilstuna. Dates will be announced.',

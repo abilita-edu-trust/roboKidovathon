@@ -7,6 +7,7 @@ import { RefCompetitionFlow } from './components/RefCompetitionFlow';
 import { VotePrompt } from './components/VotePrompt';
 import { RefWorkshopTapeBanner } from './components/RefWorkshopTapeBanner';
 import { RefFooter } from './components/RefFooter';
+import { TeamContact } from './components/TeamContact';
 import { ParticipationFees } from './components/ParticipationFees';
 import { RoboKidoTeamsFinalDay } from './components/RoboKidoTeamsFinalDay';
 
@@ -176,6 +177,7 @@ export function App() {
             )}
             {page === 'ideas' && <IdeasVotingPage onNavigateHome={goHome} onNavigateSubmit={() => goRegister('submit-idea')} />}
           </main>
+          <TeamContact />
           <RefFooter onNavigate={navigateOrOpen} onSelectPartner={handleSelectPartner} />
           {page === 'home' && <VotePrompt onGoToVote={goIdeas} onSubmitIdea={() => goRegister('submit-idea')} />}
           {/* Partner Preview Modal */}
@@ -319,6 +321,9 @@ export function App() {
           </AdminLoginGate>
         )}
       </main>
+
+      {/* ── Contact us: the INIAC team (IBK's own page keeps its own contacts) ── */}
+      {currentRoute !== 'ibk' && <TeamContact />}
 
       {/* ── Master Dark Footer with Verified Contacts ── */}
       <RefFooter onNavigate={navigateOrOpen} onSelectPartner={handleSelectPartner} />

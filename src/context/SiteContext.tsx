@@ -162,7 +162,7 @@ export const VFI_SITE: SiteConfig = {
       { id: 'register', label: { en: 'Register', sv: 'Registrering' } },
       { id: 'about', label: { en: 'About', sv: 'Om oss' } },
       { id: 'ibk', label: same('Indisk Barnklubb (IBK)') },
-      { id: 'ibk#contact', label: { en: 'Contact', sv: 'Kontakt' } },
+      { id: 'future-innovators#contact-us', label: { en: 'Contact', sv: 'Kontakt' } },
     ],
     registerLabel: { en: 'REGISTER SCHOOL, ASSOCIATION OR TEAM', sv: 'REGISTRERA SKOLA, FÖRENING ELLER LAG' },
     registerShort: { en: 'REGISTER', sv: 'REGISTRERA' },
@@ -218,10 +218,10 @@ export const VFI_SITE: SiteConfig = {
     orgTitle: same('ORGANIZATION & CONTACT'),
     orgLinks: [
       { id: 'ibk', label: same('Indisk Barnklubb (IBK)') },
-      { id: 'ibk#contact', label: same('Contact IBK') },
+      { id: 'future-innovators#contact-us', label: { en: 'Contact us', sv: 'Kontakta oss' } },
       { id: 'about', label: same('About the League') },
     ],
-    email: 'contact@robokidovation.se',
+    email: 'contact@iniac.se',
     orgLines: ['Indisk BarnKlubb (IBK) Västerås & INIAC', 'Västerås, Sweden'],
     registerText: same(
       'Registration is open for schools, associations and independent teams ahead of the 12–25 November qualifiers and the 4–5 December 2026 Final.'
