@@ -44,6 +44,16 @@ export interface SiteAction {
   tab?: IntakeProgramTab;
 }
 
+/** An event card in the hero: its date, name, kind and audience, linking to its details or registration. */
+export interface HeroEvent {
+  date: Bilingual;
+  title: Bilingual;
+  kind: Bilingual;
+  audience: Bilingual;
+  target: string;
+  tab?: IntakeProgramTab;
+}
+
 export interface SiteConfig {
   /** City the site belongs to; null = the open multi-city VFI intake. */
   location: SiteLocation | null;
@@ -74,10 +84,12 @@ export interface SiteConfig {
   };
   /** Video hero on the home page. */
   hero: {
-    badge: string;
+    badge: string | Bilingual;
     /** Headline lines; the last one is yellow. */
     lines: Bilingual[];
     intro: Bilingual;
+    /** Event cards under the intro; with them the hero shows the events layout (no second button or facts). */
+    events?: HeroEvent[];
     primary: SiteAction;
     secondary: SiteAction;
     facts: { label: string; value: string }[];
@@ -170,12 +182,31 @@ export const VFI_SITE: SiteConfig = {
   },
 
   hero: {
-    badge: '4–5 DECEMBER 2026 · VÄSTERÅS, SWEDEN',
-    lines: [same('Build ideas.'), same('Test them.'), same('Take them further.')],
-    intro: same(
-      'Västerås Future Innovators — hands-on STEM robotics and the Young Inno Hack, for schools, associations and independent teams — RoboKido Junior, Senior and GYM, the Young Inno Hack from grade 7 to university, and grades 1–2 as participants.'
-    ),
-    primary: { label: same('REGISTER SCHOOL, ASSOCIATION OR TEAM'), target: 'register' },
+    badge: { en: 'VÄSTERÅS, SWEDEN · DECEMBER 2026', sv: 'VÄSTERÅS, SVERIGE · DECEMBER 2026' },
+    lines: [same('Young Future'), same('Innovators.')],
+    intro: {
+      en: 'Two events. One mission. Inspiring the next generation of builders, creators and innovators.',
+      sv: 'Två evenemang. Ett uppdrag. Vi inspirerar nästa generation byggare, skapare och innovatörer.',
+    },
+    events: [
+      {
+        date: same('05 DECEMBER'),
+        title: same('RoboKidovation'),
+        kind: { en: 'Robotics Competition', sv: 'Robottävling' },
+        audience: { en: 'Grades 3–9', sv: 'Årskurs 3–9' },
+        target: 'register',
+        tab: 'competition',
+      },
+      {
+        date: same('11–12 DECEMBER'),
+        title: same('Young Future InnoHack'),
+        kind: { en: 'Innovation Hackathon', sv: 'Innovationshackathon' },
+        audience: { en: 'Students and young innovators', sv: 'Elever och unga innovatörer' },
+        target: 'register',
+        tab: 'hackathon',
+      },
+    ],
+    primary: { label: { en: 'Explore Events & Register', sv: 'Utforska evenemang och registrera dig' }, target: 'events' },
     secondary: { label: same('EXPLORE EVENTS'), target: 'events' },
     facts: [
       { label: 'GRADES', value: '1–9 + GYM' },
@@ -183,18 +214,18 @@ export const VFI_SITE: SiteConfig = {
       { label: 'PROGRAMME', value: '20H STEM' },
       { label: 'LGR22', value: 'CURRICULUM FIT' },
       { label: 'ARENA', value: '244 × 122 CM' },
-      { label: 'FINAL DATE', value: 'DEC 4–5, 2026' },
+      { label: 'FINAL DATE', value: 'DEC 5, 2026' },
     ],
   },
 
   banner: '/ves.jpeg',
   journey: {
-    finals: 'on 4–5 Dec 2026 at MISV, Västerås',
+    finals: 'on 5 Dec 2026 at MISV, Västerås',
     dates: [
       { label: 'School demos', value: '1–14 Oct 2026' },
       { label: 'School qualifiers', value: '12–25 Nov 2026' },
-      { label: 'Final', value: '4–5 Dec 2026 (MISV, Västerås)' },
-      { label: 'Young Inno Hack', value: '4–5 Dec 2026 (venue TBC)' },
+      { label: 'RoboKidovation', value: '5 Dec 2026 (MISV, Västerås)' },
+      { label: 'Young Inno Hack', value: '11–12 Dec 2026 (venue TBC)' },
     ],
   },
 

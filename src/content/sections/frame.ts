@@ -37,11 +37,22 @@ export interface HeaderData {
   season: Bi;
 }
 
+/** An event card in the hero; `href` goes to the event's details or registration. */
+export interface HeroEventCard {
+  date: Bi;
+  title: Bi;
+  kind: Bi;
+  audience: Bi;
+  href: string;
+}
+
 export interface HeroData {
   badge: Bi;
   /** Headline lines; the last one is yellow. */
   lines: Bi[];
   intro: Bi;
+  /** Event cards; with any, the hero shows the events layout. */
+  events: HeroEventCard[];
   primary: CmsLink;
   secondary: CmsLink;
   facts: { label: Bi; value: Bi }[];
@@ -89,9 +100,16 @@ export const headerDefaults = (c: SiteConfig): HeaderData => ({
 });
 
 export const heroDefaults = (c: SiteConfig): HeroData => ({
-  badge: bi(c.hero.badge),
+  badge: typeof c.hero.badge === 'string' ? bi(c.hero.badge) : biOf(c.hero.badge),
   lines: c.hero.lines.map(biOf),
   intro: biOf(c.hero.intro),
+  events: (c.hero.events ?? []).map((e) => ({
+    date: biOf(e.date),
+    title: biOf(e.title),
+    kind: biOf(e.kind),
+    audience: biOf(e.audience),
+    href: targetToHref(e.target, e.tab),
+  })),
   primary: actionLink(c.hero.primary),
   secondary: actionLink(c.hero.secondary),
   facts: c.hero.facts.map((f) => ({ label: bi(f.label), value: bi(f.value) })),
