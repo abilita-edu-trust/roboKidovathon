@@ -14,6 +14,7 @@ import { MediaBlock, mediaDefaults, type MediaData } from '../components/MediaBl
 import { RefHeroMarquee } from '../components/RefHeroMarquee';
 import { CollaboratorsMarquee } from '../components/CollaboratorsMarquee';
 import { UserJourneyAudienceGuide } from '../components/UserJourneyAudienceGuide';
+import { AudienceJourneys } from '../components/AudienceJourneys';
 import { RefTheExperience } from '../components/RefTheExperience';
 import { HackathonWinners } from '../components/HackathonWinners';
 import { RoboKidoTeamsFinalDay } from '../components/RoboKidoTeamsFinalDay';
@@ -93,7 +94,8 @@ export const SECTION_DEFS: Record<string, SectionDef> = {
   journey: def<JourneyData>({
     // Sites without season dates (vxo) leave the journey section out of their defaults.
     defaults: (env) => journeyDefaults(env.config) ?? ({ audiences: [], dates: [] } as unknown as JourneyData),
-    render: (d, env) => <UserJourneyAudienceGuide data={d} go={env.go} />,
+    // With programme boxes (vfi) the section shows them; other sites keep the single guide.
+    render: (d, env) => (d.programmes?.length ? <AudienceJourneys data={d} go={env.go} /> : <UserJourneyAudienceGuide data={d} go={env.go} />),
   }),
   experience: def<ExperienceData>({ defaults: (env) => experienceDefaults(env.config), render: (d, env) => <RefTheExperience data={d} go={env.go} /> }),
   programme: def<ProgrammeData>({

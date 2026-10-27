@@ -3,6 +3,7 @@
 import type { SiteConfig } from '../../context/SiteContext';
 import { bi, type Bi, type CmsLink } from '../core';
 import { targetToHref } from './frame';
+import { vfiProgrammes, type ProgrammeJourney } from './audienceJourneys';
 
 export interface JourneyStep {
   title: Bi;
@@ -25,6 +26,8 @@ export interface JourneyData {
   eyebrow: Bi;
   title: Bi;
   intro: Bi;
+  /** Programme boxes (RoboKidovation, Young Future InnoHack); with any, they replace the single guide below. */
+  programmes: ProgrammeJourney[];
   rulesButton: CmsLink;
   /** "{n}" is the step's number, "{total}" the number of steps. */
   stepLabel: Bi;
@@ -42,12 +45,20 @@ export function journeyDefaults(c: SiteConfig): JourneyData | null {
   const hasHackathon = !c.intake.tabs || c.intake.tabs.includes('hackathon');
   const register = (label: string, tab: string): CmsLink => ({ label: bi(label), href: targetToHref(c.nav.registerRoute, tab) });
 
+  const programmes = journey.audienceJourneys;
+
   return {
-    eyebrow: bi('NAVIGATE YOUR COMPETITION JOURNEY'),
-    title: bi('Designed for Students, Parents & Teachers'),
-    intro: bi(
-      'Whether you want to build robots, enroll your child, or bring hands-on STEM into your classroom, follow these clear visual steps to get started immediately.'
-    ),
+    eyebrow: programmes ? bi('FIND YOUR PATH', 'HITTA DIN VÄG') : bi('NAVIGATE YOUR COMPETITION JOURNEY'),
+    title: programmes ? bi('Two programmes. One journey for everyone.', 'Två program. En resa för alla.') : bi('Designed for Students, Parents & Teachers'),
+    intro: programmes
+      ? bi(
+          'Pick your programme and who you are to see your steps, what you gain and how to join.',
+          'Välj program och vem du är för att se dina steg, vad du får ut och hur du anmäler dig.'
+        )
+      : bi(
+          'Whether you want to build robots, enroll your child, or bring hands-on STEM into your classroom, follow these clear visual steps to get started immediately.'
+        ),
+    programmes: programmes ? vfiProgrammes((tab) => targetToHref(c.nav.registerRoute, tab)) : [],
     rulesButton: { label: bi('Rules'), href: targetToHref(journey.rulesTarget ?? 'challenges') },
     stepLabel: bi('Step {n} of {total}'),
     dates: journey.dates.map((d) => ({ label: bi(d.label), value: bi(d.value) })),
