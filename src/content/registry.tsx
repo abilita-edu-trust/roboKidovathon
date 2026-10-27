@@ -97,7 +97,7 @@ export const SECTION_DEFS: Record<string, SectionDef> = {
     // With programme boxes (vfi) the section shows them; other sites keep the single guide.
     render: (d, env) => (d.programmes?.length ? <AudienceJourneys data={d} go={env.go} /> : <UserJourneyAudienceGuide data={d} go={env.go} />),
   }),
-  experience: def<ExperienceData>({ defaults: (env) => experienceDefaults(env.config), render: (d, env) => <RefTheExperience data={d} go={env.go} /> }),
+  experience: def<ExperienceData>({ defaults: (env) => experienceDefaults(env.config), render: (d, env) => <RefTheExperience data={d} go={env.go} onNavigateVoting={env.ideas} /> }),
   programme: def<ProgrammeData>({
     // Only cities with a programme card have this section by default.
     defaults: (env) => programmeDefaults(env.config, env.city) ?? (null as unknown as ProgrammeData),

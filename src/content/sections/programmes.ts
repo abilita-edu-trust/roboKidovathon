@@ -1,5 +1,5 @@
-// Programme cards: vfi's two cards with venues and the registration bar ("experience"), and a city's
-// banner with its programme card ("programme").
+// Programme cards: vfi's two cards with venues, followed by the registration wizard ("experience"), and a
+// city's banner with its programme card ("programme").
 import type { LucideIcon } from 'lucide-react';
 import type { SiteConfig } from '../../context/SiteContext';
 import type { CitySite } from '../../components/city/citySites';
@@ -75,10 +75,6 @@ export interface ExperienceData {
   cards: PathwayData[];
   venues: VenueData[];
   noImage: Bi;
-  ctaEyebrow: Bi;
-  ctaTitle: Bi;
-  ctaText: Bi;
-  ctaButton: CmsLink;
   stripLeft: Bi;
   stripMiddle: Bi;
   stripRight: Bi;
@@ -148,10 +144,6 @@ export const experienceDefaults = (c: SiteConfig): ExperienceData => ({
     { label: bi('Young Inno Hack Final Venue'), name: bi('TBC'), detail: bi('Venue to be confirmed'), image: '', theme: 'hack' },
   ],
   noImage: bi('Image coming soon'),
-  ctaEyebrow: bi('REGISTRATION OPEN FOR SCHOOLS, ASSOCIATIONS & TEAMS'),
-  ctaTitle: bi('Ready to join the 2026 Championship?'),
-  ctaText: bi('Choose RoboKidovation, Young Inno Hack, or register teams across both tracks.'),
-  ctaButton: { label: bi('REGISTER SCHOOL, ASSOCIATION OR TEAM'), href: targetToHref(c.nav.registerRoute) },
   stripLeft: bi('// VÄSTERÅS FUTURE INNOVATORS 2026'),
   stripMiddle: bi('Students Today. A Brighter Tomorrow.'),
   stripRight: bi('VÄSTERÅS | 4–5 DECEMBER 2026'),
