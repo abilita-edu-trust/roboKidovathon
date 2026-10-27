@@ -48,7 +48,7 @@ export const EventsPage: React.FC<EventsPageProps> = ({
           </h1>
 
           <p className="mt-4 text-sm sm:text-base text-slate-600 font-light max-w-2xl leading-relaxed">
-            A clear timeline of the autumn season in Västerås: qualifiers in participating schools and associations on 12–25 November, then the Robo-Sprint City Final at Mälardalen International School (MISV) and the Young Inno Hack final presentations (venue to be confirmed) on 4–5 December 2026.
+            A clear timeline of the autumn season in Västerås: qualifiers in participating schools and associations on 12–25 November, then the Robo-Sprint City Final at Mälardalen International School (MISV) on 5 December 2026 and the Young Inno Hack final presentations (venue to be confirmed) on 11–12 December 2026.
           </p>
         </motion.div>
 
