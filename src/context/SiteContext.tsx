@@ -107,6 +107,8 @@ export interface SiteConfig {
     note?: string;
     /** Where the guide's Rules button goes; default the vfi Challenges page. */
     rulesTarget?: string;
+    /** Show the RoboKidovation and Young Future InnoHack programme boxes instead of the single guide. */
+    audienceJourneys?: boolean;
   };
   footer: {
     title: string;
@@ -221,6 +223,7 @@ export const VFI_SITE: SiteConfig = {
   banner: '/ves.jpeg',
   journey: {
     finals: 'on 5 Dec 2026 at MISV, Västerås',
+    audienceJourneys: true,
     dates: [
       { label: 'School demos', value: '1–14 Oct 2026' },
       { label: 'School qualifiers', value: '12–25 Nov 2026' },
