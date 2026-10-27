@@ -1,18 +1,26 @@
 import React from 'react';
-import { ArrowRight, MapPin } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import { FutureInnovatorsBanner } from './FutureInnovatorsBanner';
 import { PathwayCard } from './PathwayCard';
+import { RegisterWizard } from '../pages/register/RegisterWizard';
 import { useT } from '../content/useT';
-import { hasLabel } from '../content/sections/frame';
 import type { ExperienceData } from '../content/sections/programmes';
 
+/** The line under "Find your pathway" on the home page. */
+const REGISTER_INTRO = {
+  en: 'Choose your programme, tell us how you would like to participate, and complete your registration.',
+  sv: 'Välj ditt program, berätta hur du vill delta och slutför din anmälan.',
+};
+
 interface RefTheExperienceProps {
-  /** Banner, programme cards, venues and registration bar from the Site CMS. */
+  /** Banner, programme cards and venues from the Site CMS. */
   data: ExperienceData;
   go: (href: string) => void;
+  /** Opens the ideas page (after an idea is registered). */
+  onNavigateVoting?: () => void;
 }
 
-export const RefTheExperience: React.FC<RefTheExperienceProps> = ({ data, go }) => {
+export const RefTheExperience: React.FC<RefTheExperienceProps> = ({ data, go, onNavigateVoting }) => {
   const { t } = useT();
   return (
     <section
@@ -71,31 +79,9 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({ data, go }) 
           ))}
         </div>
 
-        {/* ── 04. REGISTER CTA BAR (SECTION 3 CONVERSION ANCHOR) ── */}
-        <div className="p-6 sm:p-8 bg-gradient-to-r from-[#0A1930] via-[#006AA7] to-[#0A1930] text-white flex flex-col lg:flex-row items-center justify-between gap-6 shadow-xl">
-          <div className="space-y-1 text-center lg:text-left">
-            <span className="text-[11px] font-mono-code font-bold tracking-[0.25em] text-[#FFCD00] uppercase block">
-              {t(data.ctaEyebrow)}
-            </span>
-            <h3 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight">
-              {t(data.ctaTitle)}
-            </h3>
-            <p className="text-xs sm:text-sm text-white/80 font-light max-w-xl">
-              {t(data.ctaText)}
-            </p>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-center gap-3.5 w-full sm:w-auto shrink-0">
-            {hasLabel(data.ctaButton) && (
-              <button
-                onClick={() => go(data.ctaButton.href)}
-                className="w-full sm:w-auto px-8 py-4 bg-[#FFCD00] hover:bg-[#E6B800] text-[#0A1930] font-syne font-black text-xs sm:text-sm tracking-wider uppercase transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2.5 active:scale-95"
-              >
-                <span>{t(data.ctaButton.label)}</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            )}
-          </div>
+        {/* ── 04. REGISTRATION: the register page's wizard, right here ── */}
+        <div id="find-your-pathway" className="max-w-5xl mx-auto w-full pt-4 scroll-mt-24 select-text">
+          <RegisterWizard intro={REGISTER_INTRO} onNavigateVoting={onNavigateVoting} />
         </div>
 
         {/* ── 05. FOOTER SUB-STRIP ── */}
