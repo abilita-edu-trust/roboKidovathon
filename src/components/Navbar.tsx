@@ -21,7 +21,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { language, setLanguage, toggleLanguage } = useLanguage();
   // The site (VFI or a city site like vxo.iniac.se) sets the name, menu and button text.
-  const { nav } = useSite();
+  const { nav, location } = useSite();
   const sv = language === 'sv';
 
   useEffect(() => {
@@ -88,11 +88,17 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={(e) => handleLinkClick(e, nav.homeRoute)}
             className="text-left group focus:outline-none flex items-center gap-2.5"
           >
-            {/* Swedish Flag / STEM Mark */}
-            <div className="w-5 h-5 bg-[#006AA7] flex items-center justify-center relative overflow-hidden shadow-2xs flex-shrink-0">
-              <div className="absolute top-0 bottom-0 left-[35%] w-[22%] bg-[#FFCD00]" />
-              <div className="absolute left-0 right-0 top-[38%] h-[24%] bg-[#FFCD00]" />
-            </div>
+            {/* The site's country flag: Latvia (Riga), else Sweden */}
+            {location?.countrySlug === 'latvia' ? (
+              <div className="w-5 h-5 bg-[#9E3039] relative overflow-hidden shadow-2xs flex-shrink-0" aria-hidden="true">
+                <div className="absolute left-0 right-0 top-[40%] h-[20%] bg-white" />
+              </div>
+            ) : (
+              <div className="w-5 h-5 bg-[#006AA7] flex items-center justify-center relative overflow-hidden shadow-2xs flex-shrink-0">
+                <div className="absolute top-0 bottom-0 left-[35%] w-[22%] bg-[#FFCD00]" />
+                <div className="absolute left-0 right-0 top-[38%] h-[24%] bg-[#FFCD00]" />
+              </div>
+            )}
 
             <span
               className={`flex flex-col items-start gap-0.5 font-headline font-black text-sm sm:text-base 2xl:text-lg leading-none tracking-tight uppercase whitespace-nowrap transition-colors duration-300 ${

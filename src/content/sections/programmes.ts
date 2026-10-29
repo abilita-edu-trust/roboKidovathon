@@ -31,10 +31,10 @@ export interface PathwayData {
   register?: CmsLink;
 }
 
-/** The registration form for a card's programme: RoboKidovation's competition entry or the hackathon squad. */
-export const registerLink = (theme: string): CmsLink => ({
+/** The registration form for a card's programme (RoboKidovation's competition entry or the hackathon squad) on a site's register page. */
+export const registerLink = (theme: string, registerRoute = 'register'): CmsLink => ({
   label: bi('REGISTER', 'ANMÄL DIG'),
-  href: targetToHref('register', theme === 'hack' ? 'hackathon' : 'competition'),
+  href: targetToHref(registerRoute, theme === 'hack' ? 'hackathon' : 'competition'),
 });
 
 /** A programme card as the city data builds it, one per language. */

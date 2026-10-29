@@ -122,7 +122,12 @@ const ProgrammeBox: React.FC<{ programme: ProgrammeJourney; go: (href: string) =
   };
 
   return (
-    <article className="relative bg-white border border-slate-200 shadow-sm" aria-labelledby={`${uid}-title`}>
+    // The id is a menu anchor: "#journey-robokidovation", "#journey-innohack".
+    <article
+      id={programme.id ? `journey-${programme.id}` : undefined}
+      className="relative bg-white border border-slate-200 shadow-sm scroll-mt-24"
+      aria-labelledby={`${uid}-title`}
+    >
       <span className={`absolute top-0 left-0 right-0 h-1 ${accent.bar}`} aria-hidden="true" />
 
       {/* Header */}

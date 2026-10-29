@@ -9,6 +9,7 @@ import type { RoboHackEvent } from '../../data/robohack/types';
 import type { CityDetail } from './CitySections';
 import { vaxjo } from '../../data/robohack';
 import { eskilstunaPathway, eskilstunaSite, ESKILSTUNA_DETAILS } from '../../data/cities/eskilstuna';
+import { rigaSite } from '../../data/cities/riga';
 import { SITE_META } from '../../data/siteMeta';
 import { robohackSite } from '../robohack/robohackSite';
 import { robohackPathway } from '../robohack/robohackPathway';
@@ -61,6 +62,15 @@ export const CITY_SITES: Record<string, CitySite> = {
     home: ['teams', 'details', 'vote', 'join'],
     details: ESKILSTUNA_DETAILS,
     pathway: { content: eskilstunaPathway, target: 'esk#teams-final-day' },
+  },
+  // riga.iniac.se — Riga Future Innovators (RoboKidovation + Young Inno Hack, like vfi)
+  riga: {
+    route: 'riga',
+    meta: SITE_META.riga,
+    site: rigaSite,
+    // The vfi programme cards, venues and registration, then the categories and the ideas vote.
+    home: ['experience', 'teams', 'vote'],
+    details: [],
   },
 };
 

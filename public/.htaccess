@@ -46,6 +46,13 @@ Options -Indexes
   RewriteRule ^$ https://esk.iniac.se/esk [L,R=302]
 </IfModule>
 
+# ── riga.iniac.se: Riga Future Innovators; the root opens /riga ──
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_HOST} ^riga\.iniac\.se$ [NC]
+  RewriteRule ^$ https://riga.iniac.se/riga [L,R=302]
+</IfModule>
+
 # ── Force HTTPS ──
 <IfModule mod_rewrite.c>
   RewriteEngine On
@@ -54,7 +61,7 @@ Options -Indexes
 </IfModule>
 
 # ── SPA fallback: serve the app for any path that isn't a real file/dir ──
-# Each site gets its own copy of index.html (esk.html, vxo.html, ibk.html) carrying its
+# Each site gets its own copy of index.html (esk.html, vxo.html, riga.html, ibk.html) carrying its
 # title, description and link-preview image, because LinkedIn/WhatsApp/Facebook don't run
 # JavaScript. The names come from SITE_META_PAGES in src/data/siteMeta.ts.
 <IfModule mod_rewrite.c>
@@ -75,6 +82,10 @@ Options -Indexes
   RewriteCond %{HTTP_HOST} ^vxo\.iniac\.se$ [NC,OR]
   RewriteCond %{REQUEST_URI} ^/vxo(/|$) [NC]
   RewriteRule ^ /vxo.html [L]
+  # riga.iniac.se, and /riga/* on any host
+  RewriteCond %{HTTP_HOST} ^riga\.iniac\.se$ [NC,OR]
+  RewriteCond %{REQUEST_URI} ^/riga(/|$) [NC]
+  RewriteRule ^ /riga.html [L]
   RewriteRule ^ /index.html [L]
 </IfModule>
 

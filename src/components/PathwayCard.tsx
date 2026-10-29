@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Target } from 'lucide-react';
 import { useT } from '../content/useT';
+import { useSite } from '../context/SiteContext';
 import { siteIcon } from '../content/icons';
 import { richText } from '../content/richText';
 import { hasLabel } from '../content/sections/frame';
@@ -63,6 +64,7 @@ interface PathwayCardProps {
 
 export const PathwayCard: React.FC<PathwayCardProps> = ({ data, onCta: go, half = false, delay = 0 }) => {
   const { t: tr } = useT();
+  const site = useSite();
   const t = THEMES[data.theme === 'hack' ? 'hack' : 'robo'];
   const Icon = siteIcon(data.icon);
   const title = tr(data.title);
@@ -74,7 +76,7 @@ export const PathwayCard: React.FC<PathwayCardProps> = ({ data, onCta: go, half 
   const showCta = hasLabel(data.cta);
   const onCta = () => go(data.cta.href);
   // Saved cards from before the Register button (merged in with a blank link) get the programme's form.
-  const register = hasLabel(data.register) ? data.register : registerLink(data.theme);
+  const register = hasLabel(data.register) ? data.register : registerLink(data.theme, site.nav.registerRoute);
 
   if (!half) {
     // Long journeys run as two timelines side by side on wide screens.

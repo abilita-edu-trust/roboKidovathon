@@ -152,7 +152,7 @@ export interface SiteConfig {
 }
 
 /** Cities with their own site; their ideas are kept off the Västerås pages. */
-export const CITY_SITE_SLUGS = ['vaxjo', 'eskilstuna'];
+export const CITY_SITE_SLUGS = ['vaxjo', 'eskilstuna', 'riga'];
 
 export const VFI_SITE: SiteConfig = {
   location: null,
@@ -175,7 +175,6 @@ export const VFI_SITE: SiteConfig = {
       { id: 'events', label: { en: 'Events', sv: 'Evenemang' } },
       { id: 'register', label: { en: 'Register', sv: 'Registrering' } },
       { id: 'about', label: { en: 'About', sv: 'Om oss' } },
-      { id: 'ibk', label: same('Indisk Barnklubb (IBK)') },
       { id: 'future-innovators#contact-us', label: { en: 'Contact', sv: 'Kontakt' } },
     ],
     registerLabel: { en: 'REGISTER SCHOOL, ASSOCIATION OR TEAM', sv: 'REGISTRERA SKOLA, FÖRENING ELLER LAG' },

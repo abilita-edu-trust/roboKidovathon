@@ -13,7 +13,7 @@ export interface SiteMeta {
   image: string;
 }
 
-export type SiteMetaKey = 'vfi' | 'esk' | 'vxo' | 'ibk';
+export type SiteMetaKey = 'vfi' | 'esk' | 'vxo' | 'riga' | 'ibk';
 
 export const SITE_META: Record<SiteMetaKey, SiteMeta> = {
   // vfi.iniac.se and every page without its own entry
@@ -40,6 +40,15 @@ export const SITE_META: Record<SiteMetaKey, SiteMeta> = {
     origin: 'https://vxo.iniac.se',
     image: '/vxo.jpeg',
   },
+  // riga.iniac.se and /riga
+  riga: {
+    title: 'Riga Future Innovators 2026 | INIAC',
+    description:
+      'Hands-on robotics and youth innovation for schools, associations and independent teams in Riga, by INIAC. RoboKidovation on 5 December and the Young Inno Hack on 11–12 December 2026.',
+    origin: 'https://riga.iniac.se',
+    // No Riga banner yet: the arena photo from the hero.
+    image: '/site/arena_court_hd.jpg',
+  },
   // indiskbarnklubb.se/ibk
   ibk: {
     title: 'Indisk Barnklubb (IBK) Västerås | INIAC',
@@ -55,5 +64,6 @@ export const SITE_META_PAGES: Record<SiteMetaKey, string> = {
   vfi: 'index.html',
   esk: 'esk.html',
   vxo: 'vxo.html',
+  riga: 'riga.html',
   ibk: 'ibk.html',
 };

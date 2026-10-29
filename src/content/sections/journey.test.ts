@@ -61,10 +61,11 @@ describe('audience journeys (vfi)', () => {
 });
 
 describe('journey on other sites', () => {
-  it('keeps the single guide (no programme boxes) on the city sites', () => {
+  it('keeps the single guide (no programme boxes) on the city sites without them', () => {
     for (const city of Object.values(CITY_SITES)) {
       const j = journeyDefaults(city.site);
-      if (!j) continue;
+      // Riga copies vfi, programme boxes included.
+      if (!j || city.site.journey?.audienceJourneys) continue;
       expect(j.programmes).toEqual([]);
       expect(j.title.en).toBe('Designed for Students, Parents & Teachers');
     }
