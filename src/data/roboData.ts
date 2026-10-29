@@ -354,8 +354,8 @@ export const CHAMPIONSHIP_STAGES: ChampionshipStage[] = [
 export const UPCOMING_EVENTS: UpcomingEvent[] = [
   {
     id: 'robokidovation-final',
-    date: 'DECEMBER 4–5, 2026',
-    day: 'FRI–SAT · DEC 4–5',
+    date: 'DECEMBER 5, 2026',
+    day: 'SAT · DEC 5',
     title: 'Västerås Future Innovators — Robo-Sprint City Final',
     subtitle: 'RoboKido Junior (Grades 3–6), Senior (Grades 7–9) & GYM (Gymnasium) Championships',
     location: 'Mälardalen International School, Västerås',
@@ -366,8 +366,8 @@ export const UPCOMING_EVENTS: UpcomingEvent[] = [
   },
   {
     id: 'young-innovators-hackathon',
-    date: 'DECEMBER 4–5, 2026',
-    day: 'FRI–SAT · DEC 4–5',
+    date: 'DECEMBER 11–12, 2026',
+    day: 'FRI–SAT · DEC 11–12',
     title: 'Young Inno Hack',
     subtitle: 'Final presentations · venue to be confirmed',
     location: 'Venue to be confirmed',
@@ -408,7 +408,7 @@ export const WHY_SCHOOLS_PARTICIPATE: WhyParticipateReason[] = [
   {
     title: 'School-To-City Pathway',
     desc: 'Students can represent their school beyond the classroom.',
-    detail: 'Up to 4 teams from each school or association\'s Robo-Sprint qualifiers advance to the Västerås Future Innovators Robo-Sprint City Final on December 4–5, 2026.',
+    detail: 'Up to 4 teams from each school or association\'s Robo-Sprint qualifiers advance to the Västerås Future Innovators Robo-Sprint City Final on December 5, 2026.',
   },
 ];
 
@@ -512,7 +512,7 @@ export const LEARNING_BLOCKS: LearningBlock[] = [
   {
     tag: 'COMPETE',
     desc: 'Apply the learning through Västerås Future Innovators',
-    detail: 'Sessions 9–10 close with documentation and presentation prep, then Robo-Sprint qualifiers (12–25 November) — up to 4 teams per school or association go to the Robo-Sprint City Final on December 4–5, 2026.',
+    detail: 'Sessions 9–10 close with documentation and presentation prep, then Robo-Sprint qualifiers (12–25 November) — up to 4 teams per school or association go to the Robo-Sprint City Final on December 5, 2026.',
   },
 ];
 
@@ -544,7 +544,7 @@ export const FAQ_ITEMS: FAQItem[] = [
   {
     id: 'faq-5',
     question: 'What is the competition structure?',
-    answer: 'Stage 1 is the RoboSkolan Robo League qualifiers, held within each participating school or association on 12–25 November 2026 after the 20-hour STEM project. Up to 4 teams from each school or association advance to the Västerås Future Innovators Robo-Sprint City Final on December 4–5, 2026.',
+    answer: 'Stage 1 is the RoboSkolan Robo League qualifiers, held within each participating school or association on 12–25 November 2026 after the 20-hour STEM project. Up to 4 teams from each school or association advance to the Västerås Future Innovators Robo-Sprint City Final on December 5, 2026.',
     category: 'Schools & Fees'
   },
   {

@@ -22,7 +22,7 @@ const WHY_SCHOOLS_PARTICIPATE = [
   },
   {
     title: 'School-to-City Pathway',
-    desc: 'School and association qualifiers (12–25 November) feed directly into the Västerås City Final on December 4–5, 2026.',
+    desc: 'School and association qualifiers (12–25 November) feed directly into the Västerås City Final on December 5, 2026.',
     detail: 'Up to 4 Junior (Grades 3–6) and Senior (Grades 7–9) teams from each school or association go to the Final, with SEK 3,000 in prizes and certificates.',
   },
 ];
@@ -95,7 +95,7 @@ export const ForSchoolsPage: React.FC<ForSchoolsPageProps> = ({
     {
       num: '03',
       title: 'RUN PROJECT & QUALIFY',
-      desc: 'Students complete the 10-session project, run qualifiers on 12–25 November, and up to 4 teams per school or association advance to the December 4–5 Final.',
+      desc: 'Students complete the 10-session project, run qualifiers on 12–25 November, and up to 4 teams per school or association advance to the December 5 Final.',
     },
   ];
 
@@ -371,7 +371,7 @@ export const ForSchoolsPage: React.FC<ForSchoolsPageProps> = ({
               REGISTER SCHOOL, ASSOCIATION OR TEAM
             </h3>
             <p className="text-xs sm:text-sm text-[#0A1930]/80 font-medium max-w-lg">
-              Intake for schools, associations and independent teams is open for the 2026 season ahead of the 12–25 November qualifiers and December 4–5 City Final.
+              Intake for schools, associations and independent teams is open for the 2026 season ahead of the 12–25 November qualifiers and December 5 City Final.
             </p>
           </div>
 

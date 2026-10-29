@@ -37,7 +37,7 @@ export const readMoreDefaults = (): ReadMoreData => ({
     { icon: 'Trophy', title: bi('Competition rules'), text: bi('Categories, qualification, match format and arena specifications.'), href: targetToHref('challenges') },
     { icon: 'BookOpen', title: bi('Curriculum'), text: bi('How the 20-hour programme maps to Lgr22 and Gy25.'), href: targetToHref('lgr22') },
     { icon: 'Wrench', title: bi('Equipment & workshops'), text: bi('Kits, sessions and the step-by-step learning pathway.'), href: targetToHref('workflow') },
-    { icon: 'Calendar', title: bi('Events & final'), text: bi('The season timeline, qualifiers and the 4–5 December 2026 Final.'), href: targetToHref('events') },
+    { icon: 'Calendar', title: bi('Events & final'), text: bi('The season timeline, qualifiers and the 5 December 2026 Final.'), href: targetToHref('events') },
   ],
 });
 

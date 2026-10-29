@@ -10,8 +10,8 @@ import {
 
 // Stored values are English and shared with the Fut Inno admin filters.
 const VOLUNTEER_EVENTS: ChipOption[] = [
-  { value: 'robo-sprint-city-final', en: 'Robo-Sprint City Final (4–5 Dec 2026)', sv: 'Robo-Sprint stadsfinal (4–5 dec 2026)' },
-  { value: 'young-inno-hack', en: 'Young Inno Hack (4–5 Dec 2026)', sv: 'Young Inno Hack (4–5 dec 2026)' },
+  { value: 'robo-sprint-city-final', en: 'Robo-Sprint City Final (5 Dec 2026)', sv: 'Robo-Sprint stadsfinal (5 dec 2026)' },
+  { value: 'young-inno-hack', en: 'Young Inno Hack (11–12 Dec 2026)', sv: 'Young Inno Hack (11–12 dec 2026)' },
   { value: 'school-workshops-demos', en: 'In-school workshops & demos', sv: 'Workshoppar och demos på skolor' },
   { value: 'any-vfi-event', en: 'Any VFI event', sv: 'Valfritt VFI-evenemang' },
 ];

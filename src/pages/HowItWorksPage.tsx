@@ -62,8 +62,8 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
       num: '06',
       title: 'GRAND FINALE',
       subtitle: 'Västerås City Final',
-      desc: 'Qualified teams compete live on December 4–5, 2026 at Mälardalen International School (MISV) in Västerås for SEK 3,000 in prizes, official trophies, and certificates.',
-      badge: 'DECEMBER 4–5, 2026',
+      desc: 'Qualified teams compete live on December 5, 2026 at Mälardalen International School (MISV) in Västerås for SEK 3,000 in prizes, official trophies, and certificates.',
+      badge: 'DECEMBER 5, 2026',
       highlight: true,
     },
   ];
@@ -182,7 +182,7 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
               Ready to embark on this 6-step journey?
             </h3>
             <p className="text-xs sm:text-sm text-slate-300 font-light max-w-xl">
-              From free workshop kits delivered to your classroom to the live December 4–5 finals in Västerås.
+              From free workshop kits delivered to your classroom to the live December 5 final in Västerås.
             </p>
           </div>
 
