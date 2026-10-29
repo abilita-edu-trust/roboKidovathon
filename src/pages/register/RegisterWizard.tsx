@@ -94,7 +94,7 @@ const ChoiceCard: React.FC<{
           {title}
         </span>
         {desc && <span className="block text-xs text-slate-600 leading-relaxed mt-1.5">{desc}</span>}
-        {meta && <span className="block mt-3 text-[11px] font-mono-code font-semibold text-slate-600">{meta}</span>}
+        {meta && <span className="block mt-3 text-[13px] font-mono-code font-semibold text-slate-600">{meta}</span>}
       </span>
     </button>
   );
@@ -494,7 +494,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
         <dl className="border border-slate-200 divide-y divide-slate-200">
           {reviewRows().map(([k, val], i) => (
             <div key={`${k}-${i}`} className="grid grid-cols-1 sm:grid-cols-[200px_1fr] gap-1 sm:gap-4 px-4 py-3">
-              <dt className="text-[11px] font-mono-code font-bold uppercase tracking-wider text-slate-500 pt-0.5">{k}</dt>
+              <dt className="text-[13px] font-mono-code font-bold uppercase tracking-wider text-slate-500 pt-0.5">{k}</dt>
               <dd className="text-sm text-[#0A1930] font-medium break-words whitespace-pre-line">{val}</dd>
             </div>
           ))}
@@ -523,11 +523,11 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
             </span>
           </label>
           <div>
-            <button type="button" onClick={() => setShowGdpr(!showGdpr)} className="text-[11px] font-mono-code text-[#006AA7] hover:underline">
+            <button type="button" onClick={() => setShowGdpr(!showGdpr)} className="text-[13px] font-mono-code text-[#006AA7] hover:underline">
               {showGdpr ? L('▲ Hide GDPR details', '▲ Dölj GDPR-information') : L('▼ Read GDPR & privacy terms', '▼ Läs GDPR- och integritetsvillkoren')}
             </button>
             {showGdpr && (
-              <div className="mt-2 p-3 bg-slate-50 border border-slate-200 text-[11px] text-slate-600 leading-relaxed">
+              <div className="mt-2 p-3 bg-slate-50 border border-slate-200 text-[13px] text-slate-600 leading-relaxed">
                 {L(
                   `Data controller: ${site.organiser}, in accordance with the EU GDPR. Contact details and uploads are used only to organise workshops, demos, competitions and events, and to review ideas.`,
                   `Personuppgiftsansvarig: ${site.organiser}, enligt EU:s dataskyddsförordning (GDPR). Kontaktuppgifter och uppladdat material används bara för att organisera workshoppar, demos, tävlingar och evenemang, och för att granska idéer.`,
@@ -559,7 +559,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
     <>
         <div data-no-translate="true">
           <div className="text-center max-w-3xl mx-auto mb-6">
-            <div className="inline-flex items-center gap-2 text-[11px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase mb-2">
+            <div className="inline-flex items-center gap-2 text-[13px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase mb-2">
               <Sparkles className="w-3.5 h-3.5 text-[#FFCD00]" />
               <span>{site.intake.eyebrow}</span>
             </div>
@@ -583,14 +583,14 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                     <img src={programme.image} alt="" className="hidden sm:block w-28 h-16 object-cover border border-slate-200 shrink-0" />
                   )}
                   <div className="min-w-0">
-                    <span className="block text-[10px] font-mono-code font-bold uppercase tracking-wider text-slate-500">
+                    <span className="block text-xs font-mono-code font-bold uppercase tracking-wider text-slate-500">
                       {L('You are registering for', 'Du anmäler dig till')}
                     </span>
                     <span className={`block font-headline font-black text-lg sm:text-xl uppercase tracking-tight leading-tight ${green ? 'text-[#059669]' : 'text-[#006AA7]'}`}>
                       {T(programme.title)}
                     </span>
                     {(programme.date || programme.venue) && (
-                      <span className="block mt-1 text-[11px] font-mono-code font-semibold text-slate-600">{meta(programme)}</span>
+                      <span className="block mt-1 text-[13px] font-mono-code font-semibold text-slate-600">{meta(programme)}</span>
                     )}
                   </div>
                 </div>
@@ -604,7 +604,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
 
             {crumbs.length > 0 && !done && (
               <div className="flex flex-wrap items-center gap-2 px-4 sm:px-6 py-3 border-b border-slate-200">
-                <span className="text-[10px] font-mono-code font-bold uppercase tracking-wider text-slate-500 mr-1">
+                <span className="text-xs font-mono-code font-bold uppercase tracking-wider text-slate-500 mr-1">
                   {L('Your choices', 'Dina val')}
                 </span>
                 {crumbs.map(({ k, stepKind, card }) => (
@@ -613,7 +613,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                     type="button"
                     onClick={() => goToKind(stepKind)}
                     aria-label={`${L('Change', 'Ändra')}: ${T(card.title)}`}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-slate-300 hover:border-[#0A1930] text-[11px] font-headline font-bold uppercase tracking-wider text-slate-700"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-slate-300 hover:border-[#0A1930] text-[13px] font-headline font-bold uppercase tracking-wider text-slate-700"
                   >
                     <span aria-hidden="true">{card.icon}</span>
                     <span>{T(card.title)}</span>
@@ -626,7 +626,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
             {/* Progress */}
             {!done && (
               <div className="px-4 sm:px-6 py-4 border-b border-slate-200">
-                <div className="flex items-center justify-between gap-3 mb-2 text-[11px] font-mono-code font-bold uppercase tracking-wider">
+                <div className="flex items-center justify-between gap-3 mb-2 text-[13px] font-mono-code font-bold uppercase tracking-wider">
                   <span className="text-[#0A1930]">{L(`Step ${index + 1} of ${steps.length}`, `Steg ${index + 1} av ${steps.length}`)}</span>
                   <span className="text-slate-500 text-right">{T(stepLabel(kind, path))}</span>
                 </div>
@@ -644,16 +644,16 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                   <div className="w-16 h-16 bg-emerald-100 text-emerald-600 flex items-center justify-center mb-4">
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
-                  <span className="text-[10px] font-mono-code font-bold tracking-[0.25em] text-emerald-600 uppercase mb-1 block">
+                  <span className="text-xs font-mono-code font-bold tracking-[0.25em] text-emerald-600 uppercase mb-1 block">
                     {L('Received', 'Mottaget')} // {site.cityName} 2026
                   </span>
                   <h2 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#0A1930]">{doneCopy.title}</h2>
                   <p className="mt-2 text-xs sm:text-sm text-slate-600 max-w-lg leading-relaxed">{doneCopy.body}</p>
                   {done.id && (
                     <div className="my-6 p-4 bg-slate-50 border border-slate-200 w-full max-w-md text-center">
-                      <span className="text-[10px] font-mono-code text-slate-500 uppercase block mb-1">{L('Your reference', 'Ditt referensnummer')}</span>
+                      <span className="text-xs font-mono-code text-slate-500 uppercase block mb-1">{L('Your reference', 'Ditt referensnummer')}</span>
                       <span className="font-mono-code font-bold text-xl text-[#006AA7] tracking-wider block">{done.id}</span>
-                      <span className="text-[11px] text-slate-500 font-mono-code block mt-1">
+                      <span className="text-[13px] text-slate-500 font-mono-code block mt-1">
                         {L('Status: waiting for review', 'Status: väntar på granskning')}
                       </span>
                     </div>
@@ -716,7 +716,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                   <ArrowLeft className="w-3.5 h-3.5" />
                   <span>{L('Back', 'Tillbaka')}</span>
                 </button>
-                <span className="hidden sm:block text-[11px] font-mono-code text-slate-500 truncate">{footer}</span>
+                <span className="hidden sm:block text-[13px] font-mono-code text-slate-500 truncate">{footer}</span>
                 <button
                   type={kind === 'form' ? 'submit' : 'button'}
                   form={kind === 'form' ? formDomId : undefined}

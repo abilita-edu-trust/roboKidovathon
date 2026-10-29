@@ -10,7 +10,7 @@ import type { DetailsData, JoinData } from '../../content/sections/city';
 
 export const Eyebrow: React.FC<{ children: React.ReactNode; light?: boolean; className?: string }> = ({ children, light, className = '' }) => (
   <span
-    className={`text-[10px] sm:text-[11px] font-mono-code font-bold tracking-[0.2em] uppercase block mb-2 ${
+    className={`text-xs sm:text-sm font-mono-code font-bold tracking-[0.2em] uppercase block mb-2 ${
       light ? 'text-[#FFCD00]' : 'text-[#006AA7]'
     } ${className}`}
   >
@@ -32,8 +32,8 @@ export const Section: React.FC<{ id: string; tone?: 'white' | 'gray' | 'blue' | 
     navy: 'bg-[#0A1930] text-white',
   };
   return (
-    <section id={id} className={`w-full py-16 sm:py-20 px-4 sm:px-6 lg:px-10 scroll-mt-20 ${tones[tone]}`}>
-      <div className="max-w-[1400px] mx-auto space-y-10">{children}</div>
+    <section id={id} className={`w-full py-8 sm:py-10 px-4 sm:px-6 lg:px-10 scroll-mt-20 ${tones[tone]}`}>
+      <div className="max-w-[1400px] mx-auto space-y-8">{children}</div>
     </section>
   );
 };
@@ -57,7 +57,7 @@ export const CityDetailsSection: React.FC<{ data: DetailsData }> = ({ data }) =>
         <dl className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 border-t border-l border-slate-200">
           {data.rows.map((d, i) => (
             <div key={i} className="p-5 sm:p-6 border-b border-r border-slate-200">
-              <dt className="text-[10px] font-mono-code font-bold uppercase tracking-widest text-slate-500">{t(d.label)}</dt>
+              <dt className="text-xs font-mono-code font-bold uppercase tracking-widest text-slate-500">{t(d.label)}</dt>
               <dd className={`mt-1 font-headline font-black text-xl uppercase tracking-tight ${t(d.value) ? 'text-[#0A1930]' : 'text-slate-400'}`}>
                 {t(d.value) || t(data.tbc)}
               </dd>
@@ -71,7 +71,7 @@ export const CityDetailsSection: React.FC<{ data: DetailsData }> = ({ data }) =>
 
 /** The VFI "Vote for an idea of young minds" section, showing this city's ideas. */
 export const CityVoteSection: React.FC<{ onOpenIdeas: () => void; onSubmitIdea: () => void; data: VoteData }> = ({ onOpenIdeas, onSubmitIdea, data }) => (
-  <section id="vote-ideas" className="w-full bg-white text-[#0A1930] py-10 sm:py-14 px-4 sm:px-6 lg:px-10 scroll-mt-20">
+  <section id="vote-ideas" className="w-full bg-white text-[#0A1930] py-8 sm:py-10 px-4 sm:px-6 lg:px-10 scroll-mt-20">
     <div className="max-w-[1400px] mx-auto">
       <VoteYoungMindsSection onNavigateIdeas={onOpenIdeas} onNavigateSubmit={onSubmitIdea} data={data} />
     </div>
@@ -109,7 +109,7 @@ export const CityPathways: React.FC<{ data: JoinData; go: (href: string) => void
               <span className="text-2xl" aria-hidden>{p.emoji}</span>
               <span className="font-headline font-black text-base uppercase tracking-tight">{t(p.title)}</span>
               <span className="text-xs text-slate-500 leading-snug">{t(p.desc)}</span>
-              <span className="mt-auto pt-2 inline-flex items-center gap-1 text-[11px] font-mono-code font-bold uppercase text-[#006AA7]">
+              <span className="mt-auto pt-2 inline-flex items-center gap-1 text-[13px] font-mono-code font-bold uppercase text-[#006AA7]">
                 {t(data.openForm)}
                 <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
               </span>
@@ -124,7 +124,7 @@ export const CityPathways: React.FC<{ data: JoinData; go: (href: string) => void
               <span className="text-2xl" aria-hidden>{data.ideas.emoji}</span>
               <span className="font-headline font-black text-base uppercase tracking-tight">{t(data.ideas.title)}</span>
               <span className="text-xs text-white/80 leading-snug">{t(data.ideas.desc)}</span>
-              <span className="mt-auto pt-2 inline-flex items-center gap-1 text-[11px] font-mono-code font-bold uppercase">
+              <span className="mt-auto pt-2 inline-flex items-center gap-1 text-[13px] font-mono-code font-bold uppercase">
                 {t(data.ideas.button)}
                 <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
               </span>

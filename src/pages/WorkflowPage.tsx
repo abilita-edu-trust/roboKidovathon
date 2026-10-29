@@ -164,7 +164,7 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
             <span>BACK TO HOME</span>
           </motion.button>
 
-          <span className="text-[11px] font-mono-code font-bold text-slate-500 uppercase tracking-widest">
+          <span className="text-[13px] font-mono-code font-bold text-slate-500 uppercase tracking-widest">
             COLLABORATION PROPOSAL · IBK VÄSTERÅS × INIAC · 2026
           </span>
         </div>
@@ -200,7 +200,7 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
           </div>
 
           {/* Pathway Flow Strip */}
-          <div className="p-3.5 bg-[#0A1930] text-white flex flex-wrap items-center justify-between gap-2 text-[11px] sm:text-xs font-mono-code font-bold uppercase tracking-wider">
+          <div className="p-3.5 bg-[#0A1930] text-white flex flex-wrap items-center justify-between gap-2 text-[13px] sm:text-sm font-mono-code font-bold uppercase tracking-wider">
             <span>PARTS</span>
             <span className="text-[#FFCD00]">⟶</span>
             <span>BUILD</span>
@@ -273,7 +273,7 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
             {/* Left: Robo-Sprint & 2 Learning Levels */}
             <div className="lg:col-span-7 space-y-6">
               <div className="space-y-2">
-                <span className="text-[10px] font-mono-code font-bold text-[#006AA7] uppercase tracking-wider block">
+                <span className="text-xs font-mono-code font-bold text-[#006AA7] uppercase tracking-wider block">
                   ROBO-SPRINT CHALLENGE
                 </span>
                 <h3 className="font-headline font-black text-xl sm:text-2xl text-[#0A1930] uppercase tracking-tight">
@@ -290,28 +290,28 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Junior */}
                 <div className="p-4 bg-[#F8FAFC] border border-slate-200 space-y-2">
-                  <span className="text-[11px] font-mono-code font-bold text-[#006AA7] uppercase tracking-wider block">
+                  <span className="text-[13px] font-mono-code font-bold text-[#006AA7] uppercase tracking-wider block">
                     Junior · Grades 3–6
                   </span>
                   <p className="text-xs text-slate-600 font-normal leading-relaxed">
                     Focus on stable construction, basic mechanisms, movement, motor control, teamwork
                     and simple strategy.
                   </p>
-                  <span className="inline-block text-[10px] font-mono-code font-bold text-[#006AA7] uppercase tracking-wider pt-1">
+                  <span className="inline-block text-xs font-mono-code font-bold text-[#006AA7] uppercase tracking-wider pt-1">
                     ✓ Build confidence
                   </span>
                 </div>
 
                 {/* Advanced */}
                 <div className="p-4 bg-[#F8FAFC] border border-slate-200 space-y-2">
-                  <span className="text-[11px] font-mono-code font-bold text-[#EA580C] uppercase tracking-wider block">
+                  <span className="text-[13px] font-mono-code font-bold text-[#EA580C] uppercase tracking-wider block">
                     Senior · Grades 7–9
                   </span>
                   <p className="text-xs text-slate-600 font-normal leading-relaxed">
                     Go deeper into engineering design, measurement, optimization, control logic and
                     technical explanation.
                   </p>
-                  <span className="inline-block text-[10px] font-mono-code font-bold text-[#EA580C] uppercase tracking-wider pt-1">
+                  <span className="inline-block text-xs font-mono-code font-bold text-[#EA580C] uppercase tracking-wider pt-1">
                     ✓ Engineer &amp; optimize
                   </span>
                 </div>
@@ -320,19 +320,19 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
               {/* 4 Technical Metrics Grid */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 p-3.5 bg-slate-50 border border-slate-200 text-center font-mono-code">
                 <div className="space-y-0.5">
-                  <span className="text-[9px] text-slate-400 font-bold uppercase block">ARENA</span>
+                  <span className="text-xs text-slate-400 font-bold uppercase block">ARENA</span>
                   <span className="text-xs font-bold text-[#0A1930] block">2.44 × 1.22 m</span>
                 </div>
                 <div className="space-y-0.5">
-                  <span className="text-[9px] text-slate-400 font-bold uppercase block">MATCH</span>
+                  <span className="text-xs text-slate-400 font-bold uppercase block">MATCH</span>
                   <span className="text-xs font-bold text-[#0A1930] block">1 team vs 1 team</span>
                 </div>
                 <div className="space-y-0.5">
-                  <span className="text-[9px] text-slate-400 font-bold uppercase block">DURATION</span>
+                  <span className="text-xs text-slate-400 font-bold uppercase block">DURATION</span>
                   <span className="text-xs font-bold text-[#006AA7] block">3 minutes</span>
                 </div>
                 <div className="space-y-0.5">
-                  <span className="text-[9px] text-slate-400 font-bold uppercase block">TEAM</span>
+                  <span className="text-xs text-slate-400 font-bold uppercase block">TEAM</span>
                   <span className="text-xs font-bold text-[#0A1930] block">3–4 students</span>
                 </div>
               </div>
@@ -341,7 +341,7 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
             {/* Right: What Students Experience & School Connection */}
             <div className="lg:col-span-5 space-y-6 lg:border-l lg:border-slate-100 lg:pl-8 flex flex-col justify-between">
               <div className="space-y-4">
-                <span className="text-[11px] font-mono-code font-bold text-slate-400 uppercase tracking-widest block">
+                <span className="text-[13px] font-mono-code font-bold text-slate-400 uppercase tracking-widest block">
                   ONE CHALLENGE. TWO LEARNING LEVELS.
                 </span>
                 <h4 className="font-headline font-bold text-lg text-[#0A1930] uppercase">
@@ -516,7 +516,7 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
                             {ws.title}
                           </h3>
                           <span
-                            className={`text-[9px] font-mono-code font-bold uppercase tracking-wider block mt-0.5 transition-colors duration-300 ${
+                            className={`text-xs font-mono-code font-bold uppercase tracking-wider block mt-0.5 transition-colors duration-300 ${
                               ws.isFinal ? 'text-[#013A63]' : 'text-slate-400'
                             } ${ws.hoverSubClass}`}
                           >
@@ -534,7 +534,7 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
                       </div>
 
                       <div
-                        className={`pt-2.5 border-t flex items-center justify-between text-[10px] font-mono-code font-bold uppercase transition-all duration-300 ${
+                        className={`pt-2.5 border-t flex items-center justify-between text-xs font-mono-code font-bold uppercase transition-all duration-300 ${
                           ws.isFinal
                             ? 'border-white/10 text-[#FFCD00]'
                             : 'border-slate-100 text-slate-400'
@@ -576,7 +576,7 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
                     {idx < workflowSteps.length - 1 && (
                       <div className="lg:hidden flex items-center justify-center py-2.5 relative z-20">
                         <div
-                          className={`flex items-center gap-1.5 px-3 py-1 border text-[10px] font-mono-code font-bold uppercase tracking-wider transition-colors duration-300 ${
+                          className={`flex items-center gap-1.5 px-3 py-1 border text-xs font-mono-code font-bold uppercase tracking-wider transition-colors duration-300 ${
                             isCardHovered || isNextCardHovered
                               ? 'bg-[#FFCD00] text-[#0A1930] border-[#FFCD00] shadow-sm'
                               : 'bg-sky-50 text-[#006AA7] border-sky-200'
@@ -614,7 +614,7 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
         >
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
             <div className="space-y-4 max-w-2xl">
-              <span className="text-[10px] sm:text-[11px] font-mono-code font-bold tracking-widest text-[#FFCD00] uppercase">
+              <span className="text-xs sm:text-sm font-mono-code font-bold tracking-widest text-[#FFCD00] uppercase">
                 VÄSTERÅS FUTURE INNOVATORS 2026
               </span>
               <h2 className="font-headline font-black text-2xl sm:text-3xl md:text-4xl text-white uppercase tracking-tight">

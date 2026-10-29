@@ -16,7 +16,7 @@ export const RoboFaqSection: React.FC = () => {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6 pb-10 border-b border-[#07111F]/10">
           <div>
-            <span className="text-[10px] font-mono-code font-bold tracking-[0.25em] text-[#0052FF] uppercase block mb-3">
+            <span className="text-xs font-mono-code font-bold tracking-[0.25em] text-[#0052FF] uppercase block mb-3">
               09 / FREQUENTLY ASKED QUESTIONS
             </span>
             <h2
@@ -54,7 +54,7 @@ export const RoboFaqSection: React.FC = () => {
                     </span>
 
                     <div>
-                      <div className="text-[9px] font-mono-code font-bold text-[#0052FF] uppercase tracking-wider mb-1">
+                      <div className="text-xs font-mono-code font-bold text-[#0052FF] uppercase tracking-wider mb-1">
                         {item.category}
                       </div>
                       <h3

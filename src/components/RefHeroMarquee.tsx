@@ -32,7 +32,7 @@ export const RefHeroMarquee: React.FC<RefHeroMarqueeProps> = ({ logos, onSelectP
               alt={logo.name}
               className="h-9 sm:h-11 w-auto object-contain transition-transform duration-300"
             />
-            <span className="text-[9px] sm:text-[10px] font-mono-code font-bold text-slate-400 group-hover:text-slate-600 uppercase tracking-widest whitespace-nowrap">
+            <span className="text-xs font-mono-code font-bold text-slate-400 group-hover:text-slate-600 uppercase tracking-widest whitespace-nowrap">
               {logo.role}
             </span>
           </button>

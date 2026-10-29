@@ -9,7 +9,7 @@ export const RoboChampionshipJourney: React.FC = () => {
         
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-[#07111F]/10">
           <div>
-            <span className="text-[10px] font-mono-code font-bold tracking-[0.25em] text-[#0052FF] uppercase block mb-3">
+            <span className="text-xs font-mono-code font-bold tracking-[0.25em] text-[#0052FF] uppercase block mb-3">
               06 / CHAMPIONSHIP ROADMAP
             </span>
             <h2
@@ -50,13 +50,13 @@ export const RoboChampionshipJourney: React.FC = () => {
                     >
                       {stage.stageNumber}
                     </span>
-                    <span className="text-[10px] font-mono-code font-bold tracking-[0.2em] text-[#0052FF] uppercase -mt-4">
+                    <span className="text-xs font-mono-code font-bold tracking-[0.2em] text-[#0052FF] uppercase -mt-4">
                       {stage.stageCode}
                     </span>
                   </div>
 
                   <div className="lg:col-span-6 px-6 sm:px-10 mt-6 lg:mt-0 flex flex-col justify-center">
-                    <span className="text-[10px] font-mono-code font-bold tracking-[0.2em] text-[#4A5568] uppercase mb-1">
+                    <span className="text-xs font-mono-code font-bold tracking-[0.2em] text-[#4A5568] uppercase mb-1">
                       {stage.subtitle}
                     </span>
                     <h3 className="font-display font-black uppercase text-2xl sm:text-3xl text-[#07111F] tracking-tight">
@@ -65,7 +65,7 @@ export const RoboChampionshipJourney: React.FC = () => {
                     <p className="mt-3 text-sm text-[#4A5568] font-light leading-relaxed">
                       {stage.description}
                     </p>
-                    <div className="mt-4 inline-flex items-center gap-2 text-[11px] font-mono-code font-bold text-[#0052FF]">
+                    <div className="mt-4 inline-flex items-center gap-2 text-[13px] font-mono-code font-bold text-[#0052FF]">
                       <span>ADVANCEMENT:</span>
                       <span className="text-[#07111F]">{stage.advancement}</span>
                     </div>
@@ -73,7 +73,7 @@ export const RoboChampionshipJourney: React.FC = () => {
 
                   <div className="lg:col-span-3 px-6 sm:px-8 mt-6 lg:mt-0 lg:border-l border-[#07111F]/10 flex flex-col justify-center gap-4">
                     <div>
-                      <span className="text-[9px] font-mono-code font-bold text-[#4A5568] uppercase block mb-1">
+                      <span className="text-xs font-mono-code font-bold text-[#4A5568] uppercase block mb-1">
                         LOCATION
                       </span>
                       <div className="flex items-start gap-1.5 text-xs font-display font-bold text-[#07111F] uppercase">
@@ -83,7 +83,7 @@ export const RoboChampionshipJourney: React.FC = () => {
                     </div>
 
                     <div>
-                      <span className="text-[9px] font-mono-code font-bold text-[#4A5568] uppercase block mb-1">
+                      <span className="text-xs font-mono-code font-bold text-[#4A5568] uppercase block mb-1">
                         OFFICIAL DATE
                       </span>
                       <div className="flex items-center gap-1.5 text-xs font-mono-code font-bold text-[#0052FF]">

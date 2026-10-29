@@ -31,10 +31,10 @@ export const HackathonWinners: React.FC<{ data: WinnersData }> = ({ data }) => {
   const tracks = [...new Set(results.results.map((r) => r.track))];
 
   return (
-    <section id="winners" data-no-translate="true" className="w-full bg-[#0A1930] text-white py-14 sm:py-20 px-4 sm:px-6 lg:px-10 scroll-mt-20">
+    <section id="winners" data-no-translate="true" className="w-full bg-[#0A1930] text-white py-8 sm:py-10 px-4 sm:px-6 lg:px-10 scroll-mt-20">
       <div className="max-w-[1400px] mx-auto space-y-8">
         <div className="space-y-2">
-          <span className="text-[11px] font-mono-code font-bold tracking-[0.25em] text-[#FFCD00] uppercase">{t(data.eyebrow)}</span>
+          <span className="text-[13px] font-mono-code font-bold tracking-[0.25em] text-[#FFCD00] uppercase">{t(data.eyebrow)}</span>
           <h2 className="font-headline font-black uppercase tracking-tight leading-none flex items-center gap-3" style={{ fontSize: 'clamp(1.8rem, 3.6vw, 2.8rem)' }}>
             <Trophy className="w-8 h-8 text-[#FFCD00] shrink-0" />
             {fill(t(data.title), { name: results.name }).join('')}

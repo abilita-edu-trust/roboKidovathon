@@ -35,7 +35,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="border-b border-slate-200 pb-12"
         >
-          <span className="text-[10px] font-mono-code font-medium tracking-[0.2em] text-slate-500 uppercase block mb-3">
+          <span className="text-xs font-mono-code font-medium tracking-[0.2em] text-slate-500 uppercase block mb-3">
             LEAGUE ORIGINS, PARTNERS &amp; MISSION // VÄSTERÅS 2026
           </span>
 
@@ -122,7 +122,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
               
               {/* Floating Badge */}
               <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none">
-                <span className="bg-[#0A1930]/90 backdrop-blur-md text-[#FFCD00] text-[10px] font-mono-code font-bold px-3 py-1.5 border border-white/10 shadow-md uppercase tracking-wider flex items-center gap-1.5">
+                <span className="bg-[#0A1930]/90 backdrop-blur-md text-[#FFCD00] text-xs font-mono-code font-bold px-3 py-1.5 border border-white/10 shadow-md uppercase tracking-wider flex items-center gap-1.5">
                   <Sparkles className="w-3 h-3" />
                   <span>BLIX-A-THON ACTION REEL</span>
                 </span>
@@ -130,7 +130,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
 
               {/* Bottom Caption Overlay */}
               <div className="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-[#0A1930] via-[#0A1930]/80 to-transparent">
-                <span className="text-[10px] font-mono-code font-bold text-[#FFCD00] uppercase block mb-1">
+                <span className="text-xs font-mono-code font-bold text-[#FFCD00] uppercase block mb-1">
                   FROM WORKBENCH TO ARENA PODIUM
                 </span>
                 <p className="font-syne font-bold text-sm sm:text-base text-white uppercase tracking-tight leading-snug">
@@ -152,7 +152,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
         {/* ── ORGANIZING PARTNERS ── */}
         <div className="space-y-8 pt-8 border-t border-slate-200">
           <div className="text-center max-w-xl mx-auto space-y-2">
-            <span className="text-[10px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase block">
+            <span className="text-xs font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase block">
               COLLABORATIVE ECOSYSTEM
             </span>
             <h2 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#0A1930]">

@@ -57,7 +57,7 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
             
             {/* Left Column: Heading & Description */}
             <div className="space-y-3 max-w-2xl relative z-10">
-              <span className="text-[11px] sm:text-xs font-mono-code font-bold tracking-[0.25em] text-[#006AA7] uppercase block">
+              <span className="text-[13px] sm:text-sm font-mono-code font-bold tracking-[0.25em] text-[#006AA7] uppercase block">
               ROBOTICS ECOSYSTEM
               </span>
 
@@ -114,7 +114,7 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
               
               {/* Header: Clean Tag + Card Number */}
               <div className="flex items-center justify-between">
-                <span className="text-[10px] sm:text-[11px] font-mono-code font-bold text-[#006AA7] uppercase tracking-wider block">
+                <span className="text-xs sm:text-sm font-mono-code font-bold text-[#006AA7] uppercase tracking-wider block">
                   PHASE 01: BUILD
                 </span>
                 <span className="text-xs font-mono-code text-slate-400 font-bold tracking-wider">
@@ -139,7 +139,7 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
                   transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
                   className="hidden sm:block text-right shrink-0"
                 >
-                  <span className="font-handwriting text-base font-bold text-[#006AA7] inline-block leading-tight">
+                  <span className="font-headline uppercase text-base font-bold text-[#006AA7] inline-block leading-tight">
                     From Parts to
                     <br />
                     Possibilities
@@ -168,7 +168,7 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
                     </div>
                     <div>
                       <h4 className="text-xs font-bold text-[#0A1930]">Classroom Footprint</h4>
-                      <p className="text-[11px] text-slate-500 leading-snug">Fits any school table or small floor area.</p>
+                      <p className="text-[13px] text-slate-500 leading-snug">Fits any school table or small floor area.</p>
                     </div>
                   </div>
 
@@ -179,7 +179,7 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
                     </div>
                     <div>
                       <h4 className="text-xs font-bold text-[#0A1930]">Zero Lab Budget</h4>
-                      <p className="text-[11px] text-slate-500 leading-snug">All motors, chassis &amp; batteries provided.</p>
+                      <p className="text-[13px] text-slate-500 leading-snug">All motors, chassis &amp; batteries provided.</p>
                     </div>
                   </div>
 
@@ -190,7 +190,7 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
                     </div>
                     <div>
                       <h4 className="text-xs font-bold text-[#0A1930]">Low-Voltage Safe</h4>
-                      <p className="text-[11px] text-slate-500 leading-snug">Safe 6V DC — zero soldering required.</p>
+                      <p className="text-[13px] text-slate-500 leading-snug">Safe 6V DC — zero soldering required.</p>
                     </div>
                   </div>
 
@@ -265,7 +265,7 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
               
               {/* Header: Eyebrow + Card Number */}
               <div className="flex items-center justify-between">
-                <span className="text-[10px] sm:text-[11px] font-mono-code font-bold tracking-widest text-[#FFCD00] uppercase">
+                <span className="text-xs sm:text-sm font-mono-code font-bold tracking-widest text-[#FFCD00] uppercase">
                   PHASE 02: COMPETE
                 </span>
                 <span className="text-xs font-mono-code text-slate-400 font-bold tracking-wider">
@@ -290,7 +290,7 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
                   transition={{ repeat: Infinity, duration: 3.2, ease: 'easeInOut' }}
                   className="hidden sm:block text-right shrink-0"
                 >
-                  <span className="font-handwriting text-base font-bold text-sky-400 inline-block leading-tight">
+                  <span className="font-headline uppercase text-base font-bold text-sky-400 inline-block leading-tight">
                     Real Challenges.
                     <br />
                     Real Skills.
@@ -333,7 +333,7 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
                         key={bIdx}
                         whileHover={{ scale: 1.04, x: 2 }}
                         transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-                        className="flex items-center gap-2 p-2 bg-white/5 border border-white/10 hover:border-sky-400/40 hover:bg-white/10 text-[11px] font-medium text-slate-200 transition-colors"
+                        className="flex items-center gap-2 p-2 bg-white/5 border border-white/10 hover:border-sky-400/40 hover:bg-white/10 text-[13px] font-medium text-slate-200 transition-colors"
                       >
                         <BIcon className="w-3.5 h-3.5 text-sky-400 shrink-0" />
                         <span className="leading-tight">{badge.text}</span>
@@ -346,7 +346,7 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
 
               {/* Bottom Technical Readout Box */}
               <div className="p-3.5 bg-[#061224] border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-mono-code text-xs">
-                <div className="space-y-1 text-[11px]">
+                <div className="space-y-1 text-[13px]">
                   <div className="flex items-center gap-2">
                     <span className="text-slate-400">STATUS:</span>
                     <span className="text-[#FFCD00] font-bold flex items-center gap-1.5">
@@ -399,7 +399,7 @@ export const RefKioskShowcase: React.FC<RefKioskShowcaseProps> = ({
 
               {/* Handwritten note matching reference */}
               <div className="hidden sm:block">
-                <span className="font-handwriting text-sm font-bold text-sky-400 tracking-wide">
+                <span className="font-headline uppercase text-sm font-bold text-sky-400 tracking-wide">
                   SAME ARENA. BIGGER DREAMS.
                 </span>
               </div>

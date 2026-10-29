@@ -25,10 +25,10 @@ export const RefStatsStrip: React.FC<RefStatsStripProps> = () => {
                   {item.value}
                 </span>
               </div>
-              <span className="font-mono-code font-bold text-[11px] sm:text-xs text-white uppercase tracking-wider block">
+              <span className="font-mono-code font-bold text-[13px] sm:text-sm text-white uppercase tracking-wider block">
                 {item.label}
               </span>
-              <span className="font-mono-code text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-widest block">
+              <span className="font-mono-code text-xs text-slate-400 uppercase tracking-widest block">
                 {item.sub}
               </span>
             </motion.div>

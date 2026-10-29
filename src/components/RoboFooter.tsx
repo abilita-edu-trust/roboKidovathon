@@ -24,7 +24,7 @@ export const RoboFooter: React.FC<RoboFooterProps> = ({ onNavigate, onOpenFaq })
               </span>
             </div>
 
-            <p className="text-[10px] font-mono-code font-bold tracking-[0.2em] text-[#E2FF00] uppercase">
+            <p className="text-xs font-mono-code font-bold tracking-[0.2em] text-[#E2FF00] uppercase">
               SWEDEN LEAGUE · VÄSTERÅS 2026
             </p>
 
@@ -35,7 +35,7 @@ export const RoboFooter: React.FC<RoboFooterProps> = ({ onNavigate, onOpenFaq })
 
           {/* Quick Links */}
           <div>
-            <div className="text-[10px] font-mono-code font-bold tracking-[0.2em] text-slate-300 uppercase mb-4">
+            <div className="text-xs font-mono-code font-bold tracking-[0.2em] text-slate-300 uppercase mb-4">
               NAVIGATION
             </div>
             <ul className="space-y-2.5 text-xs font-display font-semibold text-slate-400">
@@ -74,7 +74,7 @@ export const RoboFooter: React.FC<RoboFooterProps> = ({ onNavigate, onOpenFaq })
 
           {/* Tournament Formats */}
           <div>
-            <div className="text-[10px] font-mono-code font-bold tracking-[0.2em] text-slate-300 uppercase mb-4">
+            <div className="text-xs font-mono-code font-bold tracking-[0.2em] text-slate-300 uppercase mb-4">
               DISCIPLINES
             </div>
             <ul className="space-y-2.5 text-xs font-display font-semibold text-slate-400">
@@ -99,7 +99,7 @@ export const RoboFooter: React.FC<RoboFooterProps> = ({ onNavigate, onOpenFaq })
 
           {/* Contact / Inquiries */}
           <div>
-            <div className="text-[10px] font-mono-code font-bold tracking-[0.2em] text-slate-300 uppercase mb-4">
+            <div className="text-xs font-mono-code font-bold tracking-[0.2em] text-slate-300 uppercase mb-4">
               COORDINATION
             </div>
             <div className="space-y-3 text-xs text-slate-400 font-light">
@@ -110,7 +110,7 @@ export const RoboFooter: React.FC<RoboFooterProps> = ({ onNavigate, onOpenFaq })
               >
                 contact@robokidoathon.se
               </a>
-              <span className="inline-block text-[10px] font-mono-code text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-[2px] bg-emerald-500/10">
+              <span className="inline-block text-xs font-mono-code text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-[2px] bg-emerald-500/10">
                 ● 2026 REGISTRATION ACTIVE
               </span>
             </div>

@@ -30,7 +30,7 @@ export const ParticipationFees: React.FC<ParticipationFeesProps> = ({ showPaymen
             <span>{t(f.who)}</span>
             <span className="flex items-center gap-2">
               {t(f.note) && (
-                <span className="text-[10px] font-mono-code font-bold uppercase px-1.5 py-0.5 bg-[#0A1930] text-[#FFCD00]">
+                <span className="text-xs font-mono-code font-bold uppercase px-1.5 py-0.5 bg-[#0A1930] text-[#FFCD00]">
                   {t(f.note)}
                 </span>
               )}

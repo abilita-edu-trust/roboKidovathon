@@ -195,7 +195,7 @@ export const Grid: React.FC<{ cols?: 2 | 3; children: React.ReactNode }> = ({ co
 );
 
 export const Note: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <p className="text-[11px] text-slate-600 italic leading-relaxed">{children}</p>
+  <p className="text-[13px] text-slate-600 italic leading-relaxed">{children}</p>
 );
 
 // ── Name + grade rows (hackathon squads, competition teams) ──

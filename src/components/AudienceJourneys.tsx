@@ -2,6 +2,7 @@ import React, { useId, useRef, useState } from 'react';
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { ArrowRight, CalendarDays, CheckCircle2, Sparkles } from 'lucide-react';
 import { useT } from '../content/useT';
+import { sentenceLines } from '../content/richText';
 import { siteIcon } from '../content/icons';
 import { hasLabel } from '../content/sections/frame';
 import type { JourneyData } from '../content/sections/journey';
@@ -51,8 +52,8 @@ export const AudienceJourneys: React.FC<AudienceJourneysProps> = ({ data, go }) 
 
   return (
     <MotionConfig reducedMotion="user">
-      <section className="w-full bg-white text-[#0A1930] py-14 sm:py-20 px-4 sm:px-6 lg:px-10 border-t border-slate-200">
-        <div className="max-w-[1400px] mx-auto space-y-10">
+      <section className="w-full bg-white text-[#0A1930] py-8 sm:py-10 px-4 sm:px-6 lg:px-10 border-t border-slate-200">
+        <div className="max-w-[1400px] mx-auto space-y-8">
 
           {/* ── SECTION HEADER ── */}
           <div className="text-center max-w-3xl mx-auto space-y-3">
@@ -63,7 +64,7 @@ export const AudienceJourneys: React.FC<AudienceJourneysProps> = ({ data, go }) 
               </div>
             )}
             <h2 className="font-headline font-black text-3xl sm:text-4xl lg:text-5xl uppercase tracking-tight text-[#0A1930]">
-              {t(data.title)}
+              {sentenceLines(t(data.title))}
             </h2>
             {t(data.intro) && <p className="text-sm text-slate-600 font-light leading-relaxed">{t(data.intro)}</p>}
           </div>
@@ -87,7 +88,7 @@ export const AudienceJourneys: React.FC<AudienceJourneysProps> = ({ data, go }) 
                   </div>
                 ))}
               </div>
-              {t(data.note) && <div className="text-[11px] font-mono-code text-slate-400 text-center lg:text-right shrink-0">{t(data.note)}</div>}
+              {t(data.note) && <div className="text-[13px] font-mono-code text-slate-400 text-center lg:text-right shrink-0">{t(data.note)}</div>}
             </div>
           )}
         </div>

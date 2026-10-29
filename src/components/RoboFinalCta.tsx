@@ -26,10 +26,10 @@ export const RoboFinalCta: React.FC<RoboFinalCtaProps> = ({
 
       <div className="relative max-w-[1440px] mx-auto px-6 sm:px-10 py-20 md:py-28">
         <div className="border-b border-white/10 pb-6 mb-12 flex items-center justify-between">
-          <span className="text-[10px] font-mono-code font-bold tracking-[0.25em] text-[#E2FF00] uppercase">
+          <span className="text-xs font-mono-code font-bold tracking-[0.25em] text-[#E2FF00] uppercase">
             REGISTRATION OPEN // VÄSTERÅS 2026 SEASON
           </span>
-          <span className="text-[10px] font-mono-code text-slate-400 uppercase tracking-widest hidden sm:inline">
+          <span className="text-xs font-mono-code text-slate-400 uppercase tracking-widest hidden sm:inline">
             SWEDEN NATIONAL PILOT
           </span>
         </div>
@@ -55,7 +55,7 @@ export const RoboFinalCta: React.FC<RoboFinalCtaProps> = ({
                 { label: 'CITY FINALS ARENA', date: 'MARCH 21, 2026', highlight: true },
               ].map((item) => (
                 <div key={item.label} className="space-y-1">
-                  <span className="block text-[9px] font-mono-code font-bold text-slate-400 uppercase">
+                  <span className="block text-xs font-mono-code font-bold text-slate-400 uppercase">
                     {item.label}
                   </span>
                   <span className={`block text-xs font-display font-bold uppercase ${
@@ -91,7 +91,7 @@ export const RoboFinalCta: React.FC<RoboFinalCtaProps> = ({
               VIEW TECHNICAL RULEBOOK →
             </button>
 
-            <p className="text-[10px] font-mono-code text-slate-500 text-center uppercase tracking-widest pt-2">
+            <p className="text-xs font-mono-code text-slate-500 text-center uppercase tracking-widest pt-2">
               TURNKEY EXECUTION · ZERO ADMINISTRATIVE BURDEN
             </p>
           </div>

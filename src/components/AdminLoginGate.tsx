@@ -69,7 +69,7 @@ export const AdminLoginGate: React.FC<{ children: React.ReactNode }> = ({ childr
   if (state === 'allowed') {
     return (
       <>
-        <div className="fixed bottom-4 right-4 z-40 flex items-center gap-2 bg-[#0A1930] text-white text-[11px] font-mono-code px-3 py-2 shadow-lg">
+        <div className="fixed bottom-4 right-4 z-40 flex items-center gap-2 bg-[#0A1930] text-white text-[13px] font-mono-code px-3 py-2 shadow-lg">
           <span className="hidden sm:inline">{signedInAs}</span>
           <button type="button" onClick={signOut} className="inline-flex items-center gap-1 text-[#FFCD00] hover:underline uppercase font-bold">
             <LogOut className="w-3.5 h-3.5" /> Sign out

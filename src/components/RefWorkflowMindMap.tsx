@@ -149,7 +149,7 @@ export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({
           className="flex flex-col md:flex-row md:items-end justify-between gap-5 pb-2"
         >
           <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 text-[#006AA7] text-[11px] font-mono-code font-bold tracking-[0.25em] uppercase">
+            <div className="inline-flex items-center gap-2 text-[#006AA7] text-[13px] font-mono-code font-bold tracking-[0.25em] uppercase">
               <GitBranch className="w-3.5 h-3.5" />
               <span>STEM LEARNING PATHWAY</span>
             </div>
@@ -286,7 +286,7 @@ export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({
                           {node.title}
                         </h3>
                         <p
-                          className={`text-[11px] font-mono-code font-bold uppercase tracking-wider transition-colors duration-300 ${
+                          className={`text-[13px] font-mono-code font-bold uppercase tracking-wider transition-colors duration-300 ${
                             node.isFinal ? 'text-[#FFCD00]' : 'text-[#006AA7]'
                           } ${node.hoverSubClass}`}
                         >
@@ -303,7 +303,7 @@ export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({
 
                       {/* Card Bottom CTA Hint */}
                       <div
-                        className={`pt-2.5 border-t flex items-center justify-end text-[10px] font-mono-code font-bold uppercase transition-all duration-300 ${
+                        className={`pt-2.5 border-t flex items-center justify-end text-xs font-mono-code font-bold uppercase transition-all duration-300 ${
                           node.isFinal
                             ? 'border-white/10 text-[#FFCD00]'
                             : 'border-slate-100 text-slate-400'
@@ -344,7 +344,7 @@ export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({
                   {idx < nodes.length - 1 && (
                     <div className="lg:hidden flex items-center justify-center py-2.5 relative z-20">
                       <div
-                        className={`flex items-center gap-1.5 px-3 py-1 border text-[10px] font-mono-code font-bold uppercase tracking-wider transition-colors duration-300 ${
+                        className={`flex items-center gap-1.5 px-3 py-1 border text-xs font-mono-code font-bold uppercase tracking-wider transition-colors duration-300 ${
                           isCardHovered || isNextCardHovered
                             ? 'bg-[#FFCD00] text-[#0A1930] border-[#FFCD00] shadow-sm'
                             : 'bg-sky-50 text-[#006AA7] border-sky-200'
@@ -380,7 +380,7 @@ export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({
           className="bg-[#0A1930] text-white p-6 sm:p-8 border border-slate-800 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-5 my-6"
         >
           <div className="space-y-1.5 text-center sm:text-left">
-            <span className="text-[10px] font-mono-code font-bold tracking-widest text-[#FFCD00] uppercase block">
+            <span className="text-xs font-mono-code font-bold tracking-widest text-[#FFCD00] uppercase block">
               STEPS 01 TO 06 · IN-CLASS CURRICULUM
             </span>
             <h4 className="font-headline font-black text-xl sm:text-2xl uppercase tracking-tight text-white">
@@ -410,7 +410,7 @@ export const RefWorkflowMindMap: React.FC<RefWorkflowMindMapProps> = ({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-slate-100 text-[11px] font-mono-code text-slate-500"
+          className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-slate-100 text-[13px] font-mono-code text-slate-500"
         >
           <div className="flex items-center gap-2 font-medium">
             <Sparkles className="w-3.5 h-3.5 text-[#006AA7]" />

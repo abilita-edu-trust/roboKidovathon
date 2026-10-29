@@ -121,7 +121,7 @@ export const ForSchoolsPage: React.FC<ForSchoolsPageProps> = ({
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="border-b border-slate-200 pb-12"
         >
-          <span className="text-[10px] font-mono-code font-medium tracking-[0.2em] text-slate-500 uppercase block mb-3">
+          <span className="text-xs font-mono-code font-medium tracking-[0.2em] text-slate-500 uppercase block mb-3">
             REKTORER &amp; LÄRARE // VÄSTERÅS 2026
           </span>
 
@@ -158,7 +158,7 @@ export const ForSchoolsPage: React.FC<ForSchoolsPageProps> = ({
         {/* ── 3-STEP ONBOARDING PROCESS ── */}
         <div className="space-y-6">
           <div className="border-b border-slate-200 pb-4">
-            <span className="text-[10px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase block">
+            <span className="text-xs font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase block">
               HOW SCHOOL REGISTRATION WORKS
             </span>
             <h2 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#0A1930] mt-1">
@@ -232,7 +232,7 @@ export const ForSchoolsPage: React.FC<ForSchoolsPageProps> = ({
                         transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                         className="overflow-hidden"
                       >
-                        <p className="text-[11px] text-slate-500 font-light leading-relaxed pt-2 border-t border-slate-200">
+                        <p className="text-[13px] text-slate-500 font-light leading-relaxed pt-2 border-t border-slate-200">
                           {reason.detail}
                         </p>
                       </motion.div>
@@ -247,7 +247,7 @@ export const ForSchoolsPage: React.FC<ForSchoolsPageProps> = ({
         {/* ── WHAT THE SCHOOL NEEDS ── */}
         <div className="p-8 sm:p-12 bg-[#F8FAFC] border border-slate-200 space-y-6">
           <div className="border-b border-slate-200 pb-4">
-            <span className="text-[10px] font-mono-code font-bold text-[#006AA7] uppercase tracking-wider block">
+            <span className="text-xs font-mono-code font-bold text-[#006AA7] uppercase tracking-wider block">
               REQUIREMENTS CHECKLIST
             </span>
             <h2 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#0A1930] mt-1">
@@ -328,7 +328,7 @@ export const ForSchoolsPage: React.FC<ForSchoolsPageProps> = ({
                     <div className="flex items-start gap-3">
                       <HelpCircle className="w-4 h-4 text-[#006AA7] shrink-0 mt-0.5" />
                       <div>
-                        <span className="text-[9px] font-mono-code font-bold tracking-widest text-[#006AA7] uppercase block mb-1">
+                        <span className="text-xs font-mono-code font-bold tracking-widest text-[#006AA7] uppercase block mb-1">
                           {item.category}
                         </span>
                         <span className="font-headline font-bold text-sm sm:text-base text-[#0A1930]">
@@ -364,7 +364,7 @@ export const ForSchoolsPage: React.FC<ForSchoolsPageProps> = ({
         {/* ── ENROL COHORT ACTION BANNER ── */}
         <div className="p-8 sm:p-12 bg-[#FFCD00] text-[#0A1930] grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-md">
           <div className="lg:col-span-8 space-y-2">
-            <span className="text-[10px] font-mono-code font-bold uppercase tracking-widest text-[#0A1930] block">
+            <span className="text-xs font-mono-code font-bold uppercase tracking-widest text-[#0A1930] block">
               RESERVE WORKSHOP DATES FOR AUTUMN 2026
             </span>
             <h3 className="font-headline font-black text-3xl sm:text-4xl uppercase">

@@ -17,7 +17,7 @@ export const RoboCompetitionTracks: React.FC<RoboCompetitionTracksProps> = ({
       <div className="max-w-[1440px] mx-auto px-6 sm:px-10 pt-20 md:pt-28 pb-12">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-[#07111F]/10">
           <div>
-            <span className="text-[10px] font-mono-code font-bold tracking-[0.25em] text-[#0052FF] uppercase block mb-3">
+            <span className="text-xs font-mono-code font-bold tracking-[0.25em] text-[#0052FF] uppercase block mb-3">
               04 / TOURNAMENT DISCIPLINES
             </span>
             <h2
@@ -44,10 +44,10 @@ export const RoboCompetitionTracks: React.FC<RoboCompetitionTracksProps> = ({
         <div className="lg:col-span-6 bg-[#0052FF] text-white p-8 sm:p-12 lg:p-16 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between gap-4 mb-8">
-              <span className="text-[10px] font-mono-code font-bold tracking-[0.25em] text-white/70 uppercase border border-white/30 px-2.5 py-1 rounded-[2px]">
+              <span className="text-xs font-mono-code font-bold tracking-[0.25em] text-white/70 uppercase border border-white/30 px-2.5 py-1 rounded-[2px]">
                 CAT A // JUNIOR LEAGUE
               </span>
-              <span className="text-[10px] font-mono-code font-bold tracking-[0.15em] text-white bg-black/30 px-3 py-1 rounded-[2px]">
+              <span className="text-xs font-mono-code font-bold tracking-[0.15em] text-white bg-black/30 px-3 py-1 rounded-[2px]">
                 ⏱ 3 MIN NON-STOP
               </span>
             </div>
@@ -72,7 +72,7 @@ export const RoboCompetitionTracks: React.FC<RoboCompetitionTracksProps> = ({
                 { label: 'SCORING CRITERIA', value: 'Fewest remaining balls in own court wins' },
               ].map((row) => (
                 <div key={row.label} className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 text-xs font-mono-code border-b border-white/10 pb-2.5">
-                  <span className="text-white/60 text-[10px] uppercase">{row.label}</span>
+                  <span className="text-white/60 text-xs uppercase">{row.label}</span>
                   <span className="text-white font-bold">{row.value}</span>
                 </div>
               ))}
@@ -104,7 +104,7 @@ export const RoboCompetitionTracks: React.FC<RoboCompetitionTracksProps> = ({
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#07111F]/80 via-transparent to-transparent pointer-events-none" />
           <div className="absolute bottom-6 left-6 right-6 p-4 rounded-[2px] bg-black/80 backdrop-blur-md border border-white/15">
-            <span className="block text-[9px] font-mono-code text-[#0052FF] uppercase font-bold">
+            <span className="block text-xs font-mono-code text-[#0052FF] uppercase font-bold">
               [ ARENA SPECIFICATION 01 ]
             </span>
             <span className="block text-xs font-display font-bold text-white uppercase tracking-wider mt-0.5">
@@ -124,7 +124,7 @@ export const RoboCompetitionTracks: React.FC<RoboCompetitionTracksProps> = ({
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#07111F]/80 via-transparent to-transparent pointer-events-none" />
           <div className="absolute bottom-6 left-6 right-6 p-4 rounded-[2px] bg-black/80 backdrop-blur-md border border-white/15">
-            <span className="block text-[9px] font-mono-code text-[#E2FF00] uppercase font-bold">
+            <span className="block text-xs font-mono-code text-[#E2FF00] uppercase font-bold">
               [ ARENA SPECIFICATION 02 ]
             </span>
             <span className="block text-xs font-display font-bold text-white uppercase tracking-wider mt-0.5">
@@ -136,10 +136,10 @@ export const RoboCompetitionTracks: React.FC<RoboCompetitionTracksProps> = ({
         <div className="lg:col-span-6 bg-[#07111F] text-white p-8 sm:p-12 lg:p-16 flex flex-col justify-between order-1 lg:order-2">
           <div>
             <div className="flex items-center justify-between gap-4 mb-8">
-              <span className="text-[10px] font-mono-code font-bold tracking-[0.25em] text-[#E2FF00] uppercase border border-[#E2FF00]/30 px-2.5 py-1 rounded-[2px]">
+              <span className="text-xs font-mono-code font-bold tracking-[0.25em] text-[#E2FF00] uppercase border border-[#E2FF00]/30 px-2.5 py-1 rounded-[2px]">
                 CAT B // SENIOR LEAGUE
               </span>
-              <span className="text-[10px] font-mono-code font-bold tracking-[0.15em] text-white bg-white/10 px-3 py-1 rounded-[2px]">
+              <span className="text-xs font-mono-code font-bold tracking-[0.15em] text-white bg-white/10 px-3 py-1 rounded-[2px]">
                 ⏱ 5 MIN STRATEGIC
               </span>
             </div>
@@ -164,7 +164,7 @@ export const RoboCompetitionTracks: React.FC<RoboCompetitionTracksProps> = ({
                 { label: 'SCORING CRITERIA', value: 'Tower height, tier count & stability at buzzer' },
               ].map((row) => (
                 <div key={row.label} className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 text-xs font-mono-code border-b border-white/8 pb-2.5">
-                  <span className="text-slate-400 text-[10px] uppercase">{row.label}</span>
+                  <span className="text-slate-400 text-xs uppercase">{row.label}</span>
                   <span className="text-white font-bold">{row.value}</span>
                 </div>
               ))}

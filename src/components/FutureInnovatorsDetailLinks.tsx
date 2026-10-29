@@ -13,10 +13,10 @@ interface FutureInnovatorsDetailLinksProps {
 export const FutureInnovatorsDetailLinks: React.FC<FutureInnovatorsDetailLinksProps> = ({ data, go }) => {
   const { t } = useT();
   return (
-  <section className="w-full bg-[#F8FAFC] text-[#0A1930] py-14 sm:py-16 px-4 sm:px-6 lg:px-10 border-t border-slate-200">
+  <section className="w-full bg-[#F8FAFC] text-[#0A1930] py-8 sm:py-10 px-4 sm:px-6 lg:px-10 border-t border-slate-200">
     <div className="max-w-[1560px] mx-auto space-y-6">
       <div>
-        <span className="text-[11px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase block mb-2">
+        <span className="text-[13px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase block mb-2">
           {t(data.eyebrow)}
         </span>
         <h2 className="font-headline font-black text-3xl sm:text-4xl uppercase tracking-tight">{t(data.title)}</h2>

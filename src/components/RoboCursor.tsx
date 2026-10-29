@@ -334,7 +334,7 @@ export const RoboCursor: React.FC = () => {
         <button
           onClick={toggleEnabled}
           title="Enable Robot Cursor"
-          className="group flex items-center gap-2 px-3 py-1.5 bg-[#0A1930]/90 hover:bg-[#0A1930] text-[#FFCD00] border border-[#FFCD00]/40 text-[10px] font-mono-code font-bold tracking-wider uppercase backdrop-blur-md shadow-lg transition-all"
+          className="group flex items-center gap-2 px-3 py-1.5 bg-[#0A1930]/90 hover:bg-[#0A1930] text-[#FFCD00] border border-[#FFCD00]/40 text-xs font-mono-code font-bold tracking-wider uppercase backdrop-blur-md shadow-lg transition-all"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-slate-500 group-hover:bg-[#FFCD00]" />
           <span>ROBOT CURSOR: OFF</span>
@@ -473,7 +473,7 @@ export const RoboCursor: React.FC = () => {
             <motion.div
               initial={{ opacity: 0, y: -4 }}
               animate={{ opacity: 1, y: 0 }}
-              className="absolute -top-3 left-8 px-1.5 py-0.2 bg-[#0A1930]/95 text-[#FFCD00] border border-[#FFCD00]/70 text-[8px] font-mono-code font-black tracking-widest uppercase shadow-md pointer-events-none whitespace-nowrap"
+              className="absolute -top-3 left-8 px-1.5 py-0.2 bg-[#0A1930]/95 text-[#FFCD00] border border-[#FFCD00]/70 text-xs font-mono-code font-black tracking-widest uppercase shadow-md pointer-events-none whitespace-nowrap"
             >
               {currentConfig.label}
             </motion.div>
@@ -487,20 +487,20 @@ export const RoboCursor: React.FC = () => {
         <button
           onClick={cyclePoseMode}
           title="Cycle Robot Cursor Mode (Auto or Locked Pose)"
-          className="flex items-center gap-1.5 px-2.5 py-1.5 bg-[#0A1930]/95 hover:bg-[#0A1930] text-slate-300 hover:text-white border border-slate-700 text-[9px] font-mono-code font-bold tracking-wider uppercase backdrop-blur-md shadow-lg transition-all hover:border-[#FFCD00]/60"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 bg-[#0A1930]/95 hover:bg-[#0A1930] text-slate-300 hover:text-white border border-slate-700 text-xs font-mono-code font-bold tracking-wider uppercase backdrop-blur-md shadow-lg transition-all hover:border-[#FFCD00]/60"
         >
           <span className="text-[#FFCD00]">ROBO:</span>
           <span className="text-white font-black">
             {lockedPose === 'auto' ? `AUTO (${currentConfig.label})` : currentConfig.label}
           </span>
-          <span className="text-[9px] text-slate-400">↻</span>
+          <span className="text-xs text-slate-400">↻</span>
         </button>
 
         {/* Turn On/Off */}
         <button
           onClick={toggleEnabled}
           title="Toggle Robot Cursor on/off"
-          className="flex items-center gap-1.5 px-2.5 py-1.5 bg-[#0A1930]/95 hover:bg-[#0A1930] text-[#FFCD00] border border-[#FFCD00]/40 text-[9px] font-mono-code font-bold tracking-wider uppercase backdrop-blur-md shadow-lg transition-all"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 bg-[#0A1930]/95 hover:bg-[#0A1930] text-[#FFCD00] border border-[#FFCD00]/40 text-xs font-mono-code font-bold tracking-wider uppercase backdrop-blur-md shadow-lg transition-all"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-[#FFCD00] shadow-[0_0_6px_#FFCD00] animate-pulse" />
           <span>ON</span>

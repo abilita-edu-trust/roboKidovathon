@@ -77,7 +77,7 @@ export const RefFooter: React.FC<RefFooterProps> = ({ onNavigate, onSelectPartne
                 <span>{footer.email}</span>
               </li>
               {footer.orgLines.map((line, i) => (
-                <li key={i} className={`text-slate-400 text-[11px] font-mono-code${i === 0 ? ' pt-1' : ''}`}>
+                <li key={i} className={`text-slate-400 text-[13px] font-mono-code${i === 0 ? ' pt-1' : ''}`}>
                   {line}
                 </li>
               ))}
@@ -127,7 +127,7 @@ export const RefFooter: React.FC<RefFooterProps> = ({ onNavigate, onSelectPartne
         </div>
 
         {/* Bottom copyright & compliance */}
-        <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] font-mono-code text-slate-400">
+        <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono-code text-slate-400">
           <span>{footer.copyright}</span>
           <div className="flex flex-wrap items-center gap-4">
             <span>{footer.complianceLine ? pickLang(footer.complianceLine, sv) : 'LOW-VOLTAGE 6V HARDWARE · GDPR-COMPLIANT STUDENT PRIVACY'}</span>
@@ -160,7 +160,7 @@ export const RefFooter: React.FC<RefFooterProps> = ({ onNavigate, onSelectPartne
             rel="noopener noreferrer"
             className="group inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1 px-4 py-2.5 border border-white/15 hover:border-[#FFCD00] transition-colors"
           >
-            <span className="text-[10px] sm:text-[11px] font-mono-code font-bold uppercase tracking-[0.2em] text-slate-300">
+            <span className="text-xs sm:text-sm font-mono-code font-bold uppercase tracking-[0.2em] text-slate-300">
               Developed &amp; maintained by
             </span>
             <span className="font-headline font-black normal-case text-base sm:text-lg tracking-tight text-[#FFCD00] group-hover:text-white transition-colors">

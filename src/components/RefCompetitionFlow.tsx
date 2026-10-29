@@ -199,7 +199,7 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
                         {stage.num}
                       </span>
                       <span
-                        className={`text-[10px] font-mono-code font-bold uppercase tracking-wider ${
+                        className={`text-xs font-mono-code font-bold uppercase tracking-wider ${
                           stage.isDark
                             ? 'text-[#FFCD00]'
                             : 'text-[#006AA7]'
@@ -268,10 +268,10 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
                   >
                     {stage.specs.map((spec) => (
                       <div key={spec.label} className="space-y-0.5">
-                        <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider block">
+                        <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">
                           {spec.label}
                         </span>
-                        <span className="text-[11px] font-bold block truncate" title={spec.value}>
+                        <span className="text-[13px] font-bold block truncate" title={spec.value}>
                           {spec.value}
                         </span>
                       </div>
@@ -286,16 +286,16 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
                   >
                     <div className="flex items-center gap-1.5">
                       <Calendar className="w-3.5 h-3.5 opacity-80" />
-                      <span className="text-[11px] uppercase tracking-wider">{stage.timing}</span>
+                      <span className="text-[13px] uppercase tracking-wider">{stage.timing}</span>
                     </div>
 
                     {idx < stages.length - 1 && (
-                      <span className="hidden lg:inline text-[10px] text-slate-400 uppercase tracking-widest font-normal">
+                      <span className="hidden lg:inline text-xs text-slate-400 uppercase tracking-widest font-normal">
                         STEP {idx + 1} OF 3
                       </span>
                     )}
                     {stage.isDark && (
-                      <span className="text-[10px] text-[#FFCD00] uppercase tracking-widest font-bold">
+                      <span className="text-xs text-[#FFCD00] uppercase tracking-widest font-bold">
                         GRAND FINALE
                       </span>
                     )}
@@ -317,7 +317,7 @@ export const RefCompetitionFlow: React.FC<RefCompetitionFlowProps> = ({
           className="bg-white border-2 border-[#006AA7]/20 p-6 sm:p-8 shadow-lg flex flex-col lg:flex-row items-center justify-between gap-5 my-4"
         >
           <div className="space-y-1.5 text-center lg:text-left">
-            <span className="text-[10px] font-mono-code font-bold tracking-widest text-[#006AA7] uppercase block">
+            <span className="text-xs font-mono-code font-bold tracking-widest text-[#006AA7] uppercase block">
               STAGE 02 · 12–25 NOVEMBER 2026 QUALIFIERS
             </span>
             <h4 className="font-headline font-black text-xl sm:text-2xl uppercase tracking-tight text-[#0A1930]">

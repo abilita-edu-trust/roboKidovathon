@@ -224,7 +224,7 @@ export const RefTrackComparison: React.FC<RefTrackComparisonProps> = ({
                   {/* Top Corner Floating Badges (Clean & Out of the Way) */}
                   <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between z-10 pointer-events-none">
                     {track.id === 'robo-trials' || track.id === 'robo-quiz' ? (
-                      <span className="bg-white/95 backdrop-blur-xs text-[#0A1930] text-[11px] font-mono-code font-black px-3.5 py-1.5 shadow-md tracking-wider uppercase border border-slate-100">
+                      <span className="bg-white/95 backdrop-blur-xs text-[#0A1930] text-[13px] font-mono-code font-black px-3.5 py-1.5 shadow-md tracking-wider uppercase border border-slate-100">
                         {track.badge}
                       </span>
                     ) : (
@@ -246,7 +246,7 @@ export const RefTrackComparison: React.FC<RefTrackComparisonProps> = ({
                   
                   {/* Division Label & Description */}
                   <div className="space-y-1.5">
-                    <span className={`text-[11px] font-mono-code font-black uppercase tracking-wider block ${track.subtitleColor}`}>
+                    <span className={`text-[13px] font-mono-code font-black uppercase tracking-wider block ${track.subtitleColor}`}>
                       {track.division}
                     </span>
                     <p className="text-sm text-slate-700 font-medium leading-snug">
@@ -261,7 +261,7 @@ export const RefTrackComparison: React.FC<RefTrackComparisonProps> = ({
                         key={sIdx}
                         whileHover={{ scale: 1.05, y: -2 }}
                         transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-                        className={`inline-flex items-center gap-1.5 text-[11px] font-mono-code font-bold px-2.5 py-1 border ${track.subtitleColor} border-current/20 bg-current/5 cursor-default transition-colors`}
+                        className={`inline-flex items-center gap-1.5 text-[13px] font-mono-code font-bold px-2.5 py-1 border ${track.subtitleColor} border-current/20 bg-current/5 cursor-default transition-colors`}
                       >
                         <CheckCircle2 className={`w-3 h-3 ${track.checkColor} transition-transform group-hover:rotate-12`} />
                         {skill}
@@ -288,7 +288,7 @@ export const RefTrackComparison: React.FC<RefTrackComparisonProps> = ({
         </div>
 
         {/* ── SECTION FOOTER RIBBON ── */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-slate-200 text-[11px] font-mono-code text-slate-500 font-bold uppercase tracking-widest">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-slate-200 text-[13px] font-mono-code text-slate-500 font-bold uppercase tracking-widest">
           <span>VÄSTERÅS FUTURE INNOVATORS 2026 · OFFICIAL COMPETITION LEAGUE</span>
           <span className="hidden sm:inline">DECEMBER 4–5, 2026 · STANDARDIZED LGR22 FORMAT</span>
         </div>

@@ -12,7 +12,7 @@ export const VenueBanner: React.FC = () => {
         />
       </div>
       <div className="lg:col-span-8 space-y-2">
-        <span className="inline-block text-[10px] font-mono-code font-bold text-[#006AA7] uppercase tracking-wider">
+        <span className="inline-block text-xs font-mono-code font-bold text-[#006AA7] uppercase tracking-wider">
           FINAL VENUE
         </span>
         <h2 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#0A1930]">

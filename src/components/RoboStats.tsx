@@ -15,7 +15,7 @@ export const RoboStats: React.FC = () => {
         {/* Eyebrow + Section Headline */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6 pb-8 border-b border-[#07111F]/10">
           <div>
-            <span className="text-[10px] font-mono-code font-bold tracking-[0.25em] text-[#0052FF] uppercase block mb-3">
+            <span className="text-xs font-mono-code font-bold tracking-[0.25em] text-[#0052FF] uppercase block mb-3">
               02 / SCALE & IMPACT — 2026 PILOT COHORT
             </span>
             <h2
@@ -48,7 +48,7 @@ export const RoboStats: React.FC = () => {
                 <span className="block font-display font-extrabold text-base uppercase tracking-wider text-[#07111F]">
                   {stat.label}
                 </span>
-                <span className="block text-[10px] font-mono-code tracking-[0.15em] text-[#4A5568] uppercase mt-0.5">
+                <span className="block text-xs font-mono-code tracking-[0.15em] text-[#4A5568] uppercase mt-0.5">
                   {stat.sub}
                 </span>
               </div>

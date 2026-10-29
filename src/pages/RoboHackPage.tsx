@@ -30,7 +30,7 @@ const Flow: React.FC<{ items: string[]; light?: boolean }> = ({ items, light }) 
     {items.map((item, i) => (
       <li key={i} className="flex items-center gap-2">
         <span
-          className={`text-[11px] sm:text-xs font-mono-code font-bold uppercase tracking-wide px-3 py-2 ${
+          className={`text-[13px] sm:text-sm font-mono-code font-bold uppercase tracking-wide px-3 py-2 ${
             light ? 'bg-white/10 border border-white/20 text-white' : 'bg-white border border-slate-200 text-[#0A1930]'
           }`}
         >
@@ -110,7 +110,7 @@ export const RoboHackProblem: React.FC<Props<RhProblemData>> = ({ data, go }) =>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           <div className="lg:col-span-7 bg-white border border-slate-200 p-5 sm:p-6 space-y-3">
-            <span className="text-[10px] font-mono-code font-bold uppercase tracking-widest text-[#006AA7] block">{t(data.ideasTitle)}</span>
+            <span className="text-xs font-mono-code font-bold uppercase tracking-widest text-[#006AA7] block">{t(data.ideasTitle)}</span>
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
               {data.ideas.map((idea, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-[#0A1930]">
@@ -169,7 +169,7 @@ export const RoboHackEventSection: React.FC<Props<RhEventData>> = ({ data, go })
                 </button>
               )}
             </div>
-            <p className="text-[11px] font-mono-code font-bold uppercase tracking-widest text-white/60 pt-1 border-t border-white/10">
+            <p className="text-[13px] font-mono-code font-bold uppercase tracking-widest text-white/60 pt-1 border-t border-white/10">
               {t(data.poweredByLabel)} {data.poweredBy}
             </p>
           </div>
@@ -202,18 +202,18 @@ export const RoboHackTracks: React.FC<Props<RhTracksData>> = ({ data, go }) => {
                     </span>
                     <div>
                       <h3 className="font-headline font-black text-2xl uppercase tracking-tight leading-none">{t(track.title)}</h3>
-                      <p className="text-[11px] font-mono-code font-bold uppercase tracking-widest text-[#FFCD00] mt-1">{t(track.tagline)}</p>
+                      <p className="text-[13px] font-mono-code font-bold uppercase tracking-widest text-[#FFCD00] mt-1">{t(track.tagline)}</p>
                     </div>
                   </div>
                   <p className="text-sm sm:text-base text-white/80 font-light leading-relaxed">{t(track.description)}</p>
                   {track.interests.length > 0 && (
                     <div className="space-y-2 pt-2 border-t border-white/10">
-                      <span className="text-[10px] font-mono-code font-bold uppercase tracking-widest text-white/50 block">
+                      <span className="text-xs font-mono-code font-bold uppercase tracking-widest text-white/50 block">
                         {t(data.interestsLabel)}
                       </span>
                       <div className="flex flex-wrap gap-2">
                         {track.interests.map((tag, j) => (
-                          <span key={j} className="text-[10px] font-mono-code font-bold text-white bg-white/10 border border-white/15 px-2.5 py-1 uppercase tracking-wide">
+                          <span key={j} className="text-xs font-mono-code font-bold text-white bg-white/10 border border-white/15 px-2.5 py-1 uppercase tracking-wide">
                             {t(tag)}
                           </span>
                         ))}
@@ -263,7 +263,7 @@ export const RoboHackChallenges: React.FC<Props<RhChallengesData>> = ({ data }) 
               <p className="text-sm font-medium text-[#006AA7] leading-snug">{t(c.question)}</p>
               {c.examples.length > 0 && (
                 <div className="space-y-2 pt-2 border-t border-slate-100">
-                  <span className="text-[10px] font-mono-code font-bold uppercase tracking-widest text-slate-500 block">{t(data.examplesLabel)}</span>
+                  <span className="text-xs font-mono-code font-bold uppercase tracking-widest text-slate-500 block">{t(data.examplesLabel)}</span>
                   <ul className="space-y-1.5">
                     {c.examples.map((ex, j) => (
                       <li key={j} className="text-xs sm:text-sm text-slate-600 flex items-start gap-2">
@@ -301,7 +301,7 @@ export const RoboHackProgrammes: React.FC<Props<RhProgrammesData>> = ({ data }) 
             <div key={i} className={`p-6 sm:p-8 space-y-4 border ${i === 1 ? 'bg-[#0A1930] text-white border-[#0A1930]' : 'bg-[#F8FAFC] border-slate-200'}`}>
               <div>
                 <h3 className="font-headline font-black text-3xl uppercase tracking-tight">{t(p.name)}</h3>
-                <p className={`text-[11px] font-mono-code font-bold uppercase tracking-widest mt-1 ${i === 1 ? 'text-[#FFCD00]' : 'text-[#006AA7]'}`}>{t(p.audience)}</p>
+                <p className={`text-[13px] font-mono-code font-bold uppercase tracking-widest mt-1 ${i === 1 ? 'text-[#FFCD00]' : 'text-[#006AA7]'}`}>{t(p.audience)}</p>
               </div>
               <p className={`text-sm sm:text-base font-light leading-relaxed ${i === 1 ? 'text-white/80' : 'text-slate-600'}`}>{t(p.description)}</p>
               <Flow items={p.flow.map(t)} light={i === 1} />

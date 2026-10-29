@@ -35,7 +35,7 @@ export const EventsPage: React.FC<EventsPageProps> = ({
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="border-b border-slate-200 pb-12"
         >
-          <span className="text-[10px] font-mono-code font-medium tracking-[0.2em] text-slate-500 uppercase block mb-3">
+          <span className="text-xs font-mono-code font-medium tracking-[0.2em] text-slate-500 uppercase block mb-3">
             VÄSTERÅS TOURNAMENT CALENDAR // AUTUMN 2026
           </span>
 
@@ -63,7 +63,7 @@ export const EventsPage: React.FC<EventsPageProps> = ({
             className="border border-slate-200 bg-[#F8FAFC] p-8 sm:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 shadow-sm"
           >
             <div className="lg:col-span-3 space-y-2">
-              <span className="inline-block text-[10px] font-mono-code font-bold text-[#006AA7] uppercase tracking-wider">
+              <span className="inline-block text-xs font-mono-code font-bold text-[#006AA7] uppercase tracking-wider">
                 STAGE 01 QUALIFIERS
               </span>
               <div className="flex items-center gap-2 text-[#006AA7] pt-2">
@@ -109,7 +109,7 @@ export const EventsPage: React.FC<EventsPageProps> = ({
               }`}
             >
               <div className="lg:col-span-3 space-y-2">
-                <span className="inline-block text-[10px] font-mono-code font-bold text-[#0A1930] uppercase tracking-wider">
+                <span className="inline-block text-xs font-mono-code font-bold text-[#0A1930] uppercase tracking-wider">
                   {event.day}
                 </span>
                 <div className="flex items-center gap-2 text-[#006AA7] pt-2">
@@ -145,7 +145,7 @@ export const EventsPage: React.FC<EventsPageProps> = ({
                       {event.categories.map((c) => (
                         <span
                           key={c}
-                          className="text-[10px] font-mono-code font-bold text-[#0A1930] bg-[#F8FAFC] border border-slate-200 px-3 py-1.5 uppercase tracking-wide"
+                          className="text-xs font-mono-code font-bold text-[#0A1930] bg-[#F8FAFC] border border-slate-200 px-3 py-1.5 uppercase tracking-wide"
                         >
                           {c}
                         </span>

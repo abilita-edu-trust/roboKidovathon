@@ -27,7 +27,7 @@ export const TracksGrid: React.FC<TracksGridProps> = ({ onSelectTrack }) => {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-white/[0.08]">
           <div>
-            <div className="inline-flex items-center gap-2 text-[10px] font-mono-code font-bold tracking-[0.25em] text-indigo-400 uppercase mb-3">
+            <div className="inline-flex items-center gap-2 text-xs font-mono-code font-bold tracking-[0.25em] text-indigo-400 uppercase mb-3">
               <Terminal className="w-3.5 h-3.5" />
               <span>FRONTIER DOMAINS // 4 PARALLEL TRACKS</span>
             </div>
@@ -79,13 +79,13 @@ export const TracksGrid: React.FC<TracksGridProps> = ({ onSelectTrack }) => {
                       <div className="p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-md">
                         {getIcon(track.iconName)}
                       </div>
-                      <span className="text-[10px] font-mono-code font-bold tracking-[0.2em] text-slate-400 uppercase">
+                      <span className="text-xs font-mono-code font-bold tracking-[0.2em] text-slate-400 uppercase">
                         {track.category}
                       </span>
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <span className="text-[9px] font-mono-code font-semibold px-2.5 py-1 rounded-full bg-white/[0.04] text-slate-300 border border-white/[0.08]">
+                      <span className="text-xs font-mono-code font-semibold px-2.5 py-1 rounded-full bg-white/[0.04] text-slate-300 border border-white/[0.08]">
                         {track.badge}
                       </span>
                       <div className="w-8 h-8 rounded-full bg-white/[0.04] border border-white/[0.08] flex items-center justify-center group-hover:bg-indigo-600 group-hover:border-indigo-500 transition-all duration-200">
@@ -112,7 +112,7 @@ export const TracksGrid: React.FC<TracksGridProps> = ({ onSelectTrack }) => {
                 <div className="mt-8 pt-6 border-t border-white/[0.06]">
                   <div className="flex items-center gap-2 mb-3">
                     <Code2 className="w-3.5 h-3.5 text-slate-400" />
-                    <span className="text-[10px] font-mono-code tracking-[0.15em] text-slate-400 uppercase">
+                    <span className="text-xs font-mono-code tracking-[0.15em] text-slate-400 uppercase">
                       BENCHMARK TECH STACK
                     </span>
                   </div>
@@ -120,7 +120,7 @@ export const TracksGrid: React.FC<TracksGridProps> = ({ onSelectTrack }) => {
                     {track.techStack.map((tech) => (
                       <span
                         key={tech}
-                        className="text-[11px] font-mono-code px-2.5 py-1 rounded-md bg-black/40 text-slate-300 border border-white/[0.06] group-hover:border-white/[0.12] transition-colors"
+                        className="text-[13px] font-mono-code px-2.5 py-1 rounded-md bg-black/40 text-slate-300 border border-white/[0.06] group-hover:border-white/[0.12] transition-colors"
                       >
                         {tech}
                       </span>

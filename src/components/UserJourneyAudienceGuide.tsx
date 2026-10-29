@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, ChevronRight, Sparkles } from 'lucide-react';
 import { fill } from '../content/core';
 import { useT } from '../content/useT';
+import { sentenceLines } from '../content/richText';
 import { siteIcon } from '../content/icons';
 import { hasLabel } from '../content/sections/frame';
 import type { JourneyData } from '../content/sections/journey';
@@ -21,7 +22,7 @@ export const UserJourneyAudienceGuide: React.FC<UserJourneyAudienceGuideProps> =
   const current = data.audiences[activeAudience] ?? data.audiences[0];
 
   return (
-    <section className="w-full bg-white text-[#0A1930] py-14 sm:py-20 px-4 sm:px-6 lg:px-10 border-t border-slate-200 select-none">
+    <section className="w-full bg-white text-[#0A1930] py-8 sm:py-10 px-4 sm:px-6 lg:px-10 border-t border-slate-200 select-none">
       <div className="max-w-[1560px] mx-auto space-y-10">
 
         {/* ── SECTION HEADER ── */}
@@ -32,7 +33,7 @@ export const UserJourneyAudienceGuide: React.FC<UserJourneyAudienceGuideProps> =
           </div>
 
           <h2 className="font-headline font-black text-3xl sm:text-4xl lg:text-5xl uppercase tracking-tight text-[#0A1930]">
-            {t(data.title)}
+            {sentenceLines(t(data.title))}
           </h2>
 
           <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed">
@@ -77,7 +78,7 @@ export const UserJourneyAudienceGuide: React.FC<UserJourneyAudienceGuideProps> =
             {/* Context Card */}
             <div className="bg-[#F8FAFC] border border-slate-200 p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
               <div className="space-y-1.5 max-w-2xl">
-                <div className="text-[11px] font-mono-code font-bold text-[#006AA7] uppercase tracking-wider flex items-center gap-2">
+                <div className="text-[13px] font-mono-code font-bold text-[#006AA7] uppercase tracking-wider flex items-center gap-2">
                   <span>{t(current.tagline)}</span>
                   <span className="text-slate-300">·</span>
                   <span className="text-slate-500">{t(current.eligibility)}</span>
@@ -135,7 +136,7 @@ export const UserJourneyAudienceGuide: React.FC<UserJourneyAudienceGuideProps> =
                       <span className="w-7 h-7 rounded-full bg-[#0A1930] text-[#FFCD00] font-headline font-black text-xs flex items-center justify-center">
                         {i + 1}
                       </span>
-                      <span className="text-[10px] font-mono-code font-bold text-slate-400 group-hover:text-[#006AA7] uppercase tracking-wider">
+                      <span className="text-xs font-mono-code font-bold text-slate-400 group-hover:text-[#006AA7] uppercase tracking-wider">
                         {t(st.badge)}
                       </span>
                     </div>
@@ -149,7 +150,7 @@ export const UserJourneyAudienceGuide: React.FC<UserJourneyAudienceGuideProps> =
                     </p>
                   </div>
 
-                  <div className="pt-4 border-t border-slate-100 flex items-center text-[11px] font-mono-code text-slate-400 group-hover:text-[#006AA7]">
+                  <div className="pt-4 border-t border-slate-100 flex items-center text-[13px] font-mono-code text-slate-400 group-hover:text-[#006AA7]">
                     <span>{fill(t(data.stepLabel).replace('{total}', String(current.steps.length)), { n: i + 1 })}</span>
                     <ChevronRight className="w-3.5 h-3.5 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
@@ -170,7 +171,7 @@ export const UserJourneyAudienceGuide: React.FC<UserJourneyAudienceGuideProps> =
               </div>
 
               {t(data.note) && (
-                <div className="text-[11px] font-mono-code text-slate-400 text-center lg:text-right shrink-0">{t(data.note)}</div>
+                <div className="text-[13px] font-mono-code text-slate-400 text-center lg:text-right shrink-0">{t(data.note)}</div>
               )}
             </div>
 

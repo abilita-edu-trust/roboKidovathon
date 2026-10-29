@@ -26,11 +26,11 @@ export const TeamContact: React.FC = () => {
   const sv = language === 'sv';
   const t = sv ? TEXT.sv : TEXT.en;
   return (
-    <section id="contact-us" aria-labelledby="contact-us-title" className="w-full scroll-mt-24 border-t border-[#0A1930]/10 bg-[#F4F7FB] px-3 py-14 text-[#0A1930] sm:px-6 sm:py-16">
+    <section id="contact-us" aria-labelledby="contact-us-title" className="w-full scroll-mt-24 border-t border-[#0A1930]/10 bg-[#F4F7FB] px-3 py-8 text-[#0A1930] sm:px-6 sm:py-10">
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div className="max-w-xl">
-            <span className="font-mono-code text-[11px] font-bold tracking-widest text-[#013A63]">{t.eyebrow}</span>
+            <span className="font-mono-code text-[13px] font-bold tracking-widest text-[#013A63]">{t.eyebrow}</span>
             <h2 id="contact-us-title" className="mt-1 font-headline text-3xl font-black uppercase tracking-tight sm:text-4xl">{t.title}</h2>
             <p className="mt-2 text-sm leading-relaxed text-slate-600 sm:text-base">{t.lead}</p>
           </div>

@@ -103,12 +103,12 @@ export const VotePrompt: React.FC<VotePromptProps> = ({ onGoToVote, onSubmitIdea
         onClick={() => setOpen(true)}
         tabIndex={pastHero ? 0 : -1}
         aria-hidden={!pastHero}
-        className={`fixed bottom-5 left-5 z-[60] flex items-center gap-2 px-4 py-3 bg-[#059669] hover:bg-[#047857] text-white font-syne font-black text-xs uppercase tracking-wider shadow-xl transition-all duration-300 hover:-translate-y-0.5 ${
+        className={`fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-[60] flex items-center gap-2.5 px-5 py-3.5 sm:px-7 sm:py-4 bg-[#059669] hover:bg-[#047857] text-white font-syne font-black text-sm sm:text-base uppercase border-2 border-white/80 tracking-wider shadow-xl transition-all duration-300 hover:-translate-y-0.5 ${
           pastHero ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
         }`}
         aria-label="Vote for an idea"
       >
-        <Heart className="w-4 h-4 fill-white" />
+        <Heart className="w-5 h-5 sm:w-6 sm:h-6 fill-white" />
         <span>Vote for an idea</span>
       </button>
 
@@ -144,7 +144,7 @@ export const VotePrompt: React.FC<VotePromptProps> = ({ onGoToVote, onSubmitIdea
               {/* Header */}
               <div className="relative bg-[#059669] text-white p-6 pr-14 overflow-hidden">
                 <Lightbulb className="absolute -right-4 -bottom-6 w-32 h-32 text-white/10" aria-hidden />
-                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-[#FFCD00] text-[#0A1930] text-[10px] font-mono-code font-black uppercase tracking-widest">
+                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-[#FFCD00] text-[#0A1930] text-xs font-mono-code font-black uppercase tracking-widest">
                   {site.hackLabel} · {site.cityName}
                 </span>
                 <h2
@@ -166,7 +166,7 @@ export const VotePrompt: React.FC<VotePromptProps> = ({ onGoToVote, onSubmitIdea
                     Top ideas right now
                   </span>
                   {ideas && ideas.length > 0 && (
-                    <span className="text-[11px] font-mono-code text-slate-500">{ideas.length} ideas in the arena</span>
+                    <span className="text-[13px] font-mono-code text-slate-500">{ideas.length} ideas in the arena</span>
                   )}
                 </div>
 
@@ -200,7 +200,7 @@ export const VotePrompt: React.FC<VotePromptProps> = ({ onGoToVote, onSubmitIdea
                             <div className="font-headline font-bold text-sm text-[#0A1930] truncate" title={idea.idea_title}>
                               {idea.idea_title}
                             </div>
-                            <div className="flex items-center gap-1 text-[11px] text-slate-500 truncate">
+                            <div className="flex items-center gap-1 text-[13px] text-slate-500 truncate">
                               <Building className="w-3 h-3 shrink-0" />
                               <span className="truncate">{idea.school_name}</span>
                               <span className="mx-1">·</span>
@@ -212,7 +212,7 @@ export const VotePrompt: React.FC<VotePromptProps> = ({ onGoToVote, onSubmitIdea
                             type="button"
                             onClick={() => handleVote(idea)}
                             disabled={isVoted || voting === idea.id}
-                            className={`shrink-0 flex items-center gap-1 px-3 py-2 text-[11px] font-syne font-black uppercase tracking-wider transition-colors ${
+                            className={`shrink-0 flex items-center gap-1 px-3 py-2 text-[13px] font-syne font-black uppercase tracking-wider transition-colors ${
                               isVoted
                                 ? 'bg-emerald-50 text-[#059669] border border-emerald-200'
                                 : 'bg-[#059669] hover:bg-[#047857] text-white disabled:opacity-60'

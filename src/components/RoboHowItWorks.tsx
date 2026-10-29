@@ -13,7 +13,7 @@ export const RoboHowItWorks: React.FC<RoboHowItWorksProps> = ({ onNavigate }) =>
         
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-[#07111F]/10">
           <div>
-            <span className="text-[10px] font-mono-code font-bold tracking-[0.25em] text-[#0052FF] uppercase block mb-3">
+            <span className="text-xs font-mono-code font-bold tracking-[0.25em] text-[#0052FF] uppercase block mb-3">
               05 / TOURNAMENT JOURNEY
             </span>
             <h2
@@ -44,7 +44,7 @@ export const RoboHowItWorks: React.FC<RoboHowItWorksProps> = ({ onNavigate }) =>
                   }`}
                 />
 
-                <span className="text-[9px] font-mono-code font-bold tracking-[0.2em] text-[#0052FF] uppercase mb-1">
+                <span className="text-xs font-mono-code font-bold tracking-[0.2em] text-[#0052FF] uppercase mb-1">
                   {step.tag}
                 </span>
 
@@ -81,7 +81,7 @@ export const RoboHowItWorks: React.FC<RoboHowItWorksProps> = ({ onNavigate }) =>
                     isLast ? 'bg-[#E2FF00] border-2 border-[#07111F]' : 'bg-white border-2 border-[#0052FF]'
                   }`}
                 />
-                <span className="text-[9px] font-mono-code font-bold tracking-wider text-[#0052FF] uppercase block mb-1">
+                <span className="text-xs font-mono-code font-bold tracking-wider text-[#0052FF] uppercase block mb-1">
                   {step.tag}
                 </span>
                 <h3 className="font-display font-black uppercase text-xl text-[#07111F]">

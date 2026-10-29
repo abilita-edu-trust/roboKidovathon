@@ -47,7 +47,7 @@ export const RefWorkshopTapeBanner: React.FC<RefWorkshopTapeBannerProps> = ({
             <motion.div
               animate={{ rotate: [-3, -1, -3], scale: [1, 1.04, 1] }}
               transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#FFCD00] text-[#0A1930] text-[10px] sm:text-[11px] font-mono-code font-black uppercase tracking-widest shadow-md"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#FFCD00] text-[#0A1930] text-xs sm:text-sm font-mono-code font-black uppercase tracking-widest shadow-md"
             >
               <span>OFFICIAL INTAKE · AUTUMN 2026</span>
             </motion.div>
@@ -93,7 +93,7 @@ export const RefWorkshopTapeBanner: React.FC<RefWorkshopTapeBannerProps> = ({
             </div>
 
             {/* Key Facts Ribbon */}
-            <div className="relative pt-6 border-t border-white/10 w-full max-w-3xl flex flex-wrap items-center justify-around gap-4 text-[11px] font-mono-code text-slate-300">
+            <div className="relative pt-6 border-t border-white/10 w-full max-w-3xl flex flex-wrap items-center justify-around gap-4 text-[13px] font-mono-code text-slate-300">
               <span className="flex items-center gap-1.5">
                 <MapPin className="w-3.5 h-3.5 text-[#FFCD00]" />
                 <span>VÄSTERÅS, SWEDEN</span>

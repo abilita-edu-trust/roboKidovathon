@@ -116,7 +116,7 @@ const IdeaFields: React.FC<FieldsProps> = (props) => {
               <Video className="w-3.5 h-3.5 text-[#006AA7]" />
               <span>Video</span>
             </span>
-            <div className="flex gap-1 text-[11px] font-mono-code">
+            <div className="flex gap-1 text-[13px] font-mono-code">
               <button type="button" onClick={() => set('videoMode', 'link')} className={tab(v.videoMode !== 'upload')}>
                 {L('Paste link', 'Klistra in länk')}
               </button>

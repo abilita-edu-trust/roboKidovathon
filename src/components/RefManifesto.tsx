@@ -112,7 +112,7 @@ export const RefManifesto: React.FC<RefManifestoProps> = ({ onNavigate }) => {
                     <div className="w-12 h-12 bg-[#006AA7]/10 border border-[#006AA7]/20 flex items-center justify-center text-[#006AA7]">
                       <Icon className="w-6 h-6" />
                     </div>
-                    <span className="text-[10px] font-mono-code font-bold text-slate-500 bg-white border border-slate-200 px-2.5 py-1 uppercase tracking-wider">
+                    <span className="text-xs font-mono-code font-bold text-slate-500 bg-white border border-slate-200 px-2.5 py-1 uppercase tracking-wider">
                       {pillar.badge}
                     </span>
                   </div>
@@ -148,7 +148,7 @@ export const RefManifesto: React.FC<RefManifestoProps> = ({ onNavigate }) => {
           transition={{ duration: 0.8 }}
           className="pt-12 border-t border-slate-200 text-center space-y-6"
         >
-          <span className="block text-[10px] font-mono-code font-bold tracking-[0.25em] text-slate-500 uppercase">
+          <span className="block text-xs font-mono-code font-bold tracking-[0.25em] text-slate-500 uppercase">
             HOSTED &amp; PRESENTED BY
           </span>
           <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-14">
@@ -163,7 +163,7 @@ export const RefManifesto: React.FC<RefManifestoProps> = ({ onNavigate }) => {
                   alt={logo.name}
                   className="h-9 sm:h-11 w-auto object-contain transition-all"
                 />
-                <span className="text-[11px] font-mono-code text-slate-500 uppercase tracking-wide">
+                <span className="text-[13px] font-mono-code text-slate-500 uppercase tracking-wide">
                   {logo.role}
                 </span>
               </motion.div>

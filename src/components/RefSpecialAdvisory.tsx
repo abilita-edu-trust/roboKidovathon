@@ -27,7 +27,7 @@ export const RefSpecialAdvisory: React.FC<RefSpecialAdvisoryProps> = ({
 
         {/* ── HEADER ── */}
         <div className="text-center max-w-3xl mx-auto space-y-4">
-          <span className="text-[10px] font-mono-code font-bold tracking-[0.25em] text-[#006AA7] uppercase block">
+          <span className="text-xs font-mono-code font-bold tracking-[0.25em] text-[#006AA7] uppercase block">
             OFFICIAL LAUNCH &amp; INSTITUTIONAL FRAMEWORK
           </span>
           <h2
@@ -56,7 +56,7 @@ export const RefSpecialAdvisory: React.FC<RefSpecialAdvisoryProps> = ({
             </div>
           </div>
           <div className="lg:col-span-10 space-y-2 text-center lg:text-left">
-            <span className="text-[10px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase block">
+            <span className="text-xs font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase block">
               OFFICIAL PATRONAGE &amp; LAUNCH
             </span>
             <h3 className="font-headline font-black text-xl sm:text-2xl uppercase tracking-tight text-[#0A1930]">
@@ -66,7 +66,7 @@ export const RefSpecialAdvisory: React.FC<RefSpecialAdvisoryProps> = ({
               Ambassador of India to Sweden &amp; Latvia — formally launching Västerås Future Innovators 2026 and addressing participating students, educators, and community representatives.
             </p>
             <div className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-2">
-              <span className="text-[11px] font-mono-code font-bold text-[#0A1930] bg-[#FFCD00]/30 border border-[#FFCD00]/60 px-3 py-1 rounded-full uppercase tracking-wide">
+              <span className="text-[13px] font-mono-code font-bold text-[#0A1930] bg-[#FFCD00]/30 border border-[#FFCD00]/60 px-3 py-1 rounded-full uppercase tracking-wide">
                 Theme: Bringing Schools Together Through Robotics
               </span>
             </div>
@@ -83,7 +83,7 @@ export const RefSpecialAdvisory: React.FC<RefSpecialAdvisoryProps> = ({
         >
           <div className="flex items-center gap-2 justify-center text-[#006AA7]">
             <Sparkles className="w-4 h-4" />
-            <span className="text-[10px] font-mono-code font-bold tracking-[0.2em] uppercase">
+            <span className="text-xs font-mono-code font-bold tracking-[0.2em] uppercase">
               From Classroom Learning To City Competition
             </span>
           </div>
@@ -94,7 +94,7 @@ export const RefSpecialAdvisory: React.FC<RefSpecialAdvisoryProps> = ({
                 key={step}
                 className="rounded-2xl bg-white border border-slate-200 shadow-sm p-4 text-center space-y-1 flex flex-col justify-center"
               >
-                <span className="text-[10px] font-mono-code font-bold text-[#006AA7]">
+                <span className="text-xs font-mono-code font-bold text-[#006AA7]">
                   0{i + 1}
                 </span>
                 <span className="font-syne font-bold text-xs text-[#0A1930] uppercase tracking-wide">
@@ -124,11 +124,11 @@ export const RefSpecialAdvisory: React.FC<RefSpecialAdvisoryProps> = ({
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 text-[#006AA7]">
                     <Calendar className="w-4 h-4" />
-                    <span className="text-[10px] font-mono-code font-bold tracking-[0.2em] uppercase">
+                    <span className="text-xs font-mono-code font-bold tracking-[0.2em] uppercase">
                       {stage.stageCode} · {stage.date}
                     </span>
                   </div>
-                  <span className="text-[9px] font-mono-code font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 uppercase">
+                  <span className="text-xs font-mono-code font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 uppercase">
                     {stage.location}
                   </span>
                 </div>
@@ -141,7 +141,7 @@ export const RefSpecialAdvisory: React.FC<RefSpecialAdvisoryProps> = ({
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-slate-100 text-[11px] font-mono-code font-bold text-[#006AA7] uppercase tracking-wide">
+              <div className="pt-4 border-t border-slate-100 text-[13px] font-mono-code font-bold text-[#006AA7] uppercase tracking-wide">
                 {stage.advancement}
               </div>
             </motion.div>
@@ -153,7 +153,7 @@ export const RefSpecialAdvisory: React.FC<RefSpecialAdvisoryProps> = ({
           <div className="space-y-2 text-center md:text-left">
             <div className="flex items-center justify-center md:justify-start gap-2 text-[#006AA7]">
               <Trophy className="w-4 h-4" />
-              <span className="text-[10px] font-mono-code font-bold uppercase tracking-wider">
+              <span className="text-xs font-mono-code font-bold uppercase tracking-wider">
                 COMPETITION SPECIFICATIONS &amp; INVENTORY
               </span>
             </div>

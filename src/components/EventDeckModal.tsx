@@ -50,7 +50,7 @@ export const EventDeckModal: React.FC<EventDeckModalProps> = ({ isOpen, onClose 
 
         {!downloaded ? (
           <div>
-            <div className="inline-flex items-center gap-2 text-[10px] font-mono-code font-bold tracking-[0.25em] text-[#006AA7] uppercase mb-2">
+            <div className="inline-flex items-center gap-2 text-xs font-mono-code font-bold tracking-[0.25em] text-[#006AA7] uppercase mb-2">
               <FileText className="w-3.5 h-3.5" />
               <span>OFFICIAL PROSPECTUS &amp; GUIDE</span>
             </div>
@@ -71,7 +71,7 @@ export const EventDeckModal: React.FC<EventDeckModalProps> = ({ isOpen, onClose 
                     className="w-full h-full object-contain"
                   />
                 </div>
-                <span className="block text-[9px] font-mono-code text-center text-slate-500 uppercase">
+                <span className="block text-xs font-mono-code text-center text-slate-500 uppercase">
                   3D Arena Blueprints
                 </span>
               </div>
@@ -83,7 +83,7 @@ export const EventDeckModal: React.FC<EventDeckModalProps> = ({ isOpen, onClose 
                     className="w-full h-full object-contain"
                   />
                 </div>
-                <span className="block text-[9px] font-mono-code text-center text-slate-500 uppercase">
+                <span className="block text-xs font-mono-code text-center text-slate-500 uppercase">
                   Hardware Piece Lists
                 </span>
               </div>
@@ -91,7 +91,7 @@ export const EventDeckModal: React.FC<EventDeckModalProps> = ({ isOpen, onClose 
 
             <form onSubmit={handleDownload} className="mt-4 space-y-4">
               <div>
-                <label className="block text-[10px] font-mono-code font-bold tracking-wider text-slate-500 uppercase mb-1">
+                <label className="block text-xs font-mono-code font-bold tracking-wider text-slate-500 uppercase mb-1">
                   WORK / INSTITUTIONAL EMAIL *
                 </label>
                 <input
@@ -104,7 +104,7 @@ export const EventDeckModal: React.FC<EventDeckModalProps> = ({ isOpen, onClose 
                 />
               </div>
 
-              <div className="p-3.5 bg-slate-50 border border-slate-200 text-[11px] font-mono-code text-slate-500 space-y-1">
+              <div className="p-3.5 bg-slate-50 border border-slate-200 text-[13px] font-mono-code text-slate-500 space-y-1">
                 <div className="flex items-center gap-1.5 text-[#0A1930] font-bold">
                   <ShieldCheck className="w-4 h-4 text-[#006AA7]" />
                   <span>DOCUMENT DETAILS</span>

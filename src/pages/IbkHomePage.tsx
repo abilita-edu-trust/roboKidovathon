@@ -20,7 +20,7 @@ type LinkData = { label: Bilingual; href: string };
 
 const Eyebrow: React.FC<{ children: React.ReactNode; light?: boolean }> = ({ children, light }) => (
   <span
-    className={`text-[10px] sm:text-[11px] font-mono-code font-bold tracking-[0.2em] uppercase block mb-2 ${
+    className={`text-xs sm:text-sm font-mono-code font-bold tracking-[0.2em] uppercase block mb-2 ${
       light ? 'text-[#FFCD00]' : 'text-[#006AA7]'
     }`}
   >
@@ -57,7 +57,7 @@ const PanelHeader: React.FC<{ icon: React.ElementType; title: string; badge?: st
 const DateBadge: React.FC<{ day: string; month: string; green?: boolean }> = ({ day, month, green }) => (
   <div className={`w-12 shrink-0 text-center text-white ${green ? 'bg-[#059669]' : 'bg-[#006AA7]'}`}>
     <div className="font-headline font-black text-xl leading-none pt-1.5">{day}</div>
-    <div className="text-[9px] font-mono-code font-bold uppercase pb-1.5">{month}</div>
+    <div className="text-xs font-mono-code font-bold uppercase pb-1.5">{month}</div>
   </div>
 );
 
@@ -66,7 +66,7 @@ const StatTiles: React.FC<{ stats: { big: Bilingual; small: Bilingual }[]; t: (b
     {stats.map((s, i) => (
       <div key={i} className="bg-[#F2F6FA] border-t-4 border-[#006AA7] p-3">
         <div className="font-headline font-black text-lg sm:text-xl leading-none">{t(s.big)}</div>
-        <div className="text-[10px] font-mono-code font-bold uppercase text-slate-500 mt-1">{t(s.small)}</div>
+        <div className="text-xs font-mono-code font-bold uppercase text-slate-500 mt-1">{t(s.small)}</div>
       </div>
     ))}
   </div>
@@ -110,7 +110,7 @@ export const IbkHomePage: React.FC<IbkHomePageProps> = ({ onNavigate, onSelectPa
   };
 
   const yellowBtn = 'inline-flex btn-pill-lime text-xs font-black py-3 px-5 items-center gap-2';
-  const textLink = 'self-start text-[11px] font-mono-code font-bold uppercase text-[#006AA7] hover:underline inline-flex items-center gap-1';
+  const textLink = 'self-start text-[13px] font-mono-code font-bold uppercase text-[#006AA7] hover:underline inline-flex items-center gap-1';
 
   const fi = c.futureInnovators;
   const rk = c.robokidovation;
@@ -168,7 +168,7 @@ export const IbkHomePage: React.FC<IbkHomePageProps> = ({ onNavigate, onSelectPa
           >
             {c.hero.facts.map((f, i) => (
               <div key={i} className="p-3.5 bg-[#0A1930]/70 border border-white/15">
-                <div className="text-[9px] font-mono-code font-bold uppercase tracking-widest text-white/55">{t(f.label)}</div>
+                <div className="text-xs font-mono-code font-bold uppercase tracking-widest text-white/55">{t(f.label)}</div>
                 <div className="font-headline font-black text-base uppercase mt-0.5">{t(f.value)}</div>
               </div>
             ))}
@@ -193,7 +193,7 @@ export const IbkHomePage: React.FC<IbkHomePageProps> = ({ onNavigate, onSelectPa
               <h4 className="mt-2 font-headline font-bold text-base sm:text-lg uppercase tracking-wide text-[#006AA7]">{t(c.events.subtitle)}</h4>
             </div>
             {t(c.events.note) && (
-              <span className="text-[11px] font-mono-code font-bold uppercase px-3 py-1.5 bg-[#0A1930] text-[#FFCD00]">{t(c.events.note)}</span>
+              <span className="text-[13px] font-mono-code font-bold uppercase px-3 py-1.5 bg-[#0A1930] text-[#FFCD00]">{t(c.events.note)}</span>
             )}
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -202,7 +202,7 @@ export const IbkHomePage: React.FC<IbkHomePageProps> = ({ onNavigate, onSelectPa
               return (
                 <div key={i} className="border border-slate-200 bg-[#F8FAFC] p-5 flex flex-col justify-between gap-4">
                   <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-[11px] font-mono-code font-bold uppercase text-[#006AA7]">
+                    <div className="flex items-center gap-2 text-[13px] font-mono-code font-bold uppercase text-[#006AA7]">
                       <span className="w-7 h-7 bg-[#006AA7] text-white flex items-center justify-center">
                         <Icon className="w-4 h-4" />
                       </span>
@@ -247,22 +247,22 @@ export const IbkHomePage: React.FC<IbkHomePageProps> = ({ onNavigate, onSelectPa
               <CardHeader icon={Users} title={t(fi.whoCanJoin.title)} />
               <div className="p-5 space-y-5 flex-1">
                 <div className="space-y-2">
-                  <div className="flex items-center gap-1.5 text-[11px] font-mono-code font-bold uppercase tracking-wider text-[#006AA7]">
+                  <div className="flex items-center gap-1.5 text-[13px] font-mono-code font-bold uppercase tracking-wider text-[#006AA7]">
                     <Bot className="w-3.5 h-3.5" /> {t(fi.whoCanJoin.robokidoLabel)}
                   </div>
                   <ul className="space-y-1.5">
                     {fi.whoCanJoin.robokido.map((cat, i) => (
                       <li key={i} className="flex items-center gap-3 p-2 bg-[#F2F6FA] border-l-4 border-[#006AA7]">
-                        <span className={`min-w-16 px-2 shrink-0 text-center text-[11px] font-mono-code font-bold uppercase py-1 ${tone(CATEGORY_TONES, i)}`}>
+                        <span className={`min-w-16 px-2 shrink-0 text-center text-[13px] font-mono-code font-bold uppercase py-1 ${tone(CATEGORY_TONES, i)}`}>
                           {t(cat.tag)}
                         </span>
                         <span className="text-sm font-bold flex-1">{t(cat.grades)}</span>
-                        <span className="text-[11px] text-slate-500">{t(cat.level)}</span>
+                        <span className="text-[13px] text-slate-500">{t(cat.level)}</span>
                       </li>
                     ))}
                     {t(fi.whoCanJoin.participant.tag) && (
                       <li className="flex flex-wrap items-center gap-x-3 gap-y-1 p-2 border border-dashed border-slate-300">
-                        <span className="px-2 shrink-0 text-center text-[11px] font-mono-code font-bold uppercase py-1 bg-slate-100 text-slate-600">
+                        <span className="px-2 shrink-0 text-center text-[13px] font-mono-code font-bold uppercase py-1 bg-slate-100 text-slate-600">
                           {t(fi.whoCanJoin.participant.tag)}
                         </span>
                         <span className="text-sm flex-1">{t(fi.whoCanJoin.participant.text)}</span>
@@ -271,7 +271,7 @@ export const IbkHomePage: React.FC<IbkHomePageProps> = ({ onNavigate, onSelectPa
                   </ul>
                 </div>
                 <div className="space-y-2">
-                  <div className="flex items-center gap-1.5 text-[11px] font-mono-code font-bold uppercase tracking-wider text-[#059669]">
+                  <div className="flex items-center gap-1.5 text-[13px] font-mono-code font-bold uppercase tracking-wider text-[#059669]">
                     <Lightbulb className="w-3.5 h-3.5" /> {t(fi.whoCanJoin.hackathonLabel)}
                   </div>
                   <ol className="space-y-1.5">
@@ -279,7 +279,7 @@ export const IbkHomePage: React.FC<IbkHomePageProps> = ({ onNavigate, onSelectPa
                       <li key={i} className="flex items-center gap-3 p-2 bg-[#F0FDF4] border-l-4 border-[#059669]">
                         <span className="w-6 h-6 shrink-0 bg-[#059669] text-white text-xs font-mono-code font-bold flex items-center justify-center">{i + 1}</span>
                         <span className="text-sm font-bold flex-1">{t(h.who)}</span>
-                        <span className="text-[11px] text-slate-500">{t(h.level)}</span>
+                        <span className="text-[13px] text-slate-500">{t(h.level)}</span>
                       </li>
                     ))}
                   </ol>
@@ -297,7 +297,7 @@ export const IbkHomePage: React.FC<IbkHomePageProps> = ({ onNavigate, onSelectPa
                   return (
                     <li key={i} className="relative flex items-center gap-3 py-2">
                       <span
-                        className={`relative z-10 w-5 h-5 shrink-0 flex items-center justify-center text-[10px] font-mono-code font-bold ${
+                        className={`relative z-10 w-5 h-5 shrink-0 flex items-center justify-center text-xs font-mono-code font-bold ${
                           last ? 'bg-[#FFCD00] text-[#0A1930]' : 'bg-[#006AA7] text-white'
                         }`}
                       >
@@ -305,7 +305,7 @@ export const IbkHomePage: React.FC<IbkHomePageProps> = ({ onNavigate, onSelectPa
                       </span>
                       <span className={`flex-1 text-sm ${last ? 'font-black uppercase' : ''}`}>{t(step.label)}</span>
                       <span
-                        className={`font-mono-code text-[11px] font-bold whitespace-nowrap px-2 py-0.5 ${
+                        className={`font-mono-code text-[13px] font-bold whitespace-nowrap px-2 py-0.5 ${
                           last ? 'bg-[#0A1930] text-[#FFCD00]' : 'bg-[#F2F6FA] text-[#006AA7]'
                         }`}
                       >
@@ -331,7 +331,7 @@ export const IbkHomePage: React.FC<IbkHomePageProps> = ({ onNavigate, onSelectPa
                     <div className="p-3 flex items-start gap-3">
                       <DateBadge day={v.day} month={t(v.month)} green={!v.confirmed} />
                       <div>
-                        <div className={`text-[11px] font-mono-code font-bold uppercase ${v.confirmed ? 'text-[#006AA7]' : 'text-[#059669]'}`}>
+                        <div className={`text-[13px] font-mono-code font-bold uppercase ${v.confirmed ? 'text-[#006AA7]' : 'text-[#059669]'}`}>
                           {t(v.label)}
                         </div>
                         <div className="text-sm font-bold leading-snug">{t(v.name)}</div>
@@ -419,7 +419,7 @@ export const IbkHomePage: React.FC<IbkHomePageProps> = ({ onNavigate, onSelectPa
 
           <div className="overflow-x-auto border border-slate-200">
             <table className="w-full text-sm text-left min-w-[560px]">
-              <thead className="bg-[#0A1930] text-white text-[11px] font-mono-code uppercase tracking-wider">
+              <thead className="bg-[#0A1930] text-white text-[13px] font-mono-code uppercase tracking-wider">
                 <tr>
                   <th className="p-3">{t(rk.categoryTable.headers.category)}</th>
                   <th className="p-3">{t(rk.categoryTable.headers.grades)}</th>
@@ -447,7 +447,7 @@ export const IbkHomePage: React.FC<IbkHomePageProps> = ({ onNavigate, onSelectPa
               <div className="p-5 sm:p-6 space-y-5">
                 <StatTiles stats={rk.teams.stats} t={t} />
                 <div>
-                  <div className="text-[11px] font-mono-code font-bold uppercase tracking-wider text-[#006AA7] mb-2">{t(rk.teams.rolesTitle)}</div>
+                  <div className="text-[13px] font-mono-code font-bold uppercase tracking-wider text-[#006AA7] mb-2">{t(rk.teams.rolesTitle)}</div>
                   <div className="flex flex-wrap gap-2">
                     {rk.teams.roles.map((r, i) => {
                       const Icon = ibkIcon(r.icon);
@@ -463,7 +463,7 @@ export const IbkHomePage: React.FC<IbkHomePageProps> = ({ onNavigate, onSelectPa
                 <ol className="space-y-2.5">
                   {rk.teams.rules.map((r, i) => (
                     <li key={i} className="flex items-start gap-3 text-sm text-slate-700">
-                      <span className="w-6 h-6 shrink-0 bg-[#FFCD00] text-[#0A1930] text-[11px] font-mono-code font-bold flex items-center justify-center">
+                      <span className="w-6 h-6 shrink-0 bg-[#FFCD00] text-[#0A1930] text-[13px] font-mono-code font-bold flex items-center justify-center">
                         {String(i + 1).padStart(2, '0')}
                       </span>
                       <span className="pt-0.5">{t(r)}</span>
@@ -508,7 +508,7 @@ export const IbkHomePage: React.FC<IbkHomePageProps> = ({ onNavigate, onSelectPa
                 <div className="p-5 sm:p-6 space-y-4">
                   <p className="text-sm text-slate-700">{t(rk.finalDay.text)}</p>
                   {finalDaySegments.length > 0 && (
-                    <div className="flex h-9 text-[10px] font-mono-code font-bold uppercase" aria-hidden="true">
+                    <div className="flex h-9 text-xs font-mono-code font-bold uppercase" aria-hidden="true">
                       {finalDaySegments.map((f, i) => (
                         <div
                           key={i}
@@ -523,7 +523,7 @@ export const IbkHomePage: React.FC<IbkHomePageProps> = ({ onNavigate, onSelectPa
                   <ol>
                     {rk.finalDay.steps.map((f, i) => (
                       <li key={i} className="flex gap-3 items-start py-2 border-b border-slate-100 last:border-0">
-                        <span className="w-6 h-6 shrink-0 bg-[#0A1930] text-[#FFCD00] text-[11px] font-mono-code font-bold flex items-center justify-center">{i + 1}</span>
+                        <span className="w-6 h-6 shrink-0 bg-[#0A1930] text-[#FFCD00] text-[13px] font-mono-code font-bold flex items-center justify-center">{i + 1}</span>
                         <span className="w-16 shrink-0 font-mono-code text-xs font-bold text-[#006AA7] pt-1">{t(f.time)}</span>
                         <span className="text-sm pt-0.5">{t(f.text)}</span>
                       </li>
@@ -556,11 +556,11 @@ export const IbkHomePage: React.FC<IbkHomePageProps> = ({ onNavigate, onSelectPa
               <div className={`${s.image ? 'lg:col-span-8' : 'lg:col-span-12'} space-y-4`}>
                 <div className="flex flex-wrap items-end justify-between gap-3">
                   <div>
-                    <span className="text-[11px] font-mono-code font-bold uppercase text-slate-500">{t(s.date)}</span>
+                    <span className="text-[13px] font-mono-code font-bold uppercase text-slate-500">{t(s.date)}</span>
                     <h3 className="font-headline font-black text-2xl uppercase tracking-tight">{t(s.title)}</h3>
                   </div>
                   {t(s.badge) && (
-                    <span className="text-[11px] font-mono-code font-bold uppercase px-3 py-1.5 bg-[#0A1930] text-[#FFCD00]">{t(s.badge)}</span>
+                    <span className="text-[13px] font-mono-code font-bold uppercase px-3 py-1.5 bg-[#0A1930] text-[#FFCD00]">{t(s.badge)}</span>
                   )}
                 </div>
                 <p className="text-sm text-slate-600 font-light leading-relaxed max-w-3xl">{t(s.text)}</p>
@@ -610,7 +610,7 @@ export const IbkHomePage: React.FC<IbkHomePageProps> = ({ onNavigate, onSelectPa
               const inner = (
                 <>
                   {p.logo && <img src={mediaUrl(p.logo)} alt={p.name} loading="lazy" className="h-12 w-auto object-contain" />}
-                  <span className="text-[10px] font-mono-code font-bold uppercase tracking-widest text-slate-500">{t(p.role)}</span>
+                  <span className="text-xs font-mono-code font-bold uppercase tracking-widest text-slate-500">{t(p.role)}</span>
                 </>
               );
               const cls = 'border border-slate-200 p-5 flex flex-col items-center justify-center gap-3 text-center';
@@ -644,7 +644,7 @@ export const IbkHomePage: React.FC<IbkHomePageProps> = ({ onNavigate, onSelectPa
                   <a key={i} href={card.href || undefined} className="p-4 border border-white/20 hover:border-[#FFCD00] transition-colors flex items-start gap-3">
                     <Icon className="w-5 h-5 text-[#FFCD00] shrink-0 mt-0.5" />
                     <div>
-                      <div className="text-[10px] font-mono-code font-bold uppercase text-white/55">{t(card.label)}</div>
+                      <div className="text-xs font-mono-code font-bold uppercase text-white/55">{t(card.label)}</div>
                       <div className="text-sm font-bold break-all">{card.value}</div>
                     </div>
                   </a>
@@ -664,7 +664,7 @@ export const IbkHomePage: React.FC<IbkHomePageProps> = ({ onNavigate, onSelectPa
                     </div>
                     <div className="p-3">
                       <div className="font-bold text-sm">{m.name}</div>
-                      <div className="text-[11px] font-mono-code uppercase text-[#006AA7]">{t(m.role)}</div>
+                      <div className="text-[13px] font-mono-code uppercase text-[#006AA7]">{t(m.role)}</div>
                     </div>
                   </div>
                 ))}

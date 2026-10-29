@@ -86,12 +86,12 @@ export const PartnerPreviewModal: React.FC<PartnerPreviewModalProps> = ({
                     >
                       {partnerName}
                     </h3>
-                    <span className="hidden sm:inline-block text-[10px] font-mono-code px-2 py-0.5 bg-white/10 text-slate-300 uppercase">
+                    <span className="hidden sm:inline-block text-xs font-mono-code px-2 py-0.5 bg-white/10 text-slate-300 uppercase">
                       Official Partner Preview
                     </span>
                   </div>
                   {role && (
-                    <p className="text-[11px] font-mono-code text-slate-400 truncate">
+                    <p className="text-[13px] font-mono-code text-slate-400 truncate">
                       {role}
                     </p>
                   )}
@@ -170,7 +170,7 @@ export const PartnerPreviewModal: React.FC<PartnerPreviewModalProps> = ({
             </div>
 
             {/* Modal Bottom Bar */}
-            <div className="px-4 py-2.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-[11px] font-mono-code text-slate-500">
+            <div className="px-4 py-2.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-[13px] font-mono-code text-slate-500">
               <span className="truncate">
                 Viewing: <span className="text-[#006AA7]">{url}</span>
               </span>

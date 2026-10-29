@@ -11,7 +11,7 @@ export const Timeline: React.FC = () => {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-14 border-b border-white/[0.08]">
           <div>
-            <div className="inline-flex items-center gap-2 text-[10px] font-mono-code font-bold tracking-[0.25em] text-indigo-400 uppercase mb-3">
+            <div className="inline-flex items-center gap-2 text-xs font-mono-code font-bold tracking-[0.25em] text-indigo-400 uppercase mb-3">
               <Calendar className="w-3.5 h-3.5" />
               <span>COHORT 2026 // EXECUTION TIMELINE</span>
             </div>
@@ -85,7 +85,7 @@ export const Timeline: React.FC = () => {
                         }`}
                       >
                         <span
-                          className={`text-[9px] font-mono-code font-bold px-2 py-0.5 rounded uppercase ${
+                          className={`text-xs font-mono-code font-bold px-2 py-0.5 rounded uppercase ${
                             isActive
                               ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
                               : isCompleted
@@ -114,7 +114,7 @@ export const Timeline: React.FC = () => {
                       {/* Deliverables tags */}
                       <div className="mt-5 pt-4 border-t border-white/[0.06]">
                         <div
-                          className={`flex items-center gap-2 mb-2 text-[10px] font-mono-code text-slate-400 uppercase ${
+                          className={`flex items-center gap-2 mb-2 text-xs font-mono-code text-slate-400 uppercase ${
                             isEven ? 'sm:justify-end' : 'sm:justify-start'
                           }`}
                         >
@@ -129,7 +129,7 @@ export const Timeline: React.FC = () => {
                           {item.deliverables.map((deliv, i) => (
                             <span
                               key={i}
-                              className="text-[10px] font-mono-code px-2 py-0.5 rounded bg-black/40 text-slate-300 border border-white/[0.05]"
+                              className="text-xs font-mono-code px-2 py-0.5 rounded bg-black/40 text-slate-300 border border-white/[0.05]"
                             >
                               {deliv}
                             </span>

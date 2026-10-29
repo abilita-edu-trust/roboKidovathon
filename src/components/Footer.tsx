@@ -46,7 +46,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenRegister }) => {
 
           {/* Col 3 - Navigation */}
           <div>
-            <div className="text-[10px] font-mono-code font-bold tracking-[0.2em] text-slate-300 uppercase mb-4">
+            <div className="text-xs font-mono-code font-bold tracking-[0.2em] text-slate-300 uppercase mb-4">
               CHAMPIONSHIP
             </div>
             <ul className="space-y-2.5 text-xs text-slate-400 font-light">
@@ -60,7 +60,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenRegister }) => {
 
           {/* Col 4 - Governance & Security */}
           <div>
-            <div className="text-[10px] font-mono-code font-bold tracking-[0.2em] text-slate-300 uppercase mb-4">
+            <div className="text-xs font-mono-code font-bold tracking-[0.2em] text-slate-300 uppercase mb-4">
               GOVERNANCE & IP
             </div>
             <ul className="space-y-2.5 text-xs text-slate-400 font-light">
@@ -74,7 +74,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenRegister }) => {
 
           {/* Col 5 - Quick Action */}
           <div>
-            <div className="text-[10px] font-mono-code font-bold tracking-[0.2em] text-slate-300 uppercase mb-4">
+            <div className="text-xs font-mono-code font-bold tracking-[0.2em] text-slate-300 uppercase mb-4">
               COHORT STATUS
             </div>
             <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.07] space-y-3">
@@ -82,12 +82,12 @@ export const Footer: React.FC<FooterProps> = ({ onOpenRegister }) => {
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 <span>APPLICATIONS OPEN</span>
               </div>
-              <p className="text-[11px] text-slate-400 font-light leading-relaxed">
+              <p className="text-[13px] text-slate-400 font-light leading-relaxed">
                 Vetting closes March 15, 2026 at 23:59 UTC.
               </p>
               <button
                 onClick={onOpenRegister}
-                className="w-full py-2 rounded-lg text-[11px] font-mono-code font-bold tracking-wider uppercase text-white bg-indigo-600 hover:bg-indigo-500 transition-colors"
+                className="w-full py-2 rounded-lg text-[13px] font-mono-code font-bold tracking-wider uppercase text-white bg-indigo-600 hover:bg-indigo-500 transition-colors"
               >
                 APPLY AS TEAM →
               </button>
@@ -97,7 +97,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenRegister }) => {
         </div>
 
         {/* Bottom Metadata & Legal */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] font-mono-code text-slate-400">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[13px] font-mono-code text-slate-400">
           <div>
             © 2026 APEX GLOBAL FOUNDATION. ALL RIGHTS RESERVED.
           </div>

@@ -90,7 +90,7 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="border-b border-slate-200 pb-12"
         >
-          <span className="text-[10px] font-mono-code font-medium tracking-[0.2em] text-slate-500 uppercase block mb-3">
+          <span className="text-xs font-mono-code font-medium tracking-[0.2em] text-slate-500 uppercase block mb-3">
             A STRUCTURED PROJECT, NOT JUST A ONE-OFF WORKSHOP // VÄSTERÅS 2026
           </span>
 
@@ -111,7 +111,7 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-200 pb-4">
             <div>
-              <span className="text-[10px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase block">
+              <span className="text-xs font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase block">
                 PARTICIPANT JOURNEY // FROM CLASSROOM TO ARENA
               </span>
               <h2 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#0A1930] mt-1">
@@ -144,7 +144,7 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
                     }`}>
                       {step.num}
                     </span>
-                    <span className={`text-[9px] font-mono-code font-bold uppercase tracking-wider ${
+                    <span className={`text-xs font-mono-code font-bold uppercase tracking-wider ${
                       step.highlight ? 'text-[#FFCD00]' : 'text-[#006AA7]'
                     }`}>
                       {step.badge}
@@ -175,7 +175,7 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
         {/* ── ALTERNATIVE CTA: JOURNEY INTAKE ── */}
         <div className="bg-[#0A1930] text-white p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-5 border border-slate-800 shadow-xl">
           <div className="space-y-1.5 text-center sm:text-left">
-            <span className="text-[10px] font-mono-code font-bold tracking-widest text-[#FFCD00] uppercase block">
+            <span className="text-xs font-mono-code font-bold tracking-widest text-[#FFCD00] uppercase block">
               STEP 01 IS REGISTRATION
             </span>
             <h3 className="font-headline font-black text-xl sm:text-2xl uppercase tracking-tight text-white">
@@ -200,7 +200,7 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
         {/* ── 5 LEARNING BLOCKS ── */}
         <div className="space-y-4 pt-4">
           <div className="border-b border-slate-200 pb-4">
-            <span className="text-[10px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase block">
+            <span className="text-xs font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase block">
               PEDAGOGICAL BUILDING BLOCKS
             </span>
             <h2 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#0A1930] mt-1">
@@ -228,7 +228,7 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
                   <span className="font-headline font-black text-sm sm:text-base text-[#006AA7] uppercase tracking-wide block">
                     {block.tag}
                   </span>
-                  <span className="text-[11px] text-slate-500 font-light leading-snug block">
+                  <span className="text-[13px] text-slate-500 font-light leading-snug block">
                     {block.desc}
                   </span>
                   <motion.div
@@ -247,7 +247,7 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
                         transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                         className="overflow-hidden"
                       >
-                        <p className="text-[10px] text-slate-500 font-light leading-relaxed pt-2 border-t border-slate-200">
+                        <p className="text-xs text-slate-500 font-light leading-relaxed pt-2 border-t border-slate-200">
                           {block.detail}
                         </p>
                       </motion.div>
@@ -262,7 +262,7 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
         {/* ── 20-HOUR SESSION BREAKDOWN ── */}
         <div className="space-y-6 pt-4">
           <div className="border-b border-slate-200 pb-6">
-            <span className="text-[10px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase block mb-2">
+            <span className="text-xs font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase block mb-2">
               SESSION-BY-SESSION CURRICULUM
             </span>
             <h2 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#0A1930]">
@@ -277,9 +277,9 @@ export const HowItWorksPage: React.FC<HowItWorksPageProps> = ({
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-[#F8FAFC] border-b border-slate-200">
-                  <th className="px-5 py-3 text-[10px] font-mono-code font-bold text-slate-500 uppercase tracking-wider">Session</th>
-                  <th className="px-5 py-3 text-[10px] font-mono-code font-bold text-slate-500 uppercase tracking-wider">Hours</th>
-                  <th className="px-5 py-3 text-[10px] font-mono-code font-bold text-slate-500 uppercase tracking-wider">Curricular &amp; Practical Focus</th>
+                  <th className="px-5 py-3 text-xs font-mono-code font-bold text-slate-500 uppercase tracking-wider">Session</th>
+                  <th className="px-5 py-3 text-xs font-mono-code font-bold text-slate-500 uppercase tracking-wider">Hours</th>
+                  <th className="px-5 py-3 text-xs font-mono-code font-bold text-slate-500 uppercase tracking-wider">Curricular &amp; Practical Focus</th>
                 </tr>
               </thead>
               <tbody>

@@ -115,7 +115,7 @@ export const VoiceNoteRecorder: React.FC<VoiceNoteRecorderProps> = ({ onAudioRea
           <Mic className="w-3.5 h-3.5 text-[#006AA7]" />
           Record Voice Note (Idea Audio Description)
         </span>
-        <span className="text-[11px] font-mono-code text-slate-500">
+        <span className="text-[13px] font-mono-code text-slate-500">
           Max 3 minutes
         </span>
       </div>
@@ -178,7 +178,7 @@ export const VoiceNoteRecorder: React.FC<VoiceNoteRecorderProps> = ({ onAudioRea
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                 <span>Voice Note Ready ({formatSeconds(recordingTime || 12)})</span>
               </div>
-              <div className="text-[10px] font-mono-code text-slate-400">
+              <div className="text-xs font-mono-code text-slate-400">
                 Ready for submission with your idea
               </div>
             </div>

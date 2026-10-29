@@ -12,7 +12,7 @@ export const RoboMission: React.FC<RoboMissionProps> = ({ onNavigate }) => {
         
         {/* LEFT — Asymmetric Editorial Typography */}
         <div className="lg:col-span-7 px-6 sm:px-10 py-20 md:py-28 flex flex-col justify-center border-r border-[#07111F]/8">
-          <span className="text-[10px] font-mono-code font-bold tracking-[0.25em] text-[#0052FF] uppercase block mb-4">
+          <span className="text-xs font-mono-code font-bold tracking-[0.25em] text-[#0052FF] uppercase block mb-4">
             01 / THE MANIFESTO
           </span>
 
@@ -44,7 +44,7 @@ export const RoboMission: React.FC<RoboMissionProps> = ({ onNavigate }) => {
               { code: 'LV', label: 'LIVE ARENA', detail: 'Official Refereed Heats' },
             ].map((item) => (
               <div key={item.code} className="space-y-1">
-                <span className="block text-[9px] font-mono-code font-bold tracking-[0.2em] text-[#0052FF] uppercase">
+                <span className="block text-xs font-mono-code font-bold tracking-[0.2em] text-[#0052FF] uppercase">
                   [{item.code}] {item.label}
                 </span>
                 <span className="block text-xs text-[#4A5568] font-normal leading-snug">
@@ -77,7 +77,7 @@ export const RoboMission: React.FC<RoboMissionProps> = ({ onNavigate }) => {
 
           {/* Photo Caption Overlay */}
           <div className="absolute bottom-6 left-6 right-6 p-4 rounded-[2px] bg-black/85 backdrop-blur-md border border-white/10">
-            <span className="block text-[9px] font-mono-code font-bold tracking-[0.2em] text-[#0052FF] uppercase mb-1">
+            <span className="block text-xs font-mono-code font-bold tracking-[0.2em] text-[#0052FF] uppercase mb-1">
               [ WORKSHOP ENVIRONMENT · VÄSTERÅS · 2026 ]
             </span>
             <span className="block text-xs font-display font-bold text-white uppercase tracking-wider">

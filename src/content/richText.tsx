@@ -12,3 +12,13 @@ export function richText(text: string, boldClass: string): React.ReactNode[] {
     )
   );
 }
+
+/** A heading with one sentence per line ("Two programmes. One journey for everyone."). */
+export function sentenceLines(text: string): React.ReactNode[] {
+  // No lookbehind in the pattern: older Safari cannot parse it.
+  return text.replace(/([.!?])\s+(?=\S)/g, '$1\n').split('\n').map((line, i) => (
+    <span key={i} className="block">
+      {line}
+    </span>
+  ));
+}

@@ -64,7 +64,7 @@ export const EvaluationCriteria: React.FC = () => {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-14 border-b border-white/[0.08]">
           <div>
-            <div className="inline-flex items-center gap-2 text-[10px] font-mono-code font-bold tracking-[0.25em] text-cyan-400 uppercase mb-3">
+            <div className="inline-flex items-center gap-2 text-xs font-mono-code font-bold tracking-[0.25em] text-cyan-400 uppercase mb-3">
               <Scale className="w-3.5 h-3.5" />
               <span>OFFICIAL JURY BENCHMARK</span>
             </div>
@@ -90,7 +90,7 @@ export const EvaluationCriteria: React.FC = () => {
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-[10px] font-mono-code font-bold text-indigo-400 uppercase">
+                  <span className="text-xs font-mono-code font-bold text-indigo-400 uppercase">
                     {item.code}
                   </span>
                   <span className="font-display font-extrabold text-2xl text-white">
@@ -109,7 +109,7 @@ export const EvaluationCriteria: React.FC = () => {
 
               <div className="pt-4 border-t border-white/[0.06] space-y-1.5">
                 {item.subpoints.map((pt, i) => (
-                  <div key={i} className="text-[11px] font-mono-code text-slate-400 flex items-center gap-1.5">
+                  <div key={i} className="text-[13px] font-mono-code text-slate-400 flex items-center gap-1.5">
                     <span className="w-1 h-1 rounded-full bg-indigo-400" />
                     <span>{pt}</span>
                   </div>
@@ -122,7 +122,7 @@ export const EvaluationCriteria: React.FC = () => {
         {/* Developer Perks Strip */}
         <div id="perks" className="mt-20 pt-16 border-t border-white/[0.08]">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-[10px] font-mono-code font-bold tracking-[0.25em] text-indigo-400 uppercase block mb-2">
+            <span className="text-xs font-mono-code font-bold tracking-[0.25em] text-indigo-400 uppercase block mb-2">
               COHORT PRIVILEGES
             </span>
             <h3 className="font-display font-extrabold text-2xl sm:text-4xl uppercase tracking-tight text-white">

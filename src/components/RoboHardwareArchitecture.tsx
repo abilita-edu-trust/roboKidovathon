@@ -25,7 +25,7 @@ export const RoboHardwareArchitecture: React.FC = () => {
         {/* Header */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16 pb-10 border-b border-white/[0.08]">
           <div className="lg:col-span-7">
-            <span className="text-[10px] font-mono-code font-bold tracking-[0.25em] text-[#0052FF] uppercase block mb-3">
+            <span className="text-xs font-mono-code font-bold tracking-[0.25em] text-[#0052FF] uppercase block mb-3">
               03 / PHYSICAL SYSTEMS & HARDWARE SPECIFICATION
             </span>
             <h2
@@ -65,10 +65,10 @@ export const RoboHardwareArchitecture: React.FC = () => {
               <div className={`p-2 rounded-[2px] bg-black/85 backdrop-blur-md border border-white/15 ${
                 ann.dir === 'right' ? 'text-left' : 'text-right'
               }`}>
-                <span className="block text-[9px] font-mono-code font-bold tracking-wider text-[#0052FF] uppercase">
+                <span className="block text-xs font-mono-code font-bold tracking-wider text-[#0052FF] uppercase">
                   {ann.label}
                 </span>
-                <span className="block text-[9px] font-mono-code text-slate-300">
+                <span className="block text-xs font-mono-code text-slate-300">
                   {ann.spec}
                 </span>
               </div>
@@ -78,7 +78,7 @@ export const RoboHardwareArchitecture: React.FC = () => {
           ))}
 
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-[2px] bg-black/80 border border-white/10 backdrop-blur-md">
-            <span className="text-[9px] font-mono-code tracking-[0.25em] text-slate-400 uppercase">
+            <span className="text-xs font-mono-code tracking-[0.25em] text-slate-400 uppercase">
               [ OFFICIAL HARDWARE ARCHITECTURE // 12V DC LIMIT ]
             </span>
           </div>
@@ -89,7 +89,7 @@ export const RoboHardwareArchitecture: React.FC = () => {
           {specs.map((item) => (
             <div key={item.code} className="py-4 sm:py-0 px-0 sm:px-6 first:sm:pl-0 last:sm:pr-0">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-[9px] font-mono-code font-bold text-[#E2FF00] border border-[#E2FF00]/30 px-1.5 py-0.5 rounded-[2px]">
+                <span className="text-xs font-mono-code font-bold text-[#E2FF00] border border-[#E2FF00]/30 px-1.5 py-0.5 rounded-[2px]">
                   {item.code}
                 </span>
                 <span className="text-xs font-display font-bold text-white uppercase tracking-wider">

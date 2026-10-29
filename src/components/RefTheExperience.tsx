@@ -25,9 +25,9 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({ data, go, on
   return (
     <section
       id="choose-experience"
-      className="w-full bg-gradient-to-b from-[#F2F8FD] via-[#F8FBFE] to-white text-[#0A1930] py-16 sm:py-24 px-4 sm:px-6 lg:px-10 select-none relative overflow-hidden border-t border-slate-200"
+      className="w-full bg-gradient-to-b from-[#F2F8FD] via-[#F8FBFE] to-white text-[#0A1930] py-8 sm:py-10 px-4 sm:px-6 lg:px-10 select-none relative overflow-hidden border-t border-slate-200"
     >
-      <div className="max-w-[1560px] mx-auto space-y-12 relative z-10">
+      <div className="max-w-[1560px] mx-auto space-y-8 relative z-10">
 
         {/* ── 01. CITY BANNER: "<City> Future Innovators 2026" over the city skyline ── */}
         <FutureInnovatorsBanner src={data.banner} />
@@ -41,7 +41,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({ data, go, on
         </div>
 
         {/* ── 03. VENUES ── */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 pb-2">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {data.venues.map((venue, i) => (
             <div key={i} className="flex flex-col bg-white border border-slate-200/90 shadow-xs overflow-hidden">
               <div className="p-5 flex items-start gap-4 flex-1">
@@ -63,14 +63,14 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({ data, go, on
                   >
                     {t(venue.name)}
                   </p>
-                  {t(venue.detail) && <p className="text-xs text-slate-600 font-light mt-0.5">{t(venue.detail)}</p>}
+                  {t(venue.detail) && <p className="text-sm text-slate-600 mt-0.5">{t(venue.detail)}</p>}
                 </div>
               </div>
               <div className="h-32 border-t border-slate-200 bg-[#F8FAFC] flex items-center justify-center p-4">
                 {venue.image ? (
                   <img src={venue.image} alt={t(venue.detail) || t(venue.name)} className="max-h-full w-auto object-contain" />
                 ) : (
-                  <span className="text-[11px] font-mono-code font-bold uppercase tracking-widest text-slate-400">
+                  <span className="text-[13px] font-mono-code font-bold uppercase tracking-widest text-slate-400">
                     {t(data.noImage)}
                   </span>
                 )}
@@ -80,20 +80,13 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({ data, go, on
         </div>
 
         {/* ── 04. REGISTRATION: the register page's wizard, right here ── */}
-        <div id="find-your-pathway" className="max-w-5xl mx-auto w-full pt-4 scroll-mt-24 select-text">
+        <div id="find-your-pathway" className="max-w-5xl mx-auto w-full scroll-mt-24 select-text">
           <RegisterWizard intro={REGISTER_INTRO} onNavigateVoting={onNavigateVoting} />
         </div>
 
         {/* ── 05. FOOTER SUB-STRIP ── */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 text-xs font-mono-code text-slate-400 border-t border-slate-200">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4 pt-4 text-sm font-mono-code text-slate-500 border-t border-slate-200">
           <span>{t(data.stripLeft)}</span>
-
-          <div className="relative">
-            <span className="font-handwriting text-lg sm:text-xl text-[#0A1930]">
-              {t(data.stripMiddle)}
-            </span>
-            <div className="w-full h-0.5 bg-[#FFCD00] -mt-0.5" />
-          </div>
 
           <span className="font-bold text-[#006AA7] tracking-wider">
             {t(data.stripRight)}

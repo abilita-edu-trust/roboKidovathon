@@ -30,7 +30,7 @@ export const MediaBlock: React.FC<{ id: string; data: MediaData; go: (href: stri
   if (!title && !text && !hasMedia) return null;
 
   return (
-    <section id={id} className="w-full bg-white text-[#0A1930] py-12 sm:py-16 px-4 sm:px-6 lg:px-10 scroll-mt-20">
+    <section id={id} className="w-full bg-white text-[#0A1930] py-8 sm:py-10 px-4 sm:px-6 lg:px-10 scroll-mt-20">
       <div className={`max-w-[1400px] mx-auto grid grid-cols-1 gap-8 lg:gap-12 items-center ${hasMedia && (title || text) ? 'lg:grid-cols-2' : ''}`}>
         {hasMedia && (
           <div className="w-full overflow-hidden border border-slate-200 bg-[#F2F8FD]">

@@ -21,7 +21,7 @@ export const RefCompetitionInfo: React.FC<RefCompetitionInfoProps> = ({
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-slate-200">
           <div className="space-y-2">
-            <span className="text-[10px] font-mono-code font-bold tracking-[0.25em] text-[#006AA7] uppercase block">
+            <span className="text-xs font-mono-code font-bold tracking-[0.25em] text-[#006AA7] uppercase block">
               COMPETITION CATEGORIES // 2026 EDITION
             </span>
             <h2 className="font-headline font-black text-2xl sm:text-3xl md:text-4xl text-[#0A1930] uppercase tracking-tight leading-tight">
@@ -61,7 +61,7 @@ export const RefCompetitionInfo: React.FC<RefCompetitionInfoProps> = ({
                     <Bot className="w-5 h-5" />
                   </div>
                   <div>
-                    <span className="text-[10px] font-mono-code font-bold text-[#006AA7] uppercase tracking-wider block">
+                    <span className="text-xs font-mono-code font-bold text-[#006AA7] uppercase tracking-wider block">
                       ARENA ROBOTICS
                     </span>
                     <h3 className="font-headline font-black text-xl sm:text-2xl uppercase tracking-tight text-[#0A1930]">
@@ -70,7 +70,7 @@ export const RefCompetitionInfo: React.FC<RefCompetitionInfoProps> = ({
                   </div>
                 </div>
 
-                <span className="text-[10px] font-mono-code font-bold px-2.5 py-1 rounded-full bg-[#006AA7]/10 text-[#006AA7] border border-[#006AA7]/20 uppercase">
+                <span className="text-xs font-mono-code font-bold px-2.5 py-1 rounded-full bg-[#006AA7]/10 text-[#006AA7] border border-[#006AA7]/20 uppercase">
                   GRADE 3 TO 9
                 </span>
               </div>
@@ -204,7 +204,7 @@ export const RefCompetitionInfo: React.FC<RefCompetitionInfoProps> = ({
                     <HelpCircle className="w-5 h-5" />
                   </div>
                   <div>
-                    <span className="text-[10px] font-mono-code font-bold text-[#D97706] uppercase tracking-wider block">
+                    <span className="text-xs font-mono-code font-bold text-[#D97706] uppercase tracking-wider block">
                       STEM &amp; INNOVATION
                     </span>
                     <h3 className="font-headline font-black text-xl sm:text-2xl uppercase tracking-tight text-[#0A1930]">
@@ -213,7 +213,7 @@ export const RefCompetitionInfo: React.FC<RefCompetitionInfoProps> = ({
                   </div>
                 </div>
 
-                <span className="text-[10px] font-mono-code font-bold px-2.5 py-1 rounded-full bg-[#FFCD00]/30 text-[#0A1930] border border-[#FFCD00]/50 uppercase">
+                <span className="text-xs font-mono-code font-bold px-2.5 py-1 rounded-full bg-[#FFCD00]/30 text-[#0A1930] border border-[#FFCD00]/50 uppercase">
                   ALL GRADES
                 </span>
               </div>

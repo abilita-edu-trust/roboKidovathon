@@ -51,7 +51,7 @@ export const Lgr22Page: React.FC<Lgr22PageProps> = ({
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="border-b border-slate-200 pb-12"
         >
-          <span className="text-[10px] font-mono-code font-medium tracking-[0.2em] text-slate-500 uppercase block mb-3">
+          <span className="text-xs font-mono-code font-medium tracking-[0.2em] text-slate-500 uppercase block mb-3">
             SWEDISH CURRICULAR TRUST &amp; ALIGNMENT // LÄROPLAN
           </span>
 
@@ -122,7 +122,7 @@ export const Lgr22Page: React.FC<Lgr22PageProps> = ({
                     </ul>
                   </div>
 
-                  <div className="pt-4 border-t border-slate-200 text-[10px] font-mono-code font-bold text-[#006AA7] uppercase">
+                  <div className="pt-4 border-t border-slate-200 text-xs font-mono-code font-bold text-[#006AA7] uppercase">
                     Documented Evidence For Evaluation
                   </div>
                 </motion.div>
@@ -153,7 +153,7 @@ export const Lgr22Page: React.FC<Lgr22PageProps> = ({
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">
-                    <span className="text-[10px] font-mono-code font-bold tracking-widest text-[#006AA7] uppercase block">
+                    <span className="text-xs font-mono-code font-bold tracking-widest text-[#006AA7] uppercase block">
                       {pathway.grades}
                     </span>
                     <button
@@ -175,7 +175,7 @@ export const Lgr22Page: React.FC<Lgr22PageProps> = ({
                     {pathway.focus.map((f) => (
                       <span
                         key={f}
-                        className="text-[10px] font-mono-code font-bold text-[#0A1930] bg-[#F8FAFC] border border-slate-200 px-3 py-1.5 uppercase tracking-wide"
+                        className="text-xs font-mono-code font-bold text-[#0A1930] bg-[#F8FAFC] border border-slate-200 px-3 py-1.5 uppercase tracking-wide"
                       >
                         {f}
                       </span>
@@ -219,7 +219,7 @@ export const Lgr22Page: React.FC<Lgr22PageProps> = ({
               <GraduationCap className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-[10px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase block">
+              <span className="text-xs font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase block">
                 {GY25_CONNECTIONS.audience}
               </span>
               <h3 className="font-headline font-black text-xl sm:text-2xl uppercase tracking-tight text-[#0A1930]">
@@ -234,7 +234,7 @@ export const Lgr22Page: React.FC<Lgr22PageProps> = ({
             {GY25_CONNECTIONS.connections.map((c) => (
               <span
                 key={c}
-                className="text-[10px] font-mono-code font-bold text-[#0A1930] bg-white border border-slate-200 px-3 py-1.5 uppercase tracking-wide"
+                className="text-xs font-mono-code font-bold text-[#0A1930] bg-white border border-slate-200 px-3 py-1.5 uppercase tracking-wide"
               >
                 {c}
               </span>

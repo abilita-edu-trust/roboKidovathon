@@ -58,7 +58,7 @@ export const Hero: React.FC<HeroProps> = ({
             className="flex items-center gap-2 mb-6"
           >
             <span className="w-1.5 h-1.5 bg-[#0052FF]" />
-            <span className="text-[11px] font-mono-code font-bold tracking-[0.25em] text-slate-400 uppercase">
+            <span className="text-[13px] font-mono-code font-bold tracking-[0.25em] text-slate-400 uppercase">
               ROBO-KIDO-A-THON
             </span>
           </motion.div>
@@ -105,14 +105,14 @@ export const Hero: React.FC<HeroProps> = ({
       {/* ── 3. MINIMAL CORNER REGISTRATION MARKS & SCROLL CUE ── */}
       <div className="relative z-10 w-full max-w-[1440px] mx-auto px-6 sm:px-10 pb-8 flex items-center justify-between text-xs font-mono-code text-slate-500">
         <div className="flex items-center gap-3">
-          <span className="text-[10px] tracking-[0.2em] uppercase text-slate-400">
+          <span className="text-xs tracking-[0.2em] uppercase text-slate-400">
             [ 01 // 04 ]
           </span>
         </div>
 
         <a
           href="#mission"
-          className="flex items-center gap-1.5 text-[10px] tracking-[0.2em] text-slate-400 hover:text-white uppercase transition-colors"
+          className="flex items-center gap-1.5 text-xs tracking-[0.2em] text-slate-400 hover:text-white uppercase transition-colors"
         >
           <span>SCROLL</span>
           <ChevronDown className="w-3.5 h-3.5 text-[#0052FF] animate-bounce" />

@@ -103,7 +103,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <span>{nav.brand}</span>
               <span
-                className={`font-mono-code font-bold text-[10px] leading-none px-1.5 py-0.5 border transition-colors ${
+                className={`font-mono-code font-bold text-xs leading-none px-1.5 py-0.5 border transition-colors ${
                   isDarkHeader
                     ? 'text-[#FFCD00] bg-white/10 border-white/20'
                     : 'text-[#006AA7] bg-slate-100 border-slate-200'
@@ -319,7 +319,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <ArrowRight className="w-4 h-4" />
                   </button>
 
-                  <div className="p-3 bg-slate-50 border border-slate-200 text-[11px] font-mono-code text-slate-500 text-center">
+                  <div className="p-3 bg-slate-50 border border-slate-200 text-[13px] font-mono-code text-slate-500 text-center">
                     {pickLang(nav.season, sv)}
                   </div>
                 </div>

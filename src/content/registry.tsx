@@ -84,7 +84,7 @@ export const SECTION_DEFS: Record<string, SectionDef> = {
   'meet-us': def<MeetUsData>({
     defaults: meetUsDefaults,
     render: (d) => (
-      <section className="w-full bg-white text-[#0A1930] py-14 sm:py-16 px-4 sm:px-6 lg:px-10">
+      <section className="w-full bg-white text-[#0A1930] py-8 sm:py-10 px-4 sm:px-6 lg:px-10">
         <div className="max-w-[1560px] mx-auto">
           <CollaboratorsMarquee data={d} />
         </div>
@@ -108,7 +108,7 @@ export const SECTION_DEFS: Record<string, SectionDef> = {
   fees: def<FeesData>({
     defaults: feesDefaults,
     render: (d) => (
-      <section className="w-full bg-white px-4 sm:px-6 lg:px-10 pb-12">
+      <section className="w-full bg-white px-4 sm:px-6 lg:px-10 pb-8">
         <div className="max-w-[1560px] mx-auto">
           <ParticipationFees data={d} />
         </div>
@@ -121,7 +121,7 @@ export const SECTION_DEFS: Record<string, SectionDef> = {
       env.city ? (
         <CityVoteSection onOpenIdeas={env.ideas} onSubmitIdea={() => env.register('submit-idea')} data={d} />
       ) : (
-        <section id="vote-ideas" className="w-full bg-white text-[#0A1930] py-10 sm:py-14 px-4 sm:px-6 lg:px-10 scroll-mt-20">
+        <section id="vote-ideas" className="w-full bg-white text-[#0A1930] py-8 sm:py-10 px-4 sm:px-6 lg:px-10 scroll-mt-20">
           <div className="max-w-[1560px] mx-auto">
             <VoteYoungMindsSection onNavigateIdeas={env.ideas} onNavigateSubmit={() => env.register('submit-idea')} data={d} />
           </div>
@@ -153,7 +153,7 @@ const PartnersMarquee: React.FC<{ data: PartnersData; env: SectionEnv }> = ({ da
 
 /** City banner over the skyline, then the city's programme card (as on vfi). */
 const CityProgramme: React.FC<{ data: ProgrammeData; env: SectionEnv }> = ({ data, env }) => (
-  <section className="w-full bg-gradient-to-b from-[#F2F8FD] to-white px-4 sm:px-6 lg:px-10 pt-14 sm:pt-20 pb-2">
+  <section className="w-full bg-gradient-to-b from-[#F2F8FD] to-white px-4 sm:px-6 lg:px-10 pt-8 sm:pt-10 pb-2">
     <div className="max-w-[1400px] mx-auto space-y-10">
       <FutureInnovatorsBanner src={data.banner} />
       <div id="journey" className="scroll-mt-24">

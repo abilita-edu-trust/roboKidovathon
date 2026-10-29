@@ -27,7 +27,15 @@ export interface PathwayData {
   steps: PathwayStepData[];
   callout: Bi;
   cta: CmsLink;
+  /** The Register button beside the CTA (two cards side by side); without a label it opens the programme's form. */
+  register?: CmsLink;
 }
+
+/** The registration form for a card's programme: RoboKidovation's competition entry or the hackathon squad. */
+export const registerLink = (theme: string): CmsLink => ({
+  label: bi('REGISTER', 'ANMÄL DIG'),
+  href: targetToHref('register', theme === 'hack' ? 'hackathon' : 'competition'),
+});
 
 /** A programme card as the city data builds it, one per language. */
 export interface PathwaySource {
@@ -113,6 +121,7 @@ export const experienceDefaults = (c: SiteConfig): ExperienceData => ({
         'From school workshops and internal competitions, up to **4 teams** from each participating school or association qualify for the Västerås RoboKidovation Final on **4–5 December 2026**.'
       ),
       cta: { label: bi('EXPLORE TRACK'), href: targetToHref('challenges') },
+      register: registerLink('robo'),
     },
     {
       theme: 'hack',
@@ -136,6 +145,7 @@ export const experienceDefaults = (c: SiteConfig): ExperienceData => ({
         'Students work on real-world challenges around science, technology, sustainability and innovation. The final presentations take place on **4–5 December 2026**.'
       ),
       cta: { label: bi('EXPLORE TRACK'), href: targetToHref('workflow') },
+      register: registerLink('hack'),
     },
   ],
   venues: [

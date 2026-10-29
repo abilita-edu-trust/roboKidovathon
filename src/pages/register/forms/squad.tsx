@@ -1,9 +1,9 @@
 // Hackathon squad (Young Inno Hack on vfi, RoboHack on vxo). The challenge area is the theme
 // card chosen before the form; individuals may register alone and get matched to a squad.
 import React from 'react';
-import { Compass } from 'lucide-react';
+import { Compass, Lightbulb } from 'lucide-react';
 import {
-  Chips, FormDef, Grid, LocationFields, MemberRows, Note, Section, SelectField, TextField,
+  Chips, FormDef, Grid, LocationFields, MemberRows, Note, Section, SelectField, TextArea, TextField,
   chipLabels, locationInitial, locationRow, memberRows, namedMembers, resolveLocation, rows, str, submitRegistration,
   type ChipOption, type FieldsProps, type FormCtx,
 } from '../ui';
@@ -66,6 +66,21 @@ const SquadFields: React.FC<FieldsProps> = (props) => {
           <Note>{L('No team yet? Register on your own and we help you find teammates.', 'Inget lag än? Anmäl dig själv så hjälper vi dig att hitta lagkamrater.')}</Note>
         )}
       </Section>
+
+      {/* Optional: squads that already have an idea can describe it; everyone else skips this. */}
+      <Section title={L('Add your idea (optional)', 'Lägg till din idé (valfritt)')} icon={Lightbulb} green>
+        <TextArea
+          k="idea"
+          v={v}
+          set={set}
+          rows={3}
+          label={L('Your idea', 'Din idé')}
+          placeholder={L(
+            'Already have an idea? Describe it in a few lines. You can skip this.',
+            'Har ni redan en idé? Beskriv den med några rader. Du kan hoppa över detta.',
+          )}
+        />
+      </Section>
     </>
   );
 };
@@ -104,6 +119,7 @@ export const squadForm: FormDef = {
         [L('Grade', 'Årskurs'), str(v.gradeGroup)],
         [L('Squad members', 'Lagmedlemmar'), namedMembers(v.members).map((m) => (m.grade ? `${m.full_name} (${m.grade})` : m.full_name)).join(', ')],
         [L('Squad skills', 'Lagets färdigheter'), chipLabels(v.skills, SKILL_OPTIONS, sv)],
+        [L('Idea', 'Idé'), str(v.idea)],
       ),
     ];
   },
@@ -131,7 +147,7 @@ export const squadForm: FormDef = {
       grade_group: v.gradeGroup,
       consent_agreed: !!v.consentAgreed,
       form_type: 'hackathon',
-      intake_details: { squad_skills: v.skills ?? [], challenge_domain: ctx.path.theme ?? '' },
+      intake_details: { squad_skills: v.skills ?? [], challenge_domain: ctx.path.theme ?? '', ...(str(v.idea) ? { idea: str(v.idea) } : {}) },
     });
   },
   submitLabel: (ctx) => ctx.L('Register squad', 'Anmäl laget'),

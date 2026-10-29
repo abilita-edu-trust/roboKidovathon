@@ -19,7 +19,7 @@ export const RoboForSchoolsSection: React.FC<RoboForSchoolsSectionProps> = ({
         {/* Top Header */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-16 gap-6 pb-10 border-b border-white/10">
           <div>
-            <span className="text-[10px] font-mono-code font-bold tracking-[0.25em] text-[#E2FF00] uppercase block mb-3">
+            <span className="text-xs font-mono-code font-bold tracking-[0.25em] text-[#E2FF00] uppercase block mb-3">
               07 / PRINCIPALS & EDUCATORS PORTAL
             </span>
             <h2
@@ -54,7 +54,7 @@ export const RoboForSchoolsSection: React.FC<RoboForSchoolsSectionProps> = ({
           {/* Column 01: What We Deliver */}
           <div className="pr-0 md:pr-10 pb-8 md:pb-0 space-y-6">
             <div className="flex items-center gap-2">
-              <span className="text-[9px] font-mono-code font-bold text-[#0052FF] bg-[#0052FF]/20 px-2 py-0.5 rounded-[2px]">
+              <span className="text-xs font-mono-code font-bold text-[#0052FF] bg-[#0052FF]/20 px-2 py-0.5 rounded-[2px]">
                 PART 01
               </span>
               <h3 className="font-display font-black text-lg uppercase tracking-wider text-white">
@@ -71,7 +71,7 @@ export const RoboForSchoolsSection: React.FC<RoboForSchoolsSectionProps> = ({
                 { code: 'MEDIA', text: 'Full event photography & tournament media pack' },
               ].map((item) => (
                 <div key={item.code} className="flex items-start gap-3">
-                  <span className="text-[9px] font-mono-code font-bold text-[#0052FF] border border-[#0052FF]/30 px-1.5 py-0.5 rounded-[2px] shrink-0 mt-0.5">
+                  <span className="text-xs font-mono-code font-bold text-[#0052FF] border border-[#0052FF]/30 px-1.5 py-0.5 rounded-[2px] shrink-0 mt-0.5">
                     {item.code}
                   </span>
                   <span className="text-xs sm:text-sm text-slate-300 font-light leading-relaxed">
@@ -85,7 +85,7 @@ export const RoboForSchoolsSection: React.FC<RoboForSchoolsSectionProps> = ({
           {/* Column 02: School Requirements */}
           <div className="px-0 md:px-10 py-8 md:py-0 space-y-6">
             <div className="flex items-center gap-2">
-              <span className="text-[9px] font-mono-code font-bold text-[#E2FF00] bg-[#E2FF00]/10 px-2 py-0.5 rounded-[2px]">
+              <span className="text-xs font-mono-code font-bold text-[#E2FF00] bg-[#E2FF00]/10 px-2 py-0.5 rounded-[2px]">
                 PART 02
               </span>
               <h3 className="font-display font-black text-lg uppercase tracking-wider text-white">
@@ -115,7 +115,7 @@ export const RoboForSchoolsSection: React.FC<RoboForSchoolsSectionProps> = ({
           <div className="pl-0 md:pl-10 pt-8 md:pt-0 flex flex-col justify-between">
             <div className="space-y-4">
               <div className="flex items-center gap-2">
-                <span className="text-[9px] font-mono-code font-bold text-white bg-white/10 px-2 py-0.5 rounded-[2px]">
+                <span className="text-xs font-mono-code font-bold text-white bg-white/10 px-2 py-0.5 rounded-[2px]">
                   PART 03
                 </span>
                 <h3 className="font-display font-black text-lg uppercase tracking-wider text-white">
@@ -133,7 +133,7 @@ export const RoboForSchoolsSection: React.FC<RoboForSchoolsSectionProps> = ({
                 <span className="text-2xl font-display font-extrabold text-white/50 uppercase tracking-widest mt-1 block">
                   SEK
                 </span>
-                <span className="block text-[10px] font-mono-code text-slate-400 uppercase tracking-wider mt-2">
+                <span className="block text-xs font-mono-code text-slate-400 uppercase tracking-wider mt-2">
                   + VAT · 125 SEK TOTAL PER STUDENT
                 </span>
               </div>

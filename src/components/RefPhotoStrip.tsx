@@ -78,7 +78,7 @@ export const RefPhotoStrip: React.FC<RefPhotoStripProps> = ({
           >
             <div className="flex items-center gap-2 text-[#006AA7]">
               <Layers className="w-4 h-4" />
-              <span className="text-[10px] font-mono-code font-bold uppercase tracking-[0.25em]">
+              <span className="text-xs font-mono-code font-bold uppercase tracking-[0.25em]">
                 COMPETITION HIGHLIGHTS
               </span>
             </div>
@@ -143,7 +143,7 @@ export const RefPhotoStrip: React.FC<RefPhotoStripProps> = ({
 
                 {/* Content */}
                 <div className="relative space-y-2.5 z-20">
-                  <div className="flex items-center gap-2 text-[10px] font-mono-code font-bold text-[#FFCD00] uppercase tracking-wider">
+                  <div className="flex items-center gap-2 text-xs font-mono-code font-bold text-[#FFCD00] uppercase tracking-wider">
                     <motion.div
                       whileHover={{ rotate: 15, scale: 1.2 }}
                       transition={{ type: 'spring', stiffness: 400, damping: 15 }}
@@ -177,7 +177,7 @@ export const RefPhotoStrip: React.FC<RefPhotoStripProps> = ({
           <div className="space-y-1.5 text-center sm:text-left">
             <div className="flex items-center justify-center sm:justify-start gap-2 text-[#FFCD00]">
               <Trophy className="w-4 h-4" />
-              <span className="text-[10px] font-mono-code font-bold uppercase tracking-widest">
+              <span className="text-xs font-mono-code font-bold uppercase tracking-widest">
                 2,000+ STUDENTS EMPOWERED ACROSS SWEDEN
               </span>
             </div>
@@ -226,7 +226,7 @@ export const RefPhotoStrip: React.FC<RefPhotoStripProps> = ({
               {/* Top Bar */}
               <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/10 bg-[#070709]">
                 <div>
-                  <span className="text-[10px] font-mono-code font-bold text-[#FFCD00] uppercase tracking-wider block">
+                  <span className="text-xs font-mono-code font-bold text-[#FFCD00] uppercase tracking-wider block">
                     {selectedPhoto.tag}
                   </span>
                   <h3 className="font-syne font-bold text-lg sm:text-xl text-white uppercase">

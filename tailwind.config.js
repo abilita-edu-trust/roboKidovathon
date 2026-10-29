@@ -15,6 +15,10 @@ const config: Config = {
       full: '0',
     },
     extend: {
+      // The smallest text size is 13px, so labels stay readable.
+      fontSize: {
+        xs: ['0.8125rem', { lineHeight: '1.125rem' }],
+      },
       colors: {
         'robo-navy': '#0A1930',
         'robo-navy-light': '#0F2A4D',

@@ -5,12 +5,15 @@ import { useT } from '../content/useT';
 import { siteIcon } from '../content/icons';
 import { teamsDefaults, type TeamsData } from '../content/sections/teams';
 
-// One colour per category, used on its card header, skill path and the coding badge.
-const CATEGORY_STYLES: Record<string, { band: string; dot: string; line: string; badge: string }> = {
-  Junior: { band: 'bg-[#006AA7] text-white', dot: 'bg-[#006AA7]', line: 'bg-[#006AA7]/25', badge: 'bg-sky-100 text-[#006AA7]' },
-  Senior: { band: 'bg-[#0A1930] text-white', dot: 'bg-[#0A1930]', line: 'bg-[#0A1930]/20', badge: 'bg-slate-200 text-[#0A1930]' },
-  GYM: { band: 'bg-[#FFCD00] text-[#0A1930]', dot: 'bg-[#E0B000]', line: 'bg-[#FFCD00]/50', badge: 'bg-[#FFF3C2] text-[#0A1930]' },
+// One colour per category, used on its card header, skill markers and the coding badge.
+const CATEGORY_STYLES: Record<string, { band: string; dot: string; badge: string }> = {
+  Junior: { band: 'bg-[#006AA7] text-white', dot: 'bg-[#006AA7]', badge: 'bg-sky-100 text-[#006AA7]' },
+  Senior: { band: 'bg-[#0A1930] text-white', dot: 'bg-[#0A1930]', badge: 'bg-slate-200 text-[#0A1930]' },
+  GYM: { band: 'bg-[#FFCD00] text-[#0A1930]', dot: 'bg-[#E0B000]', badge: 'bg-[#FFF3C2] text-[#0A1930]' },
 };
+
+/** Wide-screen columns for 1–5 team facts (full class names, so Tailwind keeps them). */
+const FACT_COLS = ['', 'lg:grid-cols-1', 'lg:grid-cols-2', 'lg:grid-cols-3', 'lg:grid-cols-4', 'lg:grid-cols-5'];
 
 const BAR_STYLES = ['bg-[#E2E8F0] text-[#0A1930]', 'bg-[#006AA7] text-white', 'bg-[#0A1930] text-white', 'bg-[#FFCD00] text-[#0A1930]'];
 
@@ -23,7 +26,7 @@ const PanelHeader: React.FC<{ icon: LucideIcon; title: string; badge?: string }>
       <h3 className="font-headline font-black text-lg sm:text-xl uppercase tracking-tight text-white">{title}</h3>
     </div>
     {badge && (
-      <span className="border border-[#FFCD00] text-[#FFCD00] text-[11px] font-mono-code font-bold px-2 py-1 whitespace-nowrap">{badge}</span>
+      <span className="border border-[#FFCD00] text-[#FFCD00] text-[13px] font-mono-code font-bold px-2 py-1 whitespace-nowrap">{badge}</span>
     )}
   </div>
 );
@@ -36,15 +39,19 @@ export const RoboKidoTeamsFinalDay: React.FC<{ className?: string; data?: TeamsD
   const timedSteps = d.finalSteps.filter((s) => s.minutes > 0);
   const totalMinutes = timedSteps.reduce((sum, s) => sum + s.minutes, 0);
 
+  // Team facts share one row on wide screens; an odd last fact spans the 2-column rows.
+  const factCount = d.teamFacts.length;
+  const factCols = factCount <= 5 ? FACT_COLS[factCount] : factCount === 6 ? 'lg:grid-cols-3' : 'lg:grid-cols-4';
+
   return (
     <section
       id="teams-final-day"
       data-no-translate="true"
-      className={`w-full bg-white text-[#0A1930] py-12 sm:py-16 px-4 sm:px-6 lg:px-10 scroll-mt-20 ${className}`}
+      className={`w-full bg-white text-[#0A1930] py-8 sm:py-10 px-4 sm:px-6 lg:px-10 scroll-mt-20 ${className}`}
     >
-      <div className="max-w-[1560px] mx-auto space-y-8 sm:space-y-10">
+      <div className="max-w-[1560px] mx-auto space-y-6 sm:space-y-8">
         <div>
-          <span className="block text-[11px] font-mono-code font-bold tracking-[0.25em] text-[#006AA7] uppercase mb-3">
+          <span className="block text-[13px] sm:text-sm font-mono-code font-bold tracking-[0.25em] text-[#006AA7] uppercase mb-3">
             {t(d.eyebrow)}
           </span>
           <h2
@@ -62,27 +69,27 @@ export const RoboKidoTeamsFinalDay: React.FC<{ className?: string; data?: TeamsD
             return (
               <article key={i} className="border border-slate-200 flex flex-col hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200">
                 <div className={`${style.band} px-5 py-4`}>
-                  <div className="text-[11px] font-mono-code font-bold uppercase tracking-wider opacity-80">{t(c.level)}</div>
+                  <div className="text-[13px] font-mono-code font-bold uppercase tracking-wider opacity-80">{t(c.level)}</div>
                   <h3 className="font-headline font-black text-2xl uppercase tracking-tight leading-none mt-1">{t(c.name)}</h3>
                   <div className="font-headline font-black text-lg mt-2 opacity-90">{t(c.grades)}</div>
                 </div>
                 <div className="p-5 flex-1 flex flex-col gap-4">
-                  <p className="text-sm text-slate-700 leading-snug">{t(c.focus)}</p>
-                  <div className="flex items-center gap-2 text-xs">
+                  <p className="text-[15px] text-slate-700 leading-snug">{t(c.focus)}</p>
+                  <div className="flex items-center gap-2 text-sm">
                     <Code2 className="w-4 h-4 text-slate-400" />
-                    <span className="text-slate-500">{t(d.codingLabel)}</span>
+                    <span className="text-slate-600">{t(d.codingLabel)}</span>
                     <span className={`px-2 py-0.5 font-bold ${style.badge}`}>{t(c.coding)}</span>
                   </div>
                   {c.skills.length > 0 && (
                     <div className="mt-auto pt-4 border-t border-slate-100">
-                      <div className="text-[11px] font-mono-code font-bold uppercase tracking-wider text-slate-500 mb-3">
+                      <div className="text-[13px] font-mono-code font-bold uppercase tracking-wider text-slate-500 mb-3">
                         {t(d.skillsLabel)}
                       </div>
-                      <ol className="relative space-y-2.5">
-                        <span className={`absolute left-[5px] top-2 bottom-2 w-0.5 ${style.line}`} aria-hidden />
+                      {/* Two columns where the card is wide enough, so the skills use its full width */}
+                      <ol className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 xl:grid-cols-2 gap-x-4 gap-y-2.5">
                         {c.skills.map((s, j) => (
-                          <li key={j} className="relative flex items-center gap-3 text-sm text-[#0A1930]">
-                            <span className={`w-3 h-3 shrink-0 ${style.dot} ring-2 ring-white`} aria-hidden />
+                          <li key={j} className="flex items-start gap-2.5 text-[15px] text-[#0A1930] leading-snug">
+                            <span className={`w-3 h-3 mt-1 shrink-0 ${style.dot}`} aria-hidden />
                             <span className="first-letter:uppercase">{t(s)}</span>
                           </li>
                         ))}
@@ -95,84 +102,84 @@ export const RoboKidoTeamsFinalDay: React.FC<{ className?: string; data?: TeamsD
           })}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1.35fr_1fr] gap-6 lg:gap-8 items-start">
-          {/* ── Teams ── */}
-          <div className="border border-slate-200">
-            <PanelHeader icon={Users} title={t(d.teamsTitle)} />
-            <div className="p-5 sm:p-6 space-y-6">
-              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {d.teamFacts.map((f, i) => {
-                  const Icon = siteIcon(f.icon);
-                  return (
-                  <li key={i} className="flex gap-3 p-3.5 bg-[#F2F6FA] border-l-4 border-[#006AA7]">
+        {/* ── Teams ── */}
+        <div className="border border-slate-200">
+          <PanelHeader icon={Users} title={t(d.teamsTitle)} />
+          <div className="p-5 sm:p-6 space-y-6">
+            <ul className={`grid grid-cols-1 sm:grid-cols-2 ${factCols} gap-3`}>
+              {d.teamFacts.map((f, i) => {
+                const Icon = siteIcon(f.icon);
+                const oddLast = factCount % 2 === 1 && i === factCount - 1;
+                return (
+                  <li
+                    key={i}
+                    className={`flex lg:flex-col gap-3 p-4 bg-[#F2F6FA] border-t-4 border-[#006AA7] ${oddLast ? 'sm:col-span-2 lg:col-span-1' : ''}`}
+                  >
                     <span className="w-10 h-10 shrink-0 bg-white text-[#006AA7] flex items-center justify-center">
                       <Icon className="w-5 h-5" />
                     </span>
                     <div>
-                      <div className="font-headline font-black text-sm uppercase tracking-tight leading-tight">{t(f.value)}</div>
-                      <p className="text-xs text-slate-600 leading-snug mt-1">{t(f.text)}</p>
+                      <div className="font-headline font-black text-base uppercase tracking-tight leading-tight">{t(f.value)}</div>
+                      <p className="text-sm text-slate-600 leading-snug mt-1">{t(f.text)}</p>
                     </div>
                   </li>
+                );
+              })}
+            </ul>
+
+            <div>
+              <div className="text-[13px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase mb-2.5">
+                {t(d.rolesTitle)}
+              </div>
+              <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
+                {d.roles.map((r, i) => {
+                  const Icon = siteIcon(r.icon);
+                  return (
+                    <div key={i} className="bg-[#0A1930] text-white px-2 py-3.5 flex flex-col items-center gap-2 text-center">
+                      <Icon className="w-5 h-5 text-[#FFCD00]" />
+                      <span className="text-sm font-bold leading-tight">{t(r.label)}</span>
+                    </div>
                   );
                 })}
-              </ul>
-
-              <div>
-                <div className="text-[11px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase mb-2.5">
-                  {t(d.rolesTitle)}
-                </div>
-                <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
-                  {d.roles.map((r, i) => {
-                    const Icon = siteIcon(r.icon);
-                    return (
-                    <div key={i} className="bg-[#0A1930] text-white px-2 py-3 flex flex-col items-center gap-2 text-center">
-                      <Icon className="w-5 h-5 text-[#FFCD00]" />
-                      <span className="text-[11px] font-bold leading-tight">{t(r.label)}</span>
-                    </div>
-                    );
-                  })}
-                </div>
               </div>
-
-              <details className="group border border-slate-200">
-                <summary className="flex items-center justify-between gap-3 px-4 py-3 cursor-pointer list-none text-sm font-bold hover:bg-slate-50 [&::-webkit-details-marker]:hidden">
-                  {fill(t(d.rulesLabel), { count: d.rules.length }).join('')}
-                  <ChevronDown className="w-4 h-4 text-slate-500 transition-transform group-open:rotate-180" />
-                </summary>
-                <ol className="px-4 pb-4 pt-1 space-y-2.5">
-                  {d.rules.map((rule, i) => (
-                    <li key={i} className="flex gap-3 text-sm leading-relaxed text-slate-700">
-                      <span className="w-6 h-6 shrink-0 bg-[#FFCD00] text-[#0A1930] text-[11px] font-mono-code font-bold flex items-center justify-center">
-                        {i + 1}
-                      </span>
-                      <span>{t(rule)}</span>
-                    </li>
-                  ))}
-                </ol>
-              </details>
             </div>
-          </div>
 
-          {/* ── Before the final ── */}
-          <div className="border border-slate-200">
-            <PanelHeader icon={Code2} title={t(d.beforeTitle)} />
-            <div className="p-5 sm:p-6 space-y-5">
-              <div className="grid grid-cols-3 gap-2 sm:gap-3">
-                {d.prep.map((s, i) => (
-                  <div key={i} className="border-t-4 border-[#006AA7] bg-[#F2F6FA] px-3 py-3 sm:px-4 sm:py-4">
-                    <div className="font-headline font-black text-xl sm:text-2xl uppercase tracking-tight leading-none">{t(s.value)}</div>
-                    <div className="mt-2 text-[10px] font-mono-code uppercase tracking-wider text-slate-500">{t(s.label)}</div>
-                  </div>
+            <details className="group border border-slate-200">
+              <summary className="flex items-center justify-between gap-3 px-4 py-3 cursor-pointer list-none text-[15px] font-bold hover:bg-slate-50 [&::-webkit-details-marker]:hidden">
+                {fill(t(d.rulesLabel), { count: d.rules.length }).join('')}
+                <ChevronDown className="w-4 h-4 text-slate-500 transition-transform group-open:rotate-180" />
+              </summary>
+              <ol className="px-4 pb-4 pt-1 space-y-2.5">
+                {d.rules.map((rule, i) => (
+                  <li key={i} className="flex gap-3 text-[15px] leading-relaxed text-slate-700">
+                    <span className="w-6 h-6 shrink-0 bg-[#FFCD00] text-[#0A1930] text-[13px] font-mono-code font-bold flex items-center justify-center">
+                      {i + 1}
+                    </span>
+                    <span>{t(rule)}</span>
+                  </li>
                 ))}
-              </div>
-              <p className="text-sm leading-relaxed text-slate-700">
-                {t(d.prepText)}
-              </p>
+              </ol>
+            </details>
+          </div>
+        </div>
+
+        {/* ── Before the final: the preparation figures beside what they mean ── */}
+        <div className="border border-slate-200">
+          <PanelHeader icon={Code2} title={t(d.beforeTitle)} />
+          <div className="p-5 sm:p-6 grid grid-cols-1 lg:grid-cols-5 gap-3 lg:gap-4">
+            <div className="lg:col-span-3 grid grid-cols-3 gap-3">
+              {d.prep.map((s, i) => (
+                <div key={i} className="border-t-4 border-[#006AA7] bg-[#F2F6FA] px-3 py-4 sm:px-4 sm:py-5 flex flex-col justify-center">
+                  <div className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight leading-none">{t(s.value)}</div>
+                  <div className="mt-2 text-xs sm:text-[13px] font-mono-code uppercase tracking-wider text-slate-600">{t(s.label)}</div>
+                </div>
+              ))}
+            </div>
+            <div className="lg:col-span-2 flex flex-col gap-3">
+              <p className="text-[15px] leading-relaxed text-slate-700 flex-1 flex items-center">{t(d.prepText)}</p>
               <div className="flex gap-3 p-4 bg-[#0A1930] text-white">
                 <EyeOff className="w-5 h-5 shrink-0 text-[#FFCD00]" />
-                <p className="text-sm leading-snug">
-                  {t(d.secret)}
-                </p>
+                <p className="text-[15px] leading-snug">{t(d.secret)}</p>
               </div>
             </div>
           </div>
@@ -182,11 +189,11 @@ export const RoboKidoTeamsFinalDay: React.FC<{ className?: string; data?: TeamsD
         <div className="border border-slate-200">
           <PanelHeader icon={Timer} title={t(d.finalTitle)} badge={t(d.finalBadge)} />
           <div className="p-5 sm:p-6 space-y-5">
-            <p className="text-sm leading-relaxed text-slate-700">
+            <p className="text-[15px] leading-relaxed text-slate-700">
               {t(d.finalIntro)}
             </p>
 
-            <div className="flex w-full h-10 text-[11px] font-mono-code font-bold uppercase">
+            <div className="flex w-full h-10 text-[13px] font-mono-code font-bold uppercase">
               {timedSteps.map((s, i) => (
                 <div
                   key={i}
@@ -207,11 +214,11 @@ export const RoboKidoTeamsFinalDay: React.FC<{ className?: string; data?: TeamsD
                       <span className="w-10 h-10 shrink-0 bg-[#0A1930] text-[#FFCD00] flex items-center justify-center">
                         <Icon className="w-5 h-5" />
                       </span>
-                      <span className="text-xs font-mono-code font-bold text-[#006AA7] uppercase hidden lg:inline">{t(s.time)}</span>
+                      <span className="text-sm font-mono-code font-bold text-[#006AA7] uppercase hidden lg:inline">{t(s.time)}</span>
                     </div>
                     <div>
-                      <span className="text-xs font-mono-code font-bold text-[#006AA7] uppercase lg:hidden">{t(s.time)}</span>
-                      <p className="text-sm text-[#0A1930] leading-snug">{t(s.label)}</p>
+                      <span className="text-sm font-mono-code font-bold text-[#006AA7] uppercase lg:hidden">{t(s.time)}</span>
+                      <p className="text-[15px] text-[#0A1930] leading-snug">{t(s.label)}</p>
                     </div>
                   </li>
                 );

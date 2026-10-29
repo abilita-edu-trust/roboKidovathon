@@ -191,7 +191,7 @@ export const IdeasVotingPage: React.FC<IdeasVotingPageProps> = ({
 
         {/* Page Title & Mission */}
         <div className="text-center max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 text-[11px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase mb-2">
+          <div className="inline-flex items-center gap-2 text-[13px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase mb-2">
             <Sparkles className="w-3.5 h-3.5 text-[#FFCD00]" />
             <span>{site.location ? `${site.hackLabel} ${site.cityName}`.toUpperCase() : 'VÄSTERÅS FUTURE INNOVATORS'} // PUBLIC VOTING ARENA</span>
           </div>
@@ -215,7 +215,7 @@ export const IdeasVotingPage: React.FC<IdeasVotingPageProps> = ({
                 <h2 className="font-headline font-black text-lg sm:text-xl uppercase tracking-tight text-[#0A1930]">
                   Top 10 Ideas Leaderboard
                 </h2>
-                <span className="text-[11px] font-mono-code text-slate-500">
+                <span className="text-[13px] font-mono-code text-slate-500">
                   Automatically ranked by live votes across schools
                 </span>
               </div>
@@ -257,15 +257,15 @@ export const IdeasVotingPage: React.FC<IdeasVotingPageProps> = ({
                   <h3 className="font-headline font-bold text-xs line-clamp-2 text-[#0A1930] group-hover:text-[#006AA7] transition-colors">
                     {item.idea_title}
                   </h3>
-                  <div className="text-[11px] font-semibold text-[#006AA7] truncate mt-1">
+                  <div className="text-[13px] font-semibold text-[#006AA7] truncate mt-1">
                     {item.school_name}
                   </div>
-                  <div className="text-[10px] font-mono-code text-slate-400 truncate">
+                  <div className="text-xs font-mono-code text-slate-400 truncate">
                     ID: {item.public_id}
                   </div>
                 </div>
 
-                <div className="mt-3 pt-2 border-t border-slate-200 flex items-center justify-between text-[10px] font-mono-code text-slate-500">
+                <div className="mt-3 pt-2 border-t border-slate-200 flex items-center justify-between text-xs font-mono-code text-slate-500">
                   <span>{item.public_id}</span>
                   <span className="text-[#006AA7] font-semibold group-hover:underline">
                     View & Vote →
@@ -327,13 +327,13 @@ export const IdeasVotingPage: React.FC<IdeasVotingPageProps> = ({
           {/* Admin Formats Review Shortcut */}
           {onNavigateAdmin && (
             <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs font-headline">
-              <span className="text-[11px] font-mono-code text-slate-400">
+              <span className="text-[13px] font-mono-code text-slate-400">
                 Official English Curation Active
               </span>
               <button
                 type="button"
                 onClick={onNavigateAdmin}
-                className="py-1 px-2.5 bg-white hover:bg-slate-100 border border-slate-300 text-slate-600 hover:text-[#006AA7] text-[10px] font-mono-code font-bold uppercase flex items-center gap-1 transition-colors"
+                className="py-1 px-2.5 bg-white hover:bg-slate-100 border border-slate-300 text-slate-600 hover:text-[#006AA7] text-xs font-mono-code font-bold uppercase flex items-center gap-1 transition-colors"
               >
                 <span>🛡️ Admin Formats Curation</span>
               </button>
@@ -397,14 +397,14 @@ export const IdeasVotingPage: React.FC<IdeasVotingPageProps> = ({
                       ) : (
                         <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 text-slate-400 p-4 text-center">
                           <ImageIcon className="w-10 h-10 mb-2 opacity-50" />
-                          <span className="text-[11px] font-mono-code uppercase">
+                          <span className="text-[13px] font-mono-code uppercase">
                             Concept Documentation
                           </span>
                         </div>
                       )}
 
                       {/* Category Badge */}
-                      <span className="absolute top-2.5 left-2.5 px-2 py-0.5 bg-[#0A1930]/80 backdrop-blur-sm text-white text-[10px] font-mono-code font-bold uppercase tracking-wider">
+                      <span className="absolute top-2.5 left-2.5 px-2 py-0.5 bg-[#0A1930]/80 backdrop-blur-sm text-white text-xs font-mono-code font-bold uppercase tracking-wider">
                         {idea.category || 'Innovation'}
                       </span>
 
@@ -423,7 +423,7 @@ export const IdeasVotingPage: React.FC<IdeasVotingPageProps> = ({
                     <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
                       <div>
                         {/* ID Token */}
-                        <div className="flex items-center justify-between text-[10px] font-mono-code text-slate-400 mb-1">
+                        <div className="flex items-center justify-between text-xs font-mono-code text-slate-400 mb-1">
                           <span>{idea.public_id}</span>
                           <span className="text-emerald-700 font-bold uppercase">Approved</span>
                         </div>
@@ -444,7 +444,7 @@ export const IdeasVotingPage: React.FC<IdeasVotingPageProps> = ({
                             <Building className="w-3.5 h-3.5 text-[#006AA7] shrink-0" />
                             <span>{idea.school_name}</span>
                           </div>
-                          <div className="text-[11px] text-slate-500 font-mono-code truncate">
+                          <div className="text-[13px] text-slate-500 font-mono-code truncate">
                             Idea ID: {idea.public_id}
                           </div>
                         </div>
@@ -505,7 +505,7 @@ export const IdeasVotingPage: React.FC<IdeasVotingPageProps> = ({
 
                 {/* Specific Pop-up Banner Header as Requested */}
                 <div className="mb-5 pb-4 border-b border-slate-200">
-                  <div className="inline-flex items-center gap-1.5 text-[10px] font-mono-code font-bold tracking-widest text-emerald-700 uppercase mb-2">
+                  <div className="inline-flex items-center gap-1.5 text-xs font-mono-code font-bold tracking-widest text-emerald-700 uppercase mb-2">
                     <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
                     <span>VERIFIED SCHOOL INNOVATION</span>
                   </div>

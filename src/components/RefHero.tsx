@@ -17,6 +17,9 @@ export const RefHero: React.FC<RefHeroProps> = (props) =>
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
+/** Audience line per event card: RoboKidovation blue, the hackathon green. */
+const AUDIENCE_COLOURS = ['text-sky-300', 'text-emerald-300'];
+
 const fadeUp = (delay: number) => ({
   initial: { opacity: 0, y: 18 },
   animate: { opacity: 1, y: 0 },
@@ -74,7 +77,7 @@ const EventsHero: React.FC<RefHeroProps> = ({ data: hero, go }) => {
               {/* Top label */}
               <motion.p
                 {...fadeUp(0)}
-                className="flex items-center gap-3 text-[#FFCD00] text-[10px] sm:text-[11px] font-mono-code font-bold tracking-[0.22em] uppercase"
+                className="flex items-center gap-3 text-[#FFCD00] text-sm sm:text-base font-mono-code font-bold tracking-[0.18em] uppercase"
               >
                 <span className="h-px w-8 bg-[#FFCD00] shrink-0" aria-hidden="true" />
                 <span className="whitespace-pre-line">{t(hero.badge)}</span>
@@ -96,7 +99,7 @@ const EventsHero: React.FC<RefHeroProps> = ({ data: hero, go }) => {
               {/* Subtitle */}
               <motion.p
                 {...fadeUp(0.16)}
-                className="mt-5 text-sm sm:text-base text-white/80 font-light leading-relaxed max-w-xl"
+                className="mt-5 text-base sm:text-lg text-white/85 leading-relaxed max-w-xl"
               >
                 {t(hero.intro)}
               </motion.p>
@@ -116,7 +119,7 @@ const EventsHero: React.FC<RefHeroProps> = ({ data: hero, go }) => {
                       aria-hidden="true"
                     />
                     <span className="flex items-start justify-between gap-4">
-                      <span className="font-mono-code font-bold text-[11px] sm:text-xs tracking-[0.2em] uppercase text-[#FFCD00]">
+                      <span className="font-mono-code font-bold text-[13px] sm:text-sm tracking-[0.2em] uppercase text-[#FFCD00]">
                         {t(event.date)}
                       </span>
                       <ArrowUpRight
@@ -127,15 +130,13 @@ const EventsHero: React.FC<RefHeroProps> = ({ data: hero, go }) => {
                     <span className="mt-3 block font-headline font-black text-lg sm:text-xl text-white leading-tight">
                       {t(event.title)}
                     </span>
-                    <span className="mt-2 block text-xs sm:text-[13px] text-white/70 leading-relaxed">
-                      {t(event.kind)}
-                      {t(event.audience) && (
-                        <>
-                          <span className="mx-2 text-white/30" aria-hidden="true">·</span>
-                          {t(event.audience)}
-                        </>
-                      )}
-                    </span>
+                    <span className="mt-2 block text-sm sm:text-[15px] text-white/85 leading-relaxed">{t(event.kind)}</span>
+                    {/* Audience on its own line, in the programme's colour */}
+                    {t(event.audience) && (
+                      <span className={`mt-1.5 block text-sm sm:text-[15px] font-bold leading-snug ${AUDIENCE_COLOURS[i % AUDIENCE_COLOURS.length]}`}>
+                        {t(event.audience)}
+                      </span>
+                    )}
                   </button>
                 ))}
               </motion.div>
@@ -146,7 +147,7 @@ const EventsHero: React.FC<RefHeroProps> = ({ data: hero, go }) => {
                   <button
                     type="button"
                     onClick={() => go(hero.primary.href)}
-                    className="group inline-flex w-full sm:w-auto items-center justify-center gap-2.5 px-7 py-3.5 bg-[#FFCD00] hover:bg-[#E6B800] text-[#0A1930] font-syne font-black text-xs sm:text-[13px] tracking-wider uppercase shadow-md hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFCD00] transition-colors duration-200"
+                    className="group inline-flex w-full sm:w-auto items-center justify-center gap-2.5 px-7 py-3.5 bg-[#FFCD00] hover:bg-[#E6B800] text-[#0A1930] font-syne font-black text-xs sm:text-sm tracking-wider uppercase shadow-md hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFCD00] transition-colors duration-200"
                   >
                     <span>{t(hero.primary.label)}</span>
                     <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
@@ -186,10 +187,10 @@ const FactBoxes: React.FC<{ facts: HeroData['facts'] }> = ({ facts }) => {
           transition={{ type: 'spring', stiffness: 400, damping: 20 }}
           className="flex flex-col gap-0.5 px-3 py-2 sm:px-3.5 sm:py-2.5 bg-white/10 backdrop-blur-md border border-white/15 text-white cursor-pointer shadow-xs transition-colors duration-200"
         >
-          <span className="font-mono-code font-bold text-[8.5px] sm:text-[9px] text-white/60 uppercase tracking-widest">
+          <span className="font-mono-code font-bold text-xs text-white/75 uppercase tracking-widest">
             {t(fact.label)}
           </span>
-          <span className="font-headline font-black text-xs sm:text-sm tracking-wide uppercase">
+          <span className="font-headline font-black text-sm sm:text-base tracking-wide uppercase">
             {t(fact.value)}
           </span>
         </motion.div>
@@ -258,7 +259,7 @@ const ClassicHero: React.FC<RefHeroProps> = ({ data: hero, go }) => {
             <motion.div
               animate={{ y: [0, -4, 0] }}
               transition={{ repeat: Infinity, duration: 3.2, ease: 'easeInOut' }}
-              className="inline-flex items-start gap-2 px-3 py-1.5 bg-black/40 backdrop-blur-md border border-[#FFCD00]/40 text-[#FFCD00] text-[10px] sm:text-[11px] font-mono-code font-bold tracking-[0.18em] uppercase shadow-md"
+              className="inline-flex items-start gap-2 px-3 py-1.5 bg-black/40 backdrop-blur-md border border-[#FFCD00]/40 text-[#FFCD00] text-sm sm:text-base font-mono-code font-bold tracking-[0.18em] uppercase shadow-md"
             >
               <span className="relative flex h-2 w-2 mt-1 shrink-0">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FFCD00] opacity-75"></span>
@@ -287,7 +288,7 @@ const ClassicHero: React.FC<RefHeroProps> = ({ data: hero, go }) => {
             </h1>
 
             {/* Sub-copy - refined size */}
-            <p className="text-xs sm:text-sm text-white/75 font-light leading-relaxed max-w-md">
+            <p className="text-sm sm:text-base text-white/85 leading-relaxed max-w-md">
               {t(hero.intro)}
             </p>
 

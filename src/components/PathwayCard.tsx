@@ -5,7 +5,7 @@ import { useT } from '../content/useT';
 import { siteIcon } from '../content/icons';
 import { richText } from '../content/richText';
 import { hasLabel } from '../content/sections/frame';
-import type { PathwayData } from '../content/sections/programmes';
+import { registerLink, type PathwayData } from '../content/sections/programmes';
 
 const THEMES = {
   robo: {
@@ -26,6 +26,7 @@ const THEMES = {
     connector: 'bg-sky-200',
     ctaSolid: 'text-[#006AA7] hover:bg-sky-50',
     bold: 'font-bold text-[#006AA7]',
+    ctaPrimary: 'bg-[#006AA7] hover:bg-[#013A63]',
   },
   hack: {
     card: 'border-[#059669]',
@@ -45,6 +46,7 @@ const THEMES = {
     connector: 'bg-emerald-200',
     ctaSolid: 'text-[#059669] hover:bg-emerald-50',
     bold: 'font-bold text-[#059669]',
+    ctaPrimary: 'bg-[#059669] hover:bg-[#047857]',
   },
 } as const;
 
@@ -71,6 +73,8 @@ export const PathwayCard: React.FC<PathwayCardProps> = ({ data, onCta: go, half 
   const ctaLabel = tr(data.cta.label);
   const showCta = hasLabel(data.cta);
   const onCta = () => go(data.cta.href);
+  // Saved cards from before the Register button (merged in with a blank link) get the programme's form.
+  const register = hasLabel(data.register) ? data.register : registerLink(data.theme);
 
   if (!half) {
     // Long journeys run as two timelines side by side on wide screens.
@@ -91,7 +95,7 @@ export const PathwayCard: React.FC<PathwayCardProps> = ({ data, onCta: go, half 
             </div>
             <div>
               <h3 className="font-headline font-black text-3xl sm:text-4xl tracking-tight leading-none">{title}</h3>
-              <p className={`text-[11px] sm:text-xs font-mono-code font-bold uppercase tracking-[0.2em] ${t.tagline} mt-1.5`}>{tagline}</p>
+              <p className={`text-[13px] sm:text-sm font-mono-code font-bold uppercase tracking-[0.2em] ${t.tagline} mt-1.5`}>{tagline}</p>
             </div>
           </div>
 
@@ -137,7 +141,7 @@ export const PathwayCard: React.FC<PathwayCardProps> = ({ data, onCta: go, half 
                       }`}
                     >
                       <StepIcon className="w-5 h-5" />
-                      <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#0A1930] text-white text-[9px] font-bold flex items-center justify-center">
+                      <span className="absolute -top-2 -right-2 w-5 h-5 bg-[#0A1930] text-white text-xs font-bold flex items-center justify-center">
                         {n}
                       </span>
                     </span>
@@ -152,7 +156,7 @@ export const PathwayCard: React.FC<PathwayCardProps> = ({ data, onCta: go, half 
                       </div>
                       {step.date && (
                         <span
-                          className={`shrink-0 self-start px-2.5 py-1 text-[11px] font-mono-code font-bold whitespace-nowrap ${
+                          className={`shrink-0 self-start px-2.5 py-1 text-[13px] font-mono-code font-bold whitespace-nowrap ${
                             step.highlight ? t.pillHighlight : t.pill
                           }`}
                         >
@@ -188,13 +192,13 @@ export const PathwayCard: React.FC<PathwayCardProps> = ({ data, onCta: go, half 
             <h3 className="font-headline font-black text-2xl sm:text-3xl text-white tracking-tight leading-none whitespace-nowrap">
               {title}
             </h3>
-            <p className={`text-[11px] sm:text-xs font-mono-code font-bold uppercase tracking-[0.2em] ${t.tagline} mt-1`}>
+            <p className={`text-[13px] sm:text-sm font-mono-code font-bold uppercase tracking-[0.2em] ${t.tagline} mt-1`}>
               {tagline}
             </p>
           </div>
         </div>
 
-        <div className={`text-xs sm:text-sm ${t.intro} font-light w-full border-t border-white/15 pt-3`}>
+        <div className={`text-sm sm:text-base ${t.intro} w-full border-t border-white/15 pt-3`}>
           {intro.map((line, i) => (
             <p key={i} className={i > 0 ? 'text-white/80' : undefined}>
               {line}
@@ -203,60 +207,72 @@ export const PathwayCard: React.FC<PathwayCardProps> = ({ data, onCta: go, half 
         </div>
       </div>
 
-      {/* Steps */}
+      {/* Steps: one numbered timeline, dates on the right */}
       <div className="p-5 sm:p-7 space-y-6 flex-1 flex flex-col justify-between">
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-3.5">
+        <ol className="relative">
           {steps.map((step, i) => {
             const StepIcon = step.icon;
             return (
-              <div
-                key={i}
-                className={`${t.step} border p-3.5 flex flex-col items-center text-center gap-3 transition-all duration-200 shadow-2xs group`}
-              >
-                <div className={`w-7 h-7 ${t.num} text-white flex items-center justify-center font-headline font-bold text-xs shadow-xs group-hover:scale-110 transition-transform`}>
-                  {i + 1}
-                </div>
-                <div className={`w-12 h-12 ${t.iconBox} flex items-center justify-center group-hover:text-white transition-colors duration-200`}>
+              <li key={i} className="relative flex gap-4 pb-4 last:pb-0 group">
+                {i < steps.length - 1 && <span className={`absolute left-6 top-12 bottom-0 w-0.5 ${t.connector}`} aria-hidden />}
+                <span
+                  className={`relative z-10 w-12 h-12 shrink-0 flex items-center justify-center transition-transform duration-200 group-hover:scale-105 ${
+                    step.highlight ? t.nodeHighlight : t.node
+                  }`}
+                >
                   <StepIcon className="w-6 h-6" />
-                </div>
-                <div className="space-y-1 flex flex-col justify-center">
-                  <h4 className="font-headline font-bold text-xs sm:text-sm text-[#0A1930] leading-tight">{step.title}</h4>
-                  <p className="text-[11px] text-slate-500 font-normal leading-tight">{step.subtitle}</p>
-                </div>
-                {step.date && (
-                  <div
-                    className={`mt-auto w-full py-1.5 px-2 text-[10px] sm:text-[11px] font-mono-code font-bold tracking-tight text-center ${
-                      step.highlight ? t.pillHighlight : t.pill
-                    }`}
-                  >
-                    {step.date}
+                  <span className="absolute -top-2 -left-2 w-6 h-6 bg-[#0A1930] text-white text-xs font-bold flex items-center justify-center">
+                    {i + 1}
+                  </span>
+                </span>
+                <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-x-4 gap-y-1.5 min-h-12">
+                  <div className="min-w-0">
+                    <h4 className="font-headline font-bold text-base uppercase tracking-tight text-[#0A1930] leading-tight">{step.title}</h4>
+                    <p className="text-sm text-slate-600 leading-snug mt-0.5">{step.subtitle}</p>
                   </div>
-                )}
-              </div>
+                  {step.date && (
+                    <span
+                      className={`shrink-0 self-start sm:self-center px-3 py-1.5 text-[13px] font-mono-code font-bold whitespace-nowrap ${
+                        step.highlight ? t.pillHighlight : t.pill
+                      }`}
+                    >
+                      {step.date}
+                    </span>
+                  )}
+                </div>
+              </li>
             );
           })}
-        </div>
+        </ol>
 
-        {/* Who goes to the final, and where to read more */}
-        <div className={`${t.callout} border p-4 flex flex-col sm:flex-row items-center justify-between gap-4`}>
-          <div className="flex items-center gap-3">
+        {/* Who goes to the final, then register or read more */}
+        <div className={`${t.callout} border p-4 sm:p-5 space-y-4`}>
+          <div className="flex items-start gap-3">
             <div className={`w-9 h-9 ${t.calloutIcon} flex items-center justify-center shrink-0`}>
               <Target className="w-5 h-5" />
             </div>
-            <p className="text-xs sm:text-sm text-[#0A1930] leading-snug font-medium">{callout}</p>
+            <p className="text-sm sm:text-[15px] text-[#0A1930] leading-snug font-medium">{callout}</p>
           </div>
-          {showCta && (
-          <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row gap-2.5">
             <button
               type="button"
-              onClick={onCta}
-              className={`group w-full sm:w-auto px-4 py-2.5 bg-white ${t.cta} border text-xs font-bold font-syne uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-2xs`}
+              onClick={() => go(register.href)}
+              className={`group flex-1 px-5 py-3 ${t.ctaPrimary} text-white text-sm font-bold font-syne uppercase tracking-wider transition-colors flex items-center justify-center gap-2 shadow-xs`}
             >
-              <span>{ctaLabel}</span>
-              <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+              <span>{tr(register.label)}</span>
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </button>
+            {showCta && (
+              <button
+                type="button"
+                onClick={onCta}
+                className={`group flex-1 px-5 py-3 bg-white ${t.cta} border text-sm font-bold font-syne uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-2xs`}
+              >
+                <span>{ctaLabel}</span>
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+              </button>
+            )}
           </div>
-          )}
         </div>
       </div>
     </motion.div>

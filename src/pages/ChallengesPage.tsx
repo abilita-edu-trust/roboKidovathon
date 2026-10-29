@@ -79,7 +79,7 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
           className="border-b border-slate-200 pb-12 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center"
         >
           <div>
-          <span className="text-[10px] font-mono-code font-medium tracking-[0.2em] text-slate-500 uppercase block mb-3">
+          <span className="text-xs font-mono-code font-medium tracking-[0.2em] text-slate-500 uppercase block mb-3">
             OFFICIAL TECHNICAL SPECIFICATIONS &amp; ARENA REGULATIONS // 2026 SEASON
           </span>
 
@@ -110,7 +110,7 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
             <h2 className="font-headline font-black text-xl sm:text-2xl uppercase tracking-tight text-[#0A1930]">
               Track Quick Reference
             </h2>
-            <span className="text-[11px] font-mono-code text-slate-500 uppercase">
+            <span className="text-[13px] font-mono-code text-slate-500 uppercase">
               Select a track below to inspect technical rules
             </span>
           </div>
@@ -193,7 +193,7 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
                       key={s.label}
                       className="p-3 bg-white border border-slate-200 space-y-0.5"
                     >
-                      <span className="block text-[9px] font-mono-code font-bold text-[#006AA7] uppercase">
+                      <span className="block text-xs font-mono-code font-bold text-[#006AA7] uppercase">
                         {s.label}
                       </span>
                       <span className="block text-xs font-headline font-bold text-[#0A1930] uppercase tracking-wider">
@@ -286,7 +286,7 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
                 <div className="p-5 sm:p-6 bg-[#F8FAFC] border-t border-slate-200">
                   <div className="flex items-center gap-2 mb-3">
                     <Layers className="w-4 h-4 text-[#006AA7]" />
-                    <span className="text-[10px] font-mono-code font-bold text-[#006AA7] uppercase tracking-widest">
+                    <span className="text-xs font-mono-code font-bold text-[#006AA7] uppercase tracking-widest">
                       SCHEMATIC BLUEPRINTS &amp; INVENTORY
                     </span>
                   </div>
@@ -303,10 +303,10 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
                       className="p-3.5 bg-white border border-slate-200 group cursor-pointer space-y-2.5 shadow-xs hover:border-[#006AA7]/40 transition-all flex flex-col justify-between"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-mono-code font-bold text-[#006AA7] uppercase">
+                        <span className="text-xs font-mono-code font-bold text-[#006AA7] uppercase">
                           244 × 122 cm ARENA MAT
                         </span>
-                        <span className="text-[9px] font-mono-code text-[#006AA7] flex items-center gap-1">
+                        <span className="text-xs font-mono-code text-[#006AA7] flex items-center gap-1">
                           <Eye className="w-3 h-3" />
                           <span>EXPAND</span>
                         </span>
@@ -318,7 +318,7 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
                           className="w-full h-28 sm:h-32 object-contain mx-auto group-hover:scale-105 transition-transform duration-300"
                         />
                       </div>
-                      <div className="text-[10px] font-mono-code text-slate-500 flex justify-between">
+                      <div className="text-xs font-mono-code text-slate-500 flex justify-between">
                         <span>2.44 m × 1.22 m</span>
                         <span className="text-[#006AA7] font-bold">OFFICIAL SPEC</span>
                       </div>
@@ -335,10 +335,10 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
                       className="p-3.5 bg-white border border-slate-200 group cursor-pointer space-y-2.5 shadow-xs hover:border-[#006AA7]/40 transition-all flex flex-col justify-between"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-mono-code font-bold text-[#006AA7] uppercase">
+                        <span className="text-xs font-mono-code font-bold text-[#006AA7] uppercase">
                           OFFICIAL HARDWARE KIT
                         </span>
-                        <span className="text-[9px] font-mono-code text-[#006AA7] flex items-center gap-1">
+                        <span className="text-xs font-mono-code text-[#006AA7] flex items-center gap-1">
                           <Eye className="w-3 h-3" />
                           <span>EXPAND</span>
                         </span>
@@ -350,7 +350,7 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
                           className="w-full h-28 sm:h-32 object-contain mx-auto group-hover:scale-[1.02] transition-transform duration-300"
                         />
                       </div>
-                      <div className="text-[10px] font-mono-code text-slate-500 flex justify-between">
+                      <div className="text-xs font-mono-code text-slate-500 flex justify-between">
                         <span>41+ COMPONENTS</span>
                         <span className="text-[#0A1930] font-bold">CLICK TO ZOOM</span>
                       </div>

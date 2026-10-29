@@ -48,7 +48,7 @@ export const RefSlushCountdown: React.FC<RefSlushCountdownProps> = ({ onOpenRegi
                   <span className="font-headline font-black text-3xl sm:text-5xl md:text-6xl text-[#0A1930] tracking-tight leading-none">
                     {unit.value}
                   </span>
-                  <span className="text-[9px] sm:text-xs font-mono-code font-bold text-slate-500 uppercase tracking-wider">
+                  <span className="text-xs font-mono-code font-bold text-slate-500 uppercase tracking-wider">
                     {unit.label}
                   </span>
                 </div>
@@ -58,7 +58,7 @@ export const RefSlushCountdown: React.FC<RefSlushCountdownProps> = ({ onOpenRegi
 
           {/* Milestone context & real action CTA */}
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3 w-full max-w-md">
-            <div className="text-[11px] font-mono-code text-slate-500 flex items-center gap-1.5">
+            <div className="text-[13px] font-mono-code text-slate-500 flex items-center gap-1.5">
               <Trophy className="w-3.5 h-3.5 text-[#006AA7]" />
               <span>School Qualifiers: October 2026</span>
             </div>

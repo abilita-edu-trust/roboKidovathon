@@ -17,7 +17,7 @@ export const PrizePool: React.FC<PrizePoolProps> = ({ onOpenRegister }) => {
         
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-20">
-          <div className="inline-flex items-center gap-2 text-[10px] font-mono-code font-bold tracking-[0.25em] text-cyan-400 uppercase mb-3">
+          <div className="inline-flex items-center gap-2 text-xs font-mono-code font-bold tracking-[0.25em] text-cyan-400 uppercase mb-3">
             <Trophy className="w-3.5 h-3.5" />
             <span>NON-DILUTIVE CAPITAL ALLOCATIONS</span>
           </div>
@@ -41,10 +41,10 @@ export const PrizePool: React.FC<PrizePoolProps> = ({ onOpenRegister }) => {
           >
             <div>
               <div className="flex items-center justify-between mb-4">
-                <span className="text-[10px] font-mono-code font-bold tracking-[0.2em] text-slate-400 uppercase">
+                <span className="text-xs font-mono-code font-bold tracking-[0.2em] text-slate-400 uppercase">
                   {PRIZE_TIERS[0].rank}
                 </span>
-                <span className="text-[9px] font-mono-code px-2 py-0.5 rounded bg-white/[0.05] text-slate-300 border border-white/[0.08]">
+                <span className="text-xs font-mono-code px-2 py-0.5 rounded bg-white/[0.05] text-slate-300 border border-white/[0.08]">
                   {PRIZE_TIERS[0].badge}
                 </span>
               </div>
@@ -82,10 +82,10 @@ export const PrizePool: React.FC<PrizePoolProps> = ({ onOpenRegister }) => {
             
             <div>
               <div className="flex items-center justify-between mb-4">
-                <span className="text-[10px] font-mono-code font-bold tracking-[0.2em] text-indigo-400 uppercase">
+                <span className="text-xs font-mono-code font-bold tracking-[0.2em] text-indigo-400 uppercase">
                   {PRIZE_TIERS[1].rank}
                 </span>
-                <span className="text-[9px] font-mono-code font-bold px-2.5 py-1 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 animate-pulse">
+                <span className="text-xs font-mono-code font-bold px-2.5 py-1 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 animate-pulse">
                   {PRIZE_TIERS[1].badge}
                 </span>
               </div>
@@ -128,10 +128,10 @@ export const PrizePool: React.FC<PrizePoolProps> = ({ onOpenRegister }) => {
           >
             <div>
               <div className="flex items-center justify-between mb-4">
-                <span className="text-[10px] font-mono-code font-bold tracking-[0.2em] text-slate-400 uppercase">
+                <span className="text-xs font-mono-code font-bold tracking-[0.2em] text-slate-400 uppercase">
                   {PRIZE_TIERS[2].rank}
                 </span>
-                <span className="text-[9px] font-mono-code px-2 py-0.5 rounded bg-white/[0.05] text-slate-300 border border-white/[0.08]">
+                <span className="text-xs font-mono-code px-2 py-0.5 rounded bg-white/[0.05] text-slate-300 border border-white/[0.08]">
                   {PRIZE_TIERS[2].badge}
                 </span>
               </div>
@@ -161,7 +161,7 @@ export const PrizePool: React.FC<PrizePoolProps> = ({ onOpenRegister }) => {
         <div className="mt-20 pt-16 border-t border-white/[0.08]">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10">
             <div>
-              <div className="text-[10px] font-mono-code font-bold tracking-[0.2em] text-indigo-400 uppercase mb-1">
+              <div className="text-xs font-mono-code font-bold tracking-[0.2em] text-indigo-400 uppercase mb-1">
                 SPECIALTY GRANTS // 6 CATEGORIES
               </div>
               <h3 className="font-display font-extrabold text-2xl sm:text-3xl text-white uppercase tracking-tight">
@@ -181,7 +181,7 @@ export const PrizePool: React.FC<PrizePoolProps> = ({ onOpenRegister }) => {
               >
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-[9px] font-mono-code text-slate-400 uppercase">
+                    <span className="text-xs font-mono-code text-slate-400 uppercase">
                       AWARD 0{idx + 1}
                     </span>
                     <span className="text-xs font-mono-code font-bold text-cyan-400">
@@ -192,7 +192,7 @@ export const PrizePool: React.FC<PrizePoolProps> = ({ onOpenRegister }) => {
                     {award.title}
                   </h4>
                 </div>
-                <div className="text-[11px] font-mono-code text-slate-400 uppercase mt-4 pt-3 border-t border-white/[0.04]">
+                <div className="text-[13px] font-mono-code text-slate-400 uppercase mt-4 pt-3 border-t border-white/[0.04]">
                   SPONSORED BY: {award.sponsor}
                 </div>
               </div>

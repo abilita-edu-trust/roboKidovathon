@@ -822,11 +822,11 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                 activePanel === 'workshops' ? 'border-[#FFCD00]' : 'border-slate-800'
               }`}
             >
-              <div className="text-[10px] font-mono-code text-slate-400 uppercase">1. Workshops</div>
+              <div className="text-xs font-mono-code text-slate-400 uppercase">1. Workshops</div>
               <div className="text-xl font-headline font-black text-white mt-0.5">
                 {stats.totalWorkshops}
               </div>
-              <div className="text-[10px] font-mono-code text-amber-400">
+              <div className="text-xs font-mono-code text-amber-400">
                 {stats.pendingWorkshops} pending
               </div>
             </div>
@@ -837,11 +837,11 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                 activePanel === 'demos' ? 'border-[#FFCD00]' : 'border-slate-800'
               }`}
             >
-              <div className="text-[10px] font-mono-code text-slate-400 uppercase">2. Demos</div>
+              <div className="text-xs font-mono-code text-slate-400 uppercase">2. Demos</div>
               <div className="text-xl font-headline font-black text-white mt-0.5">
                 {stats.totalDemos}
               </div>
-              <div className="text-[10px] font-mono-code text-amber-400">
+              <div className="text-xs font-mono-code text-amber-400">
                 {stats.pendingDemos} pending
               </div>
             </div>
@@ -852,11 +852,11 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                 activePanel === 'ideas' ? 'border-[#FFCD00]' : 'border-slate-800'
               }`}
             >
-              <div className="text-[10px] font-mono-code text-slate-400 uppercase">3. Ideas</div>
+              <div className="text-xs font-mono-code text-slate-400 uppercase">3. Ideas</div>
               <div className="text-xl font-headline font-black text-[#FFCD00] mt-0.5">
                 {stats.totalIdeas}
               </div>
-              <div className="text-[10px] font-mono-code text-emerald-400">
+              <div className="text-xs font-mono-code text-emerald-400">
                 {stats.approvedIdeas} live on site
               </div>
             </div>
@@ -867,11 +867,11 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                 activePanel === 'hackathons' ? 'border-[#FFCD00]' : 'border-slate-800'
               }`}
             >
-              <div className="text-[10px] font-mono-code text-slate-400 uppercase">4. Hackathons</div>
+              <div className="text-xs font-mono-code text-slate-400 uppercase">4. Hackathons</div>
               <div className="text-xl font-headline font-black text-white mt-0.5">
                 {stats.totalHackathons}
               </div>
-              <div className="text-[10px] font-mono-code text-amber-400">
+              <div className="text-xs font-mono-code text-amber-400">
                 {stats.pendingHackathons} squads
               </div>
             </div>
@@ -880,11 +880,11 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
               onClick={() => setShowAnalyticsModal(true)}
               className="p-2.5 bg-slate-900/80 border border-slate-800 col-span-2 sm:col-span-1 cursor-pointer hover:border-emerald-400 transition-all"
             >
-              <div className="text-[10px] font-mono-code text-slate-400 uppercase">Total Students</div>
+              <div className="text-xs font-mono-code text-slate-400 uppercase">Total Students</div>
               <div className="text-xl font-headline font-black text-emerald-400 mt-0.5">
                 {stats.totalStudents}+
               </div>
-              <div className="text-[10px] font-mono-code text-slate-400">
+              <div className="text-xs font-mono-code text-slate-400">
                 {stats.approvalRate}% Approval Rate
               </div>
             </div>
@@ -896,7 +896,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
           {/* User's "Dropdown to select what" feature */}
           <div className="flex flex-wrap items-center gap-3">
             <div className="space-y-1">
-              <label className="text-[10px] font-mono-code font-bold uppercase tracking-wider text-slate-500 block">
+              <label className="text-xs font-mono-code font-bold uppercase tracking-wider text-slate-500 block">
                 Select Program / Scope:
               </label>
               <div className="relative">
@@ -945,7 +945,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                     <span>{panel.icon}</span>
                     <span>{panel.label}</span>
                     <span
-                      className={`text-[10px] font-mono-code px-1 rounded-xs ${
+                      className={`text-xs font-mono-code px-1 rounded-xs ${
                         active ? 'bg-white text-[#006AA7]' : 'bg-slate-200 text-slate-700'
                       }`}
                     >
@@ -961,7 +961,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
           <div className="flex flex-wrap items-center gap-3">
             {/* View Mode Switcher */}
             <div className="space-y-1">
-              <label className="text-[10px] font-mono-code font-bold uppercase tracking-wider text-slate-500 block">
+              <label className="text-xs font-mono-code font-bold uppercase tracking-wider text-slate-500 block">
                 View Mode:
               </label>
               <div className="flex border border-slate-300">
@@ -1000,7 +1000,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
 
             {/* Sorting Dropdown */}
             <div className="space-y-1">
-              <label className="text-[10px] font-mono-code font-bold uppercase tracking-wider text-slate-500 block">
+              <label className="text-xs font-mono-code font-bold uppercase tracking-wider text-slate-500 block">
                 Sort By:
               </label>
               <div className="relative">
@@ -1021,7 +1021,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
 
             {/* Date Preset Dropdown */}
             <div className="space-y-1">
-              <label className="text-[10px] font-mono-code font-bold uppercase tracking-wider text-slate-500 block">
+              <label className="text-xs font-mono-code font-bold uppercase tracking-wider text-slate-500 block">
                 Timeframe:
               </label>
               <select
@@ -1043,7 +1043,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
           <div className="flex flex-wrap items-center justify-between gap-4">
             {/* Status Filter */}
             <div className="space-y-1.5">
-              <span className="text-[11px] font-mono-code font-bold uppercase tracking-wider text-slate-500">
+              <span className="text-[13px] font-mono-code font-bold uppercase tracking-wider text-slate-500">
                 Filter by Status:
               </span>
               <div className="flex flex-wrap gap-1.5">
@@ -1071,7 +1071,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
 
             {/* Country Filter */}
             <div className="space-y-1.5">
-              <span className="text-[11px] font-mono-code font-bold uppercase tracking-wider text-slate-500">
+              <span className="text-[13px] font-mono-code font-bold uppercase tracking-wider text-slate-500">
                 Filter by Country:
               </span>
               <div className="flex flex-wrap gap-1.5">
@@ -1104,7 +1104,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
           {(activePanel === 'ideas' || activePanel === 'all') && (
             <div className="pt-3 border-t border-slate-200 flex flex-wrap items-center justify-between gap-4">
               <div className="space-y-1.5">
-                <span className="text-[11px] font-mono-code font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1">
+                <span className="text-[13px] font-mono-code font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1">
                   <Filter className="w-3.5 h-3.5 text-[#006AA7]" />
                   <span>Multimodal Idea Format (Admin Exclusive):</span>
                 </span>
@@ -1134,7 +1134,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
 
               {/* Idea Category Filter */}
               <div className="space-y-1.5">
-                <span className="text-[11px] font-mono-code font-bold uppercase tracking-wider text-slate-500">
+                <span className="text-[13px] font-mono-code font-bold uppercase tracking-wider text-slate-500">
                   Segregation:
                 </span>
                 <select
@@ -1269,24 +1269,24 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                           className="bg-white p-3 border border-slate-200 shadow-xs space-y-2 hover:border-[#006AA7] transition-all"
                         >
                           <div className="flex items-center justify-between">
-                            <span className="text-[11px] font-mono-code font-bold text-[#006AA7]">
+                            <span className="text-[13px] font-mono-code font-bold text-[#006AA7]">
                               {item.public_id}
                             </span>
-                            <span className="text-[10px] font-mono-code uppercase bg-slate-100 text-slate-600 px-1.5">
+                            <span className="text-xs font-mono-code uppercase bg-slate-100 text-slate-600 px-1.5">
                               {isIdea ? item.category : item.form_type}
                             </span>
                           </div>
                           <div className="font-headline font-bold text-xs text-slate-800">
                             {isIdea ? item.idea_title : item.school_name || item.team_name}
                           </div>
-                          <div className="text-[11px] text-slate-500">
+                          <div className="text-[13px] text-slate-500">
                             {isIdea ? `By: ${item.student_name}` : `Contact: ${item.contact_name}`}
                           </div>
                           <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
                             <button
                               type="button"
                               onClick={() => handleOpenInspection(item)}
-                              className="text-[11px] font-headline font-bold text-[#006AA7] hover:underline"
+                              className="text-[13px] font-headline font-bold text-[#006AA7] hover:underline"
                             >
                               Inspect →
                             </button>
@@ -1299,7 +1299,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                                   handleUpdateRegStatus(item.id, 'approved');
                                 }
                               }}
-                              className="py-1 px-2 bg-emerald-600 text-white text-[10px] font-headline font-bold uppercase hover:bg-emerald-700"
+                              className="py-1 px-2 bg-emerald-600 text-white text-xs font-headline font-bold uppercase hover:bg-emerald-700"
                             >
                               Approve
                             </button>
@@ -1333,24 +1333,24 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                           className="bg-white p-3 border border-slate-200 shadow-xs space-y-2 hover:border-emerald-500 transition-all"
                         >
                           <div className="flex items-center justify-between">
-                            <span className="text-[11px] font-mono-code font-bold text-emerald-700">
+                            <span className="text-[13px] font-mono-code font-bold text-emerald-700">
                               {item.public_id}
                             </span>
-                            <span className="text-[10px] font-mono-code uppercase bg-emerald-50 text-emerald-800 px-1.5">
+                            <span className="text-xs font-mono-code uppercase bg-emerald-50 text-emerald-800 px-1.5">
                               Live
                             </span>
                           </div>
                           <div className="font-headline font-bold text-xs text-slate-800">
                             {isIdea ? item.idea_title : item.school_name || item.team_name}
                           </div>
-                          <div className="text-[11px] text-slate-500">
+                          <div className="text-[13px] text-slate-500">
                             {isIdea ? `${item.votes_count} Votes` : `${item.student_count} Students`}
                           </div>
                           <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
                             <button
                               type="button"
                               onClick={() => handleOpenInspection(item)}
-                              className="text-[11px] font-headline font-bold text-[#006AA7] hover:underline"
+                              className="text-[13px] font-headline font-bold text-[#006AA7] hover:underline"
                             >
                               Inspect →
                             </button>
@@ -1363,7 +1363,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                                   handleUpdateRegStatus(item.id, 'pending');
                                 }
                               }}
-                              className="text-[10px] font-headline font-bold text-slate-500 hover:text-slate-800"
+                              className="text-xs font-headline font-bold text-slate-500 hover:text-slate-800"
                             >
                               Reset
                             </button>
@@ -1397,10 +1397,10 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                           className="bg-white p-3 border border-slate-200 shadow-xs space-y-2 opacity-80 hover:opacity-100 transition-all"
                         >
                           <div className="flex items-center justify-between">
-                            <span className="text-[11px] font-mono-code font-bold text-rose-700">
+                            <span className="text-[13px] font-mono-code font-bold text-rose-700">
                               {item.public_id}
                             </span>
-                            <span className="text-[10px] font-mono-code uppercase bg-rose-100 text-rose-800 px-1.5">
+                            <span className="text-xs font-mono-code uppercase bg-rose-100 text-rose-800 px-1.5">
                               Rejected
                             </span>
                           </div>
@@ -1411,7 +1411,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                             <button
                               type="button"
                               onClick={() => handleOpenInspection(item)}
-                              className="text-[11px] font-headline font-bold text-[#006AA7] hover:underline"
+                              className="text-[13px] font-headline font-bold text-[#006AA7] hover:underline"
                             >
                               Inspect →
                             </button>
@@ -1424,7 +1424,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                                   handleUpdateRegStatus(item.id, 'pending');
                                 }
                               }}
-                              className="text-[10px] font-headline font-bold text-amber-600 hover:text-amber-800"
+                              className="text-xs font-headline font-bold text-amber-600 hover:text-amber-800"
                             >
                               Restore
                             </button>
@@ -1456,7 +1456,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                   Showing {currentVisibleItems.length} records in dense view
                 </span>
               </div>
-              <span className="text-[11px] font-mono-code text-slate-500">
+              <span className="text-[13px] font-mono-code text-slate-500">
                 Click row or Inspect to open coordinator details
               </span>
             </div>
@@ -1510,7 +1510,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                             {isIdea
                               ? item.school_name
                               : item.school_name || item.team_name || 'Individual'}
-                            <div className="text-[10px] font-mono-code text-slate-400 font-normal">
+                            <div className="text-xs font-mono-code text-slate-400 font-normal">
                               {isIdea ? item.category : item.form_type}
                             </div>
                           </td>
@@ -1519,7 +1519,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                           </td>
                           <td className="p-3 text-slate-600">
                             <div>{isIdea ? item.contact_email : item.email}</div>
-                            <div className="text-[10px] text-slate-400">
+                            <div className="text-xs text-slate-400">
                               {isIdea ? item.contact_phone : item.phone}
                             </div>
                           </td>
@@ -1531,7 +1531,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                           </td>
                           <td className="p-3">
                             <span
-                              className={`px-2 py-0.5 text-[10px] font-headline font-bold uppercase ${
+                              className={`px-2 py-0.5 text-xs font-headline font-bold uppercase ${
                                 item.status === 'approved'
                                   ? 'bg-emerald-100 text-emerald-800'
                                   : item.status === 'rejected'
@@ -1546,7 +1546,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                             <button
                               type="button"
                               onClick={() => handleOpenInspection(item)}
-                              className="py-1 px-2.5 bg-slate-200 hover:bg-[#006AA7] hover:text-white font-headline font-bold text-[11px] uppercase transition-colors"
+                              className="py-1 px-2.5 bg-slate-200 hover:bg-[#006AA7] hover:text-white font-headline font-bold text-[13px] uppercase transition-colors"
                             >
                               Inspect
                             </button>
@@ -1638,7 +1638,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                               • {reg.city_name || 'Västerås'}, {reg.country_name || 'Sweden'}
                             </span>
                             {adminNotes[reg.id] && (
-                              <span className="text-[10px] font-mono-code bg-amber-100 text-amber-800 px-1.5 py-0.5 flex items-center gap-1">
+                              <span className="text-xs font-mono-code bg-amber-100 text-amber-800 px-1.5 py-0.5 flex items-center gap-1">
                                 <StickyNote className="w-3 h-3" /> Note Saved
                               </span>
                             )}
@@ -1653,7 +1653,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                             <button
                               type="button"
                               onClick={() => handleOpenInspection(reg)}
-                              className="py-1 px-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-headline font-bold text-[11px] uppercase flex items-center gap-1"
+                              className="py-1 px-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-headline font-bold text-[13px] uppercase flex items-center gap-1"
                             >
                               <Eye className="w-3 h-3" /> Inspect
                             </button>
@@ -1678,7 +1678,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                         {/* Workshop Booking Details */}
                         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 pt-4 text-xs">
                           <div className="space-y-1">
-                            <span className="text-[10px] font-mono-code text-slate-400 uppercase font-bold block">
+                            <span className="text-xs font-mono-code text-slate-400 uppercase font-bold block">
                               Preferred Date & Slot
                             </span>
                             <div className="font-headline font-bold text-slate-800 flex items-center gap-1.5">
@@ -1692,7 +1692,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                           </div>
 
                           <div className="space-y-1">
-                            <span className="text-[10px] font-mono-code text-slate-400 uppercase font-bold block">
+                            <span className="text-xs font-mono-code text-slate-400 uppercase font-bold block">
                               Grade & Cohort Size
                             </span>
                             <div className="font-headline font-bold text-slate-800">
@@ -1702,7 +1702,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                           </div>
 
                           <div className="space-y-1">
-                            <span className="text-[10px] font-mono-code text-slate-400 uppercase font-bold block">
+                            <span className="text-xs font-mono-code text-slate-400 uppercase font-bold block">
                               Contact Coordinator
                             </span>
                             <div className="font-headline font-bold text-slate-800 flex items-center gap-1">
@@ -1722,14 +1722,14 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                           </div>
 
                           <div className="flex flex-col justify-end space-y-1.5">
-                            <span className="text-[10px] font-mono-code text-slate-400 uppercase font-bold">
+                            <span className="text-xs font-mono-code text-slate-400 uppercase font-bold">
                               Admin Actions:
                             </span>
                             <div className="flex flex-wrap gap-1.5">
                               <button
                                 type="button"
                                 onClick={() => handleUpdateRegStatus(reg.id, 'approved')}
-                                className="py-1 px-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-headline font-bold text-[11px] uppercase flex items-center gap-1 transition-colors"
+                                className="py-1 px-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-headline font-bold text-[13px] uppercase flex items-center gap-1 transition-colors"
                               >
                                 <Check className="w-3 h-3" />
                                 <span>Approve</span>
@@ -1737,14 +1737,14 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                               <button
                                 type="button"
                                 onClick={() => handleUpdateRegStatus(reg.id, 'pending')}
-                                className="py-1 px-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-headline font-bold text-[11px] uppercase transition-colors"
+                                className="py-1 px-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-headline font-bold text-[13px] uppercase transition-colors"
                               >
                                 Pending
                               </button>
                               <button
                                 type="button"
                                 onClick={() => handleUpdateRegStatus(reg.id, 'rejected')}
-                                className="py-1 px-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-headline font-bold text-[11px] uppercase transition-colors"
+                                className="py-1 px-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-headline font-bold text-[13px] uppercase transition-colors"
                               >
                                 Reject
                               </button>
@@ -1842,7 +1842,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                             <button
                               type="button"
                               onClick={() => handleOpenInspection(reg)}
-                              className="py-1 px-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-headline font-bold text-[11px] uppercase flex items-center gap-1"
+                              className="py-1 px-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-headline font-bold text-[13px] uppercase flex items-center gap-1"
                             >
                               <Eye className="w-3 h-3" /> Inspect
                             </button>
@@ -1862,7 +1862,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
 
                         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 pt-4 text-xs">
                           <div>
-                            <span className="text-[10px] font-mono-code text-slate-400 uppercase font-bold block">
+                            <span className="text-xs font-mono-code text-slate-400 uppercase font-bold block">
                               Date & Timing
                             </span>
                             <div className="font-headline font-bold text-slate-800">
@@ -1872,7 +1872,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                           </div>
 
                           <div>
-                            <span className="text-[10px] font-mono-code text-slate-400 uppercase font-bold block">
+                            <span className="text-xs font-mono-code text-slate-400 uppercase font-bold block">
                               Audience / Students
                             </span>
                             <div className="font-headline font-bold text-slate-800">
@@ -1882,7 +1882,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                           </div>
 
                           <div>
-                            <span className="text-[10px] font-mono-code text-slate-400 uppercase font-bold block">
+                            <span className="text-xs font-mono-code text-slate-400 uppercase font-bold block">
                               School Contact
                             </span>
                             <div className="font-headline font-bold text-slate-800">{reg.contact_name}</div>
@@ -1891,14 +1891,14 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                           </div>
 
                           <div className="flex flex-col justify-end space-y-1.5">
-                            <span className="text-[10px] font-mono-code text-slate-400 uppercase font-bold">
+                            <span className="text-xs font-mono-code text-slate-400 uppercase font-bold">
                               Admin Actions:
                             </span>
                             <div className="flex flex-wrap gap-1.5">
                               <button
                                 type="button"
                                 onClick={() => handleUpdateRegStatus(reg.id, 'approved')}
-                                className="py-1 px-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-headline font-bold text-[11px] uppercase flex items-center gap-1 transition-colors"
+                                className="py-1 px-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-headline font-bold text-[13px] uppercase flex items-center gap-1 transition-colors"
                               >
                                 <Check className="w-3 h-3" />
                                 <span>Confirm Demo</span>
@@ -1906,14 +1906,14 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                               <button
                                 type="button"
                                 onClick={() => handleUpdateRegStatus(reg.id, 'pending')}
-                                className="py-1 px-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-headline font-bold text-[11px] uppercase transition-colors"
+                                className="py-1 px-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-headline font-bold text-[13px] uppercase transition-colors"
                               >
                                 Pending
                               </button>
                               <button
                                 type="button"
                                 onClick={() => handleUpdateRegStatus(reg.id, 'rejected')}
-                                className="py-1 px-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-headline font-bold text-[11px] uppercase transition-colors"
+                                className="py-1 px-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-headline font-bold text-[13px] uppercase transition-colors"
                               >
                                 Reject
                               </button>
@@ -2012,11 +2012,11 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                                 <span>{idea.school_name || 'Individual Participant'}</span>
                               </span>
                               {idea.city_name && (
-                                <span className="text-[11px] font-mono-code text-slate-500">
+                                <span className="text-[13px] font-mono-code text-slate-500">
                                   • {idea.city_name}, {idea.country_name || 'Sweden'}
                                 </span>
                               )}
-                              <span className="text-[10px] font-mono-code bg-slate-100 text-slate-700 px-1.5 py-0.5">
+                              <span className="text-xs font-mono-code bg-slate-100 text-slate-700 px-1.5 py-0.5">
                                 🗳️ {idea.votes_count || 0} Votes
                               </span>
                             </div>
@@ -2024,19 +2024,19 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                             <div className="flex items-center gap-2">
                               {/* Format Indicators */}
                               {hasVoice && (
-                                <span className="px-2 py-0.5 bg-blue-100 text-blue-800 text-[10px] font-mono-code font-bold uppercase flex items-center gap-1">
+                                <span className="px-2 py-0.5 bg-blue-100 text-blue-800 text-xs font-mono-code font-bold uppercase flex items-center gap-1">
                                   <Volume2 className="w-3 h-3" />
                                   <span>Voice Note</span>
                                 </span>
                               )}
                               {hasVideo && (
-                                <span className="px-2 py-0.5 bg-purple-100 text-purple-800 text-[10px] font-mono-code font-bold uppercase flex items-center gap-1">
+                                <span className="px-2 py-0.5 bg-purple-100 text-purple-800 text-xs font-mono-code font-bold uppercase flex items-center gap-1">
                                   <Video className="w-3 h-3" />
                                   <span>Video</span>
                                 </span>
                               )}
                               {hasPhoto && (
-                                <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-mono-code font-bold uppercase flex items-center gap-1">
+                                <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-xs font-mono-code font-bold uppercase flex items-center gap-1">
                                   <ImageIcon className="w-3 h-3" />
                                   <span>Blueprint</span>
                                 </span>
@@ -2045,7 +2045,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                               <button
                                 type="button"
                                 onClick={() => handleOpenInspection(idea)}
-                                className="py-1 px-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-headline font-bold text-[11px] uppercase flex items-center gap-1"
+                                className="py-1 px-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-headline font-bold text-[13px] uppercase flex items-center gap-1"
                               >
                                 <Eye className="w-3 h-3" /> Inspect
                               </button>
@@ -2074,10 +2074,10 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                             {/* LEFT COLUMN: Original Media & Student Metadata (Cols 1-5) */}
                             <div className="lg:col-span-5 space-y-4 bg-slate-50 p-4 border border-slate-200">
                               <div className="flex items-center justify-between">
-                                <span className="text-[11px] font-mono-code font-bold uppercase tracking-wider text-slate-500">
+                                <span className="text-[13px] font-mono-code font-bold uppercase tracking-wider text-slate-500">
                                   Original Student Intake
                                 </span>
-                                <span className="text-[10px] font-mono-code text-slate-400">
+                                <span className="text-xs font-mono-code text-slate-400">
                                   {new Date(idea.created_at).toLocaleString()}
                                 </span>
                               </div>
@@ -2088,19 +2088,19 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                                   <User className="w-3.5 h-3.5 text-slate-400" />
                                   <span className="font-bold text-slate-800">{idea.student_name}</span>
                                   {(idea.student_age || idea.student_grade) && (
-                                    <span className="text-slate-400 text-[11px]">
+                                    <span className="text-slate-400 text-[13px]">
                                       ({idea.student_grade || `Age ${idea.student_age}`})
                                     </span>
                                   )}
                                 </div>
                                 {idea.contact_email && (
-                                  <div className="flex items-center gap-2 text-[11px]">
+                                  <div className="flex items-center gap-2 text-[13px]">
                                     <Mail className="w-3 h-3 text-slate-400" />
                                     <span>{idea.contact_email}</span>
                                   </div>
                                 )}
                                 {idea.contact_phone && (
-                                  <div className="flex items-center gap-2 text-[11px]">
+                                  <div className="flex items-center gap-2 text-[13px]">
                                     <Phone className="w-3 h-3 text-slate-400" />
                                     <span>{idea.contact_phone}</span>
                                   </div>
@@ -2115,7 +2115,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                                       <Volume2 className="w-4 h-4 text-[#006AA7]" />
                                       <span>Student Voice Recording</span>
                                     </span>
-                                    <span className="text-[10px] font-mono-code font-normal text-sky-700">
+                                    <span className="text-xs font-mono-code font-normal text-sky-700">
                                       Listen to original audio
                                     </span>
                                   </div>
@@ -2142,7 +2142,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                                       href={idea.voice_note_url}
                                       target="_blank"
                                       rel="noreferrer"
-                                      className="text-[11px] font-mono-code text-[#006AA7] hover:underline flex items-center gap-1"
+                                      className="text-[13px] font-mono-code text-[#006AA7] hover:underline flex items-center gap-1"
                                     >
                                       <span>Direct file</span>
                                       <ExternalLink className="w-3 h-3" />
@@ -2159,7 +2159,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                                       <ImageIcon className="w-4 h-4 text-emerald-600" />
                                       <span>Blueprint / Drawing Sketch</span>
                                     </span>
-                                    <span className="text-[10px] font-mono-code text-emerald-700 font-normal">
+                                    <span className="text-xs font-mono-code text-emerald-700 font-normal">
                                       Click to zoom
                                     </span>
                                   </div>
@@ -2198,7 +2198,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                                       <span>Watch Video In New Tab</span>
                                       <ExternalLink className="w-3 h-3" />
                                     </a>
-                                    <p className="text-[10px] font-mono-code text-slate-500 truncate">
+                                    <p className="text-xs font-mono-code text-slate-500 truncate">
                                       {idea.video_url}
                                     </p>
                                   </div>
@@ -2208,7 +2208,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                               {/* Original raw text description */}
                               {idea.idea_description && (
                                 <div className="p-2.5 bg-white border border-slate-200 space-y-1">
-                                  <span className="text-[10px] font-mono-code uppercase text-slate-400 font-bold block">
+                                  <span className="text-xs font-mono-code uppercase text-slate-400 font-bold block">
                                     Student Initial Written Text:
                                   </span>
                                   <p className="text-xs text-slate-700 whitespace-pre-wrap leading-relaxed">
@@ -2225,7 +2225,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                                   <span className="text-xs font-headline font-black text-[#006AA7] uppercase tracking-wider">
                                     Admin English Curation Editor
                                   </span>
-                                  <span className="text-[10px] font-mono-code px-1.5 py-0.5 bg-slate-100 text-slate-600">
+                                  <span className="text-xs font-mono-code px-1.5 py-0.5 bg-slate-100 text-slate-600">
                                     Reflected on Live Website
                                   </span>
                                 </div>
@@ -2234,7 +2234,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                                   <button
                                     type="button"
                                     onClick={() => handleAutoDraftAiCuration(idea)}
-                                    className="py-1 px-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white text-[11px] font-headline font-bold uppercase flex items-center gap-1 shadow-xs transition-all"
+                                    className="py-1 px-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white text-[13px] font-headline font-bold uppercase flex items-center gap-1 shadow-xs transition-all"
                                   >
                                     <Sparkles className="w-3 h-3 text-[#FFCD00]" />
                                     <span>AI Auto-Draft</span>
@@ -2261,7 +2261,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                                   placeholder="e.g. Solar Canal Skimmer & Water Purity Drone"
                                   className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-[#006AA7] focus:outline-none text-xs sm:text-sm font-headline font-bold text-[#0A1930]"
                                 />
-                                <p className="text-[11px] font-mono-code text-slate-500 mt-1">
+                                <p className="text-[13px] font-mono-code text-slate-500 mt-1">
                                   Shown publicly beside {idea.school_name} & ID {idea.public_id}.
                                 </p>
                               </div>
@@ -2280,7 +2280,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                                   placeholder="Based on the voice note / drawing / video, write a clear, inspiring description in English that will be published on the site for voting..."
                                   className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-[#006AA7] focus:outline-none text-xs sm:text-sm text-[#0A1930] leading-relaxed"
                                 />
-                                <p className="text-[11px] font-mono-code text-slate-500 mt-1">
+                                <p className="text-[13px] font-mono-code text-slate-500 mt-1">
                                   Voters will read this English explanation to cast their community vote.
                                 </p>
                               </div>
@@ -2451,7 +2451,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                             <button
                               type="button"
                               onClick={() => handleOpenInspection(reg)}
-                              className="py-1 px-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-headline font-bold text-[11px] uppercase flex items-center gap-1"
+                              className="py-1 px-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-headline font-bold text-[13px] uppercase flex items-center gap-1"
                             >
                               <Eye className="w-3 h-3" /> Inspect
                             </button>
@@ -2471,7 +2471,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
 
                         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 pt-4 text-xs">
                           <div>
-                            <span className="text-[10px] font-mono-code text-slate-400 uppercase font-bold block">
+                            <span className="text-xs font-mono-code text-slate-400 uppercase font-bold block">
                               Squad Size
                             </span>
                             <div className="font-headline font-bold text-slate-800 flex items-center gap-1.5">
@@ -2482,7 +2482,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                           </div>
 
                           <div>
-                            <span className="text-[10px] font-mono-code text-slate-400 uppercase font-bold block">
+                            <span className="text-xs font-mono-code text-slate-400 uppercase font-bold block">
                               Challenge Track
                             </span>
                             <div className="font-headline font-bold text-slate-800">
@@ -2492,7 +2492,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                           </div>
 
                           <div>
-                            <span className="text-[10px] font-mono-code text-slate-400 uppercase font-bold block">
+                            <span className="text-xs font-mono-code text-slate-400 uppercase font-bold block">
                               Team Lead / Contact
                             </span>
                             <div className="font-headline font-bold text-slate-800">{reg.contact_name}</div>
@@ -2501,14 +2501,14 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                           </div>
 
                           <div className="flex flex-col justify-end space-y-1.5">
-                            <span className="text-[10px] font-mono-code text-slate-400 uppercase font-bold">
+                            <span className="text-xs font-mono-code text-slate-400 uppercase font-bold">
                               Admin Actions:
                             </span>
                             <div className="flex flex-wrap gap-1.5">
                               <button
                                 type="button"
                                 onClick={() => handleUpdateRegStatus(reg.id, 'approved')}
-                                className="py-1 px-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-headline font-bold text-[11px] uppercase flex items-center gap-1 transition-colors"
+                                className="py-1 px-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-headline font-bold text-[13px] uppercase flex items-center gap-1 transition-colors"
                               >
                                 <Check className="w-3 h-3" />
                                 <span>Confirm Squad</span>
@@ -2516,14 +2516,14 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                               <button
                                 type="button"
                                 onClick={() => handleUpdateRegStatus(reg.id, 'pending')}
-                                className="py-1 px-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-headline font-bold text-[11px] uppercase transition-colors"
+                                className="py-1 px-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-headline font-bold text-[13px] uppercase transition-colors"
                               >
                                 Pending
                               </button>
                               <button
                                 type="button"
                                 onClick={() => handleUpdateRegStatus(reg.id, 'rejected')}
-                                className="py-1 px-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-headline font-bold text-[11px] uppercase transition-colors"
+                                className="py-1 px-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-headline font-bold text-[13px] uppercase transition-colors"
                               >
                                 Reject
                               </button>
@@ -2554,7 +2554,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                   <div className="space-y-3">
                     <div className="bg-[#0A1930] text-white px-3 py-2 text-xs font-headline font-bold uppercase tracking-wider flex items-center justify-between">
                       <span>Workshops, Demos & Hackathons ({filteredRegistrations.length})</span>
-                      <span className="text-[10px] font-mono-code text-[#FFCD00]">Real-time Bookings</span>
+                      <span className="text-xs font-mono-code text-[#FFCD00]">Real-time Bookings</span>
                     </div>
                     {filteredRegistrations.slice(0, 10).map((r) => (
                       <div
@@ -2565,7 +2565,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                         <div className="flex items-center justify-between">
                           <span className="font-mono-code font-bold text-[#006AA7]">{r.public_id}</span>
                           <span
-                            className={`text-[10px] font-bold uppercase px-1.5 py-0.2 ${
+                            className={`text-xs font-bold uppercase px-1.5 py-0.2 ${
                               r.status === 'approved'
                                 ? 'bg-emerald-100 text-emerald-800'
                                 : 'bg-amber-100 text-amber-800'
@@ -2577,7 +2577,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                         <div className="font-headline font-bold text-slate-800">
                           {r.school_name || r.team_name}
                         </div>
-                        <div className="text-[11px] text-slate-500">
+                        <div className="text-[13px] text-slate-500">
                           {r.city_name} • {r.contact_name} ({r.email})
                         </div>
                       </div>
@@ -2588,7 +2588,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                   <div className="space-y-3">
                     <div className="bg-[#006AA7] text-white px-3 py-2 text-xs font-headline font-bold uppercase tracking-wider flex items-center justify-between">
                       <span>Multimodal Idea Submissions ({filteredIdeas.length})</span>
-                      <span className="text-[10px] font-mono-code text-[#FFCD00]">Voice / Blueprint / Video</span>
+                      <span className="text-xs font-mono-code text-[#FFCD00]">Voice / Blueprint / Video</span>
                     </div>
                     {filteredIdeas.slice(0, 10).map((i) => (
                       <div
@@ -2599,7 +2599,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                         <div className="flex items-center justify-between">
                           <span className="font-mono-code font-bold text-[#006AA7]">{i.public_id}</span>
                           <span
-                            className={`text-[10px] font-bold uppercase px-1.5 py-0.2 ${
+                            className={`text-xs font-bold uppercase px-1.5 py-0.2 ${
                               i.status === 'approved'
                                 ? 'bg-emerald-100 text-emerald-800'
                                 : 'bg-amber-100 text-amber-800'
@@ -2609,7 +2609,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                           </span>
                         </div>
                         <div className="font-headline font-bold text-slate-800">{i.idea_title}</div>
-                        <div className="text-[11px] text-slate-500">
+                        <div className="text-[13px] text-slate-500">
                           {i.school_name} • By: {i.student_name}
                         </div>
                       </div>
@@ -2768,7 +2768,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                 <button
                   type="button"
                   onClick={() => handleSaveNote(inspectingItem.id)}
-                  className="py-1.5 px-3 bg-amber-600 hover:bg-amber-700 text-white font-headline font-bold text-[11px] uppercase transition-colors"
+                  className="py-1.5 px-3 bg-amber-600 hover:bg-amber-700 text-white font-headline font-bold text-[13px] uppercase transition-colors"
                 >
                   Save Internal Note
                 </button>
@@ -2862,7 +2862,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
             {/* Core Metrics Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <div className="p-3 bg-slate-50 border border-slate-200 text-center">
-                <span className="text-[10px] font-mono-code text-slate-500 uppercase">
+                <span className="text-xs font-mono-code text-slate-500 uppercase">
                   Total Registrations
                 </span>
                 <div className="text-2xl font-headline font-black text-[#0A1930] mt-1">
@@ -2871,7 +2871,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
               </div>
 
               <div className="p-3 bg-emerald-50 border border-emerald-200 text-center">
-                <span className="text-[10px] font-mono-code text-emerald-700 uppercase">
+                <span className="text-xs font-mono-code text-emerald-700 uppercase">
                   Approval Rate
                 </span>
                 <div className="text-2xl font-headline font-black text-emerald-700 mt-1">
@@ -2880,7 +2880,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
               </div>
 
               <div className="p-3 bg-sky-50 border border-sky-200 text-center">
-                <span className="text-[10px] font-mono-code text-sky-700 uppercase">
+                <span className="text-xs font-mono-code text-sky-700 uppercase">
                   Students Impacted
                 </span>
                 <div className="text-2xl font-headline font-black text-[#006AA7] mt-1">
@@ -2889,7 +2889,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
               </div>
 
               <div className="p-3 bg-amber-50 border border-amber-200 text-center">
-                <span className="text-[10px] font-mono-code text-amber-700 uppercase">
+                <span className="text-xs font-mono-code text-amber-700 uppercase">
                   Action Required
                 </span>
                 <div className="text-2xl font-headline font-black text-amber-800 mt-1">

@@ -12,10 +12,10 @@ export const RoboPrizePool: React.FC<RoboPrizePoolProps> = ({ onOpenRegister }) 
         
         {/* Top Eyebrow */}
         <div className="border-b border-white/10 pb-6 flex items-center justify-between">
-          <span className="text-[10px] font-mono-code font-bold tracking-[0.25em] text-[#E2FF00] uppercase">
+          <span className="text-xs font-mono-code font-bold tracking-[0.25em] text-[#E2FF00] uppercase">
             08 / CHAMPIONSHIP ALLOCATIONS
           </span>
-          <span className="text-[10px] font-mono-code text-slate-400 uppercase tracking-widest hidden sm:inline">
+          <span className="text-xs font-mono-code text-slate-400 uppercase tracking-widest hidden sm:inline">
             VÄSTERÅS CITY FINALS · MÄLARDALEN INTERNATIONAL SCHOOL
           </span>
         </div>
@@ -50,7 +50,7 @@ export const RoboPrizePool: React.FC<RoboPrizePoolProps> = ({ onOpenRegister }) 
           <div className="pb-10 lg:pb-0 lg:pr-12 flex flex-col justify-between">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <span className="text-[9px] font-mono-code font-bold text-white/50 border border-white/20 px-2 py-0.5 rounded-[2px] uppercase">
+                <span className="text-xs font-mono-code font-bold text-white/50 border border-white/20 px-2 py-0.5 rounded-[2px] uppercase">
                   RANK 02
                 </span>
                 <span className="text-xs font-display font-bold uppercase text-slate-300">
@@ -85,7 +85,7 @@ export const RoboPrizePool: React.FC<RoboPrizePoolProps> = ({ onOpenRegister }) 
           <div className="py-10 lg:py-0 lg:px-12 flex flex-col justify-between">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <span className="text-[9px] font-mono-code font-bold text-[#07111F] bg-[#E2FF00] px-2.5 py-0.5 rounded-[2px] uppercase">
+                <span className="text-xs font-mono-code font-bold text-[#07111F] bg-[#E2FF00] px-2.5 py-0.5 rounded-[2px] uppercase">
                   RANK 01 // GRAND CHAMPION
                 </span>
               </div>
@@ -129,7 +129,7 @@ export const RoboPrizePool: React.FC<RoboPrizePoolProps> = ({ onOpenRegister }) 
           <div className="pt-10 lg:pt-0 lg:pl-12 flex flex-col justify-between">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <span className="text-[9px] font-mono-code font-bold text-white/50 border border-white/20 px-2 py-0.5 rounded-[2px] uppercase">
+                <span className="text-xs font-mono-code font-bold text-white/50 border border-white/20 px-2 py-0.5 rounded-[2px] uppercase">
                   RANK 03
                 </span>
                 <span className="text-xs font-display font-bold uppercase text-slate-300">
@@ -163,7 +163,7 @@ export const RoboPrizePool: React.FC<RoboPrizePoolProps> = ({ onOpenRegister }) 
         </div>
 
         {/* Bottom Participant Note */}
-        <div className="border-t border-white/10 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] font-mono-code text-slate-400 uppercase tracking-widest">
+        <div className="border-t border-white/10 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono-code text-slate-400 uppercase tracking-widest">
           <span>ALL PARTICIPATING STUDENTS RECEIVE OFFICIALLY ENDORSED DIPLOMAS</span>
           <span>COMPETITION CATEGORIES: JUNIOR & SENIOR BRACKETS</span>
         </div>

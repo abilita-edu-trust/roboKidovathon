@@ -136,7 +136,7 @@ export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-2 text-[11px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase mb-1.5">
+          <div className="inline-flex items-center gap-2 text-[13px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase mb-1.5">
             <Sparkles className="w-3.5 h-3.5 text-[#FFCD00]" />
             <span>{fill(t(data.eyebrow), { city: site.cityName.toUpperCase() })}</span>
           </div>
@@ -171,13 +171,13 @@ export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
       <div className="bg-slate-50 p-3.5 border border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs">
         {/* Category Segregation Pills */}
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-[11px] font-mono-code text-slate-500 uppercase mr-1">
+          <span className="text-[13px] font-mono-code text-slate-500 uppercase mr-1">
             {t(data.categoryLabel)}
           </span>
           <button
             type="button"
             onClick={() => setSelectedSegregation('all')}
-            className={`py-1 px-3 uppercase text-[11px] font-bold border transition-colors ${
+            className={`py-1 px-3 uppercase text-[13px] font-bold border transition-colors ${
               selectedSegregation === 'all'
                 ? 'bg-[#006AA7] text-white border-[#006AA7]'
                 : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
@@ -190,7 +190,7 @@ export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
               key={cat}
               type="button"
               onClick={() => setSelectedSegregation(cat)}
-              className={`py-1 px-3 uppercase text-[11px] font-bold border transition-colors ${
+              className={`py-1 px-3 uppercase text-[13px] font-bold border transition-colors ${
                 selectedSegregation === cat
                   ? 'bg-[#006AA7] text-white border-[#006AA7]'
                   : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
@@ -206,7 +206,7 @@ export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
           <button
             type="button"
             onClick={onNavigateAdmin}
-            className="py-1 px-2.5 bg-white hover:bg-slate-100 border border-slate-300 text-slate-600 hover:text-[#006AA7] text-[10px] font-mono-code font-bold uppercase flex items-center gap-1 transition-colors"
+            className="py-1 px-2.5 bg-white hover:bg-slate-100 border border-slate-300 text-slate-600 hover:text-[#006AA7] text-xs font-mono-code font-bold uppercase flex items-center gap-1 transition-colors"
           >
             <span>🛡️ Admin Formats Curation</span>
           </button>
@@ -256,14 +256,14 @@ export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
                   ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 text-slate-400 p-4 text-center">
                       <ImageIcon className="w-8 h-8 mb-1.5 opacity-60 text-slate-400" />
-                      <span className="text-[10px] font-mono-code uppercase text-slate-500">
+                      <span className="text-xs font-mono-code uppercase text-slate-500">
                         {t(data.noPhoto)}
                       </span>
                     </div>
                   )}
 
                   {/* Category Badge */}
-                  <span className="absolute top-2.5 left-2.5 px-2 py-0.5 bg-[#0A1930]/85 backdrop-blur-sm text-white text-[10px] font-mono-code font-bold uppercase tracking-wider">
+                  <span className="absolute top-2.5 left-2.5 px-2 py-0.5 bg-[#0A1930]/85 backdrop-blur-sm text-white text-xs font-mono-code font-bold uppercase tracking-wider">
                     {idea.category || t(data.defaultCategory)}
                   </span>
 
@@ -283,11 +283,11 @@ export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
                   <div>
                     {/* STRICT GDPR: SCHOOL NAME FOLLOWED BY IDEA ID (NO KID NAME) */}
                     <div className="flex flex-wrap items-center gap-1.5 mb-2">
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#006AA7]/10 text-[#006AA7] text-[11px] font-headline font-black uppercase">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#006AA7]/10 text-[#006AA7] text-[13px] font-headline font-black uppercase">
                         <Building className="w-3 h-3" />
                         <span>{idea.school_name}</span>
                       </span>
-                      <span className="px-2 py-0.5 bg-slate-100 text-slate-700 text-[10px] font-mono-code font-bold border border-slate-200">
+                      <span className="px-2 py-0.5 bg-slate-100 text-slate-700 text-xs font-mono-code font-bold border border-slate-200">
                         {idea.public_id}
                       </span>
                     </div>
@@ -304,14 +304,14 @@ export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
                   {/* Voice note inline player if available */}
                   {idea.voice_note_url && (
                     <div className="p-2 bg-sky-50 border border-sky-200 flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-2 text-[#006AA7] font-semibold text-[11px]">
+                      <div className="flex items-center gap-2 text-[#006AA7] font-semibold text-[13px]">
                         <Volume2 className="w-3.5 h-3.5" />
                         <span>{isPlaying ? t(data.playing) : t(data.voiceNote)}</span>
                       </div>
                       <button
                         type="button"
                         onClick={() => toggleAudio(idea.id, idea.voice_note_url!)}
-                        className="py-1 px-2.5 bg-[#006AA7] hover:bg-[#013A63] text-white text-[10px] font-headline font-bold uppercase flex items-center gap-1 transition-colors"
+                        className="py-1 px-2.5 bg-[#006AA7] hover:bg-[#013A63] text-white text-xs font-headline font-bold uppercase flex items-center gap-1 transition-colors"
                       >
                         {isPlaying ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
                         <span>{isPlaying ? t(data.pause) : t(data.listen)}</span>
@@ -358,7 +358,7 @@ export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
       {/* Bottom CTA Banner */}
       <div className="bg-[#0A1930] text-white p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg border border-[#0A1930]">
         <div className="space-y-1 text-center sm:text-left">
-          <div className="inline-flex items-center gap-1.5 text-[10px] font-mono-code font-bold tracking-widest text-[#FFCD00] uppercase">
+          <div className="inline-flex items-center gap-1.5 text-xs font-mono-code font-bold tracking-widest text-[#FFCD00] uppercase">
             <Trophy className="w-3.5 h-3.5 text-[#FFCD00]" />
             <span>{t(data.bannerEyebrow)}</span>
           </div>

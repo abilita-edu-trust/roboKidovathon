@@ -55,7 +55,7 @@ export const RefTrendingCards: React.FC<RefTrendingCardsProps> = ({
         {/* ── SECTION TITLE ── */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-4 border-b border-slate-200">
           <div className="space-y-2">
-            <span className="text-[10px] font-mono-code font-bold tracking-[0.25em] text-[#006AA7] uppercase block">
+            <span className="text-xs font-mono-code font-bold tracking-[0.25em] text-[#006AA7] uppercase block">
               EDUCATOR &amp; COMPETITOR GUIDES
             </span>
             <h2
@@ -92,14 +92,14 @@ export const RefTrendingCards: React.FC<RefTrendingCardsProps> = ({
                       alt={item.title}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
-                    <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-white/95 text-[10px] font-mono-code font-bold text-[#006AA7] uppercase tracking-wider shadow-sm flex items-center gap-1.5">
+                    <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-white/95 text-xs font-mono-code font-bold text-[#006AA7] uppercase tracking-wider shadow-sm flex items-center gap-1.5">
                       <Icon className="w-3 h-3" />
                       <span>{item.category}</span>
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <span className="text-[10px] font-mono-code font-bold text-slate-400 uppercase">
+                    <span className="text-xs font-mono-code font-bold text-slate-400 uppercase">
                       {item.date}
                     </span>
                     <h3 className="font-headline font-bold text-lg sm:text-xl uppercase tracking-wide text-[#0A1930] group-hover:text-[#006AA7] transition-colors leading-snug">

@@ -50,7 +50,7 @@ const CountUpStat: React.FC<{ target: number; label: string; inView: boolean; ac
       <span className={`font-headline font-black text-3xl sm:text-4xl tracking-tight leading-none ${accentClass}`}>
         {value}+
       </span>
-      <span className="text-[10px] sm:text-xs font-mono-code font-bold text-slate-500 uppercase tracking-widest mt-1.5">
+      <span className="text-xs font-mono-code font-bold text-slate-500 uppercase tracking-widest mt-1.5">
         {label}
       </span>
     </div>
@@ -94,19 +94,19 @@ const SchoolChip: React.FC<{ school: ApprovedSchool; slots: Labels; kinds: Label
             {school.school_name}
           </span>
           {kind && (
-            <span className="px-1.5 py-0.5 bg-[#FFCD00] text-[#0A1930] text-[10px] font-mono-code font-black uppercase tracking-wider whitespace-nowrap">
+            <span className="px-1.5 py-0.5 bg-[#FFCD00] text-[#0A1930] text-xs font-mono-code font-black uppercase tracking-wider whitespace-nowrap">
               {kind}
             </span>
           )}
         </span>
         {school.city_name && (
-          <span className="flex items-center gap-1.5 mt-0.5 text-[11px] sm:text-xs font-mono-code font-bold text-white/80 whitespace-nowrap">
+          <span className="flex items-center gap-1.5 mt-0.5 text-[13px] sm:text-sm font-mono-code font-bold text-white/80 whitespace-nowrap">
             <MapPin className="w-3 h-3 shrink-0" />
             {school.city_name}
           </span>
         )}
         {booking && (
-          <span className="flex items-center gap-1.5 mt-0.5 text-[11px] sm:text-xs font-mono-code font-bold text-[#FFCD00] whitespace-nowrap">
+          <span className="flex items-center gap-1.5 mt-0.5 text-[13px] sm:text-sm font-mono-code font-bold text-[#FFCD00] whitespace-nowrap">
             <CalendarClock className="w-3 h-3 shrink-0" />
             {booking}
           </span>
@@ -188,7 +188,7 @@ export const CollaboratorsMarquee: React.FC<CollaboratorsMarqueeProps> = ({ data
   return (
     <div ref={sectionRef} className="space-y-8">
       <div className="text-center space-y-2">
-        <span className="block text-[11px] font-mono-code font-bold tracking-[0.25em] text-[#006AA7] uppercase">
+        <span className="block text-[13px] font-mono-code font-bold tracking-[0.25em] text-[#006AA7] uppercase">
           {t(data.eyebrow)}
         </span>
         <h2 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#0A1930]">
