@@ -115,10 +115,10 @@ export const experienceDefaults = (c: SiteConfig): ExperienceData => ({
         st('Users', 'Team Formation', 'Form teams and start practising', '29 October – 11 November 2026'),
         st('Award', 'School Qualification', 'Internal challenge to select best teams', '12 – 25 November 2026'),
         st('Wrench', 'Final Preparation', 'Practise and get final-ready', '26 November – 3 December 2026'),
-        st('Trophy', 'Västerås Future Innovators Final', 'Compete, showcase & celebrate innovation', '4–5 December 2026', true),
+        st('Trophy', 'Västerås Future Innovators Final', 'Compete, showcase & celebrate innovation', '5 December 2026', true),
       ],
       callout: bi(
-        'From school workshops and internal competitions, up to **4 teams** from each participating school or association qualify for the Västerås RoboKidovation Final on **4–5 December 2026**.'
+        'From school workshops and internal competitions, up to **4 teams** from each participating school or association qualify for the Västerås RoboKidovation Final on **5 December 2026**.'
       ),
       cta: { label: bi('EXPLORE TRACK'), href: targetToHref('challenges') },
       register: registerLink('robo'),
@@ -142,7 +142,7 @@ export const experienceDefaults = (c: SiteConfig): ExperienceData => ({
         st('Rocket', 'Demonstrate', 'Present to the jury and win', '4–5 December 2026', true),
       ],
       callout: bi(
-        'Students work on real-world challenges around science, technology, sustainability and innovation. The final presentations take place on **4–5 December 2026**.'
+        'Students work on real-world challenges around science, technology, sustainability and innovation. The final presentations take place on **11–12 December 2026**.'
       ),
       cta: { label: bi('EXPLORE TRACK'), href: targetToHref('workflow') },
       register: registerLink('hack'),
@@ -156,7 +156,7 @@ export const experienceDefaults = (c: SiteConfig): ExperienceData => ({
   noImage: bi('Image coming soon'),
   stripLeft: bi('// VÄSTERÅS FUTURE INNOVATORS 2026'),
   stripMiddle: bi('Students Today. A Brighter Tomorrow.'),
-  stripRight: bi('VÄSTERÅS | 4–5 DECEMBER 2026'),
+  stripRight: bi('VÄSTERÅS | 5 & 11–12 DECEMBER 2026'),
 });
 
 export interface ProgrammeData {

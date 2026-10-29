@@ -98,7 +98,7 @@ export interface SiteConfig {
   banner?: string;
   /** Dates for the students/parents/teachers guide on the home page; without it the guide is hidden. */
   journey?: {
-    /** When and where the final is, read after "the Final", e.g. "on 4–5 Dec 2026 at MISV, Västerås". */
+    /** When and where the final is, read after "the Final", e.g. "on 5 Dec 2026 at MISV, Västerås". */
     finals: string;
     dates: { label: string; value: string }[];
     /** Added to the students' last step, e.g. the international stage. */
@@ -257,7 +257,7 @@ export const VFI_SITE: SiteConfig = {
     email: 'contact@iniac.se',
     orgLines: ['Indisk BarnKlubb (IBK) Västerås & INIAC', 'Västerås, Sweden'],
     registerText: same(
-      'Registration is open for schools, associations and independent teams ahead of the 12–25 November qualifiers and the 4–5 December 2026 Final.'
+      'Registration is open for schools, associations and independent teams ahead of the 12–25 November qualifiers and the 5 December 2026 Final.'
     ),
     register: { label: same('REGISTER SCHOOL, ASSOCIATION OR TEAM'), target: 'register' },
     copyright: '© 2026 VÄSTERÅS FUTURE INNOVATORS · INDISK BARNKLUBB VÄSTERÅS',
@@ -281,7 +281,7 @@ export const VFI_SITE: SiteConfig = {
         id: 'robo',
         title: same('RoboKidovation'),
         subtitle: { en: 'School robotics · Grades 1–9 & GYM', sv: 'Skolrobotik · åk 1–9 och gymnasiet' },
-        date: { en: '4–5 December 2026', sv: '4–5 december 2026' },
+        date: { en: '5 December 2026', sv: '5 december 2026' },
         venue: same('MISV, Västerås'),
         image: '/register/robokidovation.jpg',
       },
@@ -289,7 +289,7 @@ export const VFI_SITE: SiteConfig = {
         id: 'hack',
         title: same('Young Inno Hack'),
         subtitle: { en: 'Ideas and squads · Grade 7 to university', sv: 'Idéer och lag · åk 7 till universitet' },
-        date: { en: '4–5 December 2026', sv: '4–5 december 2026' },
+        date: { en: '11–12 December 2026', sv: '11–12 december 2026' },
         venue: { en: 'Venue to be confirmed', sv: 'Lokal meddelas senare' },
         image: '/register/hackathon.jpg',
       },
