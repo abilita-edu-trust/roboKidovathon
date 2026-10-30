@@ -5,7 +5,7 @@ import {
   Code2, Compass, Cpu, Drama, Eye, EyeOff, Flag, Flame, FlaskConical, Gamepad2, Gauge, Ghost, Gift, Globe2,
   GraduationCap, Hammer, HandHeart, Handshake, Heart, Home, Image, Info, Layers, Leaf, Lightbulb, LineChart, Link,
   Mail, MapPin, Megaphone, Mic, Music, Palette, PartyPopper, PenTool, Phone, Presentation, Puzzle, RefreshCw, Rocket,
-  Scale, School, Search, Smile, Sparkles, Star, Sun, Target, Ticket, Timer, TreePine, Trophy, UserCheck, UserPlus,
+  Scale, School, Search, Smile, Snowflake, Sparkles, Star, Sun, Target, Ticket, Timer, TreePine, Trophy, UserCheck, UserPlus,
   Users, Video, Wrench, type LucideIcon,
 } from 'lucide-react';
 
@@ -14,7 +14,7 @@ export const SITE_ICONS: Record<string, LucideIcon> = {
   Calendar, CalendarDays, Camera, ClipboardCheck, Clock, Code2, Compass, Cpu, Drama, Eye, EyeOff, Flag, Flame,
   FlaskConical, Gamepad2, Gauge, Ghost, Gift, Globe2, GraduationCap, Hammer, HandHeart, Handshake, Heart, Home,
   Image, Info, Layers, Leaf, Lightbulb, LineChart, Link, Mail, MapPin, Megaphone, Mic, Music, Palette, PartyPopper,
-  PenTool, Phone, Presentation, Puzzle, RefreshCw, Rocket, Scale, School, Search, Smile, Sparkles, Star, Sun, Target,
+  PenTool, Phone, Presentation, Puzzle, RefreshCw, Rocket, Scale, School, Search, Smile, Snowflake, Sparkles, Star, Sun, Target,
   Ticket, Timer, TreePine, Trophy, UserCheck, UserPlus, Users, Video, Wrench,
 };
 

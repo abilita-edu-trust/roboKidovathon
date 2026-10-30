@@ -3,6 +3,7 @@ import { useInView } from 'framer-motion';
 import { CalendarClock, MapPin, School } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useT } from '../content/useT';
+import { useSite } from '../context/SiteContext';
 import type { MeetUsData } from '../content/sections/live';
 
 interface ApprovedSchool {
@@ -123,6 +124,7 @@ interface CollaboratorsMarqueeProps {
 
 export const CollaboratorsMarquee: React.FC<CollaboratorsMarqueeProps> = ({ data }) => {
   const { t } = useT();
+  const { meetUsCity } = useSite();
   const slots: Labels = { morning: t(data.morning), afternoon: t(data.afternoon) };
   const kinds: Labels = {
     demo: t(data.kinds.demo),
@@ -151,7 +153,9 @@ export const CollaboratorsMarquee: React.FC<CollaboratorsMarqueeProps> = ({ data
       if (cancelled) return;
 
       if (!schoolsRes.error && Array.isArray(schoolsRes.data)) {
-        setSchools(schoolsRes.data.filter((row: ApprovedSchool) => Boolean(row.school_name)));
+        setSchools(
+          schoolsRes.data.filter((row: ApprovedSchool) => Boolean(row.school_name) && (!meetUsCity || row.city_name === meetUsCity))
+        );
       }
 
       if (!statsRes.error && Array.isArray(statsRes.data) && statsRes.data[0]) {
@@ -171,7 +175,7 @@ export const CollaboratorsMarquee: React.FC<CollaboratorsMarqueeProps> = ({ data
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [meetUsCity]);
 
   const schoolsCount = stats?.schools_count ?? 0;
   const studentsCount = stats?.students_count ?? 0;

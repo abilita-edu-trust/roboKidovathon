@@ -6,7 +6,11 @@ import { useSite } from '../context/SiteContext';
 import { siteIcon } from '../content/icons';
 import { richText } from '../content/richText';
 import { hasLabel } from '../content/sections/frame';
-import { registerLink, type PathwayData } from '../content/sections/programmes';
+import { registerLink, stepKind, stepNumbers, type PathwayData, type StepKind } from '../content/sections/programmes';
+
+/** Breaks and milestones look the same in both colours: a dashed grey pause and a yellow date. */
+const BREAK = { node: 'bg-white border-2 border-dashed border-slate-300 text-slate-400', pill: 'bg-white border border-dashed border-slate-300 text-slate-500' };
+const MILESTONE = { node: 'bg-[#FFCD00] text-[#0A1930] ring-4 ring-[#FFCD00]/25', pill: 'bg-[#FFCD00] text-[#0A1930] shadow-xs' };
 
 const THEMES = {
   robo: {
@@ -25,6 +29,8 @@ const THEMES = {
     node: 'bg-sky-100 text-[#006AA7]',
     nodeHighlight: 'bg-[#006AA7] text-white',
     connector: 'bg-sky-200',
+    connectorDashed: 'border-sky-300',
+    tentative: 'border-[#006AA7] text-[#006AA7]',
     ctaSolid: 'text-[#006AA7] hover:bg-sky-50',
     bold: 'font-bold text-[#006AA7]',
     ctaPrimary: 'bg-[#006AA7] hover:bg-[#013A63]',
@@ -45,6 +51,8 @@ const THEMES = {
     node: 'bg-emerald-100 text-[#059669]',
     nodeHighlight: 'bg-[#059669] text-white',
     connector: 'bg-emerald-200',
+    connectorDashed: 'border-emerald-300',
+    tentative: 'border-[#059669] text-[#059669]',
     ctaSolid: 'text-[#059669] hover:bg-emerald-50',
     bold: 'font-bold text-[#059669]',
     ctaPrimary: 'bg-[#059669] hover:bg-[#047857]',
@@ -70,7 +78,26 @@ export const PathwayCard: React.FC<PathwayCardProps> = ({ data, onCta: go, half 
   const title = tr(data.title);
   const tagline = tr(data.tagline);
   const intro = data.intro.map(tr);
-  const steps = data.steps.map((s) => ({ icon: siteIcon(s.icon), title: tr(s.title), subtitle: tr(s.subtitle), date: tr(s.date), highlight: s.highlight }));
+  const numbers = stepNumbers(data.steps);
+  const steps = data.steps.map((s, i) => ({
+    icon: siteIcon(s.icon),
+    title: tr(s.title),
+    subtitle: tr(s.subtitle),
+    date: tr(s.date),
+    highlight: s.highlight,
+    kind: stepKind(s.stepType),
+    num: numbers[i],
+  }));
+  const nodeClass = (kind: StepKind, highlight: boolean) =>
+    kind === 'break' ? BREAK.node
+    : kind === 'milestone' ? MILESTONE.node
+    : kind === 'tentative' ? `bg-white border-2 border-dashed ${t.tentative}`
+    : highlight ? t.nodeHighlight : t.node;
+  const pillClass = (kind: StepKind, highlight: boolean) =>
+    kind === 'break' ? BREAK.pill
+    : kind === 'milestone' ? MILESTONE.pill
+    : kind === 'tentative' ? `bg-white border border-dashed ${t.tentative}`
+    : highlight ? t.pillHighlight : t.pill;
   const callout = richText(tr(data.callout), t.bold);
   const ctaLabel = tr(data.cta.label);
   const showCta = hasLabel(data.cta);
@@ -134,18 +161,20 @@ export const PathwayCard: React.FC<PathwayCardProps> = ({ data, onCta: go, half 
               <span className={`absolute left-5 top-5 bottom-5 w-0.5 ${t.connector} ${c > 0 ? 'mt-5 lg:mt-0' : ''}`} aria-hidden />
               {list.map((step, i) => {
                 const StepIcon = step.icon;
-                const n = c * split + i + 1;
                 return (
                   <li key={i} className="relative flex gap-4 group">
                     <span
-                      className={`relative z-10 w-10 h-10 shrink-0 flex items-center justify-center transition-transform duration-200 group-hover:scale-110 ${
-                        step.highlight ? t.nodeHighlight : t.node
-                      }`}
+                      className={`relative z-10 w-10 h-10 shrink-0 flex items-center justify-center transition-transform duration-200 group-hover:scale-110 ${nodeClass(
+                        step.kind,
+                        step.highlight
+                      )}`}
                     >
                       <StepIcon className="w-5 h-5" />
-                      <span className="absolute -top-2 -right-2 w-5 h-5 bg-[#0A1930] text-white text-xs font-bold flex items-center justify-center">
-                        {n}
-                      </span>
+                      {step.num !== null && (
+                        <span className="absolute -top-2 -right-2 w-5 h-5 bg-[#0A1930] text-white text-xs font-bold flex items-center justify-center">
+                          {step.num}
+                        </span>
+                      )}
                     </span>
                     <div
                       className={`flex-1 min-w-0 flex flex-col gap-x-4 gap-y-1.5 pt-0.5 ${
@@ -158,9 +187,10 @@ export const PathwayCard: React.FC<PathwayCardProps> = ({ data, onCta: go, half 
                       </div>
                       {step.date && (
                         <span
-                          className={`shrink-0 self-start px-2.5 py-1 text-[13px] font-mono-code font-bold whitespace-nowrap ${
-                            step.highlight ? t.pillHighlight : t.pill
-                          }`}
+                          className={`shrink-0 self-start px-2.5 py-1 text-[13px] font-mono-code font-bold whitespace-nowrap ${pillClass(
+                            step.kind,
+                            step.highlight
+                          )}`}
                         >
                           {step.date}
                         </span>
@@ -214,29 +244,47 @@ export const PathwayCard: React.FC<PathwayCardProps> = ({ data, onCta: go, half 
         <ol className="relative">
           {steps.map((step, i) => {
             const StepIcon = step.icon;
+            const isBreak = step.kind === 'break';
+            // The line runs dashed into and out of a break: the programme pauses there.
+            const dashed = isBreak || steps[i + 1]?.kind === 'break';
             return (
               <li key={i} className="relative flex gap-4 pb-4 last:pb-0 group">
-                {i < steps.length - 1 && <span className={`absolute left-6 top-12 bottom-0 w-0.5 ${t.connector}`} aria-hidden />}
+                {i < steps.length - 1 && (
+                  <span
+                    className={`absolute left-6 top-12 bottom-0 ${dashed ? `w-0 border-l-2 border-dashed ${t.connectorDashed}` : `w-0.5 ${t.connector}`}`}
+                    aria-hidden
+                  />
+                )}
                 <span
-                  className={`relative z-10 w-12 h-12 shrink-0 flex items-center justify-center transition-transform duration-200 group-hover:scale-105 ${
-                    step.highlight ? t.nodeHighlight : t.node
-                  }`}
+                  className={`relative z-10 w-12 h-12 shrink-0 flex items-center justify-center transition-transform duration-200 group-hover:scale-105 ${nodeClass(
+                    step.kind,
+                    step.highlight
+                  )}`}
                 >
                   <StepIcon className="w-6 h-6" />
-                  <span className="absolute -top-2 -left-2 w-6 h-6 bg-[#0A1930] text-white text-xs font-bold flex items-center justify-center">
-                    {i + 1}
-                  </span>
+                  {step.num !== null && (
+                    <span className="absolute -top-2 -left-2 w-6 h-6 bg-[#0A1930] text-white text-xs font-bold flex items-center justify-center">
+                      {step.num}
+                    </span>
+                  )}
                 </span>
-                <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-x-4 gap-y-1.5 min-h-12">
+                <div
+                  className={`flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-x-4 gap-y-1.5 min-h-12 ${
+                    isBreak ? 'border border-dashed border-slate-300 bg-slate-50 px-3 py-2' : ''
+                  }`}
+                >
                   <div className="min-w-0">
-                    <h4 className="font-headline font-bold text-base uppercase tracking-tight text-[#0A1930] leading-tight">{step.title}</h4>
-                    <p className="text-sm text-slate-600 leading-snug mt-0.5">{step.subtitle}</p>
+                    <h4 className={`font-headline font-bold text-base uppercase tracking-tight leading-tight ${isBreak ? 'text-slate-500' : 'text-[#0A1930]'}`}>
+                      {step.title}
+                    </h4>
+                    <p className={`text-sm leading-snug mt-0.5 ${isBreak ? 'text-slate-500' : 'text-slate-600'}`}>{step.subtitle}</p>
                   </div>
                   {step.date && (
                     <span
-                      className={`shrink-0 self-start sm:self-center px-3 py-1.5 text-[13px] font-mono-code font-bold whitespace-nowrap ${
-                        step.highlight ? t.pillHighlight : t.pill
-                      }`}
+                      className={`shrink-0 self-start sm:self-center px-3 py-1.5 text-[13px] font-mono-code font-bold whitespace-nowrap ${pillClass(
+                        step.kind,
+                        step.highlight
+                      )}`}
                     >
                       {step.date}
                     </span>
