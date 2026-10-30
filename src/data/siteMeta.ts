@@ -42,9 +42,9 @@ export const SITE_META: Record<SiteMetaKey, SiteMeta> = {
   },
   // riga.iniac.se and /riga
   riga: {
-    title: 'Riga Future Innovators 2026 | INIAC',
+    title: 'Riga Future Innovators 2027 | INIAC',
     description:
-      'Hands-on robotics and youth innovation for schools, associations and independent teams in Riga, by INIAC. RoboKidovation on 5 December and the Young Inno Hack on 11–12 December 2026.',
+      'Hands-on robotics and youth innovation for schools, associations and independent teams in Riga, by INIAC. RoboKidovation final on 6 February 2027 at the International School of Riga; Young Inno Hack on 12–13 February 2027 (dates to be confirmed).',
     origin: 'https://riga.iniac.se',
     // No Riga banner yet: the arena photo from the hero.
     image: '/site/arena_court_hd.jpg',

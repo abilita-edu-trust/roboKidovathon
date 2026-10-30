@@ -553,7 +553,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
 
   const doneCopy = done && def && ctx ? def.done(ctx, values) : null;
   const choiceStep = kind !== 'form' && kind !== 'review';
-  const footer = programme ? [site.cityName, programme.date ? T(programme.date) : ''].filter(Boolean).join(' · ') : `${site.cityName} · 2026`;
+  const footer = programme ? [site.cityName, programme.date ? T(programme.date) : ''].filter(Boolean).join(' · ') : `${site.cityName} · ${site.nav.brandChip}`;
 
   return (
     <>
@@ -645,7 +645,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
                   <span className="text-xs font-mono-code font-bold tracking-[0.25em] text-emerald-600 uppercase mb-1 block">
-                    {L('Received', 'Mottaget')} // {site.cityName} 2026
+                    {L('Received', 'Mottaget')} // {site.cityName} {site.nav.brandChip}
                   </span>
                   <h2 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#0A1930]">{doneCopy.title}</h2>
                   <p className="mt-2 text-xs sm:text-sm text-slate-600 max-w-lg leading-relaxed">{doneCopy.body}</p>

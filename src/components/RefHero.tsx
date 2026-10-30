@@ -119,7 +119,8 @@ const EventsHero: React.FC<RefHeroProps> = ({ data: hero, go }) => {
                       aria-hidden="true"
                     />
                     <span className="flex items-start justify-between gap-4">
-                      <span className="font-mono-code font-bold text-[13px] sm:text-sm tracking-[0.2em] uppercase text-[#FFCD00]">
+                      {/* A line break from the Admin Panel starts a second line, e.g. "Dates to be confirmed" */}
+                      <span className="font-mono-code font-bold text-[13px] sm:text-sm tracking-[0.2em] uppercase text-[#FFCD00] whitespace-pre-line">
                         {t(event.date)}
                       </span>
                       <ArrowUpRight

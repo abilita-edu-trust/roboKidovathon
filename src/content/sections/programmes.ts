@@ -14,7 +14,24 @@ export interface PathwayStepData {
   /** Empty = no date pill. */
   date: Bi;
   highlight: boolean;
+  /** "step" (the default), "break" (a pause such as a holiday), "milestone" (a highlighted date such as a
+   *  restart) or "tentative" (a step whose date is not confirmed yet). Breaks and milestones are not numbered. */
+  stepType?: string;
 }
+
+export type StepKind = 'step' | 'break' | 'milestone' | 'tentative';
+
+export const stepKind = (stepType: string | undefined): StepKind =>
+  stepType === 'break' || stepType === 'milestone' || stepType === 'tentative' ? stepType : 'step';
+
+/** Each row's step number; breaks and milestones get none. */
+export const stepNumbers = (steps: { stepType?: string }[]): (number | null)[] => {
+  let n = 0;
+  return steps.map((s) => {
+    const kind = stepKind(s.stepType);
+    return kind === 'break' || kind === 'milestone' ? null : ++n;
+  });
+};
 
 /** A programme card. `theme`: "robo" (blue) or "hack" (green). The note may mark **bold** parts. */
 export interface PathwayData {

@@ -67,6 +67,8 @@ export interface SiteConfig {
   /** Path of the public ideas & voting page. */
   ideasPath: string;
   ideasFilter: IdeasCityFilter;
+  /** "Meet us at" lists only the bookings in this city; unset = all cities. */
+  meetUsCity?: string;
 
   /** Header: the name top-left and the menu. */
   nav: {
