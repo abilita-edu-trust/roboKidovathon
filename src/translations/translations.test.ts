@@ -53,6 +53,12 @@ describe('Swedish dictionary', () => {
   it('has no entries that translate a text to itself', () => {
     for (const [en, sv] of Object.entries(svTranslations)) expect(sv, en).not.toBe(en);
   });
+
+  it('writes the months in dates in lower case', () => {
+    expect(translateWhole('sv', '16 – 27 November 2026')).toBe('16 – 27 november 2026');
+    expect(translateWhole('sv', '23 Nov – 3 Dec 2026')).toBe('23 nov – 3 dec 2026');
+    expect(translateWhole('sv', '4–5 DECEMBER 2026')).toBe('4–5 DECEMBER 2026');
+  });
 });
 
 describe('pick', () => {
