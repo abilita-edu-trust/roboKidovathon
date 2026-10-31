@@ -127,11 +127,11 @@ export const experienceDefaults = (c: SiteConfig): ExperienceData => ({
         bi('Junior: grades 3–6 · Senior: grades 7–9 · GYM: programmable bot.'),
       ],
       steps: [
-        st('Presentation', 'School Demo', 'See the robots, try simple challenges', '1 – 14 October 2026'),
-        st('Cpu', 'Hands-On Workshop', 'Learn and build with real robots', '15 – 28 October 2026'),
+        st('Presentation', 'School Demo', 'See the robots, try simple challenges', '1–14 October 2026'),
+        st('Cpu', 'Hands-On Workshop', 'Learn and build with real robots', '15–28 October 2026'),
         st('Users', 'Team Formation', 'Form teams and start practising', '29 October – 11 November 2026'),
-        st('Award', 'School Qualification', 'Internal challenge to select best teams', '12 – 25 November 2026'),
-        st('Wrench', 'Final Preparation', 'Practise and get final-ready', '26 November – 3 December 2026'),
+        st('Award', 'School Qualification', 'Internal challenge to select best teams', '12–25 November 2026'),
+        st('Wrench', 'Final Preparation', 'Practise and get final-ready', '26 November – 4 December 2026'),
         st('Trophy', 'Västerås Future Innovators Final', 'Compete, showcase & celebrate innovation', '5 December 2026', true),
       ],
       callout: bi(
@@ -146,17 +146,17 @@ export const experienceDefaults = (c: SiteConfig): ExperienceData => ({
       title: bi('Young Inno Hack'),
       tagline: bi('IDEAS TODAY. A BRIGHTER TOMORROW.'),
       intro: [
-        bi('A one-day innovation challenge solving real-world problems.'),
+        bi('An innovation challenge solving real-world problems.'),
         bi('Develop a concept and pitch to the jury.'),
         bi('Basic: grades 7–9 · Medium: gymnasiet · Advanced: university students.'),
       ],
       steps: [
-        st('Compass', 'Listen', 'Collect ideas from schools', '1 – 14 October 2026'),
-        st('Search', 'Select', 'Identify key challenges', '15 – 28 October 2026'),
-        st('UserPlus', 'Connect', 'Form mixed teams with mentors', '29 October – 11 November 2026'),
-        st('Layers', 'Build', 'Turn ideas into a prototype', '12 – 25 November 2026'),
-        st('LineChart', 'Prepare Pitch', 'Refine your solution and pitch', '26 November – 3 December 2026'),
-        st('Rocket', 'Demonstrate', 'Present to the jury and win', '4–5 December 2026', true),
+        st('Compass', 'Listen', 'Collect ideas from schools', '1–20 November 2026'),
+        st('Search', 'Select', 'Identify key challenges', '20–25 November 2026'),
+        st('UserPlus', 'Connect', 'Form mixed teams with mentors', '25–30 November 2026'),
+        st('Layers', 'Build', 'Turn ideas into a prototype', '1–7 December 2026'),
+        st('LineChart', 'Prepare Pitch', 'Refine your solution and pitch', '11 December 2026'),
+        st('Rocket', 'Demonstrate', 'Present to the jury and win', '12 December 2026', true),
       ],
       callout: bi(
         'Students work on real-world challenges around science, technology, sustainability and innovation. The final presentations take place on **11–12 December 2026**.'

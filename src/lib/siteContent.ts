@@ -7,7 +7,8 @@ import { DEFAULT_SITE_CONTENT } from '../data/siteContent.default';
  * (Site CMS; table `fut_inno_site_content`, one row per site: vfi, esk, vxo, …). The built-in default
  * shows until the database answers, and whenever it can't be reached.
  */
-export type Bilingual = { en: string; sv: string };
+/** Riga's texts are English and Latvian (`lv`). */
+export type Bilingual = { en: string; sv: string; lv?: string };
 
 export interface SitePerson {
   id: string;
@@ -44,7 +45,8 @@ export const isPeople = (s: SiteSection): s is PeopleSection => s.type === 'peop
 
 const isObj = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v);
 const str = (v: unknown): string => (typeof v === 'string' ? v : '');
-const bi = (v: unknown): Bilingual => (isObj(v) ? { en: str(v.en), sv: str(v.sv) } : { en: '', sv: '' });
+const bi = (v: unknown): Bilingual =>
+  isObj(v) ? { en: str(v.en), sv: str(v.sv), ...(typeof v.lv === 'string' ? { lv: v.lv } : {}) } : { en: '', sv: '' };
 
 /** Fills missing fields so a half-filled document still renders; other section types pass through. */
 export function normalizeContent(raw: unknown): SiteContent {

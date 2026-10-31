@@ -83,7 +83,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenRegister }) => {
                 <span>APPLICATIONS OPEN</span>
               </div>
               <p className="text-[13px] text-slate-400 font-light leading-relaxed">
-                Vetting closes March 15, 2026 at 23:59 UTC.
+                Vetting closes 15 March 2026 at 23:59 UTC.
               </p>
               <button
                 onClick={onOpenRegister}

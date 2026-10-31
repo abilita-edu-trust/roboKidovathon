@@ -12,6 +12,12 @@ interface NavbarProps {
   onOpenFaq?: () => void;
 }
 
+/** The second-language button: Swedish on the Swedish sites, Latvian on Riga. */
+const SECOND_LANGUAGE = {
+  sv: { code: 'SV', flag: '🇸🇪', word: 'Språk', title: 'Växla hela webbplatsen till svenska', label: 'Byt språk till svenska', toSecond: 'Byt till svenska', toEnglish: 'Byt till engelska', toggle: 'Växla språk' },
+  lv: { code: 'LV', flag: '🇱🇻', word: 'Valoda', title: 'Pārslēgt visu vietni uz latviešu valodu', label: 'Mainīt valodu uz latviešu', toSecond: 'Pārslēgt uz latviešu valodu', toEnglish: 'Pārslēgt uz angļu valodu', toggle: 'Mainīt valodu' },
+} as const;
+
 export const Navbar: React.FC<NavbarProps> = ({
   activeTab,
   onNavigate,
@@ -19,10 +25,11 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { language, setLanguage, toggleLanguage } = useLanguage();
+  const { language, secondLanguage, setLanguage, toggleLanguage } = useLanguage();
+  // The language next to English: Latvian on Riga, Swedish on the other sites.
+  const second = SECOND_LANGUAGE[secondLanguage];
   // The site (VFI or a city site like vxo.iniac.se) sets the name, menu and button text.
   const { nav, location } = useSite();
-  const sv = language === 'sv';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -44,9 +51,9 @@ export const Navbar: React.FC<NavbarProps> = ({
     };
   }, [mobileMenuOpen]);
 
-  const navLinks = nav.links.map((l) => ({ id: l.id, label: pickLang(l.label, sv) }));
+  const navLinks = nav.links.map((l) => ({ id: l.id, label: pickLang(l.label, language) }));
 
-  const registerLabel = pickLang(nav.registerLabel, sv);
+  const registerLabel = pickLang(nav.registerLabel, language);
 
   // Real links (shareable, open-in-new-tab) that navigate in-app on a plain click.
   const handleLinkClick = (e: React.MouseEvent, id: string) => {
@@ -160,9 +167,9 @@ export const Navbar: React.FC<NavbarProps> = ({
             })}
           </nav>
 
-          {/* Action Button & Swedish Language Toggle (Right) */}
+          {/* Action Button & Language Toggle (Right) */}
           <div className="hidden sm:flex items-center gap-2.5">
-            {/* Swedish / English Language Switcher Pill */}
+            {/* Second language / English Language Switcher Pill */}
             <div
               className={`flex items-center p-0.5 transition-all duration-300 ${
                 isDarkHeader
@@ -172,19 +179,19 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <button
                 type="button"
-                onClick={() => setLanguage('sv')}
+                onClick={() => setLanguage(secondLanguage)}
                 className={`relative flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono-code font-bold transition-all ${
-                  language === 'sv'
+                  language === secondLanguage
                     ? 'bg-[#006AA7] text-white shadow-xs'
                     : isDarkHeader
                     ? 'text-white/70 hover:text-white hover:bg-white/10'
                     : 'text-slate-600 hover:text-[#0A1930] hover:bg-slate-200/60'
                 }`}
-                title="Växla hela webbplatsen till svenska"
-                aria-label="Byt språk till svenska"
+                title={second.title}
+                aria-label={second.label}
               >
-                <span className="hidden 2xl:inline text-xs leading-none">🇸🇪</span>
-                <span>SV</span>
+                <span className="hidden 2xl:inline text-xs leading-none">{second.flag}</span>
+                <span>{second.code}</span>
               </button>
               <button
                 type="button"
@@ -212,7 +219,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="btn-pill-lime text-xs font-black py-2.5 px-4 2xl:px-5 whitespace-nowrap transition-all duration-200 shadow-md flex items-center gap-2 group relative overflow-hidden"
             >
               {/* The long label only fits next to the full menu on wide screens */}
-              <span className="2xl:hidden">{pickLang(nav.registerShort, sv)}</span>
+              <span className="2xl:hidden">{pickLang(nav.registerShort, language)}</span>
               <span className="hidden 2xl:inline">{registerLabel}</span>
               <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
             </motion.a>
@@ -228,10 +235,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                   ? 'bg-black/30 border-white/20 text-white hover:bg-white/15'
                   : 'bg-slate-100 border-slate-200 text-[#0A1930] hover:bg-slate-200'
               }`}
-              title={language === 'sv' ? 'Byt till engelska' : 'Byt till svenska'}
-              aria-label="Växla språk"
+              title={language === 'en' ? second.toSecond : second.toEnglish}
+              aria-label={second.toggle}
             >
-              <span>{language === 'sv' ? '🇸🇪 SV' : '🇬🇧 EN'}</span>
+              <span>{language === 'en' ? '🇬🇧 EN' : `${second.flag} ${second.code}`}</span>
             </button>
 
             <button
@@ -286,19 +293,19 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <div className="p-3 bg-slate-50 border border-slate-200 flex items-center justify-between gap-2">
                     <span className="text-xs font-display font-medium text-slate-700 flex items-center gap-1.5">
                       <Globe className="w-3.5 h-3.5 text-[#006AA7]" />
-                      <span>{language === 'sv' ? 'Språk / Language' : 'Language / Språk'}:</span>
+                      <span>{language === 'en' ? `Language / ${second.word}` : `${second.word} / Language`}:</span>
                     </span>
                     <div className="flex items-center p-0.5 bg-slate-200 border border-slate-300">
                       <button
                         type="button"
-                        onClick={() => setLanguage('sv')}
+                        onClick={() => setLanguage(secondLanguage)}
                         className={`flex items-center gap-1 px-3 py-1 text-xs font-mono-code font-bold transition-all ${
-                          language === 'sv'
+                          language === secondLanguage
                             ? 'bg-[#006AA7] text-white shadow-xs'
                             : 'text-slate-700 hover:text-[#0A1930]'
                         }`}
                       >
-                        <span>🇸🇪 SV</span>
+                        <span>{second.flag} {second.code}</span>
                       </button>
                       <button
                         type="button"
@@ -326,7 +333,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   </button>
 
                   <div className="p-3 bg-slate-50 border border-slate-200 text-[13px] font-mono-code text-slate-500 text-center">
-                    {pickLang(nav.season, sv)}
+                    {pickLang(nav.season, language)}
                   </div>
                 </div>
               </div>

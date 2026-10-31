@@ -8,8 +8,8 @@ interface RefSlushCountdownProps {
 }
 
 export const RefSlushCountdown: React.FC<RefSlushCountdownProps> = ({ onOpenRegister }) => {
-  // Verifiable Grand Finale Date: December 4–5, 2026
-  const countdown = useCountdown('2026-12-04T09:00:00+01:00');
+  // Verifiable Grand Finale Date: 5 December 2026
+  const countdown = useCountdown('2026-12-05T09:00:00+01:00');
 
   const units = [
     { value: countdown.days, label: 'DAYS' },
@@ -32,7 +32,7 @@ export const RefSlushCountdown: React.FC<RefSlushCountdownProps> = ({ onOpenRegi
           <div className="flex items-center gap-2 text-slate-600">
             <Calendar className="w-4 h-4 text-[#006AA7]" />
             <span className="text-xs sm:text-sm font-sans font-medium tracking-wide">
-              Västerås Future Innovators 2026 · Grand Finale · December 4–5, 2026
+              Västerås Future Innovators 2026 · Grand Finale · 5 December 2026
             </span>
           </div>
 
@@ -60,7 +60,7 @@ export const RefSlushCountdown: React.FC<RefSlushCountdownProps> = ({ onOpenRegi
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3 w-full max-w-md">
             <div className="text-[13px] font-mono-code text-slate-500 flex items-center gap-1.5">
               <Trophy className="w-3.5 h-3.5 text-[#006AA7]" />
-              <span>School Qualifiers: October 2026</span>
+              <span>School Qualifiers: 12–25 November 2026</span>
             </div>
 
             <span className="hidden sm:inline text-slate-300">•</span>

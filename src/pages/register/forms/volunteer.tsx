@@ -1,6 +1,7 @@
 // Volunteer and mentor sign-ups (Community path). Mentor is the volunteer form with the
 // mentor role already chosen. Stored in volunteer_registrations (submit_vfi_volunteer).
 import React from 'react';
+import { pick } from '../../../content/core';
 import { supabase } from '../../../lib/supabase';
 import {
   Chips, FormDef, Grid, LocationFields, SelectField, TextArea, TextField,
@@ -10,8 +11,8 @@ import {
 
 // Stored values are English and shared with the Fut Inno admin filters.
 const VOLUNTEER_EVENTS: ChipOption[] = [
-  { value: 'robo-sprint-city-final', en: 'Robo-Sprint City Final (5 Dec 2026)', sv: 'Robo-Sprint stadsfinal (5 dec 2026)' },
-  { value: 'young-inno-hack', en: 'Young Inno Hack (11–12 Dec 2026)', sv: 'Young Inno Hack (11–12 dec 2026)' },
+  { value: 'robo-sprint-city-final', en: 'Robo-Sprint City Final (5 December 2026)', sv: 'Robo-Sprint stadsfinal (5 december 2026)' },
+  { value: 'young-inno-hack', en: 'Young Inno Hack (11–12 December 2026)', sv: 'Young Inno Hack (11–12 december 2026)' },
   { value: 'school-workshops-demos', en: 'In-school workshops & demos', sv: 'Workshoppar och demos på skolor' },
   { value: 'any-vfi-event', en: 'Any VFI event', sv: 'Valfritt VFI-evenemang' },
 ];
@@ -46,7 +47,7 @@ const team = (ctx: FormCtx) => ctx.site.intake.volunteer?.teamName ?? 'VFI';
 
 const VolunteerFields: React.FC<FieldsProps> = (props) => {
   const { v, set, ctx } = props;
-  const { L, sv } = ctx;
+  const { L, lang } = ctx;
   return (
     <>
       <Grid>
@@ -54,7 +55,7 @@ const VolunteerFields: React.FC<FieldsProps> = (props) => {
         <TextField k="email" v={v} set={set} type="email" required label={L('Email', 'E-post')} />
         <TextField k="phone" v={v} set={set} type="tel" required label={L('Phone', 'Telefon')} />
       </Grid>
-      <Chips k="ageGroup" v={v} set={set} sv={sv} required label={L('Age group', 'Åldersgrupp')} options={AGE_GROUPS} />
+      <Chips k="ageGroup" v={v} set={set} lang={lang} required label={L('Age group', 'Åldersgrupp')} options={AGE_GROUPS} />
       {v.ageGroup === 'under-18' && (
         <div className="p-4 bg-amber-50 border border-amber-200">
           <Grid>
@@ -64,9 +65,9 @@ const VolunteerFields: React.FC<FieldsProps> = (props) => {
         </div>
       )}
       <LocationFields {...props} allowCustom={false} />
-      <Chips k="events" v={v} set={set} sv={sv} multi required label={L('Which event(s)?', 'Vilket/vilka evenemang?')} options={events(ctx)} />
-      <Chips k="roles" v={v} set={set} sv={sv} multi required label={L('Preferred roles', 'Önskade roller')} options={VOLUNTEER_ROLES} />
-      <Chips k="availability" v={v} set={set} sv={sv} required label={L('Availability', 'Tillgänglighet')} options={AVAILABILITY} />
+      <Chips k="events" v={v} set={set} lang={lang} multi required label={L('Which event(s)?', 'Vilket/vilka evenemang?')} options={events(ctx)} />
+      <Chips k="roles" v={v} set={set} lang={lang} multi required label={L('Preferred roles', 'Önskade roller')} options={VOLUNTEER_ROLES} />
+      <Chips k="availability" v={v} set={set} lang={lang} required label={L('Availability', 'Tillgänglighet')} options={AVAILABILITY} />
       <Grid>
         <TextField k="languages" v={v} set={set} required label={L('Languages spoken', 'Språk du talar')} placeholder={L('e.g. Swedish, English, Hindi', 't.ex. svenska, engelska, hindi')} />
         <SelectField
@@ -97,7 +98,7 @@ const makeForm = (mentor: boolean): FormDef => ({
     mentor
       ? ctx.L('Support student teams and their projects. All fields are required.', 'Stötta elevlag och deras projekt. Alla fält är obligatoriska.')
       : ctx.site.intake.volunteer
-      ? ctx.L(ctx.site.intake.volunteer.intro.en, ctx.site.intake.volunteer.intro.sv)
+      ? pick(ctx.site.intake.volunteer.intro, ctx.lang)
       : ctx.L(
           'Help us run Västerås Future Innovators events. All fields are required.',
           'Hjälp oss att genomföra Västerås Future Innovators evenemang. Alla fält är obligatoriska.',
@@ -121,20 +122,20 @@ const makeForm = (mentor: boolean): FormDef => ({
     return '';
   },
   summary: (v, ctx) => {
-    const { L, sv } = ctx;
+    const { L, lang } = ctx;
     return [
       ...rows(
         [L('Full name', 'Fullständigt namn'), str(v.contactName)],
         [L('Email', 'E-post'), str(v.email)],
         [L('Phone', 'Telefon'), str(v.phone)],
-        [L('Age group', 'Åldersgrupp'), chipLabels(v.ageGroup, AGE_GROUPS, sv)],
+        [L('Age group', 'Åldersgrupp'), chipLabels(v.ageGroup, AGE_GROUPS, lang)],
         [L('Parent / guardian', 'Vårdnadshavare'), v.ageGroup === 'under-18' ? [str(v.guardianName), str(v.guardianPhone)].filter(Boolean).join(' · ') : ''],
       ),
       ...locationRow(v, ctx),
       ...rows(
-        [L('Events', 'Evenemang'), chipLabels(v.events, events(ctx), sv)],
-        [L('Roles', 'Roller'), chipLabels(v.roles, VOLUNTEER_ROLES, sv)],
-        [L('Availability', 'Tillgänglighet'), chipLabels(v.availability, AVAILABILITY, sv)],
+        [L('Events', 'Evenemang'), chipLabels(v.events, events(ctx), lang)],
+        [L('Roles', 'Roller'), chipLabels(v.roles, VOLUNTEER_ROLES, lang)],
+        [L('Availability', 'Tillgänglighet'), chipLabels(v.availability, AVAILABILITY, lang)],
         [L('Languages', 'Språk'), str(v.languages)],
         [L('T-shirt size', 'T-shirtstorlek'), str(v.tshirtSize)],
         [L('Experience', 'Erfarenhet'), str(v.experience)],

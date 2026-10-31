@@ -50,9 +50,9 @@ export const RoboFinalCta: React.FC<RoboFinalCtaProps> = ({
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-white/10 max-w-2xl">
               {[
-                { label: 'REGISTRATION CLOSES', date: 'JANUARY 31, 2026' },
+                { label: 'REGISTRATION CLOSES', date: '31 JANUARY 2026' },
                 { label: 'SCHOOL WORKSHOPS', date: 'FEBRUARY 2026' },
-                { label: 'CITY FINALS ARENA', date: 'MARCH 21, 2026', highlight: true },
+                { label: 'CITY FINALS ARENA', date: '21 MARCH 2026', highlight: true },
               ].map((item) => (
                 <div key={item.label} className="space-y-1">
                   <span className="block text-xs font-mono-code font-bold text-slate-400 uppercase">

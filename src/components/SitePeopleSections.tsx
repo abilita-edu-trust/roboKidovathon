@@ -1,24 +1,25 @@
 import React from 'react';
 import { pickLang } from '../context/SiteContext';
+import type { Language } from '../context/LanguageContext';
 import { initials, type PeopleSection } from '../lib/siteContent';
 
 /** One people section (Jury, Speakers, …): a grid of cards, or its "announced soon" text while empty. */
-export const PeopleBlock: React.FC<{ section: PeopleSection; sv: boolean }> = ({ section, sv }) => {
-  const intro = pickLang(section.intro, sv);
+export const PeopleBlock: React.FC<{ section: PeopleSection; lang: Language }> = ({ section, lang }) => {
+  const intro = pickLang(section.intro, lang);
   return (
     <section id={section.id} data-no-translate="true" className="w-full bg-white text-[#0A1930] py-5 sm:py-6 px-4 sm:px-6 lg:px-10 scroll-mt-20">
       <div className="max-w-[1560px] mx-auto">
-        <h2 className="font-headline font-black text-3xl sm:text-4xl uppercase tracking-tight">{pickLang(section.title, sv)}</h2>
+        <h2 className="font-headline font-black text-3xl sm:text-4xl uppercase tracking-tight">{pickLang(section.title, lang)}</h2>
         {intro && <p className="mt-3 max-w-2xl text-sm sm:text-base leading-relaxed text-[#0A1930]/70">{intro}</p>}
         {section.people.length === 0 ? (
           <p className="mt-6 inline-flex items-center gap-2.5 rounded-2xl border-2 border-dashed border-[#0A1930]/20 px-5 py-4 text-sm font-semibold text-[#0A1930]/80">
             <span className="h-2 w-2 shrink-0 rounded-full bg-[#FFCD00]" aria-hidden />
-            {pickLang(section.emptyText, sv)}
+            {pickLang(section.emptyText, lang)}
           </p>
         ) : (
           <ul className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 lg:grid-cols-5">
             {section.people.map((p) => {
-              const role = pickLang(p.role, sv);
+              const role = pickLang(p.role, lang);
               return (
                 <li key={p.id} className="min-w-0">
                   <div className="aspect-square overflow-hidden rounded-2xl bg-[#F2F8FD]">

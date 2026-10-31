@@ -18,7 +18,8 @@ import { fetchRegisteredSchools } from '../../lib/ideasService';
 import { GRADE_GROUP_OPTIONS } from '../../data/vfiFacts';
 import { ParticipationFees } from '../../components/ParticipationFees';
 import { useSite, type Bilingual } from '../../context/SiteContext';
-import { useLanguage } from '../../context/LanguageContext';
+import { useT } from '../../content/useT';
+import { pick } from '../../content/core';
 import {
   activityChoices,
   answerCard,
@@ -109,10 +110,10 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
   intro = DEFAULT_INTRO,
 }) => {
   const site = useSite();
-  const { language } = useLanguage();
-  const sv = language === 'sv';
-  const L = (en: string, svText: string) => (sv ? svText : en);
-  const T = (b: Bilingual) => (sv ? b.sv || b.en : b.en);
+  const { lang, sv, L } = useT();
+  const T = (b: Bilingual) => pick(b, lang);
+  // The city in the visitor's language (Riga is "Rīga" in Latvian).
+  const city = L(site.cityName, site.cityName);
 
   const programmes = site.intake.programmes;
   const accepts = (tab: IntakeProgramTab) => !site.intake.tabs || site.intake.tabs.includes(tab);
@@ -135,7 +136,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
   );
 
   const ctxFor = (p: RegisterPath): FormCtx | null =>
-    p.programme ? { site, language, sv, L, path: p, programme: programmeOf(p.programme, programmes), gradeOptions } : null;
+    p.programme ? { site, language: sv ? 'sv' : 'en', lang, sv, L, path: p, programme: programmeOf(p.programme, programmes), gradeOptions } : null;
   const formKey = (p: RegisterPath) => {
     const f = formFor(p);
     return f ? `${f}|${p.role ?? ''}|${p.activity ?? ''}` : '';
@@ -553,7 +554,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
 
   const doneCopy = done && def && ctx ? def.done(ctx, values) : null;
   const choiceStep = kind !== 'form' && kind !== 'review';
-  const footer = programme ? [site.cityName, programme.date ? T(programme.date) : ''].filter(Boolean).join(' · ') : `${site.cityName} · ${site.nav.brandChip}`;
+  const footer = programme ? [city, programme.date ? T(programme.date) : ''].filter(Boolean).join(' · ') : `${city} · ${site.nav.brandChip}`;
 
   return (
     <>
@@ -561,7 +562,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
           <div className="text-center max-w-3xl mx-auto mb-6">
             <div className="inline-flex items-center gap-2 text-[13px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase mb-2">
               <Sparkles className="w-3.5 h-3.5 text-[#FFCD00]" />
-              <span>{site.intake.eyebrow}</span>
+              <span>{L(site.intake.eyebrow, site.intake.eyebrow)}</span>
             </div>
             <Heading className="font-headline font-black text-3xl sm:text-4xl uppercase tracking-tight text-[#0A1930]">
               {L('Find your pathway', 'Hitta din väg')}
@@ -645,7 +646,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
                   <span className="text-xs font-mono-code font-bold tracking-[0.25em] text-emerald-600 uppercase mb-1 block">
-                    {L('Received', 'Mottaget')} // {site.cityName} {site.nav.brandChip}
+                    {L('Received', 'Mottaget')} // {city} {site.nav.brandChip}
                   </span>
                   <h2 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#0A1930]">{doneCopy.title}</h2>
                   <p className="mt-2 text-xs sm:text-sm text-slate-600 max-w-lg leading-relaxed">{doneCopy.body}</p>

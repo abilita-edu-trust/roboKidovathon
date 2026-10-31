@@ -48,7 +48,7 @@ export const DateTimeSection: React.FC<FieldsProps & { countLabel?: string }> = 
         <TextField k="endTime" v={v} set={set} type="time" required label={L('End time', 'Sluttid')} />
       </Grid>
       <Grid>
-        <SelectField k="gradeGroup" v={v} set={set} label={L('Grade', 'Årskurs')} options={ctx.gradeOptions.map((g) => ({ value: g, label: g }))} />
+        <SelectField k="gradeGroup" v={v} set={set} label={L('Grade', 'Årskurs')} options={ctx.gradeOptions.map((g) => ({ value: g, label: L(g, g) }))} />
         {countLabel && <TextField k="studentCount" v={v} set={set} label={countLabel} placeholder={L('e.g. 25', 't.ex. 25')} />}
       </Grid>
     </Section>
@@ -66,7 +66,7 @@ export const dateTimeRows = (v: Values, ctx: FormCtx) => {
 
 const BookingFields: React.FC<FieldsProps> = (props) => {
   const { v, set, ctx } = props;
-  const { L, sv } = ctx;
+  const { L, lang } = ctx;
   const role = ctx.path.role;
   return (
     <>
@@ -103,9 +103,9 @@ const BookingFields: React.FC<FieldsProps> = (props) => {
               <TextField k="studentAge" v={v} set={set} type="number" min="6" max="20" label={L('Age', 'Ålder')} />
             </Grid>
           )}
-          <Chips k="wantsTo" v={v} set={set} sv={sv} multi label={L('I would like to', 'Jag skulle vilja')} options={WANTS_TO_OPTIONS} />
-          <Chips k="experience" v={v} set={set} sv={sv} label={L('Experience', 'Erfarenhet')} options={EXPERIENCE_OPTIONS} />
-          <Chips k="interests" v={v} set={set} sv={sv} multi label={L('What interests me', 'Det här intresserar mig')} options={INTEREST_OPTIONS} />
+          <Chips k="wantsTo" v={v} set={set} lang={lang} multi label={L('I would like to', 'Jag skulle vilja')} options={WANTS_TO_OPTIONS} />
+          <Chips k="experience" v={v} set={set} lang={lang} label={L('Experience', 'Erfarenhet')} options={EXPERIENCE_OPTIONS} />
+          <Chips k="interests" v={v} set={set} lang={lang} multi label={L('What interests me', 'Det här intresserar mig')} options={INTEREST_OPTIONS} />
           <div className="pt-2 border-t border-sky-200">
             <Grid>
               <TextField k="guardianName" v={v} set={set} required label={L('Parent / guardian name', 'Vårdnadshavarens namn')} />
@@ -142,7 +142,7 @@ export const bookingForm: FormDef = {
   }),
   Fields: BookingFields,
   summary: (v, ctx) => {
-    const { L, sv, path } = ctx;
+    const { L, lang, path } = ctx;
     const student = path.role !== 'school';
     return [
       ...locationRow(v, ctx),
@@ -157,9 +157,9 @@ export const bookingForm: FormDef = {
       ...rows(
         [L('Participants', 'Deltagare'), path.role === 'individual' ? '' : str(v.studentCount)],
         student && [L('Age', 'Ålder'), str(v.studentAge)],
-        student && [L('Would like to', 'Vill gärna'), chipLabels(v.wantsTo, WANTS_TO_OPTIONS, sv)],
-        student && [L('Experience', 'Erfarenhet'), chipLabels(v.experience, EXPERIENCE_OPTIONS, sv)],
-        student && [L('Interests', 'Intressen'), chipLabels(v.interests, INTEREST_OPTIONS, sv)],
+        student && [L('Would like to', 'Vill gärna'), chipLabels(v.wantsTo, WANTS_TO_OPTIONS, lang)],
+        student && [L('Experience', 'Erfarenhet'), chipLabels(v.experience, EXPERIENCE_OPTIONS, lang)],
+        student && [L('Interests', 'Intressen'), chipLabels(v.interests, INTEREST_OPTIONS, lang)],
         student && [L('Parent / guardian', 'Vårdnadshavare'), [str(v.guardianName), str(v.guardianPhone)].filter(Boolean).join(' · ')],
       ),
     ];
