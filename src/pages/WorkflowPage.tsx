@@ -129,10 +129,10 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
     {
       step: '06',
       title: 'City Final',
-      subtitle: 'Dec 5 Grand Finale',
+      subtitle: '5 December Grand Finale',
       icon: Award,
       desc: 'Up to 4 teams per school or association represent their group at the Final and meet students from across Västerås.',
-      tag: 'DECEMBER 5 GRAND FINALE',
+      tag: '5 DECEMBER GRAND FINALE',
       color: '#FFCD00',
       isFinal: true,
       hoverCardClass: 'hover:bg-[#FFCD00] hover:border-[#FFCD00] hover:shadow-[0_14px_34px_rgba(255,205,0,0.38)]',

@@ -53,6 +53,10 @@ export type ViewMode = 'cards' | 'table' | 'kanban';
 export type SortOption = 'newest' | 'oldest' | 'students' | 'name' | 'urgent';
 export type DateRangePreset = 'all' | 'today' | 'week' | 'month';
 
+// The same date format as the rest of the site, with the time: "31 October 2026 at 11:02".
+const submittedAt = (iso: string) =>
+  new Date(iso).toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
 export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
   onNavigateHome,
   onNavigateVoting,
@@ -2078,7 +2082,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                                   Original Student Intake
                                 </span>
                                 <span className="text-xs font-mono-code text-slate-400">
-                                  {new Date(idea.created_at).toLocaleString()}
+                                  {submittedAt(idea.created_at)}
                                 </span>
                               </div>
 
@@ -2384,7 +2388,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                     </h2>
                   </div>
                   <span className="text-xs font-mono-code text-slate-500">
-                    Dec 11–12 Challenge Cohorts & Squads
+                    11–12 December Challenge Cohorts & Squads
                   </span>
                 </div>
 
@@ -2488,7 +2492,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                             <div className="font-headline font-bold text-slate-800">
                               Young Innovators Challenge
                             </div>
-                            <div className="text-slate-500">11–12 Dec 2026 Final · venue TBC</div>
+                            <div className="text-slate-500">11–12 December 2026 Final · venue TBC</div>
                           </div>
 
                           <div>
@@ -2667,7 +2671,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                     : inspectingItem.school_name || inspectingItem.team_name || 'Registration'}
                 </h3>
                 <p className="text-xs font-mono-code text-slate-500 mt-1">
-                  Submitted on {new Date(inspectingItem.created_at).toLocaleString()}
+                  Submitted on {submittedAt(inspectingItem.created_at)}
                 </p>
               </div>
 

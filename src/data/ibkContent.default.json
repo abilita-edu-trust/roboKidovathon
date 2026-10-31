@@ -35,7 +35,7 @@
     "items": [
       {
         "icon": "Bird",
-        "when": { "en": "2 Oct", "sv": "2 okt" },
+        "when": { "en": "2 October 2026", "sv": "2 oktober 2026" },
         "title": { "en": "Gandhi Jayanti & RoboKidovation workshop", "sv": "Gandhi Jayanti & RoboKidovation-workshop" },
         "where": { "en": "MISV & Viksängskolan", "sv": "MISV & Viksängskolan" },
         "link": { "label": { "en": "", "sv": "" }, "href": "" }
@@ -56,21 +56,21 @@
       },
       {
         "icon": "Ghost",
-        "when": { "en": "25 Oct", "sv": "25 okt" },
+        "when": { "en": "25 October 2026", "sv": "25 oktober 2026" },
         "title": { "en": "Halloween Party", "sv": "Halloweenfest" },
         "where": { "en": "", "sv": "" },
         "link": { "label": { "en": "", "sv": "" }, "href": "" }
       },
       {
         "icon": "Bot",
-        "when": { "en": "9 Nov", "sv": "9 nov" },
+        "when": { "en": "9 November 2026", "sv": "9 november 2026" },
         "title": { "en": "RoboKidovation workshop", "sv": "RoboKidovation-workshop" },
         "where": { "en": "Classes 3–6 at MISV", "sv": "Årskurs 3–6 på MISV" },
         "link": { "label": { "en": "", "sv": "" }, "href": "" }
       },
       {
         "icon": "Bot",
-        "when": { "en": "10 Nov", "sv": "10 nov" },
+        "when": { "en": "10 November 2026", "sv": "10 november 2026" },
         "title": { "en": "RoboKidovation workshop", "sv": "RoboKidovation-workshop" },
         "where": { "en": "Classes 7–9 at MISV", "sv": "Årskurs 7–9 på MISV" },
         "link": { "label": { "en": "", "sv": "" }, "href": "" }
@@ -83,13 +83,6 @@
         "link": { "label": { "en": "See the competition rules", "sv": "Se tävlingsreglerna" }, "href": "/competition" }
       },
       {
-        "icon": "Trophy",
-        "when": { "en": "5 Dec", "sv": "5 dec" },
-        "title": { "en": "RoboKidovation & Young Innovators Hackathon", "sv": "RoboKidovation & Young Innovators Hackathon" },
-        "where": { "en": "", "sv": "" },
-        "link": { "label": { "en": "", "sv": "" }, "href": "" }
-      },
-      {
         "icon": "MapPin",
         "when": { "en": "5 December 2026", "sv": "5 december 2026" },
         "title": { "en": "RoboKidovation Final", "sv": "RoboKidovation-final" },
@@ -98,21 +91,21 @@
       },
       {
         "icon": "Lightbulb",
-        "when": { "en": "5 December 2026", "sv": "5 december 2026" },
+        "when": { "en": "11–12 December 2026", "sv": "11–12 december 2026" },
         "title": { "en": "Young Inno Hack final presentations", "sv": "Young Inno Hack – finalpresentationer" },
         "where": { "en": "Venue to be confirmed", "sv": "Plats meddelas senare" },
         "link": { "label": { "en": "Submit an idea", "sv": "Skicka in en idé" }, "href": "/register?tab=submit-idea" }
       },
       {
         "icon": "Gift",
-        "when": { "en": "12 Dec", "sv": "12 dec" },
+        "when": { "en": "12 December 2026", "sv": "12 december 2026" },
         "title": { "en": "Christmas Party", "sv": "Julfest" },
         "where": { "en": "MKM FusionX & Young Innovators Västerås Success Celebration", "sv": "MKM FusionX & Young Innovators Västerås – vi firar framgångarna" },
         "link": { "label": { "en": "", "sv": "" }, "href": "" }
       },
       {
         "icon": "Users",
-        "when": { "en": "17 or 18 Dec", "sv": "17 eller 18 dec" },
+        "when": { "en": "17 or 18 December 2026", "sv": "17 eller 18 december 2026" },
         "title": { "en": "IBK Annual General Meeting (AGM)", "sv": "IBK:s årsmöte" },
         "where": { "en": "", "sv": "" },
         "link": { "label": { "en": "", "sv": "" }, "href": "" }
@@ -151,12 +144,12 @@
     "timeline": {
       "title": { "en": "Timeline", "sv": "Tidslinje" },
       "steps": [
-        { "label": { "en": "School demos", "sv": "Skoldemos" }, "date": { "en": "1–14 Oct", "sv": "1–14 okt" } },
-        { "label": { "en": "Hands-on workshops", "sv": "Praktiska workshoppar" }, "date": { "en": "15–28 Oct", "sv": "15–28 okt" } },
-        { "label": { "en": "Team formation", "sv": "Lagbildning" }, "date": { "en": "29 Oct – 11 Nov", "sv": "29 okt – 11 nov" } },
-        { "label": { "en": "School qualifiers", "sv": "Skolkval" }, "date": { "en": "12–25 Nov", "sv": "12–25 nov" } },
-        { "label": { "en": "Final preparation", "sv": "Finalförberedelser" }, "date": { "en": "26 Nov – 4 Dec", "sv": "26 nov – 4 dec" } },
-        { "label": { "en": "Final", "sv": "Final" }, "date": { "en": "5 Dec", "sv": "5 dec" } }
+        { "label": { "en": "School demos", "sv": "Skoldemos" }, "date": { "en": "1–14 October 2026", "sv": "1–14 oktober 2026" } },
+        { "label": { "en": "Hands-on workshops", "sv": "Praktiska workshoppar" }, "date": { "en": "15–28 October 2026", "sv": "15–28 oktober 2026" } },
+        { "label": { "en": "Team formation", "sv": "Lagbildning" }, "date": { "en": "29 October – 11 November 2026", "sv": "29 oktober – 11 november 2026" } },
+        { "label": { "en": "School qualifiers", "sv": "Skolkval" }, "date": { "en": "12–25 November 2026", "sv": "12–25 november 2026" } },
+        { "label": { "en": "Final preparation", "sv": "Finalförberedelser" }, "date": { "en": "26 November – 4 December 2026", "sv": "26 november – 4 december 2026" } },
+        { "label": { "en": "Final", "sv": "Final" }, "date": { "en": "5 December 2026", "sv": "5 december 2026" } }
       ]
     },
     "venues": {
@@ -167,15 +160,15 @@
           "label": { "en": "RoboKidovation Final", "sv": "RoboKidovation-final" },
           "name": { "en": "Mälardalen International School Västerås (MISV)", "sv": "Mälardalen International School Västerås (MISV)" },
           "day": "5",
-          "month": { "en": "Dec", "sv": "dec" },
+          "month": { "en": "December", "sv": "december" },
           "confirmed": true
         },
         {
           "image": "",
           "label": { "en": "Young Inno Hack", "sv": "Young Inno Hack" },
           "name": { "en": "Venue to be confirmed", "sv": "Plats meddelas senare" },
-          "day": "5",
-          "month": { "en": "Dec", "sv": "dec" },
+          "day": "11–12",
+          "month": { "en": "December", "sv": "december" },
           "confirmed": false
         }
       ]

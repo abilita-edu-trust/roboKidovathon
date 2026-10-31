@@ -51,7 +51,7 @@ export const rigaSite: SiteConfig = {
     ),
     events: [
       {
-        date: enLv('06 FEBRUARY', '6. FEBRUĀRIS'),
+        date: enLv('6 FEBRUARY', '6. FEBRUĀRIS'),
         title: same('RoboKidovation'),
         kind: enLv('Robotics Competition', 'Robotikas sacensības'),
         audience: enLv('Grades 3–9', '3.–9. klase'),
@@ -73,19 +73,19 @@ export const rigaSite: SiteConfig = {
       { label: 'GRADES', value: '1–9 + GYM' },
       { label: 'ROBOTICS TRAINING', value: '20H STEM' },
       { label: 'ARENA', value: '244 × 122 CM' },
-      { label: 'FINAL DATE', value: 'FEB 6, 2027' },
+      { label: 'FINAL DATE', value: '6 FEBRUARY 2027' },
     ],
   },
 
   // No banner until there is Riga artwork (the Västerås one has the city in the image).
   banner: '',
   journey: {
-    finals: 'on 6 Feb 2027 in Riga',
+    finals: 'on 6 February 2027 in Riga',
     audienceJourneys: true,
     dates: [
       { label: 'Your path', value: 'Try → Learn → Practise → Represent your school' },
-      { label: 'RoboKidovation', value: '6 Feb 2027 (International School of Riga)' },
-      { label: 'Young Inno Hack', value: '12–13 Feb 2027 (dates and venue to be confirmed)' },
+      { label: 'RoboKidovation', value: '6 February 2027 (International School of Riga)' },
+      { label: 'Young Inno Hack', value: '12–13 February 2027 (dates and venue to be confirmed)' },
     ],
   },
 

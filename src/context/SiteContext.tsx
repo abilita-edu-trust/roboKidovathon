@@ -106,7 +106,7 @@ export interface SiteConfig {
   banner?: string;
   /** Dates for the students/parents/teachers guide on the home page; without it the guide is hidden. */
   journey?: {
-    /** When and where the final is, read after "the Final", e.g. "on 5 Dec 2026 at MISV, Västerås". */
+    /** When and where the final is, read after "the Final", e.g. "on 5 December 2026 at MISV, Västerås". */
     finals: string;
     dates: { label: string; value: string }[];
     /** Added to the students' last step, e.g. the international stage. */
@@ -199,7 +199,7 @@ export const VFI_SITE: SiteConfig = {
     },
     events: [
       {
-        date: same('05 DECEMBER'),
+        date: same('5 DECEMBER'),
         title: same('RoboKidovation'),
         kind: { en: 'Robotics Competition', sv: 'Robottävling' },
         audience: { en: 'Grades 3–9', sv: 'Årskurs 3–9' },
@@ -223,19 +223,19 @@ export const VFI_SITE: SiteConfig = {
       { label: 'PROGRAMME', value: '20H STEM' },
       { label: 'LGR22', value: 'CURRICULUM FIT' },
       { label: 'ARENA', value: '244 × 122 CM' },
-      { label: 'FINAL DATE', value: 'DEC 5, 2026' },
+      { label: 'FINAL DATE', value: '5 DECEMBER 2026' },
     ],
   },
 
   banner: '/ves.jpeg',
   journey: {
-    finals: 'on 5 Dec 2026 at MISV, Västerås',
+    finals: 'on 5 December 2026 at MISV, Västerås',
     audienceJourneys: true,
     dates: [
-      { label: 'School demos', value: '1–14 Oct 2026' },
-      { label: 'School qualifiers', value: '12–25 Nov 2026' },
-      { label: 'RoboKidovation', value: '5 Dec 2026 (MISV, Västerås)' },
-      { label: 'Young Inno Hack', value: '11–12 Dec 2026 (venue TBC)' },
+      { label: 'School demos', value: '1–14 October 2026' },
+      { label: 'School qualifiers', value: '12–25 November 2026' },
+      { label: 'RoboKidovation', value: '5 December 2026 (MISV, Västerås)' },
+      { label: 'Young Inno Hack', value: '11–12 December 2026 (venue TBC)' },
     ],
   },
 

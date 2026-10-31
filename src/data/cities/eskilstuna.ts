@@ -12,13 +12,13 @@ const NAME = 'Eskilstuna Future Innovators';
 // - Registration opening: 12 October 2026
 // - School demo: 16 October 2026
 // - Finals: 2 December 2026, IES Eskilstuna
-// - International-level opportunity: April 2027 (flight ticket possibility for 1-2 teams, subject to official rules)
+// - International-level opportunity: May 2027 (flight ticket possibility for 1-2 teams, subject to official rules)
 export const ESKILSTUNA_DETAILS: CityDetail[] = [
   {
     label: { en: 'Key Dates', sv: 'Viktiga datum' },
     value: {
-      en: 'Registration opens: 12 Oct 2026 · School Demo: 16 Oct 2026 · Finals: 2 Dec 2026',
-      sv: 'Anmälan öppnar: 12 okt 2026 · Skoldemo: 16 okt 2026 · Final: 2 dec 2026',
+      en: 'Registration opens: 12 October 2026 · School Demo: 16 October 2026 · Finals: 2 December 2026',
+      sv: 'Anmälan öppnar: 12 oktober 2026 · Skoldemo: 16 oktober 2026 · Final: 2 december 2026',
     },
   },
   {
@@ -34,8 +34,8 @@ export const ESKILSTUNA_DETAILS: CityDetail[] = [
   {
     label: { en: 'International Stage', sv: 'Internationellt steg' },
     value: {
-      en: 'April 2027 — Possibility of flight tickets for 1–2 winning teams (subject to official rules & confirmation)',
-      sv: 'April 2027 — Möjlighet till flygbiljetter för 1–2 vinnande lag (villkorat officiella regler och bekräftelse)',
+      en: 'May 2027 — Possibility of flight tickets for 1–2 winning teams (subject to official rules & confirmation)',
+      sv: 'Maj 2027 — Möjlighet till flygbiljetter för 1–2 vinnande lag (villkorat officiella regler och bekräftelse)',
     },
   },
 ];
@@ -69,7 +69,7 @@ export const eskilstunaSite: SiteConfig = {
   },
 
   hero: {
-    badge: 'FINALS: 2 DEC 2026 · IES ESKILSTUNA, SWEDEN',
+    badge: 'FINALS: 2 DECEMBER 2026 · IES ESKILSTUNA, SWEDEN',
     lines: [
       { en: 'Build ideas.', sv: 'Bygg idéer.' },
       { en: 'Test them.', sv: 'Testa dem.' },
@@ -85,25 +85,25 @@ export const eskilstunaSite: SiteConfig = {
     },
     secondary: { label: { en: 'EXPLORE ROBOKIDOVATION', sv: 'UTFORSKA ROBOKIDOVATION' }, target: 'esk#teams-final-day' },
     facts: [
-      { label: 'REG OPENS', value: '12 OCT 2026' },
-      { label: 'SCHOOL DEMO', value: '16 OCT 2026' },
-      { label: 'FINALS DATE', value: '2 DEC 2026' },
+      { label: 'REG OPENS', value: '12 OCTOBER 2026' },
+      { label: 'SCHOOL DEMO', value: '16 OCTOBER 2026' },
+      { label: 'FINALS DATE', value: '2 DECEMBER 2026' },
       { label: 'VENUE', value: 'IES ESKILSTUNA' },
-      { label: 'NEXT STAGE', value: 'APRIL 2027' },
+      { label: 'NEXT STAGE', value: 'MAY 2027' },
       { label: 'FLIGHT TICKETS', value: 'TOP 1–2 TEAMS*' },
     ],
   },
 
   banner: '/esk.jpeg',
   journey: {
-    finals: 'on 2 Dec 2026 at IES Eskilstuna',
+    finals: 'on 2 December 2026 at IES Eskilstuna',
     dates: [
-      { label: 'Registration opens', value: '12 Oct 2026' },
-      { label: 'School demo', value: '16 Oct 2026' },
-      { label: 'Finals', value: '2 Dec 2026 (IES Eskilstuna)' },
-      { label: 'International stage', value: 'April 2027*' },
+      { label: 'Registration opens', value: '12 October 2026' },
+      { label: 'School demo', value: '16 October 2026' },
+      { label: 'Finals', value: '2 December 2026 (IES Eskilstuna)' },
+      { label: 'International stage', value: 'May 2027*' },
     ],
-    studentsExtra: 'Top 1–2 teams may qualify for flight tickets to the international stage (Apr 2027)*.',
+    studentsExtra: 'Top 1–2 teams may qualify for flight tickets to the international stage (May 2027)*.',
     note: '* Flight ticket possibility for 1–2 teams (subject to rules & confirmation)',
     rulesTarget: 'esk#teams-final-day',
   },
@@ -129,8 +129,8 @@ export const eskilstunaSite: SiteConfig = {
     email: 'contact@iniac.se',
     orgLines: ['INIAC', 'Eskilstuna, Sweden'],
     registerText: {
-      en: 'Registration is open for schools, associations and independent teams in Eskilstuna. Dates will be announced.',
-      sv: 'Anmälan är öppen för skolor, föreningar och fristående lag i Eskilstuna. Datum meddelas senare.',
+      en: 'Registration is open for schools, associations and independent teams in Eskilstuna ahead of the 2 December 2026 final at IES Eskilstuna.',
+      sv: 'Anmälan är öppen för skolor, föreningar och fristående lag i Eskilstuna inför finalen den 2 december 2026 på IES Eskilstuna.',
     },
     register: {
       label: { en: 'REGISTER SCHOOL, ASSOCIATION OR TEAM', sv: 'REGISTRERA SKOLA, FÖRENING ELLER LAG' },
@@ -217,32 +217,32 @@ export const eskilstunaPathway = (sv: boolean): PathwaySource => ({
     {
       title: sv ? 'Anmälan öppnar' : 'Registration opens',
       subtitle: sv ? 'För skolor, föreningar och fristående lag' : 'For schools, associations and independent teams',
-      date: sv ? '12 okt 2026' : '12 Oct 2026',
+      date: sv ? '12 oktober 2026' : '12 October 2026',
       icon: Presentation,
     },
     {
       title: sv ? 'Skoldemo' : 'School demo',
       subtitle: sv ? 'Se robotarna och prova utmaningar' : 'See the robots and try the challenges',
-      date: sv ? '16 okt 2026' : '16 Oct 2026',
+      date: sv ? '16 oktober 2026' : '16 October 2026',
       icon: Cpu,
     },
     {
       title: sv ? 'Workshoppar' : 'Hands-on workshops',
       subtitle: sv ? 'Lagen bildas på första workshoppen' : 'Teams form at the first workshop',
-      date: sv ? 'okt–nov 2026' : 'Oct–Nov 2026',
+      date: sv ? 'oktober–november 2026' : 'October–November 2026',
       icon: Users,
     },
     {
       title: sv ? 'Final' : 'Competition final',
       subtitle: sv ? 'Arenatävling på IES Eskilstuna' : 'Arena tournament at IES Eskilstuna',
-      date: sv ? '2 dec 2026' : '2 Dec 2026',
+      date: sv ? '2 december 2026' : '2 December 2026',
       icon: Trophy,
       highlight: true,
     },
     {
       title: sv ? 'Internationellt steg' : 'International stage',
       subtitle: sv ? 'Flygbiljetter möjliga för 1–2 lag*' : 'Flight tickets possible for 1–2 teams*',
-      date: sv ? 'april 2027' : 'April 2027',
+      date: sv ? 'maj 2027' : 'May 2027',
       icon: Rocket,
       highlight: true,
     },
