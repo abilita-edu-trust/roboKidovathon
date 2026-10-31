@@ -1,12 +1,14 @@
 // Riga Future Innovators (riga.iniac.se): the VFI site for Riga, with RoboKidovation and the
-// Young Inno Hack, ideas & voting. The RoboKidovation final is on 6 February 2027 at the International
-// School of Riga (ISR); the Young Inno Hack on 12–13 February 2027 is tentative (dates to be confirmed).
-// No fees or payment details yet.
+// Young Inno Hack, ideas & voting, in English and Latvian. The RoboKidovation final is on 6 February 2027
+// at the International School of Riga (ISR); the Young Inno Hack on 12–13 February 2027 is tentative
+// (dates to be confirmed). No fees or payment details yet.
 import type { SiteConfig } from '../../context/SiteContext';
 import { pathForRoute } from '../../lib/routes';
 
 const NAME = 'Riga Future Innovators';
 
+/** A text in English and Latvian (the site has no Swedish, so the Swedish slot repeats the English). */
+const enLv = (en: string, lv: string) => ({ en, sv: en, lv });
 /** Same text in both languages. */
 const same = (text: string) => ({ en: text, sv: text });
 
@@ -19,6 +21,7 @@ export const rigaSite: SiteConfig = {
   ideasPath: pathForRoute('riga-ideas'),
   ideasFilter: { only: { countrySlug: 'latvia', citySlug: 'riga' } },
   meetUsCity: 'Riga',
+  secondLanguage: 'lv',
 
   nav: {
     brand: 'RIGA FUTURE INNOVATORS',
@@ -27,48 +30,48 @@ export const rigaSite: SiteConfig = {
     registerRoute: 'riga-register',
     darkRoutes: ['riga'],
     links: [
-      { id: 'riga', label: { en: 'Home', sv: 'Hem' } },
+      { id: 'riga', label: enLv('Home', 'Sākums') },
       { id: 'riga#journey-robokidovation', label: same('RoboKidovation') },
       { id: 'riga#journey-innohack', label: same('Young InnoHack') },
-      { id: 'riga#choose-experience', label: { en: 'Events', sv: 'Evenemang' } },
-      { id: 'riga-register', label: { en: 'Register', sv: 'Registrering' } },
-      { id: 'riga#contact-us', label: { en: 'Contact', sv: 'Kontakt' } },
+      { id: 'riga#choose-experience', label: enLv('Events', 'Pasākumi') },
+      { id: 'riga-register', label: enLv('Register', 'Reģistrācija') },
+      { id: 'riga#contact-us', label: enLv('Contact', 'Kontakti') },
     ],
-    registerLabel: { en: 'REGISTER SCHOOL, ASSOCIATION OR TEAM', sv: 'REGISTRERA SKOLA, FÖRENING ELLER LAG' },
-    registerShort: { en: 'REGISTER', sv: 'REGISTRERA' },
-    season: { en: 'Riga, Latvia · 2026–27 Season', sv: 'Riga, Lettland · Säsongen 2026–27' },
+    registerLabel: enLv('REGISTER SCHOOL, ASSOCIATION OR TEAM', 'REĢISTRĒT SKOLU, BIEDRĪBU VAI KOMANDU'),
+    registerShort: enLv('REGISTER', 'REĢISTRĒTIES'),
+    season: enLv('Riga, Latvia · 2026–27 Season', 'Rīga, Latvija · 2026.–2027. gada sezona'),
   },
 
   hero: {
-    badge: { en: 'RIGA, LATVIA · FEBRUARY 2027', sv: 'RIGA, LETTLAND · FEBRUARI 2027' },
-    lines: [same('Young Future'), same('Innovators.')],
-    intro: {
-      en: 'Two events. One mission. Inspiring the next generation of builders, creators and innovators.',
-      sv: 'Två evenemang. Ett uppdrag. Vi inspirerar nästa generation byggare, skapare och innovatörer.',
-    },
+    badge: enLv('RIGA, LATVIA · FEBRUARY 2027', 'RĪGA, LATVIJA · 2027. GADA FEBRUĀRIS'),
+    lines: [enLv('Young Future', 'Jaunie nākotnes'), enLv('Innovators.', 'inovatori.')],
+    intro: enLv(
+      'Two events. One mission. Inspiring the next generation of builders, creators and innovators.',
+      'Divi pasākumi. Viena misija. Iedvesmojam nākamo konstruktoru, radītāju un inovatoru paaudzi.'
+    ),
     events: [
       {
-        date: { en: '06 FEBRUARY', sv: '06 FEBRUARI' },
+        date: enLv('06 FEBRUARY', '6. FEBRUĀRIS'),
         title: same('RoboKidovation'),
-        kind: { en: 'Robotics Competition', sv: 'Robottävling' },
-        audience: { en: 'Grades 3–9', sv: 'Årskurs 3–9' },
+        kind: enLv('Robotics Competition', 'Robotikas sacensības'),
+        audience: enLv('Grades 3–9', '3.–9. klase'),
         target: 'riga-register',
         tab: 'competition',
       },
       {
-        date: { en: '12–13 FEBRUARY\nDATES TO BE CONFIRMED', sv: '12–13 FEBRUARI\nDATUM BEKRÄFTAS SENARE' },
+        date: enLv('12–13 FEBRUARY\nDATES TO BE CONFIRMED', '12.–13. FEBRUĀRIS\nDATUMI TIKS PRECIZĒTI'),
         title: same('Young Future InnoHack'),
-        kind: { en: 'Innovation Hackathon', sv: 'Innovationshackathon' },
-        audience: { en: 'Students and young innovators', sv: 'Elever och unga innovatörer' },
+        kind: enLv('Innovation Hackathon', 'Inovāciju hakatons'),
+        audience: enLv('Students and young innovators', 'Skolēni un jaunie inovatori'),
         target: 'riga-register',
         tab: 'hackathon',
       },
     ],
-    primary: { label: { en: 'Explore Both Programmes', sv: 'Utforska båda programmen' }, target: 'riga#choose-experience' },
-    secondary: { label: same('EXPLORE EVENTS'), target: 'riga#choose-experience' },
+    primary: { label: enLv('Explore Both Programmes', 'Iepazīsti abas programmas'), target: 'riga#choose-experience' },
+    secondary: { label: enLv('EXPLORE EVENTS', 'IEPAZĪT PASĀKUMUS'), target: 'riga#choose-experience' },
     facts: [
       { label: 'GRADES', value: '1–9 + GYM' },
-      { label: 'PROGRAMME', value: '20H STEM' },
+      { label: 'ROBOTICS TRAINING', value: '20H STEM' },
       { label: 'ARENA', value: '244 × 122 CM' },
       { label: 'FINAL DATE', value: 'FEB 6, 2027' },
     ],
@@ -80,7 +83,7 @@ export const rigaSite: SiteConfig = {
     finals: 'on 6 Feb 2027 in Riga',
     audienceJourneys: true,
     dates: [
-      { label: 'School qualifiers', value: '12–25 Nov 2026' },
+      { label: 'Your path', value: 'Try → Learn → Practise → Represent your school' },
       { label: 'RoboKidovation', value: '6 Feb 2027 (International School of Riga)' },
       { label: 'Young Inno Hack', value: '12–13 Feb 2027 (dates and venue to be confirmed)' },
     ],
@@ -88,42 +91,43 @@ export const rigaSite: SiteConfig = {
 
   footer: {
     title: 'RIGA FUTURE INNOVATORS 2027',
-    description: same(
-      'Hands-on STEM programme and robotics competition for schools, associations and independent teams in Riga. Hosted by INIAC and SkillSkolan, with Blix as technology and kit partner.'
+    description: enLv(
+      'Hands-on STEM programme and robotics competition for schools, associations and independent teams in Riga. Hosted by INIAC and SkillSkolan, with Blix as technology and kit partner.',
+      'Praktiska STEM programma un robotikas sacensības Rīgas skolām, biedrībām un neatkarīgām komandām. Rīko INIAC un SkillSkolan, tehnoloģiju un komplektu partneris – Blix.'
     ),
     location: 'RIGA, LATVIA',
     audience: 'GRADES 1–9 & GYMNASIUM',
-    programmeTitle: same('PROGRAMME'),
+    programmeTitle: enLv('PROGRAMME', 'PROGRAMMA'),
     programmeLinks: [
-      { id: 'riga', label: { en: 'Home', sv: 'Hem' } },
+      { id: 'riga', label: enLv('Home', 'Sākums') },
       { id: 'riga#journey-robokidovation', label: same('RoboKidovation') },
       { id: 'riga#journey-innohack', label: same('Young InnoHack') },
-      { id: 'riga#teams-final-day', label: { en: 'Categories & final day', sv: 'Kategorier och finaldag' } },
-      { id: 'riga-ideas', label: { en: 'Ideas & Vote', sv: 'Idéer och röstning' } },
-      { id: 'riga-register', label: { en: 'Register', sv: 'Registrering' } },
+      { id: 'riga#teams-final-day', label: enLv('Categories & final day', 'Kategorijas un fināla diena') },
+      { id: 'riga-ideas', label: enLv('Ideas & Vote', 'Idejas un balsošana') },
+      { id: 'riga-register', label: enLv('Register', 'Reģistrācija') },
     ],
-    orgTitle: same('ORGANIZATION & CONTACT'),
-    orgLinks: [{ id: 'riga#contact-us', label: { en: 'Contact us', sv: 'Kontakta oss' } }],
+    orgTitle: enLv('ORGANIZATION & CONTACT', 'ORGANIZĀCIJA UN KONTAKTI'),
+    orgLinks: [{ id: 'riga#contact-us', label: enLv('Contact us', 'Sazinies ar mums') }],
     email: 'contact@iniac.se',
     orgLines: ['INIAC', 'Riga, Latvia'],
-    registerText: {
-      en: 'Registration is open for schools, associations and independent teams ahead of the 12–25 November qualifiers and the 6 February 2027 Final.',
-      sv: 'Anmälan är öppen för skolor, föreningar och fristående lag inför kvalet 12–25 november och finalen 6 februari 2027.',
-    },
-    register: { label: same('REGISTER SCHOOL, ASSOCIATION OR TEAM'), target: 'riga-register' },
+    registerText: enLv(
+      'Registration is open for schools, associations and independent teams ahead of the 6 February 2027 Final.',
+      'Reģistrācija ir atvērta skolām, biedrībām un neatkarīgām komandām – fināls notiks 2027. gada 6. februārī.'
+    ),
+    register: { label: enLv('REGISTER SCHOOL, ASSOCIATION OR TEAM', 'REĢISTRĒT SKOLU, BIEDRĪBU VAI KOMANDU'), target: 'riga-register' },
     copyright: '© 2026 RIGA FUTURE INNOVATORS · INIAC',
     // City admins sign in on the iniac.se dashboard.
     adminHref: 'https://iniac.se/auth',
   },
 
   volunteerCta: {
-    eyebrow: { en: 'VOLUNTEERS // RIGA 2027', sv: 'VOLONTÄRER // RIGA 2027' },
-    title: { en: `Volunteer with ${NAME}`, sv: `Bli volontär hos ${NAME}` },
-    body: {
-      en: 'Help us run robotics finals, hackathons and school events across Riga. Pick your role, your time and the events you want to support.',
-      sv: 'Hjälp oss att genomföra robotikfinaler, hackathons och skolevenemang i Riga. Välj din roll, din tid och de evenemang du vill stötta.',
-    },
-    button: { en: 'REGISTER AS A VOLUNTEER', sv: 'ANMÄL DIG SOM VOLONTÄR' },
+    eyebrow: enLv('VOLUNTEERS // RIGA 2027', 'BRĪVPRĀTĪGIE // RĪGA 2027'),
+    title: enLv(`Volunteer with ${NAME}`, `Kļūsti par ${NAME} brīvprātīgo`),
+    body: enLv(
+      'Help us run robotics finals, hackathons and school events across Riga. Pick your role, your time and the events you want to support.',
+      'Palīdzi mums rīkot robotikas finālus, hakatonus un skolu pasākumus visā Rīgā. Izvēlies savu lomu, laiku un pasākumus, kurus vēlies atbalstīt.'
+    ),
+    button: enLv('REGISTER AS A VOLUNTEER', 'PIETEIKTIES KĀ BRĪVPRĀTĪGAJAM'),
   },
 
   intake: {
@@ -132,35 +136,32 @@ export const rigaSite: SiteConfig = {
       {
         id: 'robo',
         title: same('RoboKidovation'),
-        subtitle: { en: 'School robotics · Grades 1–9 & GYM', sv: 'Skolrobotik · åk 1–9 och gymnasiet' },
-        date: { en: '6 February 2027', sv: '6 februari 2027' },
+        subtitle: enLv('School robotics · Grades 1–9 & GYM', 'Skolu robotika · 1.–9. klase un ģimnāzija'),
+        date: enLv('6 February 2027', '2027. gada 6. februāris'),
         venue: same('International School of Riga (ISR)'),
         image: '/register/robokidovation.jpg',
       },
       {
         id: 'hack',
         title: same('Young Inno Hack'),
-        subtitle: { en: 'Ideas and squads · Grade 7 to university', sv: 'Idéer och lag · åk 7 till universitet' },
-        date: { en: '12–13 February 2027 · dates to be confirmed', sv: '12–13 februari 2027 · datum bekräftas senare' },
-        venue: { en: 'Riga · venue to be confirmed', sv: 'Riga · lokal meddelas senare' },
+        subtitle: enLv('Ideas and squads · Grade 7 to university', 'Idejas un komandas · no 7. klases līdz augstskolai'),
+        date: enLv('12–13 February 2027 · dates to be confirmed', '2027. gada 12.–13. februāris · datumi tiks precizēti'),
+        venue: enLv('Riga · venue to be confirmed', 'Rīga · norises vieta tiks precizēta'),
         image: '/register/hackathon.jpg',
       },
       {
         id: 'community',
-        title: { en: 'Join the Innovation Community', sv: 'Gå med i innovationsgemenskapen' },
-        subtitle: { en: 'Volunteer, mentor, partner or stay connected.', sv: 'Bli volontär, mentor eller partner, eller håll kontakten.' },
+        title: enLv('Join the Innovation Community', 'Pievienojies inovāciju kopienai'),
+        subtitle: enLv('Volunteer, mentor, partner or stay connected.', 'Kļūsti par brīvprātīgo, mentoru vai partneri vai vienkārši paliec saziņā.'),
       },
     ],
     associationContact: 'the organisers',
     // The VFI fees and payment details belong to Västerås.
     showFees: false,
     volunteer: {
-      eventOptions: [{ value: 'riga-future-innovators', en: `${NAME} events`, sv: `${NAME} evenemang` }],
-      eyebrow: { en: 'OPTION 5 // VOLUNTEER', sv: 'ALTERNATIV 5 // VOLONTÄR' },
-      intro: {
-        en: `Help us run ${NAME} events. All fields are required.`,
-        sv: `Hjälp oss att genomföra ${NAME} evenemang. Alla fält är obligatoriska.`,
-      },
+      eventOptions: [{ value: 'riga-future-innovators', en: `${NAME} events`, sv: `${NAME} events`, lv: `${NAME} pasākumi` }],
+      eyebrow: enLv('OPTION 5 // VOLUNTEER', '5. IESPĒJA // BRĪVPRĀTĪGAIS'),
+      intro: enLv(`Help us run ${NAME} events. All fields are required.`, `Palīdzi mums rīkot ${NAME} pasākumus. Visi lauki ir obligāti.`),
       teamName: NAME,
     },
   },

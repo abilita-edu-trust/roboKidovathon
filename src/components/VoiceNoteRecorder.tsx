@@ -1,11 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Mic, Square, Play, Pause, RotateCcw, Upload, CheckCircle2, AlertCircle } from 'lucide-react';
+import { useT } from '../content/useT';
 
 interface VoiceNoteRecorderProps {
   onAudioReady: (file: File | null) => void;
 }
 
 export const VoiceNoteRecorder: React.FC<VoiceNoteRecorderProps> = ({ onAudioReady }) => {
+  // Latvian from the Latvian dictionary; Swedish visitors see the English, as before.
+  const { L } = useT();
+  const tr = (en: string) => L(en, en);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
@@ -113,10 +117,10 @@ export const VoiceNoteRecorder: React.FC<VoiceNoteRecorderProps> = ({ onAudioRea
       <div className="flex items-center justify-between mb-3">
         <span className="text-xs font-headline font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
           <Mic className="w-3.5 h-3.5 text-[#006AA7]" />
-          Record Voice Note (Idea Audio Description)
+          {tr('Record Voice Note (Idea Audio Description)')}
         </span>
         <span className="text-[13px] font-mono-code text-slate-500">
-          Max 3 minutes
+          {tr('Max 3 minutes')}
         </span>
       </div>
 
@@ -136,7 +140,7 @@ export const VoiceNoteRecorder: React.FC<VoiceNoteRecorderProps> = ({ onAudioRea
               className="py-2.5 px-4 bg-[#006AA7] hover:bg-[#013A63] text-white text-xs font-headline font-bold uppercase tracking-wider flex items-center gap-2 transition-all active:scale-95 shadow-sm"
             >
               <Mic className="w-4 h-4 text-[#FFCD00]" />
-              <span>Start Recording</span>
+              <span>{tr('Start Recording')}</span>
             </button>
           ) : (
             <button
@@ -145,15 +149,15 @@ export const VoiceNoteRecorder: React.FC<VoiceNoteRecorderProps> = ({ onAudioRea
               className="py-2.5 px-4 bg-red-600 hover:bg-red-700 text-white text-xs font-headline font-bold uppercase tracking-wider flex items-center gap-2 animate-pulse shadow-sm"
             >
               <Square className="w-4 h-4 fill-white" />
-              <span>Stop Recording ({formatSeconds(recordingTime)})</span>
+              <span>{tr('Stop Recording (')}{formatSeconds(recordingTime)})</span>
             </button>
           )}
 
-          <div className="text-xs text-slate-400 font-mono-code">or</div>
+          <div className="text-xs text-slate-400 font-mono-code">{tr('or')}</div>
 
           <label className="py-2.5 px-3 bg-white border border-slate-300 hover:border-slate-400 text-slate-700 text-xs font-headline font-semibold uppercase tracking-wider flex items-center gap-2 cursor-pointer transition-colors">
             <Upload className="w-3.5 h-3.5 text-slate-500" />
-            <span>Upload Audio File</span>
+            <span>{tr('Upload Audio File')}</span>
             <input
               type="file"
               accept="audio/*"
@@ -176,10 +180,10 @@ export const VoiceNoteRecorder: React.FC<VoiceNoteRecorderProps> = ({ onAudioRea
             <div>
               <div className="text-xs font-headline font-bold text-slate-800 flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                <span>Voice Note Ready ({formatSeconds(recordingTime || 12)})</span>
+                <span>{tr('Voice Note Ready (')}{formatSeconds(recordingTime || 12)})</span>
               </div>
               <div className="text-xs font-mono-code text-slate-400">
-                Ready for submission with your idea
+                {tr('Ready for submission with your idea')}
               </div>
             </div>
             <audio
@@ -194,10 +198,10 @@ export const VoiceNoteRecorder: React.FC<VoiceNoteRecorderProps> = ({ onAudioRea
             type="button"
             onClick={resetRecording}
             className="text-xs text-slate-500 hover:text-red-600 font-mono-code flex items-center gap-1 p-1"
-            title="Re-record voice note"
+            title={tr('Re-record voice note')}
           >
             <RotateCcw className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Re-record</span>
+            <span className="hidden sm:inline">{tr('Re-record')}</span>
           </button>
         </div>
       )}

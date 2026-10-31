@@ -15,7 +15,6 @@ interface RefFooterProps {
 export const RefFooter: React.FC<RefFooterProps> = ({ onNavigate, onSelectPartner }) => {
   const { footer } = useSite();
   const { language } = useLanguage();
-  const sv = language === 'sv';
 
 
   return (
@@ -33,7 +32,7 @@ export const RefFooter: React.FC<RefFooterProps> = ({ onNavigate, onSelectPartne
               </span>
             </div>
             <p className="text-xs sm:text-sm text-slate-300 font-light leading-relaxed max-w-sm">
-              {pickLang(footer.description, sv)}
+              {pickLang(footer.description, language)}
             </p>
             <div className="flex flex-wrap items-center gap-4 text-xs font-mono-code text-slate-300 pt-1">
               <span className="flex items-center gap-1.5">
@@ -50,12 +49,12 @@ export const RefFooter: React.FC<RefFooterProps> = ({ onNavigate, onSelectPartne
           {/* Programme Navigation */}
           <div className="md:col-span-2 space-y-3">
             <span className="font-headline font-bold text-xs uppercase tracking-widest text-white block">
-              {pickLang(footer.programmeTitle, sv)}
+              {pickLang(footer.programmeTitle, language)}
             </span>
             <ul className="space-y-2 text-xs text-slate-300 font-light">
               {footer.programmeLinks.map((l, i) => (
                 <li key={i}>
-                  <button onClick={() => onNavigate(l.id)} className="hover:text-[#FFCD00] transition-colors">{pickLang(l.label, sv)}</button>
+                  <button onClick={() => onNavigate(l.id)} className="hover:text-[#FFCD00] transition-colors">{pickLang(l.label, language)}</button>
                 </li>
               ))}
             </ul>
@@ -64,12 +63,12 @@ export const RefFooter: React.FC<RefFooterProps> = ({ onNavigate, onSelectPartne
           {/* Organization & Trust */}
           <div className="md:col-span-3 space-y-3">
             <span className="font-headline font-bold text-xs uppercase tracking-widest text-white block">
-              {pickLang(footer.orgTitle, sv)}
+              {pickLang(footer.orgTitle, language)}
             </span>
             <ul className="space-y-2 text-xs text-slate-300 font-light">
               {footer.orgLinks.map((l, i) => (
                 <li key={i}>
-                  <button onClick={() => onNavigate(l.id)} className="hover:text-[#FFCD00] transition-colors">{pickLang(l.label, sv)}</button>
+                  <button onClick={() => onNavigate(l.id)} className="hover:text-[#FFCD00] transition-colors">{pickLang(l.label, language)}</button>
                 </li>
               ))}
               <li className="text-slate-300 flex items-center gap-1.5 pt-1">
@@ -87,10 +86,10 @@ export const RefFooter: React.FC<RefFooterProps> = ({ onNavigate, onSelectPartne
           {/* Cohort CTA */}
           <div className="md:col-span-3 space-y-4">
             <span className="font-headline font-bold text-xs uppercase tracking-widest text-white block">
-              {footer.registerTitle ? pickLang(footer.registerTitle, sv) : 'REGISTER'}
+              {footer.registerTitle ? pickLang(footer.registerTitle, language) : 'REGISTER'}
             </span>
             <p className="text-xs text-slate-300 font-light leading-relaxed">
-              {pickLang(footer.registerText, sv)}
+              {pickLang(footer.registerText, language)}
             </p>
             {footer.register && (
             <motion.button
@@ -99,7 +98,7 @@ export const RefFooter: React.FC<RefFooterProps> = ({ onNavigate, onSelectPartne
               onClick={() => footer.register && onNavigate(footer.register.target, footer.register.tab)}
               className="bg-[#FFCD00] hover:bg-[#FACC15] text-[#0A1930] text-xs font-syne font-black py-3.5 px-6 flex items-center justify-center gap-2 shadow-md uppercase tracking-wider transition-all"
             >
-              <span>{pickLang(footer.register.label, sv)}</span>
+              <span>{pickLang(footer.register.label, language)}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </motion.button>
             )}
@@ -130,7 +129,7 @@ export const RefFooter: React.FC<RefFooterProps> = ({ onNavigate, onSelectPartne
         <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono-code text-slate-400">
           <span>{footer.copyright}</span>
           <div className="flex flex-wrap items-center gap-4">
-            <span>{footer.complianceLine ? pickLang(footer.complianceLine, sv) : 'LOW-VOLTAGE 6V HARDWARE · GDPR-COMPLIANT STUDENT PRIVACY'}</span>
+            <span>{footer.complianceLine ? pickLang(footer.complianceLine, language) : 'LOW-VOLTAGE 6V HARDWARE · GDPR-COMPLIANT STUDENT PRIVACY'}</span>
             {footer.adminHref ? (
               <a
                 href={footer.adminHref}

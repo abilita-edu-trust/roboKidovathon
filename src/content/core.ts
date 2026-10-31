@@ -1,8 +1,11 @@
 // Building blocks of the editable site content (Site CMS, edited at iniac.se): texts in two languages,
 // links, and how a saved section is laid over its built-in default.
+import type { Language } from '../context/LanguageContext';
+import { translateWhole } from '../translations';
 
-/** A text in English and Swedish. Empty Swedish shows the English (vfi's translator still applies). */
-export type Bi = { en: string; sv: string };
+/** A text in English and Swedish (Riga: English and Latvian, `lv`). Empty Swedish shows the English (vfi's
+ *  translator still applies); empty Latvian shows the Latvian dictionary's text, else the English. */
+export type Bi = { en: string; sv: string; lv?: string };
 
 /** A button or link. An empty label hides it; `href` is a site path (/register?tab=…, /#vote-ideas), https:, mailto: or tel:. */
 export interface CmsLink {
@@ -13,7 +16,14 @@ export interface CmsLink {
 /** A text from its English and Swedish; Swedish equal to the English is stored empty. */
 export const bi = (en: string, sv?: string): Bi => ({ en, sv: sv === undefined || sv === en ? '' : sv });
 
-export const pick = (b: Bi | undefined, sv: boolean): string => (!b ? '' : sv ? b.sv || b.en : b.en);
+/** The text in the visitor's language; `true`/`false` mean Swedish/English. */
+export const pick = (b: Bi | undefined, lang: Language | boolean): string => {
+  if (!b) return '';
+  const l = lang === true ? 'sv' : lang === false ? 'en' : lang;
+  if (l === 'sv') return b.sv || b.en;
+  if (l === 'lv') return b.lv || translateWhole('lv', b.en) || b.en;
+  return b.en;
+};
 
 const isObj = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v);
 

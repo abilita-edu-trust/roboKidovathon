@@ -5,6 +5,7 @@ import type { LucideIcon } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import type { SiteConfig } from '../../context/SiteContext';
 import type { Language } from '../../context/LanguageContext';
+import { pick } from '../../content/core';
 import type { RegisterPath, RegisterProgramme } from './flow';
 import { COUNTRIES, CITIES_BY_COUNTRY } from './locations';
 
@@ -14,8 +15,12 @@ export type SummaryRow = [label: string, value: string];
 
 export interface FormCtx {
   site: SiteConfig;
-  language: Language;
+  /** Sent with the form for the receipt email, which is English or Swedish (Latvian visitors get English). */
+  language: 'en' | 'sv';
+  /** The language the visitor reads the form in. */
+  lang: Language;
   sv: boolean;
+  /** A built-in text from its English and Swedish; Latvian comes from the Latvian dictionary. */
   L: (en: string, sv: string) => string;
   path: RegisterPath;
   programme: RegisterProgramme;
@@ -130,7 +135,10 @@ export const SelectField: React.FC<BoundProps & { options: { value: string; labe
   </div>
 );
 
-export type ChipOption = { value: string; en: string; sv: string };
+export type ChipOption = { value: string; en: string; sv: string; lv?: string };
+
+/** A chip's label in the visitor's language (Latvian: its `lv`, else the Latvian dictionary). */
+export const optionLabel = (o: ChipOption, lang: Language) => pick(o, lang);
 
 /** Toggle chips; `multi` keeps a list, otherwise one value (click again to clear). */
 export const Chips: React.FC<{
@@ -139,11 +147,11 @@ export const Chips: React.FC<{
   set: SetValue;
   label: string;
   options: ChipOption[];
-  sv: boolean;
+  lang: Language;
   multi?: boolean;
   required?: boolean;
   green?: boolean;
-}> = ({ k, v, set, label, options, sv, multi, required, green }) => {
+}> = ({ k, v, set, label, options, lang, multi, required, green }) => {
   const on = green ? 'bg-[#059669] border-[#059669]' : 'bg-[#006AA7] border-[#006AA7]';
   const selected = multi ? list(v[k]) : v[k] ? [v[k]] : [];
   const toggle = (value: string) => {
@@ -168,7 +176,7 @@ export const Chips: React.FC<{
                 active ? `${on} text-white font-bold` : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
               }`}
             >
-              {sv ? o.sv : o.en}
+              {optionLabel(o, lang)}
             </button>
           );
         })}
@@ -361,11 +369,11 @@ export const rows = (...items: (SummaryRow | false | null | undefined)[]): Summa
   items.filter((r): r is SummaryRow => !!r && !!str(r[1]));
 
 /** Labels of the chosen chips, in the visitor's language. */
-export const chipLabels = (values: unknown, options: ChipOption[], sv: boolean) =>
+export const chipLabels = (values: unknown, options: ChipOption[], lang: Language) =>
   (Array.isArray(values) ? values : values ? [values] : [])
     .map((x) => options.find((o) => o.value === x))
     .filter(Boolean)
-    .map((o) => (sv ? o!.sv : o!.en))
+    .map((o) => optionLabel(o!, lang))
     .join(', ');
 
 /** School bookings, groups, squads, teams and community sign-ups (registrations table). */

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useT } from '../content/useT';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, Building, Check, Heart, Lightbulb, Trophy, X } from 'lucide-react';
 import { IdeaSubmission, fetchApprovedIdeas, hasVotedLocally, voteForIdea } from '../lib/ideasService';
@@ -21,6 +22,7 @@ interface VotePromptProps {
  */
 export const VotePrompt: React.FC<VotePromptProps> = ({ onGoToVote, onSubmitIdea }) => {
   const site = useSite();
+  const { lang } = useT();
   const [open, setOpen] = useState(false);
   const [ideas, setIdeas] = useState<IdeaSubmission[] | null>(null);
   const [voted, setVoted] = useState<Record<string, boolean>>({});
@@ -154,7 +156,9 @@ export const VotePrompt: React.FC<VotePromptProps> = ({ onGoToVote, onSubmitIdea
                   Vote for an idea of young minds
                 </h2>
                 <p className="text-sm text-emerald-50 mt-2 leading-relaxed">
-                  Students across {site.cityName} are imagining a brighter tomorrow. Back your favourite with one tap.
+                  {lang === 'lv'
+                    ? 'Skolēni iztēlojas gaišāku rītdienu. Atbalsti savu favorītu ar vienu pieskārienu.'
+                    : <>Students across {site.cityName} are imagining a brighter tomorrow. Back your favourite with one tap.</>}
                 </p>
               </div>
 

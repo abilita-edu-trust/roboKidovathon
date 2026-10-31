@@ -20,7 +20,7 @@ const fileName = (f: unknown) => (f instanceof File ? f.name : '');
 
 const IdeaFields: React.FC<FieldsProps> = (props) => {
   const { v, set, ctx } = props;
-  const { L, sv } = ctx;
+  const { L, lang } = ctx;
   const pickPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -81,7 +81,7 @@ const IdeaFields: React.FC<FieldsProps> = (props) => {
           />
         </div>
         <TextArea k="beneficiaries" v={v} set={set} rows={2} label={L('3. Who would your idea help?', '3. Vem skulle din idé hjälpa?')} />
-        <Chips k="developFurther" v={v} set={set} sv={sv} green label={L('Would you like to develop this idea further?', 'Vill du utveckla idén vidare?')} options={DEVELOP_OPTIONS} />
+        <Chips k="developFurther" v={v} set={set} lang={lang} green label={L('Would you like to develop this idea further?', 'Vill du utveckla idén vidare?')} options={DEVELOP_OPTIONS} />
 
         <div className="p-4 bg-white border border-slate-200">
           <span className={`${labelCls} mb-2 flex items-center gap-1.5`}>
@@ -165,7 +165,7 @@ export const ideaForm: FormDef = {
   initial: (ctx) => ({ ...locationInitial(ctx.site), studentAge: '13', videoMode: 'link' }),
   Fields: IdeaFields,
   summary: (v, ctx) => {
-    const { L, sv } = ctx;
+    const { L, lang } = ctx;
     const video = v.videoMode === 'upload' ? fileName(v.videoFile) : str(v.videoLink);
     return [
       ...locationRow(v, ctx),
@@ -180,7 +180,7 @@ export const ideaForm: FormDef = {
         [L('Problem', 'Problem'), str(v.problemStatement)],
         [L('Idea', 'Idé'), str(v.ideaDescription)],
         [L('Who it helps', 'Vem den hjälper'), str(v.beneficiaries)],
-        [L('Develop further', 'Utveckla vidare'), chipLabels(v.developFurther, DEVELOP_OPTIONS, sv)],
+        [L('Develop further', 'Utveckla vidare'), chipLabels(v.developFurther, DEVELOP_OPTIONS, lang)],
         [L('Picture', 'Bild'), fileName(v.photoFile)],
         [L('Voice note', 'Röstmeddelande'), v.voiceFile ? L('Recorded', 'Inspelat') : ''],
         ['Video', video],

@@ -61,20 +61,22 @@ const CountUpStat: React.FC<{ target: number; label: string; inView: boolean; ac
 // Drops the trailing "(…)" note, e.g. "09:00–11:30 (2.5 hours)" → "09:00–11:30".
 const stripNote = (s?: string | null) => (s ? s.replace(/\s*\([^)]*\)\s*$/, '').trim() : '');
 
-// "Custom Date: 2026-10-02" → "2 Oct 2026"; other free text is kept as-is.
-const cleanDate = (s?: string | null) => {
+// "Custom Date: 2026-10-02" → "2 Oct 2026" (Swedish "2 okt. 2026"); other free text is kept as-is.
+const cleanDate = (s: string | null | undefined, locale: string) => {
   const text = stripNote(s).replace(/^custom\s*date:\s*/i, '');
   if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
     const d = new Date(`${text}T00:00:00`);
-    if (!isNaN(d.getTime())) return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    if (!isNaN(d.getTime())) return d.toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric' });
   }
   return text;
 };
 
 type Labels = Record<string, string>;
 
-const bookingLabel = (school: ApprovedSchool, slots: Labels) => {
-  const date = cleanDate(school.preferred_date);
+const DATE_LOCALES = { en: 'en-GB', sv: 'sv-SE', lv: 'lv-LV' } as const;
+
+const bookingLabel = (school: ApprovedSchool, slots: Labels, locale: string) => {
+  const date = cleanDate(school.preferred_date, locale);
   const slot = school.workshop_slot ? slots[school.workshop_slot] ?? '' : '';
   const time = stripNote(school.time_range);
   const slotText = slot && time ? `${slot} (${time})` : slot || time;
@@ -82,7 +84,8 @@ const bookingLabel = (school: ApprovedSchool, slots: Labels) => {
 };
 
 const SchoolChip: React.FC<{ school: ApprovedSchool; slots: Labels; kinds: Labels }> = ({ school, slots, kinds }) => {
-  const booking = bookingLabel(school, slots);
+  const { lang } = useT();
+  const booking = bookingLabel(school, slots, DATE_LOCALES[lang]);
   const kind = school.form_type ? kinds[school.form_type] : undefined;
   return (
     <div className="flex-shrink-0 group flex items-center gap-3 px-6 py-3.5 sm:py-4 bg-[#0A1930] hover:bg-[#006AA7] border border-[#0A1930] shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5">
@@ -180,7 +183,9 @@ export const CollaboratorsMarquee: React.FC<CollaboratorsMarqueeProps> = ({ data
   const schoolsCount = stats?.schools_count ?? 0;
   const studentsCount = stats?.students_count ?? 0;
   const displayIdeasCount = ideasCount > 0 ? ideasCount : 12;
-  const hasContent = schools.length > 0 || schoolsCount > 0 || studentsCount > 0;
+  // The counts are for all cities, so a site that lists only its own city's bookings leaves them out.
+  const showCounts = !meetUsCity;
+  const hasContent = schools.length > 0 || (showCounts && (schoolsCount > 0 || studentsCount > 0));
 
   // Nothing approved yet — render nothing rather than a fake/empty section.
   if (loaded && !hasContent) return null;
@@ -219,7 +224,7 @@ export const CollaboratorsMarquee: React.FC<CollaboratorsMarqueeProps> = ({ data
         </div>
       ) : null}
 
-      {(schoolsCount > 0 || studentsCount > 0 || displayIdeasCount > 0) && (
+      {showCounts && (schoolsCount > 0 || studentsCount > 0 || displayIdeasCount > 0) && (
         <>
           <div className="border-t border-slate-200" />
           <div className="flex justify-center">

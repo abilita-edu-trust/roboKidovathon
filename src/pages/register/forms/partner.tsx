@@ -23,7 +23,7 @@ const ways = (ctx: FormCtx): ChipOption[] => (ctx.site.intake.partnerWays ?? DEF
 
 const PartnerFields: React.FC<FieldsProps> = (props) => {
   const { v, set, ctx } = props;
-  const { L, sv } = ctx;
+  const { L, lang } = ctx;
   return (
     <>
       <Grid>
@@ -34,7 +34,7 @@ const PartnerFields: React.FC<FieldsProps> = (props) => {
         <TextField k="website" v={v} set={set} label={L('Website', 'Webbplats')} />
       </Grid>
       <LocationFields {...props} allowCustom={false} />
-      <Chips k="ways" v={v} set={set} sv={sv} multi required label={L('How would you like to take part?', 'Hur vill ni delta?')} options={ways(ctx)} />
+      <Chips k="ways" v={v} set={set} lang={lang} multi required label={L('How would you like to take part?', 'Hur vill ni delta?')} options={ways(ctx)} />
       <TextArea k="message" v={v} set={set} rows={4} label={L('Message', 'Meddelande')} />
     </>
   );
@@ -51,7 +51,7 @@ export const partnerForm: FormDef = {
   Fields: PartnerFields,
   validate: (v, ctx) => ((v.ways ?? []).length === 0 ? ctx.L('Please choose at least one way to take part.', 'Välj minst ett sätt att delta.') : ''),
   summary: (v, ctx) => {
-    const { L, sv } = ctx;
+    const { L, lang } = ctx;
     return [
       ...rows(
         [L('Organisation', 'Organisation'), str(v.orgName)],
@@ -61,7 +61,7 @@ export const partnerForm: FormDef = {
         [L('Website', 'Webbplats'), str(v.website)],
       ),
       ...locationRow(v, ctx),
-      ...rows([L('Ways to take part', 'Sätt att delta'), chipLabels(v.ways, ways(ctx), sv)], [L('Message', 'Meddelande'), str(v.message)]),
+      ...rows([L('Ways to take part', 'Sätt att delta'), chipLabels(v.ways, ways(ctx), lang)], [L('Message', 'Meddelande'), str(v.message)]),
     ];
   },
   submit: async (v, ctx) => {

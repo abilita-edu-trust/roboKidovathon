@@ -199,8 +199,12 @@ export const IdeasVotingPage: React.FC<IdeasVotingPageProps> = ({
             View Ideas and Vote for the Best Idea
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 mt-3 leading-relaxed">
-            Explore innovative prototypes, blueprints, and pitches created by Swedish students.
-            Listen to their voice notes, watch their videos, and vote for the top innovations!
+            {site.location && site.location.countrySlug !== 'sweden'
+              ? `Explore innovative prototypes, blueprints, and pitches created by students in ${site.cityName}. Listen to their voice notes, watch their videos, and vote for the top innovations!`
+              : <>
+                  Explore innovative prototypes, blueprints, and pitches created by Swedish students.
+                  Listen to their voice notes, watch their videos, and vote for the top innovations!
+                </>}
           </p>
         </div>
 

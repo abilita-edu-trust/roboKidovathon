@@ -4,8 +4,12 @@
 import React, { createContext, useContext } from 'react';
 import type { IntakeProgramTab, RegisterProgramme } from '../pages/register/flow';
 import type { PartnerLogo } from '../data/roboData';
+import type { SecondLanguage } from '../translations';
+import type { Language } from './LanguageContext';
+import { pick } from '../content/core';
 
-export type Bilingual = { en: string; sv: string };
+/** Riga's texts also have Latvian (`lv`). */
+export type Bilingual = { en: string; sv: string; lv?: string };
 
 /** Same text in both languages: the site-wide translator handles Swedish (VFI). */
 const same = (text: string): Bilingual => ({ en: text, sv: text });
@@ -25,7 +29,7 @@ export interface IdeasCityFilter {
 }
 
 export interface IntakeVolunteerConfig {
-  eventOptions: { value: string; en: string; sv: string }[];
+  eventOptions: { value: string; en: string; sv: string; lv?: string }[];
   eyebrow: Bilingual;
   intro: Bilingual;
   teamName: string;
@@ -69,6 +73,8 @@ export interface SiteConfig {
   ideasFilter: IdeasCityFilter;
   /** "Meet us at" lists only the bookings in this city; unset = all cities. */
   meetUsCity?: string;
+  /** The language next to English in the language switch; unset = Swedish. */
+  secondLanguage?: SecondLanguage;
 
   /** Header: the name top-left and the menu. */
   nav: {
@@ -315,4 +321,5 @@ export const SiteProvider: React.FC<{ site: SiteConfig; children: React.ReactNod
 export const useSite = (): SiteConfig => useContext(SiteContext);
 
 /** Picks the visitor's language from a Bilingual text. */
-export const pickLang = (b: Bilingual, sv: boolean): string => (sv ? b.sv || b.en : b.en);
+/** The text in the visitor's language; `true`/`false` mean Swedish/English. */
+export const pickLang = (b: Bilingual, lang: Language | boolean): string => pick(b, lang);

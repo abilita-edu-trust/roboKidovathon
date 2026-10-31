@@ -1,4 +1,5 @@
 import React from 'react';
+import { pick } from '../content/core';
 import { Linkedin, Mail, MapPin } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { CONTACT_EMAIL, TEAM_CONTACTS, initials } from '../data/teamContacts';
@@ -18,13 +19,19 @@ const TEXT = {
     write: 'Mejla oss',
     linkedin: 'på LinkedIn',
   },
+  lv: {
+    eyebrow: 'INIAC KOMANDA',
+    title: 'Sazinies ar mums',
+    lead: 'Jautājumi par programmu, jūsu skolu vai sadarbību? Raksti mums vai sazinies ar sev tuvāko kontaktpersonu.',
+    write: 'Raksti mums',
+    linkedin: 'LinkedIn',
+  },
 };
 
 /** "Contact us": the general address and the INIAC team, above the footer of every page (not IBK's). */
 export const TeamContact: React.FC = () => {
   const { language } = useLanguage();
-  const sv = language === 'sv';
-  const t = sv ? TEXT.sv : TEXT.en;
+  const t = TEXT[language];
   return (
     <section id="contact-us" aria-labelledby="contact-us-title" className="w-full scroll-mt-24 border-t border-[#0A1930]/10 bg-[#F4F7FB] px-3 py-8 text-[#0A1930] sm:px-6 sm:py-10">
       <div className="mx-auto max-w-6xl">
@@ -49,7 +56,7 @@ export const TeamContact: React.FC = () => {
               <div className="min-w-0 flex-1">
                 <p className="font-headline font-bold leading-snug">{p.name}</p>
                 <p className="mt-0.5 flex items-center gap-1 text-sm text-slate-500">
-                  <MapPin className="h-3.5 w-3.5 shrink-0 text-[#013A63]" aria-hidden="true" /> {sv ? p.place.sv : p.place.en}
+                  <MapPin className="h-3.5 w-3.5 shrink-0 text-[#013A63]" aria-hidden="true" /> {pick(p.place, language)}
                 </p>
                 {p.email && (
                   <a href={`mailto:${p.email}`} className="mt-1 block truncate text-sm font-semibold text-[#013A63] hover:underline">{p.email}</a>
