@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLanguage } from '../context/LanguageContext';
+import { useT } from '../content/useT';
 import { RegisterWizard } from './register/RegisterWizard';
 import type { IntakeProgramTab } from './register/flow';
 
@@ -19,8 +19,7 @@ export const IntakeRegisterPage: React.FC<IntakeRegisterPageProps> = ({
   onNavigateHome,
   onNavigateVoting,
 }) => {
-  const { language } = useLanguage();
-  const L = (en: string, sv: string) => (language === 'sv' ? sv : en);
+  const { L } = useT();
 
   return (
     <div className="w-full min-h-screen bg-[#F8FAFC] text-[#0A1930] pt-24 pb-20 px-3 sm:px-6">

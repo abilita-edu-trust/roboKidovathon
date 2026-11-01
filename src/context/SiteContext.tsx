@@ -4,8 +4,12 @@
 import React, { createContext, useContext } from 'react';
 import type { IntakeProgramTab, RegisterProgramme } from '../pages/register/flow';
 import type { PartnerLogo } from '../data/roboData';
+import type { SecondLanguage } from '../translations';
+import type { Language } from './LanguageContext';
+import { pick } from '../content/core';
 
-export type Bilingual = { en: string; sv: string };
+/** Riga's texts also have Latvian (`lv`). */
+export type Bilingual = { en: string; sv: string; lv?: string };
 
 /** Same text in both languages: the site-wide translator handles Swedish (VFI). */
 const same = (text: string): Bilingual => ({ en: text, sv: text });
@@ -25,7 +29,7 @@ export interface IdeasCityFilter {
 }
 
 export interface IntakeVolunteerConfig {
-  eventOptions: { value: string; en: string; sv: string }[];
+  eventOptions: { value: string; en: string; sv: string; lv?: string }[];
   eyebrow: Bilingual;
   intro: Bilingual;
   teamName: string;
@@ -69,6 +73,8 @@ export interface SiteConfig {
   ideasFilter: IdeasCityFilter;
   /** "Meet us at" lists only the bookings in this city; unset = all cities. */
   meetUsCity?: string;
+  /** The language next to English in the language switch; unset = Swedish. */
+  secondLanguage?: SecondLanguage;
 
   /** Header: the name top-left and the menu. */
   nav: {
@@ -100,7 +106,7 @@ export interface SiteConfig {
   banner?: string;
   /** Dates for the students/parents/teachers guide on the home page; without it the guide is hidden. */
   journey?: {
-    /** When and where the final is, read after "the Final", e.g. "on 5 Dec 2026 at MISV, Västerås". */
+    /** When and where the final is, read after "the Final", e.g. "on 5 December 2026 at MISV, Västerås". */
     finals: string;
     dates: { label: string; value: string }[];
     /** Added to the students' last step, e.g. the international stage. */
@@ -193,7 +199,7 @@ export const VFI_SITE: SiteConfig = {
     },
     events: [
       {
-        date: same('05 DECEMBER'),
+        date: same('5 DECEMBER'),
         title: same('RoboKidovation'),
         kind: { en: 'Robotics Competition', sv: 'Robottävling' },
         audience: { en: 'Grades 3–9', sv: 'Årskurs 3–9' },
@@ -217,19 +223,19 @@ export const VFI_SITE: SiteConfig = {
       { label: 'PROGRAMME', value: '20H STEM' },
       { label: 'LGR22', value: 'CURRICULUM FIT' },
       { label: 'ARENA', value: '244 × 122 CM' },
-      { label: 'FINAL DATE', value: 'DEC 5, 2026' },
+      { label: 'FINAL DATE', value: '5 DECEMBER 2026' },
     ],
   },
 
   banner: '/ves.jpeg',
   journey: {
-    finals: 'on 5 Dec 2026 at MISV, Västerås',
+    finals: 'on 5 December 2026 at MISV, Västerås',
     audienceJourneys: true,
     dates: [
-      { label: 'School demos', value: '1–14 Oct 2026' },
-      { label: 'School qualifiers', value: '12–25 Nov 2026' },
-      { label: 'RoboKidovation', value: '5 Dec 2026 (MISV, Västerås)' },
-      { label: 'Young Inno Hack', value: '11–12 Dec 2026 (venue TBC)' },
+      { label: 'School demos', value: '1–14 October 2026' },
+      { label: 'School qualifiers', value: '12–25 November 2026' },
+      { label: 'RoboKidovation', value: '5 December 2026 (MISV, Västerås)' },
+      { label: 'Young Inno Hack', value: '11–12 December 2026 (venue TBC)' },
     ],
   },
 
@@ -315,4 +321,5 @@ export const SiteProvider: React.FC<{ site: SiteConfig; children: React.ReactNod
 export const useSite = (): SiteConfig => useContext(SiteContext);
 
 /** Picks the visitor's language from a Bilingual text. */
-export const pickLang = (b: Bilingual, sv: boolean): string => (sv ? b.sv || b.en : b.en);
+/** The text in the visitor's language; `true`/`false` mean Swedish/English. */
+export const pickLang = (b: Bilingual, lang: Language | boolean): string => pick(b, lang);

@@ -1,64 +1,32 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
-import { svTranslations } from '../translations/sv';
+import React, { createContext, useContext, useState, useEffect, useLayoutEffect, useCallback, useRef } from 'react';
+import { translateInText, translateWhole, type SecondLanguage } from '../translations';
 
-export type Language = 'en' | 'sv';
+/** English, plus each site's second language: Swedish on the Swedish sites, Latvian on Riga. */
+export type Language = 'en' | SecondLanguage;
 
 interface LanguageContextType {
   language: Language;
+  /** The site's other language next to English. */
+  secondLanguage: SecondLanguage;
   setLanguage: (lang: Language) => void;
+  setSecondLanguage: (lang: SecondLanguage) => void;
   toggleLanguage: () => void;
   t: (key: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-// Normalize whitespace helper
-function normalize(str: string): string {
-  return str.replace(/\s+/g, ' ').trim();
-}
-
-function isAllCaps(str: string): boolean {
-  return str.length > 2 && str === str.toUpperCase() && /[A-Z]/.test(str);
-}
-
-// Build pre-indexed normalized translation map
-const normalizedMap = new Map<string, string>();
-// Also sort phrase keys for substring matching (longer phrases first)
-const phraseKeys: { en: string; sv: string; regex: RegExp }[] = [];
-
-Object.keys(svTranslations).forEach((key) => {
-  const normKey = normalize(key).toLowerCase();
-  if (!normalizedMap.has(normKey)) {
-    normalizedMap.set(normKey, svTranslations[key]);
-  }
-  // For phrases longer than 12 characters, enable substring matching
-  if (key.length >= 12 && !key.includes('<') && !key.includes('>')) {
-    const escaped = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+');
-    try {
-      phraseKeys.push({
-        en: key,
-        sv: svTranslations[key],
-        regex: new RegExp(escaped, 'gi'),
-      });
-    } catch {
-      // ignore invalid regex
-    }
-  }
-});
-
-// Sort phrases by descending length
-phraseKeys.sort((a, b) => b.en.length - a.en.length);
-
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<Language>(() => {
     try {
       const saved = localStorage.getItem('app_language');
-      if (saved === 'en' || saved === 'sv') return saved;
+      if (saved === 'en' || saved === 'sv' || saved === 'lv') return saved;
     } catch {
       // ignore
     }
     return 'en';
   });
+  const [secondLanguage, setSecondLanguage] = useState<SecondLanguage>('sv');
 
   const isTranslatingRef = useRef(false);
 
@@ -72,57 +40,20 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   }, []);
 
+  // A language the site does not offer (Swedish saved on Riga, Latvian on a Swedish site) shows English.
+  const active: Language = language === 'en' || language === secondLanguage ? language : 'en';
+
   const toggleLanguage = useCallback(() => {
-    setLanguage(language === 'en' ? 'sv' : 'en');
-  }, [language, setLanguage]);
+    setLanguage(active === 'en' ? secondLanguage : 'en');
+  }, [active, secondLanguage, setLanguage]);
 
   // Translate lookup function
-  const t = useCallback((key: string): string => {
-    if (language === 'sv') {
-      const norm = normalize(key).toLowerCase();
-      if (normalizedMap.has(norm)) {
-        const trans = normalizedMap.get(norm)!;
-        return isAllCaps(key) ? trans.toUpperCase() : trans;
-      }
-    }
-    return key;
-  }, [language]);
-
-  // Translate a single text string
-  const getSwedishTranslation = useCallback((rawText: string): string | null => {
-    const norm = normalize(rawText);
-    const lowerNorm = norm.toLowerCase();
-
-    // 1. Direct exact or normalized match
-    if (normalizedMap.has(lowerNorm)) {
-      const trans = normalizedMap.get(lowerNorm)!;
-      return isAllCaps(norm) ? trans.toUpperCase() : trans;
-    }
-
-    // 2. Phrase-level replacement within larger multiline string
-    let working = rawText;
-    let modified = false;
-
-    for (let i = 0; i < phraseKeys.length; i++) {
-      const p = phraseKeys[i];
-      if (p.regex.test(working)) {
-        working = working.replace(p.regex, (matched) => {
-          modified = true;
-          return isAllCaps(matched) ? p.sv.toUpperCase() : p.sv;
-        });
-      }
-    }
-
-    if (modified && working !== rawText) {
-      return working;
-    }
-
-    return null;
-  }, []);
+  const t = useCallback((key: string): string => (active === 'en' ? key : translateWhole(active, key) ?? key), [active]);
 
   // Translate a single DOM node
   const translateNode = useCallback(
     (node: Node) => {
+      if (active === 'en') return;
       if (node.nodeType === Node.TEXT_NODE) {
         const parent = node.parentElement;
         if (!parent) return;
@@ -134,7 +65,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         const trimmed = originalVal.trim();
         if (!trimmed) return;
 
-        const translated = getSwedishTranslation(trimmed);
+        const translated = translateInText(active, trimmed);
         if (translated && translated !== trimmed) {
           const leading = originalVal.match(/^\s*/)?.[0] || '';
           const trailing = originalVal.match(/\s*$/)?.[0] || '';
@@ -149,11 +80,11 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         if (['script', 'style', 'noscript'].includes(tag)) return;
         if (el.getAttribute('data-no-translate') === 'true') return;
 
-        // Check attributes: placeholder, title, aria-label
-        ['placeholder', 'title', 'aria-label'].forEach((attr) => {
+        // Check attributes: placeholder, title, aria-label, alt
+        ['placeholder', 'title', 'aria-label', 'alt'].forEach((attr) => {
           const attrVal = el.getAttribute(attr);
           if (attrVal) {
-            const translated = getSwedishTranslation(attrVal.trim());
+            const translated = translateInText(active, attrVal.trim());
             if (translated && translated !== attrVal) {
               el.setAttribute(attr, translated);
             }
@@ -167,14 +98,14 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         }
       }
     },
-    [getSwedishTranslation]
+    [active]
   );
 
   // Effect to apply translation across the entire DOM tree
   useEffect(() => {
-    document.documentElement.lang = language;
+    document.documentElement.lang = active;
 
-    if (language === 'sv') {
+    if (active !== 'en') {
       isTranslatingRef.current = true;
       translateNode(document.body);
       isTranslatingRef.current = false;
@@ -189,6 +120,15 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             mutation.addedNodes.forEach((addedNode) => {
               translateNode(addedNode);
             });
+          } else if (mutation.type === 'attributes') {
+            // A tooltip or label that changed after the first translation (e.g. "Show details" → "Hide details").
+            const el = mutation.target as HTMLElement;
+            const name = mutation.attributeName!;
+            const val = el.getAttribute(name);
+            if (val && !el.closest('[data-no-translate="true"]')) {
+              const translated = translateInText(active, val.trim());
+              if (translated && translated !== val) el.setAttribute(name, translated);
+            }
           } else if (mutation.type === 'characterData') {
             const node = mutation.target;
             const parent = node.parentElement;
@@ -196,7 +136,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
               const currentVal = node.nodeValue || '';
               const trimmed = currentVal.trim();
               if (trimmed) {
-                const translated = getSwedishTranslation(trimmed);
+                const translated = translateInText(active, trimmed);
                 if (translated && translated !== trimmed) {
                   const leading = currentVal.match(/^\s*/)?.[0] || '';
                   const trailing = currentVal.match(/\s*$/)?.[0] || '';
@@ -214,16 +154,18 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         childList: true,
         subtree: true,
         characterData: true,
+        attributes: true,
+        attributeFilter: ['placeholder', 'title', 'aria-label', 'alt'],
       });
 
       return () => {
         observer.disconnect();
       };
     }
-  }, [language, translateNode, getSwedishTranslation]);
+  }, [active, translateNode]);
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, toggleLanguage, t }}>
+    <LanguageContext.Provider value={{ language: active, secondLanguage, setLanguage, setSecondLanguage, toggleLanguage, t }}>
       {children}
     </LanguageContext.Provider>
   );
@@ -236,3 +178,9 @@ export const useLanguage = (): LanguageContextType => {
   }
   return context;
 };
+
+/** Tells the language switch which second language the current site offers (before the page paints). */
+export function useSiteLanguage(second: SecondLanguage) {
+  const { setSecondLanguage } = useLanguage();
+  useLayoutEffect(() => setSecondLanguage(second), [second, setSecondLanguage]);
+}

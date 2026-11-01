@@ -24,7 +24,7 @@ const defaultHackGrade = (ctx: FormCtx) => ctx.gradeOptions.find((g) => g.starts
 
 const SquadFields: React.FC<FieldsProps> = (props) => {
   const { v, set, ctx } = props;
-  const { L, sv } = ctx;
+  const { L, lang } = ctx;
   const r = role(ctx);
   return (
     <>
@@ -43,7 +43,7 @@ const SquadFields: React.FC<FieldsProps> = (props) => {
         />
         <TextField k="email" v={v} set={set} type="email" required label={L('Email', 'E-post')} />
         <TextField k="phone" v={v} set={set} type="tel" label={L('Phone', 'Telefon')} placeholder="+46 70 123 4567" />
-        <SelectField k="gradeGroup" v={v} set={set} label={L('Grade', 'Årskurs')} options={ctx.gradeOptions.map((g) => ({ value: g, label: g }))} />
+        <SelectField k="gradeGroup" v={v} set={set} label={L('Grade', 'Årskurs')} options={ctx.gradeOptions.map((g) => ({ value: g, label: L(g, g) }))} />
       </Grid>
 
       <Section title={L('Squad profile', 'Lagprofil')} icon={Compass} green>
@@ -61,7 +61,7 @@ const SquadFields: React.FC<FieldsProps> = (props) => {
               : L('Squad members (2–4) *', 'Lagmedlemmar (2–4) *')
           }
         />
-        <Chips k="skills" v={v} set={set} sv={sv} multi green label={L('Squad skills', 'Lagets färdigheter')} options={SKILL_OPTIONS} />
+        <Chips k="skills" v={v} set={set} lang={lang} multi green label={L('Squad skills', 'Lagets färdigheter')} options={SKILL_OPTIONS} />
         {r === 'individual' && (
           <Note>{L('No team yet? Register on your own and we help you find teammates.', 'Inget lag än? Anmäl dig själv så hjälper vi dig att hitta lagkamrater.')}</Note>
         )}
@@ -107,7 +107,7 @@ export const squadForm: FormDef = {
         : ctx.L('Add at least 2 squad members with their names.', 'Lägg till minst 2 lagmedlemmar med namn.')
       : '',
   summary: (v, ctx) => {
-    const { L, sv } = ctx;
+    const { L, lang } = ctx;
     return [
       ...locationRow(v, ctx),
       ...rows(
@@ -118,7 +118,7 @@ export const squadForm: FormDef = {
         [L('Phone', 'Telefon'), str(v.phone)],
         [L('Grade', 'Årskurs'), str(v.gradeGroup)],
         [L('Squad members', 'Lagmedlemmar'), namedMembers(v.members).map((m) => (m.grade ? `${m.full_name} (${m.grade})` : m.full_name)).join(', ')],
-        [L('Squad skills', 'Lagets färdigheter'), chipLabels(v.skills, SKILL_OPTIONS, sv)],
+        [L('Squad skills', 'Lagets färdigheter'), chipLabels(v.skills, SKILL_OPTIONS, lang)],
         [L('Idea', 'Idé'), str(v.idea)],
       ),
     ];

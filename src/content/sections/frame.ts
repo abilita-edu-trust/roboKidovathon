@@ -1,5 +1,6 @@
 // Header, hero, volunteer banner and footer: their default content comes from the site's configuration,
 // and the header/footer content is put back into that configuration so every page of the site shows it.
+import type { Language } from '../../context/LanguageContext';
 import type { Bilingual, SiteAction, SiteConfig, SiteLink } from '../../context/SiteContext';
 import type { IntakeProgramTab } from '../../pages/IntakeRegisterPage';
 import { hrefToTarget, isExternalHref, pathForRoute } from '../../lib/routes';
@@ -13,12 +14,12 @@ export const targetToHref = (target: string, tab?: string | null): string => {
   return pathForRoute(route) + (tab ? `?tab=${tab}` : '') + (section ? `#${section}` : '');
 };
 
-export const biOf = (b: Bilingual): Bi => bi(b.en, b.sv);
+export const biOf = (b: Bilingual): Bi => (b.lv ? { ...bi(b.en, b.sv), lv: b.lv } : bi(b.en, b.sv));
 const linkOf = (l: SiteLink): CmsLink => ({ label: biOf(l.label), href: targetToHref(l.id) });
 const actionLink = (a: SiteAction): CmsLink => ({ label: biOf(a.label), href: targetToHref(a.target, a.tab) });
 
 /** A link with no text in either language is hidden. */
-export const hasLabel = (l: CmsLink | undefined): l is CmsLink => Boolean(l && (l.label.en.trim() || l.label.sv.trim()));
+export const hasLabel = (l: CmsLink | undefined): l is CmsLink => Boolean(l && (l.label.en.trim() || l.label.sv?.trim() || l.label.lv?.trim()));
 
 /** The header and footer navigate by target; links to other sites keep their address as the target. */
 const siteLink = (l: CmsLink): SiteLink => ({ id: isExternalHref(l.href) ? l.href : hrefToTarget(l.href).target, label: l.label });
@@ -145,7 +146,7 @@ export const footerDefaults = (c: SiteConfig): FooterData => ({
 const dataOf = <T,>(sections: SectionDoc[], type: string) => sections.find((s) => s.type === type)?.data as T | undefined;
 
 /** The site's configuration with the header and footer from its CMS document, in the visitor's language. */
-export function applyFrame(c: SiteConfig, sections: SectionDoc[], sv: boolean): SiteConfig {
+export function applyFrame(c: SiteConfig, sections: SectionDoc[], lang: Language): SiteConfig {
   const h = dataOf<HeaderData>(sections, 'header');
   const f = dataOf<FooterData>(sections, 'footer');
   const partners = dataOf<PartnersData>(sections, 'partners');
@@ -154,8 +155,8 @@ export function applyFrame(c: SiteConfig, sections: SectionDoc[], sv: boolean): 
     nav: h
       ? {
           ...c.nav,
-          brand: pick(h.brand, sv),
-          brandChip: pick(h.brandChip, sv),
+          brand: pick(h.brand, lang),
+          brandChip: pick(h.brandChip, lang),
           links: h.links.filter(hasLabel).map(siteLink),
           registerLabel: h.registerLabel,
           registerShort: h.registerShort,
@@ -165,22 +166,22 @@ export function applyFrame(c: SiteConfig, sections: SectionDoc[], sv: boolean): 
     footer: f
       ? {
           ...c.footer,
-          title: pick(f.title, sv),
+          title: pick(f.title, lang),
           description: f.description,
-          location: pick(f.location, sv),
-          audience: pick(f.audience, sv),
+          location: pick(f.location, lang),
+          audience: pick(f.audience, lang),
           programmeTitle: f.programmeTitle,
           programmeLinks: f.programmeLinks.filter(hasLabel).map(siteLink),
           orgTitle: f.orgTitle,
           orgLinks: f.orgLinks.filter(hasLabel).map(siteLink),
           email: f.email,
-          orgLines: f.orgLines.map((line) => pick(line, sv)).filter(Boolean),
+          orgLines: f.orgLines.map((line) => pick(line, lang)).filter(Boolean),
           registerTitle: f.registerTitle,
           registerText: f.registerText,
           register: hasLabel(f.register) ? actionOf(f.register) : null,
-          copyright: pick(f.copyright, sv),
+          copyright: pick(f.copyright, lang),
           complianceLine: f.complianceLine,
-          logos: partners ? toPartnerLogos(partners.logos, sv) : undefined,
+          logos: partners ? toPartnerLogos(partners.logos, lang) : undefined,
         }
       : c.footer,
   };

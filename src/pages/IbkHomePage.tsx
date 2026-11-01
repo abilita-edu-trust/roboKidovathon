@@ -55,7 +55,7 @@ const PanelHeader: React.FC<{ icon: React.ElementType; title: string; badge?: st
 );
 
 const DateBadge: React.FC<{ day: string; month: string; green?: boolean }> = ({ day, month, green }) => (
-  <div className={`w-12 shrink-0 text-center text-white ${green ? 'bg-[#059669]' : 'bg-[#006AA7]'}`}>
+  <div className={`min-w-12 px-1.5 shrink-0 text-center text-white ${green ? 'bg-[#059669]' : 'bg-[#006AA7]'}`}>
     <div className="font-headline font-black text-xl leading-none pt-1.5">{day}</div>
     <div className="text-xs font-mono-code font-bold uppercase pb-1.5">{month}</div>
   </div>

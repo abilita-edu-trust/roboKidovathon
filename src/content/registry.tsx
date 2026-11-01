@@ -147,8 +147,8 @@ export const SECTION_DEFS: Record<string, SectionDef> = {
 export const KNOWN_SECTION_TYPES = new Set(Object.keys(SECTION_DEFS));
 
 const PartnersMarquee: React.FC<{ data: PartnersData; env: SectionEnv }> = ({ data, env }) => {
-  const { sv } = useT();
-  return <RefHeroMarquee logos={toPartnerLogos(data.logos, sv)} onSelectPartner={env.selectPartner} />;
+  const { lang } = useT();
+  return <RefHeroMarquee logos={toPartnerLogos(data.logos, lang)} onSelectPartner={env.selectPartner} />;
 };
 
 /** City banner over the skyline, then the city's programme card (as on vfi). */
@@ -188,13 +188,12 @@ export function defaultSections(env: SectionEnv): SectionDoc[] {
 /** The visible home sections in order (header and footer render around the page instead). */
 export const HomeSections: React.FC<{ env: SectionEnv; sections: SectionDoc[] }> = ({ env, sections }) => {
   const { language } = useLanguage();
-  const sv = language === 'sv';
   return (
     <>
       {sections
         .filter((s) => s.visible && s.type !== FIXED_FIRST && s.type !== FIXED_LAST)
         .map((s) => {
-          if (s.type === 'people') return <PeopleBlock key={s.id} section={s as unknown as PeopleSection} sv={sv} />;
+          if (s.type === 'people') return <PeopleBlock key={s.id} section={s as unknown as PeopleSection} lang={language} />;
           const d = SECTION_DEFS[s.type];
           return d ? <React.Fragment key={s.id}>{d.render(s.data ?? {}, env, s)}</React.Fragment> : null;
         })}

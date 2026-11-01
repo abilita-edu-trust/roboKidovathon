@@ -16,7 +16,7 @@ const INTEREST_OPTIONS: ChipOption[] = [
 
 const CommunityFields: React.FC<FieldsProps> = (props) => {
   const { v, set, ctx } = props;
-  const { L, sv } = ctx;
+  const { L, lang } = ctx;
   return (
     <>
       <Grid>
@@ -26,7 +26,7 @@ const CommunityFields: React.FC<FieldsProps> = (props) => {
         <TextField k="orgName" v={v} set={set} label={L('School or organisation (optional)', 'Skola eller organisation (frivilligt)')} />
       </Grid>
       <LocationFields {...props} />
-      <Chips k="interests" v={v} set={set} sv={sv} multi required label={L('What interests you?', 'Vad är du intresserad av?')} options={INTEREST_OPTIONS} />
+      <Chips k="interests" v={v} set={set} lang={lang} multi required label={L('What interests you?', 'Vad är du intresserad av?')} options={INTEREST_OPTIONS} />
       <TextArea k="message" v={v} set={set} label={L('Anything you would like to tell us?', 'Något du vill berätta för oss?')} />
     </>
   );
@@ -43,7 +43,7 @@ export const communityForm: FormDef = {
   Fields: CommunityFields,
   validate: (v, ctx) => ((v.interests ?? []).length === 0 ? ctx.L('Choose at least one interest.', 'Välj minst ett intresse.') : ''),
   summary: (v, ctx) => {
-    const { L, sv } = ctx;
+    const { L, lang } = ctx;
     return [
       ...rows(
         [L('Full name', 'Fullständigt namn'), str(v.contactName)],
@@ -52,7 +52,7 @@ export const communityForm: FormDef = {
         [L('School or organisation', 'Skola eller organisation'), str(v.orgName)],
       ),
       ...locationRow(v, ctx),
-      ...rows([L('Interests', 'Intressen'), chipLabels(v.interests, INTEREST_OPTIONS, sv)], [L('Message', 'Meddelande'), str(v.message)]),
+      ...rows([L('Interests', 'Intressen'), chipLabels(v.interests, INTEREST_OPTIONS, lang)], [L('Message', 'Meddelande'), str(v.message)]),
     ];
   },
   submit: (v, ctx) =>

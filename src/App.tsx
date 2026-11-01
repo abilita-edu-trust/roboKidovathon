@@ -35,7 +35,7 @@ import { EventDeckModal } from './components/EventDeckModal';
 import { PartnerPreviewModal } from './components/PartnerPreviewModal';
 import type { PartnerLogo } from './data/roboData';
 import { RoboCursor } from './components/RoboCursor';
-import { useLanguage } from './context/LanguageContext';
+import { useLanguage, useSiteLanguage } from './context/LanguageContext';
 import { hrefToTarget, initialRouteFromLocation, isExternalHref, pathForRoute, routeFromPath } from './lib/routes';
 
 /** The VFI register page and the RoboHack city register pages (e.g. 'vxo-register'). */
@@ -151,11 +151,13 @@ export function App() {
     go: goHref,
     selectPartner: handleSelectPartner,
   };
+  // The language switch offers this site's second language (Latvian on Riga, else Swedish).
+  useSiteLanguage(baseSite.secondLanguage ?? 'sv');
   // The site's CMS document (iniac.se Site CMS) over its built-in defaults.
   const { sections, ready } = useSiteDocument(sectionEnv);
   const fadeIn = `transition-opacity duration-300 ${ready ? 'opacity-100' : 'opacity-0'}`;
   // Header and footer from the same document, on every page of the site.
-  const site = useMemo(() => applyFrame(baseSite, sections, language === 'sv'), [baseSite, sections, language]);
+  const site = useMemo(() => applyFrame(baseSite, sections, language), [baseSite, sections, language]);
   /** Header/footer links may point to other sites. */
   const navigateOrOpen = (target: string, tab?: IntakeProgramTab) =>
     isExternalHref(target) ? goHref(target) : handleNavigate(target, tab);

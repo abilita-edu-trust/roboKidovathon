@@ -25,7 +25,7 @@ const orgLabel = (ctx: FormCtx) => (role(ctx) === 'association' ? ctx.L('Associa
 
 const CompetitionFields: React.FC<FieldsProps> = (props) => {
   const { v, set, ctx } = props;
-  const { L, sv } = ctx;
+  const { L, lang } = ctx;
   const r = role(ctx);
   return (
     <>
@@ -52,7 +52,7 @@ const CompetitionFields: React.FC<FieldsProps> = (props) => {
       </Grid>
 
       <Section title={r === 'individual' ? L('About your child', 'Om ditt barn') : L('Your team', 'Ert lag')} icon={Trophy}>
-        <Chips k="category" v={v} set={set} sv={sv} required label={L('Category', 'Kategori')} options={CATEGORY_OPTIONS} />
+        <Chips k="category" v={v} set={set} lang={lang} required label={L('Category', 'Kategori')} options={CATEGORY_OPTIONS} />
         {r === 'individual' ? (
           <Grid>
             <TextField k="childGrade" v={v} set={set} label={L('Grade / class', 'Årskurs / klass')} placeholder={L('e.g. Grade 5', 't.ex. åk 5')} />
@@ -114,7 +114,7 @@ export const competitionForm: FormDef = {
     return '';
   },
   summary: (v, ctx) => {
-    const { L, sv } = ctx;
+    const { L, lang } = ctx;
     const r = role(ctx);
     const members = r === 'individual' ? [] : namedMembers(v.members);
     return [
@@ -126,7 +126,7 @@ export const competitionForm: FormDef = {
         [r === 'individual' ? L('Parent / guardian', 'Vårdnadshavare') : L('Contact person', 'Kontaktperson'), str(v.contactName)],
         [L('Email', 'E-post'), str(v.email)],
         [L('Phone', 'Telefon'), str(v.phone)],
-        [L('Category', 'Kategori'), chipLabels(v.category, CATEGORY_OPTIONS, sv)],
+        [L('Category', 'Kategori'), chipLabels(v.category, CATEGORY_OPTIONS, lang)],
         [L('Grade / class', 'Årskurs / klass'), r === 'individual' ? str(v.childGrade) : ''],
         [L('Number of teams', 'Antal lag'), isOrg(ctx) ? str(v.teamCount) : ''],
         [L('Team members', 'Lagmedlemmar'), members.map((m) => (m.grade ? `${m.full_name} (${m.grade})` : m.full_name)).join(', ')],

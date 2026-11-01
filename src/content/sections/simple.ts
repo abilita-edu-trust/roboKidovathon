@@ -1,4 +1,5 @@
 // Partner logos, the vfi "Read the full details" links and the participation fees.
+import type { Language } from '../../context/LanguageContext';
 import { PARTNER_LOGOS, type PartnerLogo } from '../../data/roboData';
 import { PARTICIPATION_FEES, PAYMENT } from '../../data/vfiFacts';
 import { bi, pick, type Bi } from '../core';
@@ -21,8 +22,8 @@ export const partnersDefaults = (): PartnersData => ({
 });
 
 /** The marquee/footer shape of a CMS logo, in the visitor's language. Logos without a file are left out. */
-export const toPartnerLogos = (logos: PartnerItem[], sv: boolean): PartnerLogo[] =>
-  logos.filter((l) => l.logo).map((l) => ({ name: l.name, file: l.logo, role: pick(l.role, sv), url: l.href }));
+export const toPartnerLogos = (logos: PartnerItem[], lang: Language): PartnerLogo[] =>
+  logos.filter((l) => l.logo).map((l) => ({ name: l.name, file: l.logo, role: pick(l.role, lang), url: l.href }));
 
 export interface ReadMoreData {
   eyebrow: Bi;

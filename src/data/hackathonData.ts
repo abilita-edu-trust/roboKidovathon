@@ -105,7 +105,7 @@ export const TIMELINE_DATA: MilestoneItem[] = [
   {
     id: "milestone-1",
     phase: "PHASE 01",
-    date: "MARCH 15, 2026",
+    date: "15 MARCH 2026",
     time: "23:59 UTC",
     title: "Global Registration & Vetting Gate",
     description: "Cohort registration locks. Automated algorithmic review of applicant GitHub repositories and credential verification across institutional portals.",
@@ -115,7 +115,7 @@ export const TIMELINE_DATA: MilestoneItem[] = [
   {
     id: "milestone-2",
     phase: "PHASE 02",
-    date: "APRIL 03, 2026",
+    date: "3 APRIL 2026",
     time: "14:00 UTC",
     title: "Worldwide Synchronized Kickoff & Keynote",
     description: "Challenge brief disclosure and API credential distribution. Keynote stream featuring partner engineering VPs and chief AI architects.",
@@ -126,7 +126,7 @@ export const TIMELINE_DATA: MilestoneItem[] = [
   {
     id: "milestone-3",
     phase: "PHASE 03",
-    date: "APRIL 04, 2026",
+    date: "4 APRIL 2026",
     time: "18:00 UTC",
     title: "Mid-Point Technical Checkpoint & Benchmarking",
     description: "Automated latency, concurrency, and security benchmark checks on live endpoints. Architectural review sessions with designated enterprise mentors.",
@@ -136,7 +136,7 @@ export const TIMELINE_DATA: MilestoneItem[] = [
   {
     id: "milestone-4",
     phase: "PHASE 04",
-    date: "APRIL 05, 2026",
+    date: "5 APRIL 2026",
     time: "14:00 UTC",
     title: "Hard Code Freeze & Submission Verification",
     description: "Final commits locked on main branch. Automated CI/CD build artifact verification and Loom video presentation processing.",
@@ -146,7 +146,7 @@ export const TIMELINE_DATA: MilestoneItem[] = [
   {
     id: "milestone-5",
     phase: "PHASE 05",
-    date: "APRIL 06, 2026",
+    date: "6 APRIL 2026",
     time: "19:00 UTC",
     title: "Grand Virtual Demo Day & Executive Jury Awards",
     description: "Top 12 finalist teams present live in front of a venture partner and CTO jury panel. Real-time announcement of $1.25M prize allocations.",

@@ -25,7 +25,7 @@ export const vaxjo: RoboHackEvent = {
       sv: 'En innovationsplattform för unga där nyfikenhet blir STEM-lärande, idéer blir prototyper och unga blir framtidens innovatörer.',
     },
     facts: [
-      { label: 'DATES', value: '21–22 NOV 2026' },
+      { label: 'DATES', value: '21–22 NOVEMBER 2026' },
       { label: 'VENUE', value: 'LINNAEUS UNIVERSITY' },
       { label: 'TRACKS', value: 'ROBOTICS · CODE · HACK' },
       { label: 'FOR', value: 'STUDENTS & YOUNG INNOVATORS' },

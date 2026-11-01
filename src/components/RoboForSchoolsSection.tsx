@@ -95,7 +95,7 @@ export const RoboForSchoolsSection: React.FC<RoboForSchoolsSectionProps> = ({
 
             <div className="space-y-3.5">
               {[
-                'Open room/hall for a 2-hour hands-on workshop in Feb 2026',
+                'Open room/hall for a 2-hour hands-on workshop in February 2026',
                 '4 teacher volunteers during the school qualifying round',
                 '1 teacher volunteer during the Västerås City Finals',
                 'Student registration coordination and cohort support',

@@ -4,7 +4,7 @@
 type Bilingual = { en: string; sv: string };
 
 export const VFI_FACTS = {
-  finalDate: { en: '4–5 December 2026', sv: '4–5 december 2026' } as Bilingual,
+  finalDate: { en: '5 December 2026', sv: '5 december 2026' } as Bilingual,
   /** Only MISV is confirmed. Do not list other venues until they confirm. */
   roboFinalVenue: {
     short: 'MISV',
@@ -19,12 +19,12 @@ export const VFI_FACTS = {
 };
 
 export const VFI_TIMELINE: { en: string; sv: string; date: Bilingual }[] = [
-  { en: 'School demos', sv: 'Skoldemos', date: { en: '1–14 Oct', sv: '1–14 okt' } },
-  { en: 'Hands-on workshops', sv: 'Praktiska workshoppar', date: { en: '15–28 Oct', sv: '15–28 okt' } },
-  { en: 'Team formation', sv: 'Lagbildning', date: { en: '29 Oct – 11 Nov', sv: '29 okt – 11 nov' } },
-  { en: 'School qualifiers', sv: 'Skolkval', date: { en: '12–25 Nov', sv: '12–25 nov' } },
-  { en: 'Final preparation', sv: 'Finalförberedelser', date: { en: '26 Nov – 3 Dec', sv: '26 nov – 3 dec' } },
-  { en: 'Final', sv: 'Final', date: { en: '4–5 Dec', sv: '4–5 dec' } },
+  { en: 'School demos', sv: 'Skoldemos', date: { en: '1–14 October 2026', sv: '1–14 oktober 2026' } },
+  { en: 'Hands-on workshops', sv: 'Praktiska workshoppar', date: { en: '15–28 October 2026', sv: '15–28 oktober 2026' } },
+  { en: 'Team formation', sv: 'Lagbildning', date: { en: '29 October – 11 November 2026', sv: '29 oktober – 11 november 2026' } },
+  { en: 'School qualifiers', sv: 'Skolkval', date: { en: '12–25 November 2026', sv: '12–25 november 2026' } },
+  { en: 'Final preparation', sv: 'Finalförberedelser', date: { en: '26 November – 4 December 2026', sv: '26 november – 4 december 2026' } },
+  { en: 'Final', sv: 'Final', date: { en: '5 December 2026', sv: '5 december 2026' } },
 ];
 
 /** RoboKidovation categories. Grades 1–2 join as participants, not as a competition category. */

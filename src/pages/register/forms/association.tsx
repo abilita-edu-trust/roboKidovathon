@@ -27,7 +27,7 @@ export const ASSOCIATION_TYPE_OPTIONS: ChipOption[] = [
 
 const AssociationFields: React.FC<FieldsProps> = (props) => {
   const { v, set, ctx } = props;
-  const { L, sv } = ctx;
+  const { L, lang } = ctx;
   return (
     <>
       <LocationFields {...props} />
@@ -38,8 +38,8 @@ const AssociationFields: React.FC<FieldsProps> = (props) => {
         <TextField k="phone" v={v} set={set} type="tel" label={L('Phone', 'Telefon')} placeholder="+46 70 123 4567" />
       </Grid>
       <Section title={L('About your group', 'Om er grupp')} icon={Building}>
-        <Chips k="associationType" v={v} set={set} sv={sv} label={L('Type of group', 'Typ av grupp')} options={ASSOCIATION_TYPE_OPTIONS} />
-        <Chips k="associationWants" v={v} set={set} sv={sv} multi required label={L('We would like', 'Vi vill gärna')} options={ASSOCIATION_WANTS_OPTIONS} />
+        <Chips k="associationType" v={v} set={set} lang={lang} label={L('Type of group', 'Typ av grupp')} options={ASSOCIATION_TYPE_OPTIONS} />
+        <Chips k="associationWants" v={v} set={set} lang={lang} multi required label={L('We would like', 'Vi vill gärna')} options={ASSOCIATION_WANTS_OPTIONS} />
         <Grid>
           <TextField k="teamCount" v={v} set={set} label={L('Number of teams (if competing)', 'Antal lag (om ni tävlar)')} placeholder={L('e.g. 2', 't.ex. 2')} />
         </Grid>
@@ -75,7 +75,7 @@ export const associationForm: FormDef = {
   validate: (v, ctx) =>
     (v.associationWants ?? []).length === 0 ? ctx.L('Choose what your group would like to take part in.', 'Välj vad er grupp vill delta i.') : '',
   summary: (v, ctx) => {
-    const { L, sv } = ctx;
+    const { L, lang } = ctx;
     return [
       ...locationRow(v, ctx),
       ...rows(
@@ -83,8 +83,8 @@ export const associationForm: FormDef = {
         [L('Contact person', 'Kontaktperson'), str(v.contactName)],
         [L('Email', 'E-post'), str(v.email)],
         [L('Phone', 'Telefon'), str(v.phone)],
-        [L('Type of group', 'Typ av grupp'), chipLabels(v.associationType, ASSOCIATION_TYPE_OPTIONS, sv)],
-        [L('We would like', 'Vi vill gärna'), chipLabels(v.associationWants, ASSOCIATION_WANTS_OPTIONS, sv)],
+        [L('Type of group', 'Typ av grupp'), chipLabels(v.associationType, ASSOCIATION_TYPE_OPTIONS, lang)],
+        [L('We would like', 'Vi vill gärna'), chipLabels(v.associationWants, ASSOCIATION_WANTS_OPTIONS, lang)],
         [L('Teams', 'Lag'), str(v.teamCount)],
       ),
       ...dateTimeRows(v, ctx),
