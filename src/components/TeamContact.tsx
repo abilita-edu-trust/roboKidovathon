@@ -10,6 +10,7 @@ const TEXT = {
     title: 'Contact us',
     lead: 'Questions about the programme, your school or working together? Write to us, or reach the person nearest you.',
     write: 'Email us',
+    mail: 'Email',
     linkedin: 'on LinkedIn',
   },
   sv: {
@@ -17,6 +18,7 @@ const TEXT = {
     title: 'Kontakta oss',
     lead: 'Frågor om programmet, er skola eller samarbete? Skriv till oss, eller kontakta den som är närmast dig.',
     write: 'Mejla oss',
+    mail: 'Mejla',
     linkedin: 'på LinkedIn',
   },
   lv: {
@@ -24,6 +26,7 @@ const TEXT = {
     title: 'Sazinies ar mums',
     lead: 'Jautājumi par programmu, jūsu skolu vai sadarbību? Raksti mums vai sazinies ar sev tuvāko kontaktpersonu.',
     write: 'Raksti mums',
+    mail: 'Raksti',
     linkedin: 'LinkedIn',
   },
 };
@@ -41,9 +44,9 @@ export const TeamContact: React.FC = () => {
             <h2 id="contact-us-title" className="mt-1 font-headline text-3xl font-black uppercase tracking-tight sm:text-4xl">{t.title}</h2>
             <p className="mt-2 text-sm leading-relaxed text-slate-600 sm:text-base">{t.lead}</p>
           </div>
-          <a href={`mailto:${CONTACT_EMAIL}`}
+          <a href={`mailto:${CONTACT_EMAIL}`} title={CONTACT_EMAIL}
             className="inline-flex min-h-12 items-center gap-2.5 self-start bg-[#0A1930] px-5 font-headline text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-[#013A63] md:self-auto">
-            <Mail className="h-4 w-4 text-[#FFCD00]" aria-hidden="true" /> {t.write}: <span className="normal-case">{CONTACT_EMAIL}</span>
+            <Mail className="h-4 w-4 text-[#FFCD00]" aria-hidden="true" /> {t.write}
           </a>
         </div>
 
@@ -58,10 +61,13 @@ export const TeamContact: React.FC = () => {
                 <p className="mt-0.5 flex items-center gap-1 text-sm text-slate-500">
                   <MapPin className="h-3.5 w-3.5 shrink-0 text-[#013A63]" aria-hidden="true" /> {pick(p.place, language)}
                 </p>
-                {p.email && (
-                  <a href={`mailto:${p.email}`} className="mt-1 block truncate text-sm font-semibold text-[#013A63] hover:underline">{p.email}</a>
-                )}
               </div>
+              {p.email && (
+                <a href={`mailto:${p.email}`} aria-label={`${t.mail} ${p.name}`} title={p.email}
+                  className="grid h-10 w-10 shrink-0 place-items-center border border-[#0A1930]/15 text-[#013A63] transition-colors hover:bg-[#0A1930] hover:text-[#FFCD00]">
+                  <Mail className="h-5 w-5" aria-hidden="true" />
+                </a>
+              )}
               {p.linkedin && (
                 <a href={p.linkedin} target="_blank" rel="noopener noreferrer" aria-label={`${p.name} ${t.linkedin}`}
                   className="grid h-10 w-10 shrink-0 place-items-center border border-[#0A1930]/15 text-[#013A63] transition-colors hover:bg-[#0A1930] hover:text-[#FFCD00]">

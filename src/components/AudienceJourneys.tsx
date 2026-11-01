@@ -1,6 +1,6 @@
 import React, { useId, useRef, useState } from 'react';
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
-import { ArrowRight, CalendarDays, CheckCircle2, Sparkles } from 'lucide-react';
+import { ArrowRight, BookOpen, CalendarDays, CheckCircle2, Sparkles } from 'lucide-react';
 import { useT } from '../content/useT';
 import { sentenceLines } from '../content/richText';
 import { siteIcon } from '../content/icons';
@@ -40,6 +40,8 @@ type Accent = (typeof ACCENTS)['blue'];
 /** CSS object-position for the CMS's image focus choices. */
 const POSITIONS: Record<string, string> = { center: 'center', top: 'center top', bottom: 'center bottom', left: 'left center', right: 'right center' };
 
+type RulesLink = JourneyData['rulesButton'];
+
 interface AudienceJourneysProps {
   /** Heading, programmes and season dates from the Site CMS. */
   data: JourneyData;
@@ -72,7 +74,10 @@ export const AudienceJourneys: React.FC<AudienceJourneysProps> = ({ data, go }) 
           {/* ── PROGRAMME BOXES ── */}
           <div className="space-y-8 sm:space-y-10">
             {(data.programmes ?? []).map((p, i) => (
-              <ProgrammeBox key={p.id || i} programme={p} go={go} />
+              // The section's rules button (CMS "Rules", e.g. the technical rule book) sits next to
+              // RoboKidovation's register button; an empty label hides it.
+              <ProgrammeBox key={p.id || i} programme={p} go={go}
+                rules={p.id === 'robokidovation' && hasLabel(data.rulesButton) ? data.rulesButton : undefined} />
             ))}
           </div>
 
@@ -98,7 +103,7 @@ export const AudienceJourneys: React.FC<AudienceJourneysProps> = ({ data, go }) 
 };
 
 /** One programme: title, date, audience tabs and the selected audience's journey. */
-const ProgrammeBox: React.FC<{ programme: ProgrammeJourney; go: (href: string) => void }> = ({ programme, go }) => {
+const ProgrammeBox: React.FC<{ programme: ProgrammeJourney; go: (href: string) => void; rules?: RulesLink }> = ({ programme, go, rules }) => {
   const { t } = useT();
   const [active, setActive] = useState(0);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -192,7 +197,7 @@ const ProgrammeBox: React.FC<{ programme: ProgrammeJourney; go: (href: string) =
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.25 }}
             >
-              <AudiencePanel audience={current} accent={accent} go={go} />
+              <AudiencePanel audience={current} accent={accent} go={go} rules={rules} />
             </motion.div>
           </AnimatePresence>
         )}
@@ -205,7 +210,7 @@ const ProgrammeBox: React.FC<{ programme: ProgrammeJourney; go: (href: string) =
  * Left (about 55%): heading, description, steps and button. Right (about 45%): image and benefits.
  * On phones the columns dissolve (display: contents) so the image follows the introduction.
  */
-const AudiencePanel: React.FC<{ audience: ProgrammeAudience; accent: Accent; go: (href: string) => void }> = ({ audience: a, accent, go }) => {
+const AudiencePanel: React.FC<{ audience: ProgrammeAudience; accent: Accent; go: (href: string) => void; rules?: RulesLink }> = ({ audience: a, accent, go, rules }) => {
   const { t } = useT();
   const benefits = (a.benefits ?? []).filter((b) => t(b));
   const steps = a.steps ?? [];
@@ -237,9 +242,10 @@ const AudiencePanel: React.FC<{ audience: ProgrammeAudience; accent: Accent; go:
           </ol>
         )}
 
-        {/* Button */}
-        {hasLabel(a.cta) && (
-          <div className="order-5 lg:order-none">
+        {/* Buttons: the audience's (register) and the rule book */}
+        {(hasLabel(a.cta) || rules) && (
+          <div className="order-5 lg:order-none flex flex-col sm:flex-row flex-wrap gap-3">
+            {hasLabel(a.cta) && (
             <button
               type="button"
               onClick={() => go(a.cta.href)}
@@ -248,6 +254,17 @@ const AudiencePanel: React.FC<{ audience: ProgrammeAudience; accent: Accent; go:
               <span>{t(a.cta.label)}</span>
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
             </button>
+            )}
+            {rules && (
+              <button
+                type="button"
+                onClick={() => go(rules.href)}
+                className="group inline-flex w-full sm:w-auto items-center justify-center gap-2 px-6 py-3.5 border-2 border-[#0A1930] bg-white text-[#0A1930] font-headline font-black text-xs uppercase tracking-wider transition-colors hover:bg-[#0A1930] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#006AA7]"
+              >
+                <BookOpen className="w-4 h-4" aria-hidden="true" />
+                <span>{t(rules.label)}</span>
+              </button>
+            )}
           </div>
         )}
       </div>
