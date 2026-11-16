@@ -52,19 +52,32 @@ const PATH_ALIASES: Record<string, string> = {
 
 const normalizePath = (path: string) => (path.length > 1 ? path.replace(/\/+$/, '') : path) || '/';
 
+/**
+ * A city site's own pages from the Site CMS: /<site>/<path> is the route '<site>/<path>' (e.g. /ibk/about →
+ * 'ibk/about'). Only city sites (those with a '<site>-register' route) have them; the address rule is the CMS's.
+ */
+const SUB_PAGE = /^([a-z]+)\/([a-z0-9][a-z0-9-]{0,39})$/;
+export const isSubPageRoute = (route: string): boolean => {
+  const m = SUB_PAGE.exec(route);
+  return Boolean(m && ROUTE_PATHS[`${m[1]}-register`] && !['register', 'ideas'].includes(m[2]));
+};
+
 const resolvePath = (path: string): string => {
   const p = normalizePath(path).toLowerCase();
   const match = Object.entries(ROUTE_PATHS).find(([, routePath]) => routePath === p);
-  return match ? match[0] : PATH_ALIASES[p] || 'future-innovators';
+  if (match) return match[0];
+  if (isSubPageRoute(p.slice(1))) return p.slice(1);
+  return PATH_ALIASES[p] || 'future-innovators';
 };
 
 export const routeFromPath = (path: string): string => {
   const route = resolvePath(path);
   const allowed = hostRoutes();
-  return allowed && !allowed.includes(route) ? allowed[0] : route;
+  const ownPage = isSubPageRoute(route) && route.startsWith(`${allowed?.[0]}/`);
+  return allowed && !allowed.includes(route) && !ownPage ? allowed[0] : route;
 };
 
-export const pathForRoute = (route: string): string => ROUTE_PATHS[route] || '/';
+export const pathForRoute = (route: string): string => ROUTE_PATHS[route] || (isSubPageRoute(route) ? `/${route}` : '/');
 
 /** True for links that leave the app (other sites, email, phone). */
 export const isExternalHref = (href: string): boolean => /^(https?:|mailto:|tel:)/i.test(href);

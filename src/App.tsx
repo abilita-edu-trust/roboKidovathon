@@ -24,6 +24,7 @@ import { IdeasVotingPage } from './pages/IdeasVotingPage';
 import { AdminIdeasCurationPage } from './pages/AdminIdeasCurationPage';
 import { AdminLoginGate } from './components/AdminLoginGate';
 import { cityPageFor } from './components/city/citySites';
+import { CityPage } from './components/city/CityPage';
 import { SITE_META } from './data/siteMeta';
 import { SiteProvider, VFI_SITE } from './context/SiteContext';
 import { HomeSections, type SectionEnv } from './content/registry';
@@ -153,7 +154,7 @@ export function App() {
   // The language switch offers this site's second language (Latvian on Riga, else Swedish).
   useSiteLanguage(baseSite.secondLanguage ?? 'sv');
   // The site's CMS document (iniac.se Site CMS) over its built-in defaults.
-  const { sections, ready } = useSiteDocument(sectionEnv);
+  const { sections, pages, ready } = useSiteDocument(sectionEnv);
   const fadeIn = `transition-opacity duration-300 ${ready ? 'opacity-100' : 'opacity-0'}`;
   // Header and footer from the same document, on every page of the site.
   const site = useMemo(() => applyFrame(baseSite, sections, language), [baseSite, sections, language]);
@@ -162,7 +163,7 @@ export function App() {
     isExternalHref(target) ? goHref(target) : handleNavigate(target, tab);
 
   if (cityPage) {
-    const { city, page } = cityPage;
+    const { city, page, path } = cityPage;
     const goHome = () => handleNavigate(city.route);
     const goRegister = (tab?: IntakeProgramTab) => handleNavigate(site.nav.registerRoute, tab);
     const goIdeas = () => handleNavigate(`${city.route}-ideas`);
@@ -177,6 +178,7 @@ export function App() {
               <IntakeRegisterPage key={registerInitialTab ?? 'start'} initialTab={registerInitialTab} onNavigateHome={goHome} onNavigateVoting={goIdeas} />
             )}
             {page === 'ideas' && <IdeasVotingPage onNavigateHome={goHome} onNavigateSubmit={() => goRegister('submit-idea')} />}
+            {page === 'page' && <CityPage env={sectionEnv} page={pages.find((p) => p.path === path)} ready={ready} onNavigateHome={goHome} />}
           </main>
           {!city.ownContact && <TeamContact />}
           <RefFooter onNavigate={navigateOrOpen} onSelectPartner={handleSelectPartner} />

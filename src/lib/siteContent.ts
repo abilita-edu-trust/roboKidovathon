@@ -37,8 +37,17 @@ export interface OtherSection {
 
 export type SiteSection = PeopleSection | OtherSection;
 
+/** A page of its own on a city site, at /<site>/<path> (e.g. indiskbarnklubb.se/ibk/about), made in the Site CMS. */
+export interface SitePage {
+  id: string;
+  path: string;
+  title: Bilingual;
+  sections: SiteSection[];
+}
+
 export interface SiteContent {
   sections: SiteSection[];
+  pages?: SitePage[];
 }
 
 export const isPeople = (s: SiteSection): s is PeopleSection => s.type === 'people';
@@ -50,28 +59,39 @@ const bi = (v: unknown): Bilingual =>
 
 /** Fills missing fields so a half-filled document still renders; other section types pass through. */
 export function normalizeContent(raw: unknown): SiteContent {
-  const sections = isObj(raw) && Array.isArray(raw.sections) ? raw.sections : [];
-  return {
-    sections: sections.filter(isObj).map((s, i): SiteSection => {
-      const id = str(s.id) || `section-${i}`;
-      if (s.type !== 'people') return { ...s, id, type: str(s.type), visible: s.visible !== false };
-      return {
-        id,
-        type: 'people',
-        visible: s.visible !== false,
-        title: bi(s.title),
-        intro: bi(s.intro),
-        emptyText: bi(s.emptyText),
-        people: (Array.isArray(s.people) ? s.people : []).filter(isObj).map((p, j) => ({
-          id: str(p.id) || `${id}-${j}`,
-          name: str(p.name),
-          role: bi(p.role),
-          organisation: str(p.organisation),
-          photo: str(p.photo),
-        })),
-      };
-    }),
-  };
+  const content: SiteContent = { sections: normalizeSections(isObj(raw) ? raw.sections : undefined) };
+  if (isObj(raw) && Array.isArray(raw.pages)) {
+    content.pages = raw.pages.filter(isObj).map((p, i) => ({
+      id: str(p.id) || `page-${i}`,
+      path: str(p.path).toLowerCase(),
+      title: bi(p.title),
+      sections: normalizeSections(p.sections),
+    }));
+  }
+  return content;
+}
+
+function normalizeSections(raw: unknown): SiteSection[] {
+  const sections = Array.isArray(raw) ? raw : [];
+  return sections.filter(isObj).map((s, i): SiteSection => {
+    const id = str(s.id) || `section-${i}`;
+    if (s.type !== 'people') return { ...s, id, type: str(s.type), visible: s.visible !== false };
+    return {
+      id,
+      type: 'people',
+      visible: s.visible !== false,
+      title: bi(s.title),
+      intro: bi(s.intro),
+      emptyText: bi(s.emptyText),
+      people: (Array.isArray(s.people) ? s.people : []).filter(isObj).map((p, j) => ({
+        id: str(p.id) || `${id}-${j}`,
+        name: str(p.name),
+        role: bi(p.role),
+        organisation: str(p.organisation),
+        photo: str(p.photo),
+      })),
+    };
+  });
 }
 
 export const initials = (name: string) =>
