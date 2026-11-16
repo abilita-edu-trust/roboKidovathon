@@ -1,12 +1,15 @@
-import React, { useId, useRef, useState } from 'react';
+import React, { useEffect, useId, useRef, useState } from 'react';
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
-import { ArrowRight, BookOpen, CalendarDays, CheckCircle2, Sparkles } from 'lucide-react';
+import { ArrowRight, BookOpen, Building2, CalendarDays, CheckCircle2, Sparkles } from 'lucide-react';
 import { useT } from '../content/useT';
 import { sentenceLines } from '../content/richText';
 import { siteIcon } from '../content/icons';
 import { hasLabel } from '../content/sections/frame';
 import type { JourneyData } from '../content/sections/journey';
-import type { ProgrammeAudience, ProgrammeJourney } from '../content/sections/audienceJourneys';
+import {
+  programmeTracks, trackAnchor, trackIndexForHash, visibleChallenges,
+  type ProgrammeAudience, type ProgrammeJourney, type ProgrammeTrack,
+} from '../content/sections/audienceJourneys';
 
 const DATE_DOTS = ['bg-[#FFCD00]', 'bg-[#006AA7]', 'bg-emerald-400', 'bg-sky-300'];
 
@@ -102,29 +105,12 @@ export const AudienceJourneys: React.FC<AudienceJourneysProps> = ({ data, go }) 
   );
 };
 
-/** One programme: title, date, audience tabs and the selected audience's journey. */
+/** One programme: title, date, then its audience tabs, or (with tracks, e.g. InnoHack) a track choice first. */
 const ProgrammeBox: React.FC<{ programme: ProgrammeJourney; go: (href: string) => void; rules?: RulesLink }> = ({ programme, go, rules }) => {
   const { t } = useT();
-  const [active, setActive] = useState(0);
-  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const uid = useId();
   const accent = ACCENTS[programme.accent as keyof typeof ACCENTS] ?? ACCENTS.blue;
-  const audiences = programme.audiences ?? [];
-  const index = Math.min(active, Math.max(audiences.length - 1, 0));
-  const current = audiences[index];
-  const tabId = (i: number) => `${uid}-tab-${i}`;
-  const panelId = `${uid}-panel`;
-
-  // Arrow keys move between tabs (and select them), Home/End jump to the first/last.
-  const onKeyDown = (e: React.KeyboardEvent) => {
-    const last = audiences.length - 1;
-    const next = { ArrowRight: index + 1, ArrowDown: index + 1, ArrowLeft: index - 1, ArrowUp: index - 1, Home: 0, End: last }[e.key];
-    if (next === undefined) return;
-    e.preventDefault();
-    const target = next < 0 ? last : next > last ? 0 : next;
-    setActive(target);
-    tabRefs.current[target]?.focus();
-  };
+  const tracks = programmeTracks(programme);
 
   return (
     // The id is a menu anchor: "#journey-robokidovation", "#journey-innohack".
@@ -151,11 +137,71 @@ const ProgrammeBox: React.FC<{ programme: ProgrammeJourney; go: (href: string) =
         )}
       </header>
 
+      {tracks.length > 0 ? (
+        <TrackChoice programme={programme} tracks={tracks} accent={accent} go={go} uid={uid} />
+      ) : (
+        <AudienceTabs audiences={programme.audiences ?? []} label={t(programme.title)} accent={accent} go={go} rules={rules} uid={uid} />
+      )}
+    </article>
+  );
+};
+
+/** Audience tabs and the selected audience's journey (a programme's, or a track's). */
+const AudienceTabs: React.FC<{
+  audiences: ProgrammeAudience[];
+  label: string;
+  accent: Accent;
+  go: (href: string) => void;
+  rules?: RulesLink;
+  uid: string;
+  /** A single audience is shown without a tab row (Kid InnoHack). */
+  hideSingleTab?: boolean;
+  /** While registration is closed: shown instead of the audience's register button. */
+  closedMessage?: string;
+}> = ({ audiences, label, accent, go, rules, uid, hideSingleTab = false, closedMessage }) => {
+  const { t } = useT();
+  const [active, setActive] = useState(0);
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const index = Math.min(active, Math.max(audiences.length - 1, 0));
+  const current = audiences[index];
+  const tabId = (i: number) => `${uid}-tab-${i}`;
+  const panelId = `${uid}-panel`;
+  const showTabs = !(hideSingleTab && audiences.length <= 1);
+
+  // Arrow keys move between tabs (and select them), Home/End jump to the first/last.
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    const last = audiences.length - 1;
+    const next = { ArrowRight: index + 1, ArrowDown: index + 1, ArrowLeft: index - 1, ArrowUp: index - 1, Home: 0, End: last }[e.key];
+    if (next === undefined) return;
+    e.preventDefault();
+    const target = next < 0 ? last : next > last ? 0 : next;
+    setActive(target);
+    tabRefs.current[target]?.focus();
+  };
+
+  const panel = current && (
+    <AnimatePresence mode="wait" initial={false}>
+      <motion.div
+        key={current.id || index}
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -8 }}
+        transition={{ duration: 0.25 }}
+      >
+        <AudiencePanel audience={current} accent={accent} go={go} rules={rules} closedMessage={closedMessage} />
+      </motion.div>
+    </AnimatePresence>
+  );
+
+  if (!showTabs) return <div className="px-5 sm:px-8 pt-6 pb-7 sm:pb-8">{panel}</div>;
+
+  return (
+    <>
       {/* Audience tabs: one per row on phones (the labels are too long for three across), side by side from sm */}
       <div className="px-5 sm:px-8 pt-5">
         <div
           role="tablist"
-          aria-label={t(programme.title)}
+          aria-label={label}
           onKeyDown={onKeyDown}
           className="grid grid-cols-1 sm:grid-cols-[repeat(var(--tab-count),minmax(0,1fr))] gap-2"
           style={{ '--tab-count': Math.max(audiences.length, 1) } as React.CSSProperties}
@@ -188,21 +234,203 @@ const ProgrammeBox: React.FC<{ programme: ProgrammeJourney; go: (href: string) =
 
       {/* Selected audience */}
       <div id={panelId} role="tabpanel" aria-labelledby={tabId(index)} tabIndex={0} className="px-5 sm:px-8 pt-6 pb-7 sm:pb-8 focus:outline-none">
-        {current && (
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-              key={current.id || index}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.25 }}
-            >
-              <AudiencePanel audience={current} accent={accent} go={go} rules={rules} />
-            </motion.div>
-          </AnimatePresence>
+        {panel}
+      </div>
+    </>
+  );
+};
+
+const prefersReducedMotion = () =>
+  typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/**
+ * The track choice (InnoHack: Kid InnoHack, Young InnoHack) and the chosen track: its description, audiences,
+ * timeline and company challenges. "#innohack-kid" / "#innohack-young" in the address open a track.
+ */
+const TrackChoice: React.FC<{ programme: ProgrammeJourney; tracks: ProgrammeTrack[]; accent: Accent; go: (href: string) => void; uid: string }> = ({
+  programme,
+  tracks,
+  accent,
+  go,
+  uid,
+}) => {
+  const { t } = useT();
+  const [active, setActive] = useState(() => Math.max(0, typeof window === 'undefined' ? 0 : trackIndexForHash(programme, window.location.hash)));
+  const switchRef = useRef<HTMLDivElement>(null);
+  const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const index = Math.min(active, tracks.length - 1);
+  const track = tracks[index];
+  const tabId = (i: number) => trackAnchor(programme, tracks[i], i);
+  const panelId = `${uid}-track-panel`;
+
+  /** Brings the track choice and the start of the chosen track into view, unless they already are. */
+  const reveal = () =>
+    setTimeout(() => {
+      const el = switchRef.current;
+      if (!el) return;
+      const top = el.getBoundingClientRect().top;
+      if (top < 64 || top > window.innerHeight * 0.45) el.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'start' });
+    }, 60);
+
+  const choose = (i: number, scroll = true) => {
+    setActive(i);
+    if (scroll) reveal();
+  };
+
+  // A link straight to a track (bookmark, shared link, browser back/forward) opens it.
+  useEffect(() => {
+    const open = () => {
+      const i = trackIndexForHash(programme, window.location.hash);
+      if (i >= 0) choose(i);
+    };
+    open();
+    window.addEventListener('hashchange', open);
+    window.addEventListener('popstate', open);
+    return () => {
+      window.removeEventListener('hashchange', open);
+      window.removeEventListener('popstate', open);
+    };
+  }, [programme]);
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    const last = tracks.length - 1;
+    const next = { ArrowRight: index + 1, ArrowDown: index + 1, ArrowLeft: index - 1, ArrowUp: index - 1, Home: 0, End: last }[e.key];
+    if (next === undefined) return;
+    e.preventDefault();
+    const target = next < 0 ? last : next > last ? 0 : next;
+    choose(target, false);
+    buttonRefs.current[target]?.focus();
+  };
+
+  const closedMessage = track.registrationOpen === false ? t(track.closedMessage) : undefined;
+  const meta = [t(track.dateLabel), t(track.venue)].filter(Boolean);
+
+  return (
+    <>
+      {/* Track choice: navy when chosen, side by side from sm */}
+      <div ref={switchRef} className="px-5 sm:px-8 pt-5 scroll-mt-24">
+        <div role="tablist" aria-label={t(programme.title)} onKeyDown={onKeyDown} className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {tracks.map((tr, i) => {
+            const selected = i === index;
+            return (
+              <button
+                key={tr.id || i}
+                ref={(el) => { buttonRefs.current[i] = el; }}
+                id={tabId(i)}
+                type="button"
+                role="tab"
+                aria-selected={selected}
+                aria-controls={panelId}
+                tabIndex={selected ? 0 : -1}
+                onClick={() => choose(i)}
+                className={`relative scroll-mt-28 min-h-[64px] px-5 py-3.5 text-left border-2 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#006AA7] ${
+                  selected ? 'bg-[#0A1930] border-[#0A1930] text-white' : 'bg-white border-slate-300 hover:border-[#0A1930] text-[#0A1930]'
+                }`}
+              >
+                <span className={`absolute top-0 left-0 right-0 h-1 ${selected ? 'bg-[#FFCD00]' : 'bg-transparent'}`} aria-hidden="true" />
+                <span className="block font-headline font-black text-base sm:text-lg uppercase tracking-tight leading-tight">{t(tr.label)}</span>
+                {t(tr.eligibility) && (
+                  <span className={`block mt-1 text-xs sm:text-[13px] ${selected ? 'text-[#FFCD00]' : 'text-slate-600'}`}>{t(tr.eligibility)}</span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Chosen track */}
+      <div id={panelId} role="tabpanel" aria-labelledby={tabId(index)}>
+        {(t(track.summary) || meta.length > 0) && (
+          <div className="px-5 sm:px-8 pt-5 space-y-2">
+            {t(track.summary) && <p className="text-sm text-slate-600 leading-relaxed max-w-3xl">{t(track.summary)}</p>}
+            {meta.length > 0 && (
+              <p className="flex items-start gap-2 text-[13px] font-mono-code font-bold uppercase tracking-wider text-[#0A1930]">
+                <CalendarDays className="w-3.5 h-3.5 mt-0.5 shrink-0 text-[#006AA7]" aria-hidden="true" />
+                <span>{meta.join(' · ')}</span>
+              </p>
+            )}
+          </div>
+        )}
+
+        <AudienceTabs
+          key={track.id || index}
+          audiences={track.audiences ?? []}
+          label={t(track.label)}
+          accent={accent}
+          go={go}
+          uid={`${uid}-${track.id || index}`}
+          hideSingleTab
+          closedMessage={closedMessage}
+        />
+
+        <TrackTimeline track={track} />
+        <CompanyChallenges track={track} />
+      </div>
+    </>
+  );
+};
+
+/** The track's dates (e.g. idea deadline, selection, mentoring, final). */
+const TrackTimeline: React.FC<{ track: ProgrammeTrack }> = ({ track }) => {
+  const { t } = useT();
+  const rows = (Array.isArray(track.schedule) ? track.schedule : []).filter((r) => t(r.date) || t(r.activity));
+  if (!rows.length) return null;
+  return (
+    <div className="px-5 sm:px-8 pb-7 sm:pb-8">
+      <div className="border border-slate-200 bg-slate-50 p-5">
+        {t(track.scheduleHeading) && (
+          <p className="flex items-center gap-2 font-headline font-black text-sm uppercase tracking-tight text-[#0A1930]">
+            <CalendarDays className="w-4 h-4 text-[#006AA7]" aria-hidden="true" />
+            {t(track.scheduleHeading)}
+          </p>
+        )}
+        <ol className={`mt-3 grid grid-cols-1 gap-3 ${rows.length >= 4 ? 'md:grid-cols-2 xl:grid-cols-4' : rows.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-2'}`}>
+          {rows.map((r, i) => (
+            <li key={i} className="relative bg-white border border-slate-200 border-t-4 border-t-[#FFCD00] p-4">
+              {t(r.date) && <p className="font-mono-code font-bold text-xs uppercase tracking-wider text-[#006AA7]">{t(r.date)}</p>}
+              {t(r.activity) && <p className="mt-1 font-headline font-black text-sm uppercase tracking-tight text-[#0A1930]">{t(r.activity)}</p>}
+              {t(r.detail) && <p className="mt-1 text-[13px] text-slate-600 leading-relaxed whitespace-pre-line">{t(r.detail)}</p>}
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  );
+};
+
+/** Young InnoHack's company challenges: the ones switched on, or the note while none is. */
+const CompanyChallenges: React.FC<{ track: ProgrammeTrack }> = ({ track }) => {
+  const { t } = useT();
+  const shown = visibleChallenges(track);
+  const note = t(track.challengesNote);
+  if (!shown.length && !note) return null;
+  return (
+    <div className="px-5 sm:px-8 pb-7 sm:pb-8 -mt-2">
+      <div className="border border-slate-200 p-5">
+        {t(track.challengesHeading) && (
+          <p className="flex items-center gap-2 font-headline font-black text-sm uppercase tracking-tight text-[#0A1930]">
+            <Building2 className="w-4 h-4 text-[#006AA7]" aria-hidden="true" />
+            {t(track.challengesHeading)}
+          </p>
+        )}
+        {shown.length > 0 ? (
+          <ul className="mt-3 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+            {shown.map((c, i) => (
+              <li key={i} className="flex gap-3 border border-slate-200 bg-white p-4">
+                {c.logo && <img src={c.logo} alt="" loading="lazy" className="w-12 h-12 object-contain shrink-0" />}
+                <div className="min-w-0">
+                  {c.company && <p className="font-mono-code font-bold text-xs uppercase tracking-wider text-[#006AA7]">{c.company}</p>}
+                  {t(c.title) && <p className="mt-0.5 font-headline font-black text-sm uppercase tracking-tight text-[#0A1930]">{t(c.title)}</p>}
+                  {t(c.problem) && <p className="mt-1 text-[13px] text-slate-600 leading-relaxed">{t(c.problem)}</p>}
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-2 text-sm text-slate-600">{note}</p>
         )}
       </div>
-    </article>
+    </div>
   );
 };
 
@@ -210,10 +438,18 @@ const ProgrammeBox: React.FC<{ programme: ProgrammeJourney; go: (href: string) =
  * Left (about 55%): heading, description, steps and button. Right (about 45%): image and benefits.
  * On phones the columns dissolve (display: contents) so the image follows the introduction.
  */
-const AudiencePanel: React.FC<{ audience: ProgrammeAudience; accent: Accent; go: (href: string) => void; rules?: RulesLink }> = ({ audience: a, accent, go, rules }) => {
+const AudiencePanel: React.FC<{
+  audience: ProgrammeAudience;
+  accent: Accent;
+  go: (href: string) => void;
+  rules?: RulesLink;
+  /** While the track's registration is closed: shown instead of the register button. */
+  closedMessage?: string;
+}> = ({ audience: a, accent, go, rules, closedMessage }) => {
   const { t } = useT();
   const benefits = (a.benefits ?? []).filter((b) => t(b));
   const steps = a.steps ?? [];
+  const secondary = hasLabel(a.secondaryCta) ? a.secondaryCta : undefined;
 
   return (
     <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[55fr_45fr] lg:gap-10">
@@ -242,10 +478,16 @@ const AudiencePanel: React.FC<{ audience: ProgrammeAudience; accent: Accent; go:
           </ol>
         )}
 
-        {/* Buttons: the audience's (register) and the rule book */}
-        {(hasLabel(a.cta) || rules) && (
+        {/* Buttons: the audience's (register), the rule book and a second action (e.g. Become a Mentor) */}
+        {(hasLabel(a.cta) || rules || secondary || closedMessage) && (
           <div className="order-5 lg:order-none flex flex-col sm:flex-row flex-wrap gap-3">
-            {hasLabel(a.cta) && (
+            {closedMessage && (
+              <p className="w-full sm:w-auto inline-flex items-center gap-2 px-5 py-3.5 border-2 border-[#FFCD00] bg-[#FFFBEA] text-[#0A1930] font-headline font-black text-xs uppercase tracking-wider">
+                <CalendarDays className="w-4 h-4 shrink-0 text-[#006AA7]" aria-hidden="true" />
+                <span>{closedMessage}</span>
+              </p>
+            )}
+            {hasLabel(a.cta) && !closedMessage && (
             <button
               type="button"
               onClick={() => go(a.cta.href)}
@@ -263,6 +505,16 @@ const AudiencePanel: React.FC<{ audience: ProgrammeAudience; accent: Accent; go:
               >
                 <BookOpen className="w-4 h-4" aria-hidden="true" />
                 <span>{t(rules.label)}</span>
+              </button>
+            )}
+            {secondary && (
+              <button
+                type="button"
+                onClick={() => go(secondary.href)}
+                className="group inline-flex w-full sm:w-auto items-center justify-center gap-2 px-6 py-3.5 border-2 border-[#0A1930] bg-white text-[#0A1930] font-headline font-black text-xs uppercase tracking-wider transition-colors hover:bg-[#0A1930] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#006AA7]"
+              >
+                <span>{t(secondary.label)}</span>
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
               </button>
             )}
           </div>

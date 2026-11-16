@@ -23,6 +23,52 @@ export interface ProgrammeAudience {
   benefitsHeading: Bi;
   benefits: Bi[];
   cta: CmsLink;
+  /** A second, outlined button next to `cta` (e.g. Professionals: "Become a Mentor"); an empty label hides it. */
+  secondaryCta?: CmsLink;
+}
+
+/** One row of a track's timeline; `detail` holds editable extras such as session times. */
+export interface TrackScheduleItem {
+  date: Bi;
+  activity: Bi;
+  detail: Bi;
+}
+
+/** A company's problem statement (Young InnoHack); shown only when switched on. */
+export interface CompanyChallenge {
+  visible: boolean;
+  company: string;
+  logo: string;
+  title: Bi;
+  problem: Bi;
+}
+
+/**
+ * A track of a programme (InnoHack: Kid InnoHack and Young InnoHack). The home page shows its description,
+ * audiences, timeline and challenges; the register page (later) reads the same entry for its track cards.
+ */
+export interface ProgrammeTrack {
+  /** Stable key, also the link anchor "#<programme>-<id>" (e.g. #innohack-kid); not editable in the CMS. */
+  id: string;
+  label: Bi;
+  eligibility: Bi;
+  summary: Bi;
+  dateLabel: Bi;
+  venue: Bi;
+  /** Short points for the register page's track card. */
+  highlights: Bi[];
+  image: string;
+  imageAlt: Bi;
+  registrationOpen: boolean;
+  /** Shown instead of the register button while registration is closed. */
+  closedMessage: Bi;
+  audiences: ProgrammeAudience[];
+  scheduleHeading: Bi;
+  schedule: TrackScheduleItem[];
+  challengesHeading: Bi;
+  /** Shown while no challenge is switched on. */
+  challengesNote: Bi;
+  challenges: CompanyChallenge[];
 }
 
 export interface ProgrammeJourney {
@@ -32,7 +78,26 @@ export interface ProgrammeJourney {
   dateLabel: Bi;
   accent: string;
   audiences: ProgrammeAudience[];
+  /** With any, the box offers a track choice first and shows the chosen track's audiences instead of `audiences`. */
+  tracks?: ProgrammeTrack[];
 }
+
+/** The programme's tracks that can be shown (each needs a label); empty for programmes without tracks. */
+export const programmeTracks = (p: ProgrammeJourney): ProgrammeTrack[] =>
+  (Array.isArray(p.tracks) ? p.tracks : []).filter((t) => t && typeof t === 'object' && (t.label?.en || t.label?.sv || t.label?.lv));
+
+/** The anchor of a track, e.g. "innohack-kid". */
+export const trackAnchor = (p: ProgrammeJourney, t: ProgrammeTrack, index: number) => `${p.id || 'programme'}-${t.id || index + 1}`;
+
+/** The track a link anchor ("#innohack-young") points to, or -1. */
+export const trackIndexForHash = (p: ProgrammeJourney, hash: string): number => {
+  const anchor = hash.replace(/^#/, '').toLowerCase();
+  return anchor ? programmeTracks(p).findIndex((t, i) => trackAnchor(p, t, i).toLowerCase() === anchor) : -1;
+};
+
+/** The company challenges switched on, with something to show. */
+export const visibleChallenges = (t: ProgrammeTrack): CompanyChallenge[] =>
+  (Array.isArray(t.challenges) ? t.challenges : []).filter((c) => c && c.visible === true && (c.company || c.title?.en || c.title?.sv));
 
 export const IMAGE_POSITIONS = ['center', 'top', 'bottom', 'left', 'right'] as const;
 

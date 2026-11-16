@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import type { ProgrammeAudience } from './audienceJourneys';
+import {
+  programmeTracks, trackAnchor, trackIndexForHash, visibleChallenges,
+  type ProgrammeAudience, type ProgrammeJourney, type ProgrammeTrack,
+} from './audienceJourneys';
+import { mergeData } from '../core';
 
 // The section builders read the browser location for links; any site address works (as in scripts/export-site-defaults.ts).
 (globalThis as unknown as { window: unknown }).window = {
@@ -57,6 +61,60 @@ describe('audience journeys (vfi)', () => {
   it('keeps the single guide content alongside the programmes', () => {
     expect(vfi.audiences.map((a) => a.label.en)).toEqual(['For Students', 'For Parents', 'For Teachers & Schools']);
     expect(vfi.dates.length).toBeGreaterThan(0);
+  });
+});
+
+describe('InnoHack tracks (Site CMS content)', () => {
+  const bi = (en: string, sv = '') => ({ en, sv });
+  const audience = (id: string): ProgrammeAudience => ({ ...vfi.programmes[1].audiences[0], id, label: bi(id) });
+  const track = (id: string, over: Partial<ProgrammeTrack> = {}): ProgrammeTrack => ({
+    id, label: bi(`${id} InnoHack`), eligibility: bi(''), summary: bi(''), dateLabel: bi(''), venue: bi(''), highlights: [], image: '',
+    imageAlt: bi(''), registrationOpen: true, closedMessage: bi(''), audiences: [audience(id)], scheduleHeading: bi(''), schedule: [],
+    challengesHeading: bi(''), challengesNote: bi(''), challenges: [], ...over,
+  });
+  const innohack: ProgrammeJourney = { ...vfi.programmes[1], title: bi('InnoHack'), tracks: [track('kid'), track('young')] };
+
+  it('leaves the built-in content of every site without tracks (nothing changes until the CMS content has them)', () => {
+    expect(vfi.programmes.every((p) => p.tracks === undefined)).toBe(true);
+    for (const city of Object.values(CITY_SITES)) {
+      for (const p of journeyDefaults(city.site)?.programmes ?? []) expect(p.tracks, city.route).toBeUndefined();
+    }
+  });
+
+  it('keeps saved tracks when the CMS document is laid over the defaults', () => {
+    const merged = mergeData(vfi, { ...vfi, programmes: [vfi.programmes[0], innohack] });
+    expect(merged.programmes[1].tracks).toEqual(innohack.tracks);
+    expect(programmeTracks(merged.programmes[1]).map((t) => t.id)).toEqual(['kid', 'young']);
+  });
+
+  it('shows saved content without tracks (Riga, Eskilstuna, vfi today) exactly as before', () => {
+    const saved = JSON.parse(JSON.stringify({ ...vfi, programmes: vfi.programmes }));
+    const merged = mergeData(vfi, saved);
+    for (const p of merged.programmes) {
+      expect(p.tracks).toBeUndefined();
+      expect(programmeTracks(p)).toEqual([]);
+    }
+  });
+
+  it('opens a track from its link anchor (#innohack-kid, #innohack-young)', () => {
+    expect(innohack.tracks!.map((t, i) => trackAnchor(innohack, t, i))).toEqual(['innohack-kid', 'innohack-young']);
+    expect(trackIndexForHash(innohack, '#innohack-young')).toBe(1);
+    expect(trackIndexForHash(innohack, '#INNOHACK-KID')).toBe(0);
+    expect(trackIndexForHash(innohack, '#journey-innohack')).toBe(-1);
+    expect(trackIndexForHash(innohack, '')).toBe(-1);
+    expect(trackIndexForHash(vfi.programmes[0], '#innohack-kid')).toBe(-1);
+  });
+
+  it('skips tracks without a name', () => {
+    expect(programmeTracks({ ...innohack, tracks: [track('kid', { label: bi('') }), track('young')] }).map((t) => t.id)).toEqual(['young']);
+    expect(programmeTracks({ ...innohack, tracks: 'oops' as unknown as ProgrammeTrack[] })).toEqual([]);
+  });
+
+  it('shows only the company challenges that are switched on and filled in', () => {
+    const c = (visible: boolean, company: string, title = '') => ({ visible, company, logo: '', title: bi(title), problem: bi('') });
+    const young = track('young', { challenges: [c(false, ''), c(false, 'Hidden AB', 'Not yet'), c(true, 'Shown AB', 'Water'), c(true, '')] });
+    expect(visibleChallenges(young).map((x) => x.company)).toEqual(['Shown AB']);
+    expect(visibleChallenges(track('kid'))).toEqual([]);
   });
 });
 
