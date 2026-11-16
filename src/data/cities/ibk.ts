@@ -11,7 +11,7 @@ const VFI = 'https://vfi.iniac.se';
 /** A vfi route as seen from the IBK site: its own home and registration, the rest on vfi.iniac.se. */
 const fromVfi = (id: string): string => {
   if (id === 'future-innovators' || id === 'ibk') return 'ibk';
-  if (id === 'future-innovators#contact-us') return 'ibk#contact';
+  if (id === 'future-innovators#contact-us') return 'ibk/about#contact';
   if (id === 'register') return 'ibk-register';
   return `${VFI}${pathForRoute(id)}`;
 };
@@ -32,8 +32,9 @@ export const ibkSite: SiteConfig = {
       { id: 'ibk#journey-robokidovation', label: same('RoboKidovation') },
       { id: 'ibk#journey-innohack', label: same('Young InnoHack') },
       { id: 'ibk-register', label: { en: 'Register', sv: 'Registrering' } },
-      { id: 'ibk#board', label: { en: 'Board', sv: 'Styrelse' } },
-      { id: 'ibk#contact', label: { en: 'Contact', sv: 'Kontakt' } },
+      // IBK's own page (Site CMS): welcome, why join, the board and the contact details.
+      { id: 'ibk/about', label: { en: 'About IBK', sv: 'Om IBK' } },
+      { id: 'ibk/about#contact', label: { en: 'Contact', sv: 'Kontakt' } },
     ],
   },
 

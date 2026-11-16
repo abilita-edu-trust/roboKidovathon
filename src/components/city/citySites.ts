@@ -86,10 +86,16 @@ export const CITY_SITES: Record<string, CitySite> = {
   },
 };
 
-export type CityPageKind = 'home' | 'register' | 'ideas';
+/** 'page' is one of the site's own pages from the Site CMS (route '<site>/<path>', e.g. 'ibk/about'). */
+export type CityPageKind = 'home' | 'register' | 'ideas' | 'page';
 
-/** The city site and page a route belongs to, or null for VFI routes. */
-export function cityPageFor(route: string): { city: CitySite; page: CityPageKind } | null {
+/** The city site and page a route belongs to (with the page's address for 'page'), or null for VFI routes. */
+export function cityPageFor(route: string): { city: CitySite; page: CityPageKind; path?: string } | null {
+  if (route.includes('/')) {
+    const [base, path] = route.split('/');
+    const city = CITY_SITES[base];
+    return city && path ? { city, page: 'page', path } : null;
+  }
   const [base, suffix] = route.split(/-(register|ideas)$/);
   const city = CITY_SITES[base];
   if (!city) return null;
