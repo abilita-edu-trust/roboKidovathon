@@ -86,6 +86,10 @@ Options -Indexes
   RewriteCond %{HTTP_HOST} ^riga\.iniac\.se$ [NC,OR]
   RewriteCond %{REQUEST_URI} ^/riga(/|$) [NC]
   RewriteRule ^ /riga.html [L]
+  # indiskbarnklubb.se, and /ibk/* on any host
+  RewriteCond %{HTTP_HOST} ^(www\.)?indiskbarnklubb\.se$ [NC,OR]
+  RewriteCond %{REQUEST_URI} ^/ibk(/|$) [NC]
+  RewriteRule ^ /ibk.html [L]
   RewriteRule ^ /index.html [L]
 </IfModule>
 

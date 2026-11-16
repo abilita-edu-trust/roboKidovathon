@@ -128,7 +128,7 @@ export const SECTION_DEFS: Record<string, SectionDef> = {
         </section>
       ),
   }),
-  details: def<DetailsData>({ defaults: (env) => detailsDefaults(env.config, env.city), render: (d) => <CityDetailsSection data={d} /> }),
+  details: def<DetailsData>({ defaults: (env) => detailsDefaults(env.config, env.city), render: (d, _env, section) => <CityDetailsSection data={d} id={section.id} /> }),
   join: def<JoinData>({ defaults: (env) => joinDefaults(env.config, env.city), render: (d, env) => <CityPathways data={d} go={env.go} /> }),
   // RoboHack event sections (vxo); only sites with an event have them.
   about: def<RhAboutData>({ defaults: (env) => ev(env, (e) => rhAboutDefaults(e)), render: (d, env) => <RoboHackAbout data={d} go={env.go} /> }),
