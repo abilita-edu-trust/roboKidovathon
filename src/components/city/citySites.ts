@@ -10,6 +10,7 @@ import type { CityDetail } from './CitySections';
 import { vaxjo } from '../../data/robohack';
 import { eskilstunaPathway, eskilstunaSite, ESKILSTUNA_DETAILS } from '../../data/cities/eskilstuna';
 import { rigaSite } from '../../data/cities/riga';
+import { ibkSite } from '../../data/cities/ibk';
 import { SITE_META } from '../../data/siteMeta';
 import { robohackSite } from '../robohack/robohackSite';
 import { robohackPathway } from '../robohack/robohackPathway';
@@ -31,6 +32,8 @@ export interface CitySite {
   joinOverrides?: Partial<Record<IntakeProgramTab, { title?: Bilingual; desc?: Bilingual }>>;
   /** The programme card under the city banner (the same card as on vfi), and where its button goes. */
   pathway?: { content: (sv: boolean) => PathwaySource; target: string };
+  /** The site has its own board and contact details, so the INIAC "Contact us" team is left out (IBK). */
+  ownContact?: boolean;
 }
 
 export const CITY_SITES: Record<string, CitySite> = {
@@ -71,6 +74,15 @@ export const CITY_SITES: Record<string, CitySite> = {
     // The vfi programme cards, venues and registration, then the categories and the ideas vote.
     home: ['experience', 'teams', 'vote'],
     details: [],
+  },
+  // indiskbarnklubb.se — Indisk Barnklubb (IBK) Västerås: the vfi site under IBK's name, with its board and contact
+  ibk: {
+    route: 'ibk',
+    meta: SITE_META.ibk,
+    site: ibkSite,
+    home: ['experience', 'teams', 'vote'],
+    details: [],
+    ownContact: true,
   },
 };
 

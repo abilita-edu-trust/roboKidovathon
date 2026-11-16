@@ -23,7 +23,6 @@ import { REGISTER_TABS } from './pages/register/flow';
 import { IdeasVotingPage } from './pages/IdeasVotingPage';
 import { AdminIdeasCurationPage } from './pages/AdminIdeasCurationPage';
 import { AdminLoginGate } from './components/AdminLoginGate';
-import { IbkHomePage } from './pages/IbkHomePage';
 import { cityPageFor } from './components/city/citySites';
 import { SITE_META } from './data/siteMeta';
 import { SiteProvider, VFI_SITE } from './context/SiteContext';
@@ -89,7 +88,7 @@ export function App() {
 
   // Tab title and description of the site the page belongs to (vfi, a city site, or IBK);
   // the built page per site carries the same text for link previews.
-  const pageMeta = cityPageFor(currentRoute)?.city.meta ?? (currentRoute === 'ibk' ? SITE_META.ibk : SITE_META.vfi);
+  const pageMeta = cityPageFor(currentRoute)?.city.meta ?? SITE_META.vfi;
   useEffect(() => {
     document.title = pageMeta.title;
     document.querySelector('meta[name="description"]')?.setAttribute('content', pageMeta.description);
@@ -179,7 +178,7 @@ export function App() {
             )}
             {page === 'ideas' && <IdeasVotingPage onNavigateHome={goHome} onNavigateSubmit={() => goRegister('submit-idea')} />}
           </main>
-          <TeamContact />
+          {!city.ownContact && <TeamContact />}
           <RefFooter onNavigate={navigateOrOpen} onSelectPartner={handleSelectPartner} />
           {page === 'home' && <VotePrompt onGoToVote={goIdeas} onSubmitIdea={() => goRegister('submit-idea')} />}
           {/* Partner Preview Modal */}
@@ -210,7 +209,6 @@ export function App() {
 
       {/* ── Page Router ── */}
       <main className="w-full">
-        {currentRoute === 'ibk' && <IbkHomePage onNavigate={handleNavigate} onSelectPartner={handleSelectPartner} />}
 
         {/* Home: the sections from the Site CMS, in their saved order */}
         {currentRoute === 'future-innovators' && <HomeSections env={sectionEnv} sections={sections} />}
@@ -324,8 +322,8 @@ export function App() {
         )}
       </main>
 
-      {/* ── Contact us: the INIAC team (IBK's own page keeps its own contacts) ── */}
-      {currentRoute !== 'ibk' && <TeamContact />}
+      {/* ── Contact us: the INIAC team ── */}
+      <TeamContact />
 
       {/* ── Master Dark Footer with Verified Contacts ── */}
       <RefFooter onNavigate={navigateOrOpen} onSelectPartner={handleSelectPartner} />

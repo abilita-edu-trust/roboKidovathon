@@ -4,7 +4,6 @@
 
 export const ROUTE_PATHS: Record<string, string> = {
   'future-innovators': '/',
-  ibk: '/ibk',
   challenges: '/competition',
   workflow: '/workflow',
   events: '/events',
@@ -24,6 +23,9 @@ export const ROUTE_PATHS: Record<string, string> = {
   riga: '/riga',
   'riga-register': '/riga/register',
   'riga-ideas': '/riga/ideas',
+  ibk: '/ibk',
+  'ibk-register': '/ibk/register',
+  'ibk-ideas': '/ibk/ideas',
 };
 
 // Event subdomains that only show their own routes, so visitors stay on that event.
@@ -33,6 +35,8 @@ const HOST_ROUTES: Record<string, string[]> = {
   'vxo.iniac.se': ['vxo', 'vxo-register', 'vxo-ideas'],
   'esk.iniac.se': ['esk', 'esk-register', 'esk-ideas'],
   'riga.iniac.se': ['riga', 'riga-register', 'riga-ideas'],
+  'indiskbarnklubb.se': ['ibk', 'ibk-register', 'ibk-ideas'],
+  'www.indiskbarnklubb.se': ['ibk', 'ibk-register', 'ibk-ideas'],
 };
 
 const hostRoutes = (): string[] | undefined => HOST_ROUTES[window.location.hostname.toLowerCase()];

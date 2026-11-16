@@ -28,9 +28,10 @@ describe('Contact us on the city sites', () => {
     }
   });
 
-  it('is on every page except IBK’s own page', () => {
+  it('is on every page except the IBK site, which has its own board and contact details', () => {
     const app = read('../App.tsx');
     expect(app.match(/<TeamContact \/>/g)?.length).toBe(2);
-    expect(app).toContain("currentRoute !== 'ibk' && <TeamContact />");
+    expect(app).toContain('{!city.ownContact && <TeamContact />}');
+    expect(read('../components/city/citySites.ts')).toMatch(/ibk: \{[^}]*ownContact: true/);
   });
 });

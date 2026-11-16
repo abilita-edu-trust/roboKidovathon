@@ -45,11 +45,11 @@ export interface CityDetail {
 }
 
 /** "Event details" grid from the Site CMS; empty values show the "not confirmed" text. */
-export const CityDetailsSection: React.FC<{ data: DetailsData }> = ({ data }) => {
+export const CityDetailsSection: React.FC<{ data: DetailsData; id?: string }> = ({ data, id = 'details' }) => {
   const { t } = useT();
   return (
     <div data-no-translate="true">
-      <Section id="details">
+      <Section id={id}>
         <div className="space-y-3">
           <Eyebrow>{t(data.eyebrow)}</Eyebrow>
           <SectionTitle>{t(data.title)}</SectionTitle>
