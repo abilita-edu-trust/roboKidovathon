@@ -5,6 +5,7 @@ import { associationForm } from './association';
 import { competitionForm } from './competition';
 import { buildPlayForm } from './buildPlay';
 import { squadForm } from './squad';
+import { youngForm } from './young';
 import { ideaForm } from './idea';
 import { mentorForm, volunteerForm } from './volunteer';
 import { partnerForm } from './partner';
@@ -17,6 +18,7 @@ export const FORMS: Record<FormId, FormDef> = {
   competition: competitionForm,
   buildplay: buildPlayForm,
   squad: squadForm,
+  young: youngForm,
   idea: ideaForm,
   volunteer: volunteerForm,
   mentor: mentorForm,

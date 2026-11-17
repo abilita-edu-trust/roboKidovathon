@@ -5,6 +5,7 @@ import { PathwayCard } from './PathwayCard';
 import { RegisterWizard } from '../pages/register/RegisterWizard';
 import { useT } from '../content/useT';
 import { useInnohackTracks } from '../content/innohackContext';
+import { useSite } from '../context/SiteContext';
 import type { ExperienceData } from '../content/sections/programmes';
 import { ProgrammeBoxes } from './ProgrammeBoxes';
 
@@ -32,6 +33,10 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({ data, go, on
   const roboCard = data.cards.find((c) => c.theme === 'robo');
   const hackCard = data.cards.find((c) => c.theme === 'hack');
   const boxes = (data.categories?.length ?? 0) > 0 && innohack && !!roboCard && !!hackCard;
+  // vfi and IBK (designV2): the boxes already name each final's date and venue and link to registration, so the
+  // venue cards, the wizard and the closing strip are left out here. The wizard stays on the register page.
+  const { designV2 } = useSite();
+  const compact = boxes && !!designV2;
   return (
     <section
       id="choose-experience"
@@ -58,6 +63,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({ data, go, on
         )}
 
         {/* ── 03. VENUES ── */}
+        {!compact && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {data.venues.map((venue, i) => (
             <div key={i} className="flex flex-col bg-white border border-slate-200/90 shadow-xs overflow-hidden">
@@ -95,13 +101,17 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({ data, go, on
             </div>
           ))}
         </div>
+        )}
 
         {/* ── 04. REGISTRATION: the register page's wizard, right here ── */}
+        {!compact && (
         <div id="find-your-pathway" className="max-w-5xl mx-auto w-full scroll-mt-24 select-text">
           <RegisterWizard intro={REGISTER_INTRO} onNavigateVoting={onNavigateVoting} />
         </div>
+        )}
 
         {/* ── 05. FOOTER SUB-STRIP ── */}
+        {!compact && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4 pt-4 text-sm font-mono-code text-slate-500 border-t border-slate-200">
           <span>{t(data.stripLeft)}</span>
 
@@ -109,6 +119,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({ data, go, on
             {t(data.stripRight)}
           </span>
         </div>
+        )}
 
       </div>
     </section>

@@ -310,3 +310,60 @@ body {
   animation-play-state: paused;
 }
 
+
+/* ── vfi and IBK (SiteConfig.designV2): a calmer type system ─────────────────────────────────────────────
+   Plus Jakarta Sans for headings, Inter for text, sentence case instead of all-caps labels, 14px minimum
+   for supporting text, 16px body text, and one scale for section and card headings. Other sites keep theirs. */
+.site-v2 {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.site-v2 .font-sans,
+.site-v2 .font-display,
+.site-v2 .font-syne {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  letter-spacing: 0;
+}
+.site-v2 .font-headline,
+.site-v2 .font-condensed {
+  font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  text-transform: none;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+}
+.site-v2 .font-mono-code {
+  font-family: 'Inter', system-ui, sans-serif;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 600;
+}
+.site-v2 .uppercase { text-transform: none; }
+.site-v2 .tracking-wider,
+.site-v2 .tracking-widest,
+.site-v2 .tracking-wide,
+.site-v2 [class*='tracking-[0.'] { letter-spacing: 0.005em; }
+
+/* Supporting text: never below 14px. */
+.site-v2 .text-xs,
+.site-v2 .text-\[10px\],
+.site-v2 .text-\[11px\],
+.site-v2 .text-\[12px\],
+.site-v2 .text-\[12\.5px\],
+.site-v2 .text-\[13px\] { font-size: 14px; line-height: 1.45; }
+/* Running text: 16px with room to breathe. */
+.site-v2 p.text-sm,
+.site-v2 li.text-sm,
+.site-v2 dd.text-sm,
+.site-v2 p.text-\[15px\] { font-size: 16px; line-height: 1.6; }
+.site-v2 p.text-base,
+.site-v2 p.text-lg { line-height: 1.6; }
+
+/* Headings: sections 26–40px, cards 20–26px. */
+.site-v2 main section h2,
+.site-v2 main > div > section h2 { font-size: clamp(26px, 1.2vw + 20px, 38px) !important; line-height: 1.15 !important; letter-spacing: -0.02em; }
+.site-v2 [data-programme-boxes] h3,
+.site-v2 #teams-final-day h3,
+.site-v2 article[id^='journey-'] h3 { font-size: clamp(20px, 0.5vw + 17px, 25px) !important; line-height: 1.2; }
+.site-v2 h1.font-headline { letter-spacing: -0.03em; }
+/* Buttons keep the sentence case of their labels. */
+.site-v2 [class*='btn-pill'] { text-transform: none; letter-spacing: 0; }

@@ -157,8 +157,8 @@ export const robokidoPosters = (c?: SiteConfig): CategoryPoster[] =>
           image: k.image,
           imageAlt: k.imageAlt,
           facts: k.facts,
-          register: { label: k.competition ? bi('REGISTER A TEAM', 'ANMÄL ETT LAG') : bi('REGISTER FOR BUILD & PLAY · FREE', 'ANMÄL TILL BUILD & PLAY · GRATIS'), href: targetToHref(c.nav.registerRoute, k.tab) },
-          rules: k.competition ? { label: bi('COMPETITION RULES', 'TÄVLINGSREGLER'), href: rulesHref(c) } : { label: bi(''), href: '' },
+          register: { label: k.competition ? bi('Register a team', 'Anmäl ett lag') : bi('Register for Build & Play (free)', 'Anmäl till Build & Play (gratis)'), href: targetToHref(c.nav.registerRoute, k.tab) },
+          rules: k.competition ? { label: bi('Competition rules', 'Tävlingsregler'), href: rulesHref(c) } : { label: bi(''), href: '' },
         };
       })
     : [];

@@ -138,7 +138,7 @@ export const VoteYoungMindsSection: React.FC<VoteYoungMindsSectionProps> = ({
         <div>
           <div className="inline-flex items-center gap-2 text-[13px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase mb-1.5">
             <Sparkles className="w-3.5 h-3.5 text-[#FFCD00]" />
-            <span>{fill(t(data.eyebrow), { city: site.cityName.toUpperCase() })}</span>
+            <span>{fill(t(data.eyebrow), { city: site.designV2 ? site.cityName : site.cityName.toUpperCase() })}</span>
           </div>
           <h3 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#0A1930]">
             {t(data.title)}

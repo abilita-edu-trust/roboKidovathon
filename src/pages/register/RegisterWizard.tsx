@@ -40,12 +40,19 @@ import {
   stepsFor,
   tabForPath,
   themeChoices,
+  youngChallenges,
   type IntakeProgramTab,
   type RegisterPath,
   type StepKind,
+  type TeamChoice,
 } from './flow';
 import { FORMS } from './forms';
-import type { FormCtx, SummaryRow, Values } from './ui';
+import { UserFacingError, type FormCtx, type SubmitResult, type SummaryRow, type Values } from './ui';
+import { lookupTeamCode, normaliseCode, useYoungChallenges } from '../../content/youngChallenges';
+import { ChallengeStep, TeamStep, teamStepError } from './YoungSteps';
+
+/** Young InnoHack with company challenges: the four steps people count (challenge, team, details, review). */
+const YOUNG_STEPS: StepKind[] = ['challenge', 'team', 'form', 'review'];
 
 interface RegisterWizardProps {
   /** A form to open (a ?tab= link): the questions it answers are skipped; null starts at step 1. */
@@ -159,6 +166,13 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
     (tab === 'build-play' ? !!site.intake.buildAndPlay : true) &&
     (!site.intake.tabs || site.intake.tabs.includes(tab));
 
+  // Young InnoHack's company challenges, once the Admin Panel publishes them (vfi and IBK only). Until then the
+  // list is empty and Young InnoHack keeps its general form.
+  const youngSite = tracked ? (site.nav.homeRoute === 'ibk' ? 'ibk' : 'vfi') : null;
+  const { challenges: youngList, ready: youngReady } = useYoungChallenges(youngSite);
+  const challengeMode = youngList.length > 0;
+  const withMode = (p: RegisterPath): RegisterPath => (challengeMode ? { ...p, challengeMode: true } : { ...p, challengeMode: undefined });
+
   // Grade labels only name the programmes this site runs: esk has no hackathon (and so no
   // university level), vxo has no RoboKidovation (and so no grade 1–2 participant group).
   const offersHack = accepts('hackathon');
@@ -177,14 +191,14 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
   );
 
   const ctxFor = (p: RegisterPath): FormCtx | null =>
-    p.programme ? { site, language: sv ? 'sv' : 'en', lang, sv, L, path: p, programme: programmeOf(p.programme, programmes), gradeOptions } : null;
+    p.programme ? { site, language: sv ? 'sv' : 'en', lang, sv, L, path: withMode(p), programme: programmeOf(p.programme, programmes), gradeOptions } : null;
   const formKey = (p: RegisterPath) => {
     const f = formFor(p);
     return f ? `${f}|${p.role ?? ''}|${p.activity ?? ''}` : '';
   };
   /** Values for the form `p` leads to: what was typed so far plus that form's presets. */
   const withForm = (prev: Values, p: RegisterPath): Values => {
-    const f = formFor(p);
+    const f = formFor(withMode(p));
     const c = ctxFor(p);
     const key = formKey(p);
     if (!f || !c || prev.__form === key) return prev;
@@ -200,12 +214,19 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
     const index = steps.findIndex((k) => k === 'form' || k === 'review' || !isAnswered(k, path));
     return { path, index: Math.max(0, index) };
   });
-  const [path, setPath] = useState<RegisterPath>(start.path);
+  const [rawPath, setPath] = useState<RegisterPath>(start.path);
+  // The answers, with whether Young InnoHack's company challenges are on (decided by the database, not the visitor).
+  const path = withMode(rawPath);
   const [stepIndex, setStepIndex] = useState(start.index);
   const [values, setValues] = useState<Values>(() => withForm({}, start.path));
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
-  const [done, setDone] = useState<{ id: string } | null>(null);
+  const [done, setDone] = useState<SubmitResult | null>(null);
+  // A team's invite link (?tab=young-innohack&join=CODE) fills in the code.
+  const [joinParam] = useState(() =>
+    initialTab === 'young-innohack' && typeof window !== 'undefined' ? normaliseCode(new URLSearchParams(window.location.search).get('join') ?? '') : '',
+  );
+  const modeApplied = useRef(false);
   const [showGdpr, setShowGdpr] = useState(false);
   const [copied, setCopied] = useState(false);
   const [schools, setSchools] = useState<{ name: string; city: string }[]>([]);
@@ -213,6 +234,42 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
   useEffect(() => {
     fetchRegisteredSchools().then(setSchools);
   }, []);
+
+  // Once the challenges are in: a visitor on Young InnoHack moves to the first open question of the challenge steps,
+  // and an invite link opens the team step with its team checked.
+  useEffect(() => {
+    if (!youngReady || !challengeMode || modeApplied.current) return;
+    modeApplied.current = true;
+    if (rawPath.programme !== 'hack' || rawPath.track !== 'young') return;
+    const openFirst = (p: RegisterPath) => {
+      const s = stepsFor(withMode(p), programmes);
+      setStepIndex(Math.max(0, s.findIndex((k) => k === 'form' || k === 'review' || !isAnswered(k, withMode(p)))));
+    };
+    const base: RegisterPath = { ...rawPath, role: undefined };
+    if (!joinParam) {
+      setPath(base);
+      openFirst(base);
+      return;
+    }
+    lookupTeamCode(joinParam)
+      .then((found) => {
+        const ok = found && youngList.some((c) => c.id === found.challenge_id);
+        const next: RegisterPath = ok ? { ...base, activity: 'participate', challenge: found!.challenge_id, team: 'join' } : base;
+        setPath(next);
+        setValues((prev) => ({
+          ...prev,
+          joinCode: joinParam,
+          joinChecked: !!ok,
+          joinJoinable: !!found?.joinable,
+          joinTeamName: found?.team ?? '',
+        }));
+        openFirst(ok ? { ...next, team: undefined } : next);
+      })
+      .catch(() => {
+        setPath(base);
+        openFirst(base);
+      });
+  }, [youngReady, challengeMode]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const steps = stepsFor(path, programmes);
   const index = Math.min(stepIndex, steps.length - 1);
@@ -234,7 +291,11 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
   const shownVenue = programme?.venue;
   const accentBg = green ? 'bg-[#059669]' : 'bg-[#006AA7]';
 
-  const set = (key: string, value: unknown) => setValues((prev) => ({ ...prev, [key]: value }));
+  // Editing an answer clears the message about it (it described the answer as it was).
+  const set = (key: string, value: unknown) => {
+    setValues((prev) => ({ ...prev, [key]: value }));
+    setError('');
+  };
   const wizardRef = useRef<HTMLDivElement>(null);
   const formDomId = `register-form${useId()}`;
   const Heading = headingLevel === 1 ? 'h1' : 'h2';
@@ -254,6 +315,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
     }, 50);
 
   const goTo = (target: number, p: RegisterPath = path) => {
+    p = withMode(p);
     const s = stepsFor(p, programmes);
     const i = Math.max(0, Math.min(target, s.length - 1));
     const atForm = s[i] === 'form' || s[i] === 'review';
@@ -289,7 +351,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
     const nextPath: RegisterPath = {
       programme: 'hack',
       track: id,
-      role: path.track === id ? path.role : undefined,
+      role: path.track === id && !(id === 'young' && challengeMode) ? path.role : undefined,
       activity: id === 'kid' ? 'kid-idea' : keep ? path.activity : undefined,
       theme: keep ? path.theme : undefined,
     };
@@ -300,6 +362,14 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
   const chooseActivity = (id: RegisterPath['activity']) =>
     choose({ ...path, activity: id, theme: id === path.activity ? path.theme : undefined });
   const chooseTheme = (id: string) => choose({ ...path, theme: id });
+  /** Another challenge: its teams are different, so the team answer starts again. */
+  const chooseChallenge = (id: string) => {
+    if (id === path.challenge) return;
+    choose({ ...path, challenge: id, team: undefined });
+    setValues((prev) => ({ ...prev, joinChecked: false, joinTeamId: '', joinTeamName: '', teamListed: false }));
+  };
+  const chooseTeam = (t: TeamChoice) => choose({ ...path, team: t });
+  const youngChallenge = youngList.find((c) => c.id === path.challenge);
 
   const startOver = () => {
     setPath(basePath);
@@ -326,14 +396,16 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
     setBusy(true);
     setError('');
     try {
-      const id = await def.submit(values, ctx);
-      setDone({ id });
+      const res = await def.submit(values, ctx);
+      setDone(typeof res === 'string' ? { id: res } : res);
       scrollToWizard();
     } catch (err) {
       console.error('Registration error:', err);
       const msg = err instanceof Error ? err.message : '';
       setError(
-        /Too many requests/.test(msg)
+        err instanceof UserFacingError
+          ? msg
+          : /Too many requests/.test(msg)
           ? L(
               'Too many submissions from this email or network. Please try again in an hour.',
               'För många anmälningar från den här e-postadressen eller det här nätverket. Försök igen om en timme.',
@@ -353,6 +425,10 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
       const err = def && ctx ? def.validate?.(values, ctx) ?? '' : '';
       if (err) return setError(err);
       return goTo(index + 1);
+    }
+    if (kind === 'team') {
+      const err = teamStepError(path.team, values, L);
+      if (err) return setError(err);
     }
     if (!isAnswered(kind, path)) {
       return setError(
@@ -411,6 +487,14 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
             title: L('Your pathway', 'Din väg'),
             hint: L('Kid InnoHack has one pathway: an idea for the selection on 5 December 2026.', 'Kid InnoHack har en väg: en idé till urvalet den 5 december 2026.'),
           };
+        if (youngChallenges(path))
+          return {
+            title: L('What would you like to do?', 'Vad vill du göra?'),
+            hint: L(
+              'Take on a company challenge, send an idea to the public vote, or mentor the teams.',
+              'Anta en utmaning från ett företag, skicka en idé till den publika omröstningen eller bli mentor för lagen.',
+            ),
+          };
         if (p === 'hack' && path.track === 'young')
           return {
             title: L('Register an idea, take part or mentor?', 'Registrera en idé, delta eller bli mentor?'),
@@ -431,6 +515,16 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                 'En demonstration är en kort introduktion. En workshop är ett praktiskt lärpass. Tävlingsanmälan anmäler ett lag till evenemanget.',
               ),
             };
+      case 'challenge':
+        return {
+          title: L('Choose a challenge', 'Välj en utmaning'),
+          hint: L('Each company sets a real problem. Pick the one you want to work on.', 'Varje företag har ett verkligt problem. Välj det du vill arbeta med.'),
+        };
+      case 'team':
+        return {
+          title: L('On your own or in a team?', 'På egen hand eller i ett lag?'),
+          hint: L('A team works on one challenge, and you can be in one team.', 'Ett lag arbetar med en utmaning, och du kan vara med i ett lag.'),
+        };
       case 'theme':
         return {
           title: L('Which area is your idea about?', 'Vilket område handlar din idé om?'),
@@ -449,6 +543,20 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
   };
   const { title, hint } = heading();
 
+  /** The team answer in words, for the choices bar and the review. */
+  function teamAnswer(): Bilingual {
+    // Each answer names its own team: the one being created, or the one being joined (by code or from the list).
+    if (path.team === 'create') {
+      const name = String(values.teamName ?? '').trim().replace(/\s+/g, ' ');
+      return { en: name ? `New team: ${name}` : 'New team', sv: name ? `Nytt lag: ${name}` : 'Nytt lag' };
+    }
+    if (path.team === 'join') {
+      const name = String(values.joinTeamName ?? '').trim();
+      return { en: name ? `Joining ${name}` : 'Joining a team', sv: name ? `Går med i ${name}` : 'Går med i ett lag' };
+    }
+    return { en: 'On my own', sv: 'På egen hand' };
+  }
+
   // "Your choices": every answered question, each with a way back to it.
   const trackCrumb =
     shownTrack && steps.includes('track')
@@ -460,7 +568,13 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
       const stepKind: StepKind = k === 'theme' && path.programme === 'hack' ? 'activity' : k;
       return card && steps.includes(stepKind) ? { k: k as string, stepKind, card } : null;
     })
-    .filter((c): c is NonNullable<typeof c> => !!c)];
+    .filter((c): c is NonNullable<typeof c> => !!c),
+    ...(youngChallenge && steps.includes('challenge')
+      ? [{ k: 'challenge', stepKind: 'challenge' as StepKind, card: { id: youngChallenge.id, icon: '🏢', title: { en: youngChallenge.company, sv: youngChallenge.company }, desc: { en: '', sv: '' } } }]
+      : []),
+    ...(path.team && steps.includes('team')
+      ? [{ k: 'team', stepKind: 'team' as StepKind, card: { id: path.team, icon: path.team === 'individual' ? '🙋' : '👥', title: teamAnswer(), desc: { en: '', sv: '' } } }]
+      : [])];
 
   const reviewRows = (): SummaryRow[] => {
     if (!def || !ctx || !programme) return [];
@@ -479,6 +593,9 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
       ...(role ? [[path.programme === 'community' ? L('Getting involved as', 'Engagerar dig som') : L('Joining as', 'Deltar som'), T(role.title)] as SummaryRow] : []),
       ...(activity ? [[path.programme === 'hack' ? L('Pathway', 'Väg') : L('Activity', 'Aktivitet'), T(activity.title)] as SummaryRow] : []),
       ...(theme ? [[path.programme === 'hack' && path.activity === 'participate' ? L('Challenge area', 'Utmaningsområde') : L('Area', 'Område'), T(theme.title)] as SummaryRow] : []),
+      ...(youngChallenge && formId === 'young'
+        ? [[L('Challenge', 'Utmaning'), `${youngChallenge.company}: ${T(youngChallenge.title)}`] as SummaryRow, [L('Taking part', 'Deltar'), T(teamAnswer())] as SummaryRow]
+        : []),
     ];
     return [...pathRows, ...def.summary(values, ctx)];
   };
@@ -628,6 +745,13 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
       );
     }
 
+    if (kind === 'challenge') return <ChallengeStep challenges={youngList} selected={path.challenge} onSelect={chooseChallenge} L={L} T={T} />;
+
+    if (kind === 'team') {
+      if (!youngChallenge) return null;
+      return <TeamStep challenge={youngChallenge} choice={path.team} onChoose={chooseTeam} v={values} set={set} L={L} T={T} />;
+    }
+
     if (kind === 'theme') return themeGrid();
 
     if (kind === 'form') {
@@ -737,12 +861,15 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
     <>
         <div data-no-translate="true">
           <div className="text-center max-w-3xl mx-auto mb-6">
-            <div className="inline-flex items-center gap-2 text-[13px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase mb-2">
-              <Sparkles className="w-3.5 h-3.5 text-[#FFCD00]" />
-              <span>{L(site.intake.eyebrow, site.intake.eyebrow)}</span>
-            </div>
+            {/* vfi and IBK (designV2): a plain "Register" heading without the intake label. */}
+            {!site.designV2 && (
+              <div className="inline-flex items-center gap-2 text-[13px] font-mono-code font-bold tracking-[0.2em] text-[#006AA7] uppercase mb-2">
+                <Sparkles className="w-3.5 h-3.5 text-[#FFCD00]" />
+                <span>{L(site.intake.eyebrow, site.intake.eyebrow)}</span>
+              </div>
+            )}
             <Heading className="font-headline font-black text-3xl sm:text-4xl uppercase tracking-tight text-[#0A1930]">
-              {L('Find your pathway', 'Hitta din väg')}
+              {site.designV2 ? L('Register', 'Anmälan') : L('Find your pathway', 'Hitta din väg')}
             </Heading>
             <p className="text-xs sm:text-sm text-slate-600 mt-2 max-w-2xl mx-auto leading-relaxed">
               {T(intro)}
@@ -751,6 +878,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
 
           <div
             ref={wizardRef}
+            data-register-wizard=""
             className={`bg-white border-2 border-t-8 shadow-xl scroll-mt-24 ${green ? 'border-[#059669]' : 'border-[#006AA7]'}`}
           >
             {/* The chosen programme stays in view, with its date and place */}
@@ -807,20 +935,24 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
               </div>
             )}
 
-            {/* Progress */}
-            {!done && (
-              <div className="px-4 sm:px-6 py-4 border-b border-slate-200">
-                <div className="flex items-center justify-between gap-3 mb-2 text-[13px] font-mono-code font-bold uppercase tracking-wider">
-                  <span className="text-[#0A1930]">{L(`Step ${index + 1} of ${steps.length}`, `Steg ${index + 1} av ${steps.length}`)}</span>
-                  <span className="text-slate-500 text-right">{T(stepLabel(kind, path))}</span>
+            {/* Progress (Young InnoHack's company challenges count their own four steps) */}
+            {!done && (() => {
+              const shown = youngChallenges(path) && path.activity === 'participate' && YOUNG_STEPS.includes(kind) ? YOUNG_STEPS : steps;
+              const at = shown.indexOf(kind);
+              return (
+                <div className="px-4 sm:px-6 py-4 border-b border-slate-200">
+                  <div className="flex items-center justify-between gap-3 mb-2 text-[13px] font-mono-code font-bold uppercase tracking-wider">
+                    <span className="text-[#0A1930]">{L(`Step ${at + 1} of ${shown.length}`, `Steg ${at + 1} av ${shown.length}`)}</span>
+                    <span className="text-slate-500 text-right">{T(stepLabel(kind, path))}</span>
+                  </div>
+                  <div className="grid gap-1.5" style={{ gridTemplateColumns: `repeat(${shown.length}, minmax(0, 1fr))` }}>
+                    {shown.map((s, j) => (
+                      <span key={s} className={`h-1.5 ${j <= at ? accentBg : 'bg-slate-200'}`} />
+                    ))}
+                  </div>
                 </div>
-                <div className="grid gap-1.5" style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))` }}>
-                  {steps.map((s, j) => (
-                    <span key={s} className={`h-1.5 ${j <= index ? accentBg : 'bg-slate-200'}`} />
-                  ))}
-                </div>
-              </div>
-            )}
+              );
+            })()}
 
             <div className="p-5 sm:p-8">
               {done && doneCopy ? (
@@ -829,7 +961,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
                   <span className="text-xs font-mono-code font-bold tracking-[0.25em] text-emerald-600 uppercase mb-1 block">
-                    {L('Received', 'Mottaget')} // {city} {site.nav.brandChip}
+                    {L('Received', 'Mottaget')} {site.designV2 ? '·' : '//'} {city} {site.nav.brandChip}
                   </span>
                   <h2 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#0A1930]">{doneCopy.title}</h2>
                   <p className="mt-2 text-xs sm:text-sm text-slate-600 max-w-lg leading-relaxed">{doneCopy.body}</p>
@@ -842,6 +974,29 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                           ? L('Status: waiting for guardian confirmation', 'Status: väntar på vårdnadshavarnas bekräftelse')
                           : L('Status: waiting for review', 'Status: väntar på granskning')}
                       </span>
+                    </div>
+                  )}
+                  {done.inviteCode && (
+                    <div className="mb-6 p-5 bg-sky-50 border-2 border-[#006AA7] w-full max-w-md text-center">
+                      <span className="text-sm font-semibold text-[#0A1930] block mb-1">{L(`Invite code for ${done.team ?? 'your team'}`, `Inbjudningskod för ${done.team ?? 'ditt lag'}`)}</span>
+                      <span className="font-mono font-bold text-3xl text-[#006AA7] tracking-[0.15em] block">{done.inviteCode}</span>
+                      <span className="text-sm text-slate-600 block mt-2">
+                        {L('Share it only with your teammates. They enter it under “Join a team”, or open the link.', 'Dela den bara med dina lagkamrater. De skriver den under ”Gå med i ett lag”, eller öppnar länken.')}
+                      </span>
+                      {done.inviteLink && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText(done.inviteLink!);
+                            setCopied(true);
+                            setTimeout(() => setCopied(false), 2500);
+                          }}
+                          className="mt-3 inline-flex items-center gap-2 py-2.5 px-4 bg-[#006AA7] hover:bg-[#013A63] text-white text-sm font-semibold"
+                        >
+                          {copied ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
+                          {copied ? L('Link copied', 'Länken är kopierad') : L('Copy the invite link', 'Kopiera inbjudningslänken')}
+                        </button>
+                      )}
                     </div>
                   )}
                   <div className="flex flex-wrap items-center justify-center gap-3 mt-2">
@@ -864,6 +1019,8 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                         ⭐ {L('View ideas & vote', 'Se idéer och rösta')}
                       </button>
                     )}
+                    {/* A Young InnoHack registration is one per person (and a team is created once). */}
+                    {formId !== 'young' && (
                     <button
                       type="button"
                       onClick={sendAnother}
@@ -871,6 +1028,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                     >
                       {L('Send another', 'Skicka en till')}
                     </button>
+                    )}
                     <button
                       type="button"
                       onClick={startOver}

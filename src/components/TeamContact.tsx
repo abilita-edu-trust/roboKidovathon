@@ -2,6 +2,7 @@ import React from 'react';
 import { pick } from '../content/core';
 import { Linkedin, Mail, MapPin } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useSite } from '../context/SiteContext';
 import { CONTACT_EMAIL, TEAM_CONTACTS, initials } from '../data/teamContacts';
 
 const TEXT = {
@@ -34,13 +35,16 @@ const TEXT = {
 /** "Contact us": the general address and the INIAC team, above the footer of every page (not IBK's). */
 export const TeamContact: React.FC = () => {
   const { language } = useLanguage();
+  const { designV2 } = useSite();
   const t = TEXT[language];
+  // vfi (designV2): the eyebrow in sentence case, like the rest of the page.
+  const eyebrow = designV2 && language !== 'lv' ? (language === 'sv' ? 'INIAC-teamet' : 'INIAC team') : t.eyebrow;
   return (
     <section id="contact-us" aria-labelledby="contact-us-title" className="w-full scroll-mt-24 border-t border-[#0A1930]/10 bg-[#F4F7FB] px-3 py-8 text-[#0A1930] sm:px-6 sm:py-10">
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div className="max-w-xl">
-            <span className="font-mono-code text-[13px] font-bold tracking-widest text-[#013A63]">{t.eyebrow}</span>
+            <span className="font-mono-code text-[13px] font-bold tracking-widest text-[#013A63]">{eyebrow}</span>
             <h2 id="contact-us-title" className="mt-1 font-headline text-3xl font-black uppercase tracking-tight sm:text-4xl">{t.title}</h2>
             <p className="mt-2 text-sm leading-relaxed text-slate-600 sm:text-base">{t.lead}</p>
           </div>

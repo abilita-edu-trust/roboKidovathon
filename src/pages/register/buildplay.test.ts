@@ -80,9 +80,9 @@ describe('RoboKidovation categories on vfi and IBK: Build & Play, Junior Robo Sp
     expect(bp.imageAlt.en).toContain('preschool to grade 2');
     expect(bp.imageAlt.en).not.toMatch(/1–3/);
     expect(posters.map((p) => [p.register.label.en, p.register.href])).toEqual([
-      ['REGISTER FOR BUILD & PLAY · FREE', '/register?tab=build-play'],
-      ['REGISTER A TEAM', '/register?tab=competition'],
-      ['REGISTER A TEAM', '/register?tab=competition'],
+      ['Register for Build & Play (free)', '/register?tab=build-play'],
+      ['Register a team', '/register?tab=competition'],
+      ['Register a team', '/register?tab=competition'],
     ]);
     expect(teamsDefaults(IBK).posters[0].register.href).toBe('/ibk/register?tab=build-play');
     // Junior and Senior link to the competition rules (IBK's site to the rules page on vfi); Build & Play has none.

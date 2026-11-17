@@ -59,6 +59,8 @@ export interface HeroEvent {
 }
 
 export interface SiteConfig {
+  /** vfi and IBK: the calmer type system and shorter page (Plus Jakarta Sans headings, Inter text, no all-caps labels). */
+  designV2?: boolean;
   /** City the site belongs to; null = the open multi-city VFI intake. */
   location: SiteLocation | null;
   cityName: string;
@@ -168,6 +170,7 @@ export interface SiteConfig {
 export const CITY_SITE_SLUGS = ['vaxjo', 'eskilstuna', 'riga'];
 
 export const VFI_SITE: SiteConfig = {
+  designV2: true,
   location: null,
   cityName: 'Västerås',
   hackLabel: 'Future InnoHack',
