@@ -4,7 +4,7 @@ import React from 'react';
 import { Building } from 'lucide-react';
 import {
   Chips, FormDef, Grid, LocationFields, Note, Section, TextField,
-  chipLabels, locationInitial, locationRow, resolveLocation, rows, str, submitRegistration,
+  byDesign, chipLabels, locationInitial, locationRow, resolveLocation, rows, str, submitRegistration,
   type ChipOption, type FieldsProps,
 } from '../ui';
 import { DateTimeSection, dateTimeRows, defaultGrade } from './booking';
@@ -32,22 +32,25 @@ const AssociationFields: React.FC<FieldsProps> = (props) => {
     <>
       <LocationFields {...props} />
       <Grid>
-        <TextField k="orgName" v={v} set={set} required label={L('Association or group name', 'Förening eller grupp')} />
-        <TextField k="contactName" v={v} set={set} required label={L('Contact person', 'Kontaktperson')} placeholder={L('Full name', 'Fullständigt namn')} />
+        <TextField k="orgName" v={v} set={set} required label={byDesign(ctx, L('Name of the club or association', 'Klubbens eller föreningens namn'), L('Association or group name', 'Förening eller grupp'))} />
+        <TextField k="contactName" v={v} set={set} required label={byDesign(ctx, L('Your name', 'Ditt namn'), L('Contact person', 'Kontaktperson'))} placeholder={byDesign(ctx, L('First and last name', 'För- och efternamn'), L('Full name', 'Fullständigt namn'))} />
         <TextField k="email" v={v} set={set} type="email" required label={L('Email', 'E-post')} />
         <TextField k="phone" v={v} set={set} type="tel" label={L('Phone', 'Telefon')} placeholder="+46 70 123 4567" />
       </Grid>
-      <Section title={L('About your group', 'Om er grupp')} icon={Building}>
-        <Chips k="associationType" v={v} set={set} lang={lang} label={L('Type of group', 'Typ av grupp')} options={ASSOCIATION_TYPE_OPTIONS} />
-        <Chips k="associationWants" v={v} set={set} lang={lang} multi required label={L('We would like', 'Vi vill gärna')} options={ASSOCIATION_WANTS_OPTIONS} />
+      <Section title={byDesign(ctx, L('About the group', 'Om gruppen'), L('About your group', 'Om er grupp'))} icon={Building}>
+        <Chips k="associationType" v={v} set={set} lang={lang} label={byDesign(ctx, L('What kind of group?', 'Vilken sorts grupp?'), L('Type of group', 'Typ av grupp'))} options={ASSOCIATION_TYPE_OPTIONS} />
+        <Chips k="associationWants" v={v} set={set} lang={lang} multi required label={byDesign(ctx, L('What would you like to do?', 'Vad vill ni göra?'), L('We would like', 'Vi vill gärna'))} options={ASSOCIATION_WANTS_OPTIONS} />
         <Grid>
-          <TextField k="teamCount" v={v} set={set} label={L('Number of teams (if competing)', 'Antal lag (om ni tävlar)')} placeholder={L('e.g. 2', 't.ex. 2')} />
+          <TextField k="teamCount" v={v} set={set} label={byDesign(ctx, L('Teams in the competition (if any)', 'Lag i tävlingen (om några)'), L('Number of teams (if competing)', 'Antal lag (om ni tävlar)'))} placeholder={L('e.g. 2', 't.ex. 2')} />
         </Grid>
         <Note>
-          {L(
+          {byDesign(ctx, L(
+            'Grades 1–2 take part without competing. Each association can send up to 4 teams to the final.',
+            'Årskurs 1–2 deltar utan att tävla. Varje förening kan skicka upp till 4 lag till finalen.',
+          ), L(
             'Grades 1–2 take part as participants, not as a competition category. Up to 4 teams per association qualify for the Final.',
             'Årskurs 1–2 deltar som deltagare, inte som tävlingskategori. Upp till 4 lag per förening går vidare till finalen.',
-          )}
+          ))}
         </Note>
       </Section>
       <DateTimeSection {...props} countLabel={L('Number of children', 'Antal barn')} />
@@ -57,12 +60,15 @@ const AssociationFields: React.FC<FieldsProps> = (props) => {
 
 export const associationForm: FormDef = {
   fees: true,
-  title: (ctx) => ctx.L('Register your group or association', 'Anmäl er grupp eller förening'),
+  title: (ctx) => byDesign(ctx, ctx.L('Bring your club along', 'Ta med er förening'), ctx.L('Register your group or association', 'Anmäl er grupp eller förening')),
   intro: (ctx) =>
-    ctx.L(
+    byDesign(ctx, ctx.L(
+      `For clubs, scouts and parent groups taking part together. ${ctx.site.intake.associationContact.replace(/^./, (c) => c.toUpperCase())} will get in touch to plan it with you.`,
+      'För klubbar, scouter och föräldragrupper som deltar tillsammans. Vi hör av oss för att planera det med er.',
+    ), ctx.L(
       `For associations, clubs and community groups. Tell us about your group; ${ctx.site.intake.associationContact} will contact you to coordinate.`,
       'För föreningar, klubbar och grupper. Berätta om er grupp så kontaktar vi er för att samordna.',
-    ),
+    )),
   initial: (ctx) => ({
     ...locationInitial(ctx.site),
     startTime: '10:00',
@@ -73,7 +79,7 @@ export const associationForm: FormDef = {
   }),
   Fields: AssociationFields,
   validate: (v, ctx) =>
-    (v.associationWants ?? []).length === 0 ? ctx.L('Choose what your group would like to take part in.', 'Välj vad er grupp vill delta i.') : '',
+    (v.associationWants ?? []).length === 0 ? byDesign(ctx, ctx.L('Choose at least one thing you’d like to do.', 'Välj minst en sak ni vill göra.'), ctx.L('Choose what your group would like to take part in.', 'Välj vad er grupp vill delta i.')) : '',
   summary: (v, ctx) => {
     const { L, lang } = ctx;
     return [
@@ -118,12 +124,15 @@ export const associationForm: FormDef = {
         team_count: str(v.teamCount),
       },
     }),
-  submitLabel: (ctx) => ctx.L('Register group / association', 'Anmäl grupp / förening'),
+  submitLabel: (ctx) => byDesign(ctx, ctx.L('Register the group', 'Anmäl gruppen'), ctx.L('Register group / association', 'Anmäl grupp / förening')),
   done: (ctx, v) => ({
-    title: ctx.L('Registration received!', 'Anmälan mottagen!'),
-    body: ctx.L(
+    title: byDesign(ctx, ctx.L('Your group is registered', 'Er grupp är anmäld'), ctx.L('Registration received!', 'Anmälan mottagen!')),
+    body: byDesign(ctx, ctx.L(
+      `A confirmation is on its way to ${str(v.email)}. ${ctx.site.intake.associationContact.replace(/^./, (c) => c.toUpperCase())} will get in touch to plan it with you.`,
+      `En bekräftelse är på väg till ${str(v.email)}. Vi hör av oss för att planera det med er.`,
+    ), ctx.L(
       `A receipt is on its way to ${str(v.email)}. ${ctx.site.intake.associationContact.replace(/^./, (c) => c.toUpperCase())} will contact you to coordinate.`,
       `Ett kvitto är på väg till ${str(v.email)}. Vi kontaktar er för att samordna.`,
-    ),
+    )),
   }),
 };

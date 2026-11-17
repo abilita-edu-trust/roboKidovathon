@@ -45,13 +45,13 @@ describe('Future InnoHack in the register wizard (vfi and IBK only)', () => {
     expect(stepsFor({ programme: 'hack' }, VXO)).toEqual(['role', 'activity', 'form', 'review']);
   });
 
-  it('offers School / Teacher, Existing team and Individual for both tracks', () => {
-    expect(roleChoices('hack', all, 'kid').map((c) => [c.id, c.title.en])).toEqual([['school', 'School / Teacher'], ['team', 'Existing team'], ['individual', 'Individual']]);
+  it('offers a teacher, a team of friends or one child for Kid, and the same three answers for Young', () => {
+    expect(roleChoices('hack', all, 'kid').map((c) => [c.id, c.title.en])).toEqual([['school', 'A teacher, for my class'], ['team', 'A team of friends'], ['individual', 'One child']]);
     expect(roleChoices('hack', all, 'young').map((c) => c.id)).toEqual(['school', 'team', 'individual']);
   });
 
   it('gives Kid one pathway, Young the public idea and the hackathon, and individuals also the mentor form', () => {
-    expect(activityChoices('hack', all, { track: 'kid', role: 'team' }).map((c) => [c.id, c.title.en])).toEqual([['kid-idea', 'Submit your idea for Kid InnoHack']]);
+    expect(activityChoices('hack', all, { track: 'kid', role: 'team', v2: true }).map((c) => [c.id, c.title.en])).toEqual([['kid-idea', 'Send an idea to Kid InnoHack']]);
     expect(activityChoices('hack', all, { track: 'young', role: 'team' }).map((c) => c.id)).toEqual(['idea', 'participate']);
     expect(activityChoices('hack', all, { track: 'young', role: 'individual' }).map((c) => c.id)).toEqual(['idea', 'participate', 'mentor']);
     expect(activityChoices('hack', all, {}).map((c) => c.id)).toEqual(['idea', 'participate']);
@@ -139,7 +139,7 @@ describe('Young InnoHack squad form', () => {
     });
     expect((squadForm.fees as (c: Ctx) => boolean)(ctx)).toBe(false);
     expect(YOUNG_CATEGORIES.map((c) => c.gradeGroup)).toEqual([GRADE_GROUP_OPTIONS[3], GRADE_GROUP_OPTIONS[4], PROFESSIONALS_GRADE_GROUP]);
-    expect(squadForm.validate!({ ...base }, ctx)).toMatch(/gymnasium student/);
+    expect(squadForm.validate!({ ...base }, ctx)).toMatch(/at gymnasium, at university or working/);
   });
 
   it('sends exactly what it sent before on sites without tracks (Växjö, Riga) and without a track', () => {
@@ -276,7 +276,7 @@ describe('idea deadline 1 December 2026 and no fees in the registration forms (v
     const all = () => true;
     expect(activityChoices('hack', all, { track: 'kid', role: 'team' })[0].desc.en).toContain('by 1 December 2026');
     const young = activityChoices('hack', all, { track: 'young', role: 'team' }).find((c) => c.id === 'idea')!;
-    expect(young.desc.en).toBe('Send in an idea or a problem to solve by 1 December 2026. Approved ideas go to public voting.');
+    expect(young.desc.en).toBe('Share an idea by 1 December 2026; approved ideas go up for everyone to vote on.');
     // Other hackathons (Riga, Växjö) keep the plain card.
     expect(activityChoices('hack', all, { role: 'team' }).find((c) => c.id === 'idea')!.desc.en).not.toContain('December');
     const { ideaForm } = await import('./forms/idea');

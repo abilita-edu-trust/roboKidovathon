@@ -183,13 +183,15 @@ export const squadForm: FormDef = {
   fees: (ctx) => !isYoung(ctx),
   title: (ctx) =>
     isYoung(ctx)
-      ? ctx.L('Register for Young InnoHack', 'Anmäl dig till Young InnoHack')
+      ? ctx.L('Take part in Young InnoHack', 'Delta i Young InnoHack')
       : ctx.L(`Register your squad for ${ctx.site.hackLabel}`, `Anmäl ert lag till ${ctx.site.hackLabel}`),
   intro: (ctx) =>
-    ctx.L(
-      'Form a squad of 2–4 to tackle real-world challenges in the live arena finals.',
-      'Bilda ett lag med 2–4 personer och anta verkliga utmaningar i finalen.',
-    ),
+    isYoung(ctx)
+      ? ctx.L('Come as a team of 2–4, or on your own and we help you find one.', 'Kom som ett lag med 2–4 personer, eller ensam så hjälper vi dig att hitta ett.')
+      : ctx.L(
+          'Form a squad of 2–4 to tackle real-world challenges in the live arena finals.',
+          'Bilda ett lag med 2–4 personer och anta verkliga utmaningar i finalen.',
+        ),
   initial: (ctx) =>
     isYoung(ctx)
       ? {
@@ -209,7 +211,7 @@ export const squadForm: FormDef = {
   Fields: SquadFields,
   validate: (v, ctx) =>
     isYoung(ctx) && !YOUNG_CATEGORIES.some((c) => c.value === v.category)
-      ? ctx.L('Choose whether you are a gymnasium student, a university student or a professional.', 'Välj om du är gymnasieelev, universitetsstudent eller yrkesverksam.')
+      ? ctx.L('Tell us whether you’re at gymnasium, at university or working.', 'Berätta om du går på gymnasiet, pluggar på universitetet eller jobbar.')
       : namedMembers(v.members).length < minMembers(ctx)
       ? minMembers(ctx) === 1
         ? ctx.L('Add your name as the first member.', 'Skriv ditt namn som första medlem.')

@@ -128,11 +128,12 @@ describe('RoboKidovation categories on vfi and IBK: Build & Play, Junior Robo Sp
 
 describe('Build & Play registration (a parent and child, free, no competition)', () => {
   it('is a choice for a parent under RoboKidovation, on vfi and IBK only, with its own link', () => {
-    const parent: Path = { programme: 'robo', role: 'individual' };
+    const parent: Path = { programme: 'robo', role: 'individual', v2: true };
     const choices = flow.activityChoices('robo', accepting(VFI_SITE), parent);
     expect(choices.map((c) => c.id)).toEqual(['demo', 'workshop', 'competition', 'build-play']);
-    expect(choices[3].title.en).toBe('Build & Play (preschool–grade 2)');
-    expect(choices[3].desc.en).toMatch(/^Free\..*5 December 2026.*No competition/);
+    expect(choices[3].title.en).toBe('Build & Play');
+    expect(choices[3].desc.en).toMatch(/^Preschool to grade 2, with you, on 5 December 2026\. Free, and no competition\./);
+    expect(choices[3].icon).toBe('Blocks');
     expect(flow.activityChoices('robo', accepting(RIGA), parent).map((c) => c.id)).toEqual(['demo', 'workshop', 'competition']);
     expect(flow.activityChoices('robo', accepting(VFI_SITE), { programme: 'robo', role: 'school' }).map((c) => c.id)).not.toContain('build-play');
     const path = flow.pathForTab('build-play', VFI_SITE.intake.programmes);
@@ -157,8 +158,10 @@ describe('Build & Play registration (a parent and child, free, no competition)',
     const summary = Object.fromEntries(buildPlayForm.summary({ contactName: 'P', email: 'p@example.org', phone: '1', children: [{ full_name: 'Ada', grade: 'preschool' }], accompany: true, mediaConsent: false }, ctx));
     expect(summary).toMatchObject({ Fee: 'Free', Children: 'Ada (preschool)', 'Accompanied by': 'A parent or guardian', 'Photos and videos': 'Not published' });
     expect(Object.keys(summary).join()).not.toMatch(/team|category|score|judg/i);
-    expect(buildPlayForm.intro(ctx)).toContain('free');
-    expect(buildPlayForm.done(ctx, { email: 'p@example.org' }).body).toContain('5 December 2026 at Mälardalen International School (MISV), Västerås. Participation is free.');
+    expect(buildPlayForm.intro(ctx)).toMatch(/^Free on 5 December at MISV\. A parent or guardian stays with each child\.$/);
+    const done = buildPlayForm.done(ctx, { email: 'p@example.org' });
+    expect(done.title).toBe('See you on 5 December');
+    expect(done.body).toContain('Mälardalen International School (MISV) in Västerås, and it’s free.');
     expect(buildPlayForm.fees).toBe(false);
   });
 

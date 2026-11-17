@@ -4,9 +4,10 @@
 import React from 'react';
 import { Trophy } from 'lucide-react';
 import { GRADE_GROUP_OPTIONS } from '../../../data/vfiFacts';
+import { pick } from '../../../content/core';
 import {
   Chips, FormDef, Grid, LocationFields, MemberRows, Note, Section, TextField,
-  chipLabels, locationInitial, locationRow, memberRows, namedMembers, resolveLocation, rows, str, submitRegistration,
+  byDesign, chipLabels, locationInitial, locationRow, memberRows, namedMembers, resolveLocation, rows, str, submitRegistration,
   type ChipOption, type FieldsProps, type FormCtx,
 } from '../ui';
 
@@ -25,6 +26,15 @@ const role = (ctx: FormCtx) => ctx.path.role;
 /** Schools and associations may enter several teams and send the names later. */
 const isOrg = (ctx: FormCtx) => role(ctx) === 'school' || role(ctx) === 'association';
 
+/** "School qualifiers first, then the final on <date> at <venue>": this site's own programme date and place. */
+const finalLine = (ctx: FormCtx) => {
+  const date = ctx.programme.date ? pick(ctx.programme.date, ctx.lang) : '';
+  const venue = ctx.programme.venue ? pick(ctx.programme.venue, ctx.lang) : '';
+  const en = `School qualifiers first, then the final${date ? ` on ${date}` : ''}${venue ? ` at ${venue}` : ''}.`;
+  const sv = `Först skolkval, sedan finalen${date ? ` den ${date}` : ''}${venue ? ` på ${venue}` : ''}.`;
+  return ctx.L(en, sv);
+};
+
 const orgLabel = (ctx: FormCtx) => (role(ctx) === 'association' ? ctx.L('Association or club', 'Förening eller klubb') : ctx.L('School', 'Skola'));
 
 const CompetitionFields: React.FC<FieldsProps> = (props) => {
@@ -39,14 +49,14 @@ const CompetitionFields: React.FC<FieldsProps> = (props) => {
           <TextField k="orgName" v={v} set={set} required list={r === 'school' ? 'registered-schools-list' : undefined} label={orgLabel(ctx)} />
         )}
         {r === 'team' && <TextField k="teamName" v={v} set={set} required label={L('Team name', 'Lagnamn')} />}
-        {r === 'individual' && <TextField k="childName" v={v} set={set} required label={L("Child's name", 'Barnets namn')} placeholder={L('Full name', 'Fullständigt namn')} />}
+        {r === 'individual' && <TextField k="childName" v={v} set={set} required label={byDesign(ctx, L('Your child’s name', 'Ditt barns namn'), L("Child's name", 'Barnets namn'))} placeholder={byDesign(ctx, L('First and last name', 'För- och efternamn'), L('Full name', 'Fullständigt namn'))} />}
         <TextField
           k="contactName"
           v={v}
           set={set}
           required
-          label={r === 'individual' ? L('Parent / guardian name', 'Vårdnadshavarens namn') : r === 'school' ? L('Teacher / contact person', 'Lärare / kontaktperson') : L('Contact person', 'Kontaktperson')}
-          placeholder={L('Full name', 'Fullständigt namn')}
+          label={byDesign(ctx, r === 'individual' ? L('Your name (parent or guardian)', 'Ditt namn (förälder eller vårdnadshavare)') : r === 'school' ? L('Your name (teacher or contact)', 'Ditt namn (lärare eller kontakt)') : L('Your name', 'Ditt namn'), r === 'individual' ? L('Parent / guardian name', 'Vårdnadshavarens namn') : r === 'school' ? L('Teacher / contact person', 'Lärare / kontaktperson') : L('Contact person', 'Kontaktperson'))}
+          placeholder={byDesign(ctx, L('First and last name', 'För- och efternamn'), L('Full name', 'Fullständigt namn'))}
         />
         {(r === 'team' || r === 'individual') && (
           <TextField k="orgName" v={v} set={set} list="registered-schools-list" label={L('School (optional)', 'Skola (frivilligt)')} />
@@ -55,17 +65,17 @@ const CompetitionFields: React.FC<FieldsProps> = (props) => {
         <TextField k="phone" v={v} set={set} type="tel" required={r === 'individual'} label={L('Phone', 'Telefon')} placeholder="+46 70 123 4567" />
       </Grid>
 
-      <Section title={r === 'individual' ? L('About your child', 'Om ditt barn') : L('Your team', 'Ert lag')} icon={Trophy}>
+      <Section title={byDesign(ctx, r === 'individual' ? L('Your child', 'Ditt barn') : isOrg(ctx) ? L('Your teams', 'Era lag') : L('The team', 'Laget'), r === 'individual' ? L('About your child', 'Om ditt barn') : L('Your team', 'Ert lag'))} icon={Trophy}>
         <Chips k="category" v={v} set={set} lang={lang} required label={L('Category', 'Kategori')} options={categoryOptions(ctx)} />
         {r === 'individual' ? (
           <Grid>
-            <TextField k="childGrade" v={v} set={set} label={L('Grade / class', 'Årskurs / klass')} placeholder={L('e.g. Grade 5', 't.ex. åk 5')} />
+            <TextField k="childGrade" v={v} set={set} label={byDesign(ctx, L('Class', 'Klass'), L('Grade / class', 'Årskurs / klass'))} placeholder={byDesign(ctx, L('e.g. 5B', 't.ex. 5B'), L('e.g. Grade 5', 't.ex. åk 5'))} />
           </Grid>
         ) : (
           <>
             {isOrg(ctx) && (
               <Grid>
-                <TextField k="teamCount" v={v} set={set} type="number" min="1" max="20" required label={L('Number of teams', 'Antal lag')} />
+                <TextField k="teamCount" v={v} set={set} type="number" min="1" max="20" required label={byDesign(ctx, L('How many teams?', 'Hur många lag?'), L('Number of teams', 'Antal lag'))} />
               </Grid>
             )}
             <MemberRows
@@ -77,8 +87,8 @@ const CompetitionFields: React.FC<FieldsProps> = (props) => {
               max={6}
               label={
                 isOrg(ctx)
-                  ? L('Team members (first team, optional: you can send names later)', 'Lagmedlemmar (första laget, frivilligt: namnen kan skickas senare)')
-                  : L('Team members', 'Lagmedlemmar') + ' *'
+                  ? byDesign(ctx, L('Who’s in the first team? (optional; you can send names later)', 'Vilka är med i första laget? (valfritt; namnen kan skickas senare)'), L('Team members (first team, optional: you can send names later)', 'Lagmedlemmar (första laget, frivilligt: namnen kan skickas senare)'))
+                  : byDesign(ctx, L('Who’s in the team?', 'Vilka är med i laget?'), L('Team members', 'Lagmedlemmar')) + ' *'
               }
             />
           </>
@@ -86,18 +96,21 @@ const CompetitionFields: React.FC<FieldsProps> = (props) => {
         <Note>
           {r === 'individual' && ctx.site.intake.buildAndPlay
             ? L(
-                'We place your child in a team for the qualifiers. Younger children (preschool to grade 2) can join Build & Play with a parent instead: free, on 5 December 2026.',
-                'Vi placerar ditt barn i ett lag inför kvalet. Yngre barn (förskola till årskurs 2) kan i stället delta i Build & Play med en förälder: gratis, den 5 december 2026.',
+                'We find your child a team for the school qualifiers. Younger children (preschool to grade 2) can come to Build & Play with you instead: free, on 5 December 2026.',
+                'Vi hittar ett lag åt ditt barn inför skolkvalet. Yngre barn (förskola till årskurs 2) kan i stället komma till Build & Play med dig: gratis, den 5 december 2026.',
               )
             : r === 'individual'
             ? L(
                 'We place your child in a team for the qualifiers. Grades 1–2 take part as participants, not as a competition category.',
                 'Vi placerar ditt barn i ett lag inför kvalet. Årskurs 1–2 deltar som deltagare, inte som tävlingskategori.',
               )
-            : L(
+            : byDesign(ctx, L(
+                'Each school or association can send up to 4 teams to the final.',
+                'Varje skola eller förening kan skicka upp till 4 lag till finalen.',
+              ), L(
                 'Up to 4 teams from each school or association qualify for the Final.',
                 'Upp till 4 lag från varje skola eller förening går vidare till finalen.',
-              )}
+              ))}
         </Note>
       </Section>
     </>
@@ -106,11 +119,11 @@ const CompetitionFields: React.FC<FieldsProps> = (props) => {
 
 export const competitionForm: FormDef = {
   fees: true,
-  title: (ctx) => ctx.L('Competition registration', 'Tävlingsanmälan'),
+  title: (ctx) => byDesign(ctx, (role(ctx) === 'individual' ? ctx.L('Sign up your child', 'Anmäl ditt barn') : ctx.L('Enter a team', 'Anmäl ett lag')), ctx.L('Competition registration', 'Tävlingsanmälan')),
   intro: (ctx) =>
     role(ctx) === 'individual'
-      ? ctx.L('Sign up your child for the RoboKidovation competition. We find them a team.', 'Anmäl ditt barn till RoboKidovation-tävlingen. Vi hittar ett lag åt hen.')
-      : ctx.L('Enter your team in the RoboKidovation competition: qualifiers first, then the Final.', 'Anmäl ert lag till RoboKidovation-tävlingen: först kvalet, sedan finalen.'),
+      ? byDesign(ctx, ctx.L('For Robo Sprint, grades 3–9. We find your child a team.', 'För Robo Sprint, årskurs 3–9. Vi hittar ett lag åt ditt barn.'), ctx.L('Sign up your child for the RoboKidovation competition. We find them a team.', 'Anmäl ditt barn till RoboKidovation-tävlingen. Vi hittar ett lag åt hen.'))
+      : byDesign(ctx, finalLine(ctx), ctx.L('Enter your team in the RoboKidovation competition: qualifiers first, then the Final.', 'Anmäl ert lag till RoboKidovation-tävlingen: först kvalet, sedan finalen.')),
   initial: (ctx) => ({
     ...locationInitial(ctx.site),
     teamCount: isOrg(ctx) ? '1' : '',
@@ -118,8 +131,8 @@ export const competitionForm: FormDef = {
   }),
   Fields: CompetitionFields,
   validate: (v, ctx) => {
-    if (!v.category) return ctx.L('Choose a category.', 'Välj en kategori.');
-    if (role(ctx) === 'team' && namedMembers(v.members).length === 0) return ctx.L('Add the names of your team members.', 'Lägg till namnen på lagmedlemmarna.');
+    if (!v.category) return byDesign(ctx, ctx.L('Choose Junior or Senior.', 'Välj Junior eller Senior.'), ctx.L('Choose a category.', 'Välj en kategori.'));
+    if (role(ctx) === 'team' && namedMembers(v.members).length === 0) return byDesign(ctx, ctx.L('Add at least one name to the team.', 'Lägg till minst ett namn i laget.'), ctx.L('Add the names of your team members.', 'Lägg till namnen på lagmedlemmarna.'));
     return '';
   },
   summary: (v, ctx) => {
@@ -168,12 +181,15 @@ export const competitionForm: FormDef = {
       },
     });
   },
-  submitLabel: (ctx) => ctx.L('Send competition registration', 'Skicka tävlingsanmälan'),
+  submitLabel: (ctx) => byDesign(ctx, (role(ctx) === 'individual' ? ctx.L('Sign up my child', 'Anmäl mitt barn') : ctx.L('Enter the team', 'Anmäl laget')), ctx.L('Send competition registration', 'Skicka tävlingsanmälan')),
   done: (ctx, v) => ({
-    title: ctx.L('Team entry received!', 'Tävlingsanmälan mottagen!'),
-    body: ctx.L(
+    title: byDesign(ctx, role(ctx) === 'individual' ? ctx.L('Your child is signed up', 'Ditt barn är anmält') : ctx.L('Your team is in', 'Ert lag är med'), ctx.L('Team entry received!', 'Tävlingsanmälan mottagen!')),
+    body: byDesign(ctx, ctx.L(
+      `A confirmation is on its way to ${str(v.email)}. We’ll be in touch before the school qualifiers.`,
+      `En bekräftelse är på väg till ${str(v.email)}. Vi hör av oss före skolkvalet.`,
+    ), ctx.L(
       `A receipt is on its way to ${str(v.email)}. The coordinator reviews your entry and contacts you with the next steps.`,
       `Ett kvitto är på väg till ${str(v.email)}. Samordnaren går igenom anmälan och kontaktar dig med nästa steg.`,
-    ),
+    )),
   }),
 };

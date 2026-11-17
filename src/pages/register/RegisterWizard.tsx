@@ -9,7 +9,6 @@ import {
   Calendar,
   Check,
   CheckCircle2,
-  Lightbulb,
   Lock,
   MapPin,
   Pencil,
@@ -48,11 +47,14 @@ import {
 } from './flow';
 import { FORMS } from './forms';
 import { UserFacingError, type FormCtx, type SubmitResult, type SummaryRow, type Values } from './ui';
-import { lookupTeamCode, normaliseCode, useYoungChallenges } from '../../content/youngChallenges';
-import { ChallengeStep, TeamStep, teamStepError } from './YoungSteps';
+import { challengeName, lookupTeamCode, normaliseCode, useYoungState } from '../../content/youngChallenges';
+import { ChallengesClosed, ChoicesStep, TeamStep, choicesError, teamStepError } from './YoungSteps';
+import { AccentContext, ACCENTS, ChoiceGroup, type Accent, type ChoiceItem } from './ChoiceCards';
+import { ClassicChoiceCard } from './ClassicChoiceCard';
+import { registerIcon } from './icons';
 
-/** Young InnoHack with company challenges: the four steps people count (challenge, team, details, review). */
-const YOUNG_STEPS: StepKind[] = ['challenge', 'team', 'form', 'review'];
+/** Young InnoHack with company challenges: the four steps people count (how you take part, choices, details, review). */
+const YOUNG_STEPS: StepKind[] = ['team', 'choices', 'form', 'review'];
 
 interface RegisterWizardProps {
   /** A form to open (a ?tab= link): the questions it answers are skipped; null starts at step 1. */
@@ -69,73 +71,6 @@ interface RegisterWizardProps {
 const DEFAULT_INTRO: Bilingual = {
   en: 'Answer a few quick questions. Then you get the form that fits you, and a last check before you send it.',
   sv: 'Svara på några snabba frågor. Sedan får du formuläret som passar dig, och en sista kontroll innan du skickar.',
-};
-
-/** A selectable card: programme (with its picture), role, activity or theme. */
-const ChoiceCard: React.FC<{
-  selected: boolean;
-  onSelect: () => void;
-  title: string;
-  desc?: string;
-  icon?: string;
-  image?: string;
-  meta?: React.ReactNode;
-  green?: boolean;
-  small?: boolean;
-  /** Not open yet (Kid InnoHack): greyed, with `badge` saying why; choosing it explains instead of selecting. */
-  disabled?: boolean;
-  badge?: string;
-  /** A picture slot without a picture yet: a navy panel with a lightbulb and this name. */
-  placeholder?: string;
-}> = ({ selected, onSelect, title, desc, icon, image, meta, green, small, disabled, badge, placeholder }) => {
-  const tone = selected
-    ? `${green ? 'border-[#059669] bg-emerald-50/60' : 'border-[#006AA7] bg-sky-50/70'} shadow-md`
-    : disabled
-      ? 'bg-slate-50 border-slate-200'
-      : 'bg-white border-slate-200 hover:border-[#0A1930] hover:shadow-lg';
-  return (
-    <button
-      type="button"
-      onClick={onSelect}
-      aria-pressed={selected}
-      aria-disabled={disabled || undefined}
-      className={`relative w-full text-left border-2 transition-all flex flex-col ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'} ${tone}`}
-    >
-      {badge && (
-        <span className="absolute top-2 left-2 z-10 inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#FFCD00] text-[#0A1930] text-[11px] font-headline font-black uppercase tracking-wider">
-          <Lock className="w-3 h-3" aria-hidden="true" />
-          {badge}
-        </span>
-      )}
-      {selected && (
-        <span className={`absolute top-2 right-2 z-10 w-6 h-6 flex items-center justify-center text-white ${green ? 'bg-[#059669]' : 'bg-[#006AA7]'}`}>
-          <Check className="w-3.5 h-3.5" />
-        </span>
-      )}
-      {image ? (
-        <img src={image} alt="" className={`w-full h-40 sm:h-44 object-cover border-b border-slate-200 ${disabled ? 'opacity-60' : ''}`} />
-      ) : placeholder ? (
-        <span className={`w-full h-40 sm:h-44 border-b border-slate-200 bg-gradient-to-br from-[#0A1930] to-[#1E3A5F] flex flex-col items-center justify-center gap-2 text-white ${disabled ? 'opacity-70' : ''}`} aria-hidden="true">
-          <span className="w-14 h-14 bg-white/10 border border-white/25 flex items-center justify-center">
-            <Lightbulb className="w-7 h-7 text-[#FFCD00]" />
-          </span>
-          <span className="font-headline font-black text-xs uppercase tracking-wider text-white/85">{placeholder}</span>
-        </span>
-      ) : null}
-      <span className={`block ${small ? 'p-4' : 'p-5'}`}>
-        {icon && (
-          <span className={`block leading-none mb-2 ${small ? 'text-2xl' : 'text-3xl'}`} aria-hidden="true">
-            {icon}
-          </span>
-        )}
-        <span className={`block font-headline font-black uppercase tracking-tight text-[#0A1930] leading-snug pr-7 ${small ? 'text-sm' : 'text-lg'}`}>
-          {title}
-        </span>
-        {desc && <span className="block text-xs text-slate-600 leading-relaxed mt-1.5">{desc}</span>}
-        {meta && <span className="block mt-3 text-[13px] font-mono-code font-semibold text-slate-600">{meta}</span>}
-      </span>
-    </button>
-  );
 };
 
 /** The wizard with its heading; the page around it (if any) is the caller's. */
@@ -169,9 +104,14 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
   // Young InnoHack's company challenges, once the Admin Panel publishes them (vfi and IBK only). Until then the
   // list is empty and Young InnoHack keeps its general form.
   const youngSite = tracked ? (site.nav.homeRoute === 'ibk' ? 'ibk' : 'vfi') : null;
-  const { challenges: youngList, ready: youngReady } = useYoungChallenges(youngSite);
-  const challengeMode = youngList.length > 0;
-  const withMode = (p: RegisterPath): RegisterPath => (challengeMode ? { ...p, challengeMode: true } : { ...p, challengeMode: undefined });
+  const young = useYoungState(youngSite);
+  const youngReady = young.ready;
+  // Published challenges switch Young InnoHack to choices; the database decides whether registration is open.
+  const challengeMode = young.challenges.length > 0;
+  // vfi and IBK (SiteConfig.designV2) have the redesigned cards and wording; Riga, Eskilstuna and Växjö keep the
+  // earlier ones (./classicCards, ./ClassicChoiceCard and the `v2 ? … : …` texts below), unchanged.
+  const v2 = !!site.designV2;
+  const withMode = (p: RegisterPath): RegisterPath => ({ ...p, challengeMode: challengeMode || undefined, v2: v2 || undefined });
 
   // Grade labels only name the programmes this site runs: esk has no hackathon (and so no
   // university level), vxo has no RoboKidovation (and so no grade 1–2 participant group).
@@ -253,17 +193,19 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
     }
     lookupTeamCode(joinParam)
       .then((found) => {
-        const ok = found && youngList.some((c) => c.id === found.challenge_id);
-        const next: RegisterPath = ok ? { ...base, activity: 'participate', challenge: found!.challenge_id, team: 'join' } : base;
+        const next: RegisterPath = found
+          ? { ...base, activity: 'participate', team: 'join', first: found.first_choice, second: found.second_choice }
+          : { ...base, activity: 'participate', team: 'join' };
         setPath(next);
         setValues((prev) => ({
           ...prev,
           joinCode: joinParam,
-          joinChecked: !!ok,
+          joinChecked: !!found,
           joinJoinable: !!found?.joinable,
           joinTeamName: found?.team ?? '',
         }));
-        openFirst(ok ? { ...next, team: undefined } : next);
+        // The team step, with its team checked (or the code to correct).
+        setStepIndex(Math.max(0, stepsFor(withMode(next), programmes).indexOf('team')));
       })
       .catch(() => {
         setPath(base);
@@ -280,6 +222,9 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
   const programme = ctx?.programme ?? null;
   // Future InnoHack keeps the site's navy and yellow; other hackathons their green.
   const green = isGreen(path.programme) && !tracked;
+  /** vfi and IBK's selection colour: RoboKidovation's Swedish blue, Future InnoHack's navy and yellow. */
+  const accentOf = (p?: RegisterPath['programme']): Accent => (p === 'hack' || p === 'ideas' ? 'hack' : 'robo');
+  const accent = accentOf(path.programme);
   // Kid InnoHack while it is closed: every step after the track explains that instead of asking.
   const kidBlocked = path.track === 'kid' && !kidOpen;
   // Young InnoHack's public ideas close with Kid's, on 1 December 2026 (its hackathon and mentor forms stay open).
@@ -289,7 +234,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
   const buildPlay = path.programme === 'robo' && path.activity === 'build-play';
   const shownDate = programme?.date;
   const shownVenue = programme?.venue;
-  const accentBg = green ? 'bg-[#059669]' : 'bg-[#006AA7]';
+  const accentBg = v2 ? ACCENTS[accent].bar : green ? 'bg-[#059669]' : 'bg-[#006AA7]';
 
   // Editing an answer clears the message about it (it described the answer as it was).
   const set = (key: string, value: unknown) => {
@@ -335,14 +280,15 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
     setError('');
   };
   // A new programme clears every answer; a new activity clears its theme (the lists differ).
-  const chooseProgramme = (id: RegisterPath['programme']) => {
+  /** `advance`: a click moves on; an arrow key only changes the choice (keyboard users press Continue). */
+  const chooseProgramme = (id: RegisterPath['programme'], advance = true) => {
     const nextPath: RegisterPath = id === path.programme ? path : { programme: id };
     choose(nextPath);
     // Future InnoHack: its tracks come straight after, scrolled into view.
-    if (id === 'hack' && tracked) goTo(stepsFor(nextPath, programmes).indexOf('track'), nextPath);
+    if (advance && id === 'hack' && tracked) goTo(stepsFor(nextPath, programmes).indexOf('track'), nextPath);
   };
   /** A track, then on to "How are you joining?". Kid keeps only its idea pathway; Young keeps an idea or squad answer from a link. */
-  const chooseTrack = (id: NonNullable<RegisterPath['track']>) => {
+  const chooseTrack = (id: NonNullable<RegisterPath['track']>, advance = true) => {
     if (id === 'kid' && !kidOpen) {
       setError(T(trackOf('kid')?.closedMessage ?? { en: 'Kid InnoHack opens soon.', sv: 'Kid InnoHack öppnar snart.' }));
       return;
@@ -356,20 +302,23 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
       theme: keep ? path.theme : undefined,
     };
     choose(nextPath);
-    goTo(stepsFor(nextPath, programmes).indexOf('track') + 1, nextPath);
+    if (advance) goTo(stepsFor(nextPath, programmes).indexOf('track') + 1, nextPath);
   };
   const chooseRole = (id: RegisterPath['role']) => choose({ ...path, role: id });
   const chooseActivity = (id: RegisterPath['activity']) =>
     choose({ ...path, activity: id, theme: id === path.activity ? path.theme : undefined });
   const chooseTheme = (id: string) => choose({ ...path, theme: id });
-  /** Another challenge: its teams are different, so the team answer starts again. */
-  const chooseChallenge = (id: string) => {
-    if (id === path.challenge) return;
-    choose({ ...path, challenge: id, team: undefined });
-    setValues((prev) => ({ ...prev, joinChecked: false, joinTeamId: '', joinTeamName: '', teamListed: false }));
+  /** Joining takes the team's choices; switching to or from joining starts the choices again. */
+  const chooseTeam = (t: TeamChoice) => {
+    if (t === path.team) return;
+    const fromOrToJoin = t === 'join' || path.team === 'join';
+    choose({ ...path, team: t, ...(fromOrToJoin ? { first: undefined, second: undefined } : {}) });
+    if (fromOrToJoin) setValues((prev) => ({ ...prev, joinChecked: false, joinTeamId: '', joinTeamName: '' }));
   };
-  const chooseTeam = (t: TeamChoice) => choose({ ...path, team: t });
-  const youngChallenge = youngList.find((c) => c.id === path.challenge);
+  const setChoices = (first?: string, second?: string) => choose({ ...path, first, second });
+  const byChallenge = (id?: string) => young.challenges.find((c) => c.id === id);
+  // Published challenges but the switch off (or fewer than two): Young InnoHack's taking part is closed.
+  const youngClosed = youngChallenges(path) && path.activity === 'participate' && !young.registrationOpen;
 
   const startOver = () => {
     setPath(basePath);
@@ -390,7 +339,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
   const submit = async () => {
     if (!def || !ctx) return;
     if (!values.consentAgreed || !values.gdprAgreed) {
-      setError(L('Please tick both boxes to confirm.', 'Kryssa i båda rutorna för att bekräfta.'));
+      setError(v2 ? L('Tick both boxes to send.', 'Kryssa i båda rutorna för att skicka.') : L('Please tick both boxes to confirm.', 'Kryssa i båda rutorna för att bekräfta.'));
       return;
     }
     setBusy(true);
@@ -412,6 +361,8 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
             )
           : /too long|must be a web address|must be an uploaded file|could not be uploaded/.test(msg)
           ? msg
+          : v2
+          ? L('We couldn’t send this. Check your connection and try again.', 'Vi kunde inte skicka. Kontrollera anslutningen och försök igen.')
           : L('Something went wrong while submitting. Please try again.', 'Något gick fel vid inskickningen. Försök igen.'),
       );
     } finally {
@@ -427,7 +378,12 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
       return goTo(index + 1);
     }
     if (kind === 'team') {
+      if (youngClosed) return;
       const err = teamStepError(path.team, values, L);
+      if (err) return setError(err);
+    }
+    if (kind === 'choices') {
+      const err = choicesError(path.first, path.second, L);
       if (err) return setError(err);
     }
     if (!isAnswered(kind, path)) {
@@ -447,7 +403,9 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
   };
 
   // ── Copy for each step ──
-  const heading = (): { title: string; hint: string } => {
+  const heading = (): { title: string; hint: string } => (v2 ? headingV2() : classicHeading());
+  /** Riga, Eskilstuna and Växjö: the step texts as they were (their sites have no tracks or company challenges). */
+  const classicHeading = (): { title: string; hint: string } => {
     const p = path.programme;
     switch (kind) {
       case 'programme':
@@ -455,20 +413,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
           title: L('What would you like to join?', 'Vad vill du delta i?'),
           hint: L('Each programme has its own date and place. Choose one to see its steps.', 'Varje program har sitt eget datum och sin egen plats. Välj ett för att se stegen.'),
         };
-      case 'track':
-        return {
-          title: L('Which track?', 'Vilket spår?'),
-          hint: L(
-            'Kid InnoHack is for grades 3–9 with their own idea. Young InnoHack is for gymnasium, university and professionals.',
-            'Kid InnoHack är för årskurs 3–9 med en egen idé. Young InnoHack är för gymnasium, universitet och yrkesverksamma.',
-          ),
-        };
       case 'role':
-        if (p === 'hack' && path.track === 'kid')
-          return {
-            title: L('How are you joining?', 'Hur deltar du?'),
-            hint: L('Choose who is sending the idea. Each child’s parent or guardian confirms by email.', 'Välj vem som skickar idén. Varje barns förälder eller vårdnadshavare bekräftar via e-post.'),
-          };
         if (p === 'community')
           return {
             title: L('How would you like to get involved?', 'Hur vill du engagera dig?'),
@@ -482,27 +427,6 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
               : L('Choose who you are registering for. Next you choose a demo, a workshop or the competition.', 'Välj vem du anmäler. Sedan väljer du demonstration, workshop eller tävling.'),
         };
       case 'activity':
-        if (p === 'hack' && path.track === 'kid')
-          return {
-            title: L('Your pathway', 'Din väg'),
-            hint: L('Kid InnoHack has one pathway: an idea for the selection on 5 December 2026.', 'Kid InnoHack har en väg: en idé till urvalet den 5 december 2026.'),
-          };
-        if (youngChallenges(path))
-          return {
-            title: L('What would you like to do?', 'Vad vill du göra?'),
-            hint: L(
-              'Take on a company challenge, send an idea to the public vote, or mentor the teams.',
-              'Anta en utmaning från ett företag, skicka en idé till den publika omröstningen eller bli mentor för lagen.',
-            ),
-          };
-        if (p === 'hack' && path.track === 'young')
-          return {
-            title: L('Register an idea, take part or mentor?', 'Registrera en idé, delta eller bli mentor?'),
-            hint: L(
-              'An idea goes to the public vote, separate from the hackathon. Taking part registers you for the hackathon. Professionals on their own can also mentor the teams.',
-              'En idé går till den publika omröstningen, skild från hackathonet. Att delta anmäler dig till hackathonet. Yrkesverksamma på egen hand kan också vara mentorer för lagen.',
-            ),
-          };
         return p === 'hack'
           ? {
               title: L('Register an idea or take part?', 'Registrera en idé eller delta?'),
@@ -515,16 +439,6 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                 'En demonstration är en kort introduktion. En workshop är ett praktiskt lärpass. Tävlingsanmälan anmäler ett lag till evenemanget.',
               ),
             };
-      case 'challenge':
-        return {
-          title: L('Choose a challenge', 'Välj en utmaning'),
-          hint: L('Each company sets a real problem. Pick the one you want to work on.', 'Varje företag har ett verkligt problem. Välj det du vill arbeta med.'),
-        };
-      case 'team':
-        return {
-          title: L('On your own or in a team?', 'På egen hand eller i ett lag?'),
-          hint: L('A team works on one challenge, and you can be in one team.', 'Ett lag arbetar med en utmaning, och du kan vara med i ett lag.'),
-        };
       case 'theme':
         return {
           title: L('Which area is your idea about?', 'Vilket område handlar din idé om?'),
@@ -541,6 +455,111 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
         };
     }
   };
+  /** vfi and IBK. */
+  const headingV2 = (): { title: string; hint: string } => {
+    const p = path.programme;
+    switch (kind) {
+      case 'programme':
+        return {
+          title: L('What would you like to join?', 'Vad vill du vara med i?'),
+          hint: L('Each programme has its own day and place.', 'Varje program har sin egen dag och plats.'),
+        };
+      case 'track':
+        return {
+          title: L('Kid or Young InnoHack?', 'Kid eller Young InnoHack?'),
+          hint: L(
+            'Kid InnoHack is for grades 3–9 with an idea of their own. Young InnoHack is for gymnasium, university and working life.',
+            'Kid InnoHack är för årskurs 3–9 med en egen idé. Young InnoHack är för gymnasiet, universitetet och arbetslivet.',
+          ),
+        };
+      case 'role':
+        if (p === 'hack' && path.track === 'kid')
+          return {
+            title: L('Who is sending the idea?', 'Vem skickar idén?'),
+            hint: L('Each child’s parent or guardian confirms by email afterwards.', 'Varje barns förälder eller vårdnadshavare bekräftar via e-post efteråt.'),
+          };
+        if (p === 'community')
+          return {
+            title: L('How would you like to help?', 'Hur vill du hjälpa till?'),
+            hint: L('Pick the one that fits you best.', 'Välj det som passar dig bäst.'),
+          };
+        return {
+          title: L('Who are you signing up?', 'Vem anmäler du?'),
+          hint:
+            p === 'hack'
+              ? L('Then you choose between an idea and taking part.', 'Sedan väljer du mellan en idé och att delta.')
+              : L('Then you choose what to do: a demo, a workshop, the competition or Build & Play.', 'Sedan väljer du vad: en demo, en workshop, tävlingen eller Build & Play.'),
+        };
+      case 'activity':
+        if (p === 'hack' && path.track === 'kid')
+          return {
+            title: L('Your idea', 'Din idé'),
+            hint: L('Kid InnoHack has one way in: an idea for the selection on 5 December 2026.', 'Kid InnoHack har en väg in: en idé till urvalet den 5 december 2026.'),
+          };
+        if (youngChallenges(path))
+          return {
+            title: L('What would you like to do?', 'Vad vill du göra?'),
+            hint: L('Take on a company challenge, put an idea to the public vote, or mentor the teams.', 'Anta en utmaning från ett företag, låt alla rösta på din idé eller bli mentor för lagen.'),
+          };
+        if (p === 'hack' && path.track === 'young')
+          return {
+            title: L('An idea, taking part or mentoring?', 'En idé, delta eller vara mentor?'),
+            hint: L(
+              'An idea goes to the public vote on its own. Taking part signs you up for the hackathon. Professionals can also mentor the teams.',
+              'En idé går till den publika omröstningen för sig. Att delta anmäler dig till hackathonet. Yrkesverksamma kan också vara mentorer för lagen.',
+            ),
+          };
+        return p === 'hack'
+          ? {
+              title: L('An idea or taking part?', 'En idé eller delta?'),
+              hint: L('Choose one, then the area that interests you most.', 'Välj ett av dem och sedan det område som intresserar dig mest.'),
+            }
+          : {
+              title: L('What would you like to do?', 'Vad vill du göra?'),
+              hint: L(
+                'A demo is a short show. A workshop is hands-on building. The competition is for teams.',
+                'En demo är en kort visning. En workshop är att bygga på riktigt. Tävlingen är för lag.',
+              ),
+            };
+      case 'team':
+        return youngClosed
+          ? {
+              title: L('Registration opening soon', 'Anmälan öppnar snart'),
+              hint: L(
+                'These are the company challenges for Young InnoHack. When registration opens, you choose two of them, on your own or as a team.',
+                'Här är företagens utmaningar i Young InnoHack. När anmälan öppnar väljer du två av dem, själv eller som lag.',
+              ),
+            }
+          : {
+              title: L('How will you take part?', 'Hur vill du delta?'),
+              hint: L('You can be in one team. A team chooses its challenges together.', 'Du kan vara med i ett lag. Laget väljer sina utmaningar tillsammans.'),
+            };
+      case 'choices':
+        return path.team === 'join'
+          ? { title: L('Your team’s choices', 'Lagets val'), hint: '' }
+          : {
+              title: L('Choose two challenges', 'Välj två utmaningar'),
+              hint: L(
+                'Pick a first and a second choice. The organisers match every team with a challenge, using everyone’s choices and the places each company has. We can’t promise your first choice.',
+                'Välj ett förstahands- och ett andrahandsval. Arrangörerna matchar varje lag med en utmaning utifrån allas val och hur många platser varje företag har. Vi kan inte lova ditt förstahandsval.',
+              ),
+            };
+      case 'theme':
+        return {
+          title: L('What is your idea about?', 'Vad handlar din idé om?'),
+          hint: L('Pick the closest one. You describe the idea next.', 'Välj det som ligger närmast. Du beskriver idén i nästa steg.'),
+        };
+      case 'form':
+        return def && ctx
+          ? { title: def.title(ctx), hint: `${def.intro(ctx)} ${L('Fields with * are required.', 'Fält med * måste fyllas i.')}` }
+          : { title: '', hint: '' };
+      default:
+        return {
+          title: L('Check and send', 'Kontrollera och skicka'),
+          hint: L('Look it over. Use Back, or a choice above, to change something.', 'Titta igenom. Använd Tillbaka, eller ett val ovan, för att ändra något.'),
+        };
+    }
+  };
   const { title, hint } = heading();
 
   /** The team answer in words, for the choices bar and the review. */
@@ -548,7 +567,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
     // Each answer names its own team: the one being created, or the one being joined (by code or from the list).
     if (path.team === 'create') {
       const name = String(values.teamName ?? '').trim().replace(/\s+/g, ' ');
-      return { en: name ? `New team: ${name}` : 'New team', sv: name ? `Nytt lag: ${name}` : 'Nytt lag' };
+      return { en: name ? `Starting ${name}` : 'Starting a team', sv: name ? `Startar ${name}` : 'Startar ett lag' };
     }
     if (path.team === 'join') {
       const name = String(values.joinTeamName ?? '').trim();
@@ -560,7 +579,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
   // "Your choices": every answered question, each with a way back to it.
   const trackCrumb =
     shownTrack && steps.includes('track')
-      ? [{ k: 'track', stepKind: 'track' as StepKind, card: { id: shownTrack.id, icon: shownTrack.id === 'kid' ? '🧒' : '🚀', title: shownTrack.label, desc: { en: '', sv: '' } } }]
+      ? [{ k: 'track', stepKind: 'track' as StepKind, card: { id: shownTrack.id, icon: shownTrack.id === 'kid' ? 'Lightbulb' : 'Rocket', title: shownTrack.label, desc: { en: '', sv: '' } } }]
       : [];
   const crumbs = [...trackCrumb, ...(['role', 'activity', 'theme'] as const)
     .map((k) => {
@@ -569,11 +588,8 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
       return card && steps.includes(stepKind) ? { k: k as string, stepKind, card } : null;
     })
     .filter((c): c is NonNullable<typeof c> => !!c),
-    ...(youngChallenge && steps.includes('challenge')
-      ? [{ k: 'challenge', stepKind: 'challenge' as StepKind, card: { id: youngChallenge.id, icon: '🏢', title: { en: youngChallenge.company, sv: youngChallenge.company }, desc: { en: '', sv: '' } } }]
-      : []),
     ...(path.team && steps.includes('team')
-      ? [{ k: 'team', stepKind: 'team' as StepKind, card: { id: path.team, icon: path.team === 'individual' ? '🙋' : '👥', title: teamAnswer(), desc: { en: '', sv: '' } } }]
+      ? [{ k: 'team', stepKind: 'team' as StepKind, card: { id: path.team, icon: path.team === 'individual' ? 'User' : 'Users', title: teamAnswer(), desc: { en: '', sv: '' } } }]
       : [])];
 
   const reviewRows = (): SummaryRow[] => {
@@ -593,8 +609,14 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
       ...(role ? [[path.programme === 'community' ? L('Getting involved as', 'Engagerar dig som') : L('Joining as', 'Deltar som'), T(role.title)] as SummaryRow] : []),
       ...(activity ? [[path.programme === 'hack' ? L('Pathway', 'Väg') : L('Activity', 'Aktivitet'), T(activity.title)] as SummaryRow] : []),
       ...(theme ? [[path.programme === 'hack' && path.activity === 'participate' ? L('Challenge area', 'Utmaningsområde') : L('Area', 'Område'), T(theme.title)] as SummaryRow] : []),
-      ...(youngChallenge && formId === 'young'
-        ? [[L('Challenge', 'Utmaning'), `${youngChallenge.company}: ${T(youngChallenge.title)}`] as SummaryRow, [L('Taking part', 'Deltar'), T(teamAnswer())] as SummaryRow]
+      // The two choices, and the final challenge kept apart: the organisers decide it.
+      ...(formId === 'young'
+        ? [
+            [L('Taking part', 'Deltar'), T(teamAnswer())] as SummaryRow,
+            [L('1st choice', '1:a val'), challengeName(byChallenge(path.first), T)] as SummaryRow,
+            [L('2nd choice', '2:a val'), challengeName(byChallenge(path.second), T)] as SummaryRow,
+            [L('Final challenge', 'Slutlig utmaning'), L('Decided by the organisers', 'Bestäms av arrangörerna')] as SummaryRow,
+          ]
         : []),
     ];
     return [...pathRows, ...def.summary(values, ctx)];
@@ -623,7 +645,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
 
   // ── Step bodies ──
   const body = (): React.ReactNode => {
-    if (kind === 'programme') {
+    if (kind === 'programme' && !v2) {
       const pictured = programmes.filter((p) => p.image);
       const plain = programmes.filter((p) => !p.image);
       return (
@@ -631,7 +653,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
           {pictured.length > 0 && (
             <div className={`grid grid-cols-1 gap-4 ${pictured.length > 1 ? 'md:grid-cols-2' : ''} ${pictured.length > 2 ? 'lg:grid-cols-3' : ''}`}>
               {pictured.map((p) => (
-                <ChoiceCard
+                <ClassicChoiceCard
                   key={p.id}
                   selected={path.programme === p.id}
                   onSelect={() => chooseProgramme(p.id)}
@@ -645,7 +667,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
             </div>
           )}
           {plain.map((p) => (
-            <ChoiceCard
+            <ClassicChoiceCard
               key={p.id}
               small
               selected={path.programme === p.id}
@@ -661,27 +683,47 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
       );
     }
 
+    if (kind === 'programme') {
+      // One question: the pictured programmes side by side, the others (e.g. the community) across the row.
+      const items: ChoiceItem[] = programmes.map((p) => ({
+        id: p.id,
+        title: T(p.title),
+        desc: T(p.subtitle),
+        meta: meta(p),
+        image: p.image,
+        icon: p.image ? undefined : registerIcon(p.id === 'community' ? 'Handshake' : 'Lightbulb'),
+        wide: !p.image,
+        accent: accentOf(p.id),
+      }));
+      return (
+        <ChoiceGroup
+          label={L('Programme', 'Program')}
+          items={items}
+          value={path.programme}
+          accent="robo"
+          columns={programmes.filter((p) => p.image).length > 2 ? 3 : 2}
+          onChoose={(id, how) => chooseProgramme(id as RegisterPath['programme'], how === 'pointer')}
+        />
+      );
+    }
+
     if (kind === 'track') {
       return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {trackCards.map((tr) => {
-            const closed = tr.id === 'kid' && !kidOpen;
-            return (
-              <ChoiceCard
-                key={tr.id}
-                selected={path.track === tr.id}
-                onSelect={() => chooseTrack(tr.id as NonNullable<RegisterPath['track']>)}
-                image={tr.image || (tr.id === 'young' ? '/register/hackathon.jpg' : undefined)}
-                placeholder={T(tr.label)}
-                title={T(tr.label)}
-                desc={[T(tr.eligibility), ...(tr.highlights ?? []).map(T).filter((h) => h && h !== T(tr.eligibility))].filter(Boolean).join(' · ')}
-                meta={meta({ date: tr.dateLabel, venue: tr.venue })}
-                disabled={closed}
-                badge={closed ? T(tr.closedMessage) : undefined}
-              />
-            );
-          })}
-        </div>
+        <ChoiceGroup
+          label={L('Track', 'Spår')}
+          accent="hack"
+          value={path.track}
+          onChoose={(id, how) => chooseTrack(id as NonNullable<RegisterPath['track']>, how === 'pointer')}
+          items={trackCards.map((tr) => ({
+            id: tr.id,
+            title: T(tr.label),
+            desc: [T(tr.eligibility), ...(tr.highlights ?? []).map(T).filter((h) => h && h !== T(tr.eligibility))].filter(Boolean).join(' · '),
+            meta: meta({ date: tr.dateLabel, venue: tr.venue }),
+            image: tr.image || (tr.id === 'young' ? '/register/hackathon.jpg' : undefined),
+            placeholder: T(tr.label),
+            closed: tr.id === 'kid' && !kidOpen ? T(tr.closedMessage) : undefined,
+          }))}
+        />
       );
     }
 
@@ -713,31 +755,66 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
     }
 
     if (kind === 'role') {
-      const cards = roleChoices(path.programme, accepts, path.track);
+      const cards = roleChoices(path.programme, accepts, path.track, v2);
+      if (!v2)
+        return (
+          <div className={`grid grid-cols-1 sm:grid-cols-2 gap-4 ${cards.length === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-4'}`}>
+            {cards.map((c) => (
+              <ClassicChoiceCard key={c.id} small selected={path.role === c.id} onSelect={() => chooseRole(c.id)} icon={c.icon} title={T(c.title)} desc={T(c.desc)} green={green} />
+            ))}
+          </div>
+        );
       return (
-        <div className={`grid grid-cols-1 sm:grid-cols-2 gap-4 ${cards.length === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-4'}`}>
-          {cards.map((c) => (
-            <ChoiceCard key={c.id} small selected={path.role === c.id} onSelect={() => chooseRole(c.id)} icon={c.icon} title={T(c.title)} desc={T(c.desc)} green={green} />
-          ))}
-        </div>
+        <ChoiceGroup
+          label={heading().title}
+          small
+          accent={accent}
+          columns={cards.length === 3 ? 3 : 4}
+          value={path.role}
+          onChoose={(id) => chooseRole(id as RegisterPath['role'])}
+          items={cards.map((c) => ({ id: c.id, title: T(c.title), desc: T(c.desc), icon: registerIcon(c.icon) }))}
+        />
       );
     }
 
     if (kind === 'activity') {
       const cards = activityChoices(path.programme, accepts, path);
+      if (!v2)
+        return (
+          <div>
+            <div className={`grid grid-cols-1 gap-4 ${cards.length >= 3 ? 'md:grid-cols-3' : 'md:grid-cols-2'}`}>
+              {cards.map((c) => (
+                <ClassicChoiceCard key={c.id} small selected={path.activity === c.id} onSelect={() => chooseActivity(c.id)} icon={c.icon} title={T(c.title)} desc={T(c.desc)} green={green} />
+              ))}
+            </div>
+            {path.programme === 'hack' && path.activity && themeChoices(path).length > 0 && (
+              <div className="mt-8">
+                <h3 className="font-headline font-black text-lg uppercase tracking-tight text-[#0A1930]">
+                  {path.activity === 'participate' ? L('Challenge area', 'Utmaningsområde') : L('Area of your idea', 'Idéns område')}
+                </h3>
+                <p className="text-xs text-slate-600 mt-1 mb-4">{L('Choose the one that interests you most.', 'Välj det som intresserar dig mest.')}</p>
+                {themeGrid()}
+              </div>
+            )}
+          </div>
+        );
       return (
         <div>
-          <div className={`grid grid-cols-1 gap-4 ${cards.length >= 3 ? 'md:grid-cols-3' : 'md:grid-cols-2'}`}>
-            {cards.map((c) => (
-              <ChoiceCard key={c.id} small selected={path.activity === c.id} onSelect={() => chooseActivity(c.id)} icon={c.icon} title={T(c.title)} desc={T(c.desc)} green={green} />
-            ))}
-          </div>
+          <ChoiceGroup
+            label={heading().title}
+            small
+            accent={accent}
+            columns={cards.length === 3 ? 3 : 2}
+            value={path.activity}
+            onChoose={(id) => chooseActivity(id as RegisterPath['activity'])}
+            items={cards.map((c) => ({ id: c.id, title: T(c.title), desc: T(c.desc), icon: registerIcon(c.icon) }))}
+          />
           {path.programme === 'hack' && path.activity && themeChoices(path).length > 0 && (
             <div className="mt-8">
-              <h3 className="font-headline font-black text-lg uppercase tracking-tight text-[#0A1930]">
-                {path.activity === 'participate' ? L('Challenge area', 'Utmaningsområde') : L('Area of your idea', 'Idéns område')}
+              <h3 className="font-headline font-bold text-lg text-[#0A1930]">
+                {path.activity === 'participate' ? L('Challenge area', 'Utmaningsområde') : L('What is your idea about?', 'Vad handlar din idé om?')}
               </h3>
-              <p className="text-xs text-slate-600 mt-1 mb-4">{L('Choose the one that interests you most.', 'Välj det som intresserar dig mest.')}</p>
+              <p className="text-[15px] text-slate-600 mt-1 mb-4">{L('Pick the closest one.', 'Välj det som ligger närmast.')}</p>
               {themeGrid()}
             </div>
           )}
@@ -745,11 +822,36 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
       );
     }
 
-    if (kind === 'challenge') return <ChallengeStep challenges={youngList} selected={path.challenge} onSelect={chooseChallenge} L={L} T={T} />;
-
     if (kind === 'team') {
-      if (!youngChallenge) return null;
-      return <TeamStep challenge={youngChallenge} choice={path.team} onChoose={chooseTeam} v={values} set={set} L={L} T={T} />;
+      if (youngClosed) return <ChallengesClosed state={young} L={L} T={T} />;
+      return (
+        <TeamStep
+          state={young}
+          site={youngSite ?? 'vfi'}
+          choice={path.team}
+          onChoose={chooseTeam}
+          onTeamChoices={setChoices}
+          v={values}
+          set={set}
+          L={L}
+          T={T}
+        />
+      );
+    }
+
+    if (kind === 'choices') {
+      return (
+        <ChoicesStep
+          state={young}
+          joining={path.team === 'join'}
+          teamName={String(values.joinTeamName ?? '') || undefined}
+          first={path.first}
+          second={path.second}
+          onChange={setChoices}
+          L={L}
+          T={T}
+        />
+      );
     }
 
     if (kind === 'theme') return themeGrid();
@@ -783,7 +885,14 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
           }}
           className="space-y-6"
         >
-          <Fields v={values} set={set} ctx={ctx} />
+          {/* vfi and IBK: chips in the form take the programme's selection colour (elsewhere they keep their look). */}
+          {v2 ? (
+            <AccentContext.Provider value={accent}>
+              <Fields v={values} set={set} ctx={ctx} />
+            </AccentContext.Provider>
+          ) : (
+            <Fields v={values} set={set} ctx={ctx} />
+          )}
           {(typeof def.fees === 'function' ? def.fees(ctx) : def.fees) && site.intake.showFees && <ParticipationFees />}
         </form>
       );
@@ -843,12 +952,24 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
 
   const themeGrid = () => {
     const themes = themeChoices(path);
+    if (!v2)
+      return (
+        <div className={`grid grid-cols-2 gap-3 ${themes.length === 4 ? '' : 'md:grid-cols-3'}`}>
+          {themes.map((t) => (
+            <ClassicChoiceCard key={t.id} small selected={path.theme === t.id} onSelect={() => chooseTheme(t.id)} icon={t.icon} title={T(t.title)} green={green} />
+          ))}
+        </div>
+      );
     return (
-    <div className={`grid grid-cols-2 gap-3 ${themes.length === 4 ? '' : 'md:grid-cols-3'}`}>
-      {themes.map((t) => (
-        <ChoiceCard key={t.id} small selected={path.theme === t.id} onSelect={() => chooseTheme(t.id)} icon={t.icon} title={T(t.title)} green={green} />
-      ))}
-    </div>
+    <ChoiceGroup
+      label={L('Area', 'Område')}
+      small
+      accent={accent}
+      columns={themes.length === 4 ? 2 : 3}
+      value={path.theme}
+      onChoose={(id) => chooseTheme(id)}
+      items={themes.map((t) => ({ id: t.id, title: T(t.title), icon: registerIcon(t.icon) }))}
+    />
     );
   };
 
@@ -890,7 +1011,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                   )}
                   <div className="min-w-0">
                     <span className="block text-xs font-mono-code font-bold uppercase tracking-wider text-slate-500">
-                      {L('You are registering for', 'Du anmäler dig till')}
+                      {v2 ? L('You’re signing up for', 'Du anmäler dig till') : L('You are registering for', 'Du anmäler dig till')}
                     </span>
                     <span className={`block font-headline font-black text-lg sm:text-xl uppercase tracking-tight leading-tight ${green ? 'text-[#059669]' : 'text-[#006AA7]'}`}>
                       {T(programme.title)}
@@ -927,7 +1048,14 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                     aria-label={`${L('Change', 'Ändra')}: ${T(card.title)}`}
                     className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-slate-300 hover:border-[#0A1930] text-[13px] font-headline font-bold uppercase tracking-wider text-slate-700"
                   >
-                    <span aria-hidden="true">{card.icon}</span>
+                    {v2 ? (
+                      (() => {
+                        const Icon = registerIcon(card.icon);
+                        return Icon ? <Icon className="w-3.5 h-3.5" aria-hidden="true" /> : null;
+                      })()
+                    ) : (
+                      <span aria-hidden="true">{card.icon}</span>
+                    )}
                     <span>{T(card.title)}</span>
                     <Pencil className="w-3 h-3 text-[#006AA7]" aria-hidden="true" />
                   </button>
@@ -960,9 +1088,11 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                   <div className="w-16 h-16 bg-emerald-100 text-emerald-600 flex items-center justify-center mb-4">
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
-                  <span className="text-xs font-mono-code font-bold tracking-[0.25em] text-emerald-600 uppercase mb-1 block">
-                    {L('Received', 'Mottaget')} {site.designV2 ? '·' : '//'} {city} {site.nav.brandChip}
-                  </span>
+                  {!site.designV2 && (
+                    <span className="text-xs font-mono-code font-bold tracking-[0.25em] text-emerald-600 uppercase mb-1 block">
+                      {L('Received', 'Mottaget')} // {city} {site.nav.brandChip}
+                    </span>
+                  )}
                   <h2 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#0A1930]">{doneCopy.title}</h2>
                   <p className="mt-2 text-xs sm:text-sm text-slate-600 max-w-lg leading-relaxed">{doneCopy.body}</p>
                   {done.id && (
@@ -970,9 +1100,15 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                       <span className="text-xs font-mono-code text-slate-500 uppercase block mb-1">{L('Your reference', 'Ditt referensnummer')}</span>
                       <span className="font-mono-code font-bold text-xl text-[#006AA7] tracking-wider block">{done.id}</span>
                       <span className="text-[13px] text-slate-500 font-mono-code block mt-1">
-                        {formId === 'kid'
-                          ? L('Status: waiting for guardian confirmation', 'Status: väntar på vårdnadshavarnas bekräftelse')
-                          : L('Status: waiting for review', 'Status: väntar på granskning')}
+                        {!v2
+                          ? formId === 'kid'
+                            ? L('Status: waiting for guardian confirmation', 'Status: väntar på vårdnadshavarnas bekräftelse')
+                            : L('Status: waiting for review', 'Status: väntar på granskning')
+                          : formId === 'kid'
+                          ? L('Next: each guardian confirms by email', 'Nästa steg: varje vårdnadshavare bekräftar via e-post')
+                          : formId === 'young'
+                            ? L('Next: the organisers match you with a challenge', 'Nästa steg: arrangörerna matchar dig med en utmaning')
+                            : L('We’ll look it over and get back to you', 'Vi går igenom den och hör av oss')}
                       </span>
                     </div>
                   )}
@@ -981,7 +1117,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                       <span className="text-sm font-semibold text-[#0A1930] block mb-1">{L(`Invite code for ${done.team ?? 'your team'}`, `Inbjudningskod för ${done.team ?? 'ditt lag'}`)}</span>
                       <span className="font-mono font-bold text-3xl text-[#006AA7] tracking-[0.15em] block">{done.inviteCode}</span>
                       <span className="text-sm text-slate-600 block mt-2">
-                        {L('Share it only with your teammates. They enter it under “Join a team”, or open the link.', 'Dela den bara med dina lagkamrater. De skriver den under ”Gå med i ett lag”, eller öppnar länken.')}
+                        {L('Share it only with your teammates. They choose “Join a team” and enter it, or open the link.', 'Dela den bara med dina lagkamrater. De väljer ”Gå med i ett lag” och skriver in den, eller öppnar länken.')}
                       </span>
                       {done.inviteLink && (
                         <button
@@ -1007,7 +1143,11 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                         className="py-3 px-5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-headline font-bold uppercase tracking-wider flex items-center gap-2 transition-colors"
                       >
                         {copied ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
-                        <span>{copied ? L('Link copied!', 'Länken är kopierad!') : L('Copy link: vote for my idea', 'Kopiera länk: rösta på min idé')}</span>
+                        <span>
+                          {v2
+                            ? copied ? L('Link copied', 'Länken är kopierad') : L('Copy the link to my idea', 'Kopiera länken till min idé')
+                            : copied ? L('Link copied!', 'Länken är kopierad!') : L('Copy link: vote for my idea', 'Kopiera länk: rösta på min idé')}
+                        </span>
                       </button>
                     )}
                     {formId === 'idea' && onNavigateVoting && (
@@ -1016,7 +1156,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                         onClick={onNavigateVoting}
                         className="py-3 px-5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-headline font-bold uppercase tracking-wider transition-colors"
                       >
-                        ⭐ {L('View ideas & vote', 'Se idéer och rösta')}
+                        {v2 ? L('See the ideas and vote', 'Se idéerna och rösta') : `⭐ ${L('View ideas & vote', 'Se idéer och rösta')}`}
                       </button>
                     )}
                     {/* A Young InnoHack registration is one per person (and a team is created once). */}
@@ -1026,7 +1166,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                       onClick={sendAnother}
                       className="py-3 px-5 bg-[#0A1930] hover:bg-[#006AA7] text-white text-xs font-headline font-bold uppercase tracking-wider transition-colors"
                     >
-                      {L('Send another', 'Skicka en till')}
+                      {v2 ? L('Register someone else', 'Anmäl någon annan') : L('Send another', 'Skicka en till')}
                     </button>
                     )}
                     <button
@@ -1065,7 +1205,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                   type={kind === 'form' ? 'submit' : 'button'}
                   form={kind === 'form' ? formDomId : undefined}
                   onClick={kind === 'form' ? undefined : next}
-                  disabled={busy || (choiceStep && !isAnswered(kind, path)) || (kidBlocked && kind !== 'programme' && kind !== 'track') || (youngIdeaClosed && kind === 'form')}
+                  disabled={busy || (choiceStep && !isAnswered(kind, path)) || (kidBlocked && kind !== 'programme' && kind !== 'track') || (youngIdeaClosed && kind === 'form') || (youngClosed && kind !== 'programme' && kind !== 'track' && kind !== 'activity')}
                   className={`inline-flex items-center gap-2 py-3 px-5 text-white text-xs font-headline font-black uppercase tracking-wider transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                     green ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-[#006AA7] hover:bg-[#013A63]'
                   }`}

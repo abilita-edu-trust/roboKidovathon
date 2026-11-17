@@ -211,11 +211,11 @@ export function kidPayload(v: Values, ctx: FormCtx): Record<string, unknown> {
 
 export const kidForm: FormDef = {
   fees: false,
-  title: (ctx) => ctx.L('Submit your idea for Kid InnoHack', 'Skicka in din idé till Kid InnoHack'),
+  title: (ctx) => ctx.L('Share your idea', 'Dela din idé'),
   intro: (ctx) =>
     ctx.L(
-      'One idea from one child or a team of up to four children in grades 3–9. Every child’s guardian confirms by email.',
-      'En idé från ett barn eller ett lag med upp till fyra barn i årskurs 3–9. Varje barns vårdnadshavare bekräftar via e-post.',
+      'Describe a problem you’ve noticed and how you’d fix it: one child, or up to four together, in grades 3–9. Each child’s guardian confirms by email.',
+      'Beskriv ett problem du har sett och hur du skulle lösa det: ett barn, eller upp till fyra tillsammans, i årskurs 3–9. Varje barns vårdnadshavare bekräftar via e-post.',
     ),
   initial: (ctx) => ({ children: Array.from({ length: kidChildLimits(role(ctx)).min }, blankChild), guardianNotice: false }),
   Fields: KidFields,
@@ -241,12 +241,12 @@ export const kidForm: FormDef = {
     if (error) throw new Error(error.message || 'Failed to submit');
     return str((data as { reference?: string } | null)?.reference);
   },
-  submitLabel: (ctx) => ctx.L('Send the idea and email the guardians', 'Skicka idén och mejla vårdnadshavarna'),
+  submitLabel: (ctx) => ctx.L('Send and email the guardians', 'Skicka och mejla vårdnadshavarna'),
   done: (ctx, v) => ({
-    title: ctx.L('Idea received: waiting for the guardians', 'Idén är mottagen: väntar på vårdnadshavarna'),
+    title: ctx.L('Thanks! Now the guardians confirm', 'Tack! Nu bekräftar vårdnadshavarna'),
     body: ctx.L(
-      `We have emailed each child’s parent or guardian a link to confirm. The idea counts once every guardian has confirmed, by 5 December 2026 at 10:00 Swedish time. A receipt is on its way to ${str(v.email)}.`,
-      `Vi har mejlat varje barns förälder eller vårdnadshavare en länk för att bekräfta. Idén räknas när alla vårdnadshavare har bekräftat, senast den 5 december 2026 kl. 10.00 svensk tid. Ett kvitto är på väg till ${str(v.email)}.`,
+      `Each child’s parent or guardian has an email with a link. The idea counts once every guardian has confirmed, by 5 December 2026 at 10:00 Swedish time. A copy is on its way to ${str(v.email)}.`,
+      `Varje barns förälder eller vårdnadshavare har fått ett mejl med en länk. Idén räknas när alla vårdnadshavare har bekräftat, senast den 5 december 2026 kl. 10.00 svensk tid. En kopia är på väg till ${str(v.email)}.`,
     ),
   }),
 };

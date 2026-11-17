@@ -5,7 +5,7 @@ import React from 'react';
 import { Calendar, User } from 'lucide-react';
 import {
   Chips, FormDef, Grid, LocationFields, Note, Section, SelectField, TextField,
-  chipLabels, locationInitial, locationRow, resolveLocation, rows, str, submitRegistration,
+  byDesign, chipLabels, locationInitial, locationRow, resolveLocation, rows, str, submitRegistration,
   type ChipOption, type FieldsProps, type FormCtx, type Values,
 } from '../ui';
 
@@ -41,11 +41,11 @@ const isDemo = (ctx: FormCtx) => ctx.path.activity === 'demo';
 export const DateTimeSection: React.FC<FieldsProps & { countLabel?: string }> = ({ v, set, ctx, countLabel }) => {
   const { L } = ctx;
   return (
-    <Section title={L('Date & time', 'Datum och tid')} icon={Calendar}>
+    <Section title={byDesign(ctx, L('When suits you?', 'När passar det?'), L('Date & time', 'Datum och tid'))} icon={Calendar}>
       <Grid cols={3}>
-        <TextField k="date" v={v} set={set} type="date" required label={L('Date', 'Datum')} />
-        <TextField k="startTime" v={v} set={set} type="time" required label={L('Start time', 'Starttid')} />
-        <TextField k="endTime" v={v} set={set} type="time" required label={L('End time', 'Sluttid')} />
+        <TextField k="date" v={v} set={set} type="date" required label={byDesign(ctx, L('Preferred date', 'Önskat datum'), L('Date', 'Datum'))} />
+        <TextField k="startTime" v={v} set={set} type="time" required label={byDesign(ctx, L('From', 'Från'), L('Start time', 'Starttid'))} />
+        <TextField k="endTime" v={v} set={set} type="time" required label={byDesign(ctx, L('To', 'Till'), L('End time', 'Sluttid'))} />
       </Grid>
       <Grid>
         <SelectField k="gradeGroup" v={v} set={set} label={L('Grade', 'Årskurs')} options={ctx.gradeOptions.map((g) => ({ value: g, label: L(g, g) }))} />
@@ -81,8 +81,8 @@ const BookingFields: React.FC<FieldsProps> = (props) => {
           v={v}
           set={set}
           required
-          label={role === 'individual' ? L('Student name', 'Elevens namn') : L('Contact person', 'Kontaktperson')}
-          placeholder={L('Full name', 'Fullständigt namn')}
+          label={byDesign(ctx, role === 'individual' ? L('Child’s name', 'Barnets namn') : L('Your name', 'Ditt namn'), role === 'individual' ? L('Student name', 'Elevens namn') : L('Contact person', 'Kontaktperson'))}
+          placeholder={byDesign(ctx, L('First and last name', 'För- och efternamn'), L('Full name', 'Fullständigt namn'))}
         />
         {role === 'team' && (
           <TextField k="orgName" v={v} set={set} list="registered-schools-list" label={L('School (optional)', 'Skola (frivilligt)')} />
@@ -93,26 +93,26 @@ const BookingFields: React.FC<FieldsProps> = (props) => {
 
       <DateTimeSection
         {...props}
-        countLabel={role === 'individual' ? undefined : role === 'team' ? L('Team members', 'Antal i laget') : L('Number of students', 'Antal elever')}
+        countLabel={role === 'individual' ? undefined : byDesign(ctx, role === 'team' ? L('How many in the team?', 'Hur många i laget?') : L('How many pupils?', 'Hur många elever?'), role === 'team' ? L('Team members', 'Antal i laget') : L('Number of students', 'Antal elever'))}
       />
 
       {role !== 'school' && (
-        <Section title={role === 'team' ? L('About the team', 'Om laget') : L('About the student', 'Om eleven')} icon={User}>
+        <Section title={role === 'team' ? L('About the team', 'Om laget') : byDesign(ctx, L('About your child', 'Om ditt barn'), L('About the student', 'Om eleven'))} icon={User}>
           {role === 'individual' && (
             <Grid>
               <TextField k="studentAge" v={v} set={set} type="number" min="6" max="20" label={L('Age', 'Ålder')} />
             </Grid>
           )}
-          <Chips k="wantsTo" v={v} set={set} lang={lang} multi label={L('I would like to', 'Jag skulle vilja')} options={WANTS_TO_OPTIONS} />
+          <Chips k="wantsTo" v={v} set={set} lang={lang} multi label={byDesign(ctx, L('Would like to', 'Vill gärna'), L('I would like to', 'Jag skulle vilja'))} options={WANTS_TO_OPTIONS} />
           <Chips k="experience" v={v} set={set} lang={lang} label={L('Experience', 'Erfarenhet')} options={EXPERIENCE_OPTIONS} />
-          <Chips k="interests" v={v} set={set} lang={lang} multi label={L('What interests me', 'Det här intresserar mig')} options={INTEREST_OPTIONS} />
+          <Chips k="interests" v={v} set={set} lang={lang} multi label={byDesign(ctx, L('Interested in', 'Intresserad av'), L('What interests me', 'Det här intresserar mig'))} options={INTEREST_OPTIONS} />
           <div className="pt-2 border-t border-sky-200">
             <Grid>
               <TextField k="guardianName" v={v} set={set} required label={L('Parent / guardian name', 'Vårdnadshavarens namn')} />
               <TextField k="guardianPhone" v={v} set={set} type="tel" required label={L('Parent / guardian phone', 'Vårdnadshavarens telefon')} placeholder="+46 70 123 4567" />
             </Grid>
           </div>
-          <Note>{L('Parent/guardian approval is required before final registration.', 'Vårdnadshavarens godkännande krävs innan slutlig registrering.')}</Note>
+          <Note>{byDesign(ctx, L('A parent or guardian approves before the booking is final.', 'En förälder eller vårdnadshavare godkänner innan bokningen blir klar.'), L('Parent/guardian approval is required before final registration.', 'Vårdnadshavarens godkännande krävs innan slutlig registrering.'))}</Note>
         </Section>
       )}
     </>
@@ -121,17 +121,23 @@ const BookingFields: React.FC<FieldsProps> = (props) => {
 
 export const bookingForm: FormDef = {
   fees: true,
-  title: (ctx) => (isDemo(ctx) ? ctx.L('Request a school demo session', 'Boka ett demopass på skolan') : ctx.L('Book a hands-on robotics workshop', 'Boka en praktisk robotikworkshop')),
+  title: (ctx) => byDesign(ctx, (isDemo(ctx) ? ctx.L('Ask for a school demo', 'Be om en skoldemo') : ctx.L('Book a robotics workshop', 'Boka en robotikworkshop')), (isDemo(ctx) ? ctx.L('Request a school demo session', 'Boka ett demopass på skolan') : ctx.L('Book a hands-on robotics workshop', 'Boka en praktisk robotikworkshop'))),
   intro: (ctx) =>
     isDemo(ctx)
-      ? ctx.L(
+      ? byDesign(ctx, ctx.L(
+          'A short robot show for a class or an assembly, with a few challenges to try.',
+          'En kort robotvisning för en klass eller en samling, med några utmaningar att testa.',
+        ), ctx.L(
           'A live robotics demonstration and robot challenge trials in your school hall. Pick the date and time that suit you.',
           'En live-demonstration av robotik och robotutmaningar i skolans aula. Välj det datum och den tid som passar er.',
-        )
-      : ctx.L(
+        ))
+      : byDesign(ctx, ctx.L(
+          'Tell us what suits your class. We bring the kits, the mats and the 20-hour programme.',
+          'Berätta vad som passar klassen. Vi tar med kit, banor och programmet på 20 timmar.',
+        ), ctx.L(
           'We bring the rover kits, arena mats and the 20-hour curriculum to you. Pick the date and time that suit you.',
           'Vi tar med rover-kit, banor och den 20 timmar långa läroplanen. Välj det datum och den tid som passar er.',
-        ),
+        )),
   initial: (ctx) => ({
     ...locationInitial(ctx.site),
     startTime: '10:00',
@@ -200,12 +206,15 @@ export const bookingForm: FormDef = {
           },
     });
   },
-  submitLabel: (ctx) => (isDemo(ctx) ? ctx.L('Request demo session', 'Skicka demoförfrågan') : ctx.L('Send workshop request', 'Skicka workshopförfrågan')),
+  submitLabel: (ctx) => byDesign(ctx, (isDemo(ctx) ? ctx.L('Ask for a demo', 'Be om en demo') : ctx.L('Send the booking request', 'Skicka bokningsförfrågan')), (isDemo(ctx) ? ctx.L('Request demo session', 'Skicka demoförfrågan') : ctx.L('Send workshop request', 'Skicka workshopförfrågan'))),
   done: (ctx, v) => ({
-    title: ctx.L('Request received!', 'Förfrågan mottagen!'),
-    body: ctx.L(
+    title: byDesign(ctx, isDemo(ctx) ? ctx.L('Thanks, we’ll be in touch', 'Tack, vi hör av oss') : ctx.L('Request sent', 'Förfrågan skickad'), ctx.L('Request received!', 'Förfrågan mottagen!')),
+    body: byDesign(ctx, ctx.L(
+      `A copy is on its way to ${str(v.email)}. We’ll contact you to confirm a date.`,
+      `En kopia är på väg till ${str(v.email)}. Vi hör av oss för att bekräfta ett datum.`,
+    ), ctx.L(
       `Your request has gone to the city coordinator. A receipt is on its way to ${str(v.email)}, and the coordinator will contact you to confirm.`,
       `Förfrågan har skickats till stadens samordnare. Ett kvitto är på väg till ${str(v.email)}, och samordnaren kontaktar dig för att bekräfta.`,
-    ),
+    )),
   }),
 };
