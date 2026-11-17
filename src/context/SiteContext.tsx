@@ -321,7 +321,8 @@ export const VFI_SITE: SiteConfig = {
       },
     ],
     associationContact: 'the IBK team',
-    showFees: true,
+    // The participation-fee box is not shown under the registration forms (decided 17 November 2026).
+    showFees: false,
     buildAndPlay: true,
   },
 };

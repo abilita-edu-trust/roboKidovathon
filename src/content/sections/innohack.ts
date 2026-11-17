@@ -11,6 +11,12 @@ export const INNOHACK_TRACK_IDS: InnohackTrackId[] = ['kid', 'young'];
 /** Kid InnoHack: ideas from one child or a team of up to four. */
 export const KID_MAX_CHILDREN = 4;
 
+/** Kid InnoHack ideas and Young InnoHack's public ideas close at the end of 1 December 2026, Swedish time (the
+ *  database also stops Kid InnoHack ideas then: fut_inno_innohack_settings.kid_ideas_close_at). */
+export const IDEAS_CLOSE_AT = '2026-12-01T23:59:59+01:00';
+export const IDEAS_CLOSE = { en: '1 December 2026 at 23:59 Swedish time', sv: '1 december 2026 kl. 23.59 svensk tid' };
+export const ideasClosed = (now: number = Date.now()): boolean => now > Date.parse(IDEAS_CLOSE_AT);
+
 const link = (en: string, sv: string, href: string): CmsLink => ({ label: bi(en, sv), href });
 const NO_LINK: CmsLink = { label: bi(''), href: '' };
 const steps = (...rows: [string, string, string, string][]) =>
@@ -57,7 +63,7 @@ export function innohackTracks(register: (tab: string) => string): ProgrammeTrac
           ),
           steps: steps(
             ['Spot a problem', 'Hitta ett problem', 'In school, society, the environment, technology or everyday life.', 'I skolan, samhället, miljön, tekniken eller vardagen.'],
-            ['Submit your idea', 'Skicka in din idé', 'On your own or as a team of up to four, by 4 December 2026. Each child’s guardian confirms by email.', 'Ensam eller i ett lag med upp till fyra, senast 4 december 2026. Varje barns vårdnadshavare bekräftar via e-post.'],
+            ['Submit your idea', 'Skicka in din idé', 'On your own or as a team of up to four, by 1 December 2026. Each child’s guardian confirms by email.', 'Ensam eller i ett lag med upp till fyra, senast 1 december 2026. Varje barns vårdnadshavare bekräftar via e-post.'],
             ['Five ideas selected', 'Fem idéer väljs ut', 'Five ideas are chosen on 5 December 2026.', 'Fem idéer väljs ut den 5 december 2026.'],
             ['Guided mentoring', 'Handledning', 'One hour a day, 6–11 December 2026: need, approach, benefits, customer, validation and pitch.', 'En timme om dagen, 6–11 december 2026: behov, lösning, nytta, kund, validering och pitch.'],
             ['Present at the final', 'Presentera på finalen', 'Present your idea at Växhuset, Västerås on 12 December 2026.', 'Presentera er idé på Växhuset i Västerås den 12 december 2026.'],
@@ -73,7 +79,7 @@ export function innohackTracks(register: (tab: string) => string): ProgrammeTrac
       ],
       scheduleHeading: bi('Kid InnoHack timeline', 'Tidslinje för Kid InnoHack'),
       schedule: [
-        row(bi('By 4 December 2026', 'Senast 4 december 2026'), bi('Submit ideas', 'Skicka in idéer'),
+        row(bi('By 1 December 2026', 'Senast 1 december 2026'), bi('Submit ideas', 'Skicka in idéer'),
           bi('Closes at 23:59 Swedish time. Each child’s guardian confirms by email.', 'Stänger kl. 23.59 svensk tid. Varje barns vårdnadshavare bekräftar via e-post.')),
         row(bi('5 December 2026', '5 december 2026'), bi('Five ideas selected', 'Fem idéer väljs ut')),
         row(bi('6–11 December 2026', '6–11 december 2026'), bi('Daily mentoring', 'Daglig handledning'),

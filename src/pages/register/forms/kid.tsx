@@ -170,8 +170,8 @@ const KidFields: React.FC<FieldsProps> = ({ v, set, ctx }) => {
       <Section title={L('Guardian confirmation', 'Vårdnadshavarens bekräftelse')} icon={ShieldCheck}>
         <Note>
           {L(
-            'After you send this, each child’s parent or guardian gets an email with a secure link to confirm that the child takes part. The idea only counts once every guardian has confirmed, by 5 December 2026 at 10:00 Swedish time. Ideas close on 4 December 2026 at 23:59 Swedish time.',
-            'När du har skickat får varje barns förälder eller vårdnadshavare ett e-postmeddelande med en säker länk för att bekräfta att barnet deltar. Idén räknas först när alla vårdnadshavare har bekräftat, senast den 5 december 2026 kl. 10.00 svensk tid. Idéinlämningen stänger den 4 december 2026 kl. 23.59 svensk tid.',
+            'After you send this, each child’s parent or guardian gets an email with a secure link to confirm that the child takes part. The idea only counts once every guardian has confirmed, by 5 December 2026 at 10:00 Swedish time. Ideas close on 1 December 2026 at 23:59 Swedish time.',
+            'När du har skickat får varje barns förälder eller vårdnadshavare ett e-postmeddelande med en säker länk för att bekräfta att barnet deltar. Idén räknas först när alla vårdnadshavare har bekräftat, senast den 5 december 2026 kl. 10.00 svensk tid. Idéinlämningen stänger den 1 december 2026 kl. 23.59 svensk tid.',
           )}
         </Note>
         <label className="flex items-start gap-2.5 cursor-pointer select-none">

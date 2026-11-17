@@ -6,21 +6,31 @@ import { useSite, type SiteConfig } from '../context/SiteContext';
 import type { SectionDoc } from './document';
 import type { JourneyData } from './sections/journey';
 import { programmeTracks, visibleChallenges, type CompanyChallenge, type ProgrammeTrack } from './sections/audienceJourneys';
-import { innohackTracks, type InnohackTrackId } from './sections/innohack';
+import { ideasClosed, innohackTracks, type InnohackTrackId } from './sections/innohack';
 import { targetToHref } from './sections/frame';
 
 const InnohackContext = createContext<ProgrammeTrack[]>([]);
 
 /** The tracks in a site's resolved home sections (Find Your Path's programme with tracks), or none. */
-export function innohackTracksFrom(sections: SectionDoc[]): ProgrammeTrack[] {
+export function innohackTracksFrom(sections: SectionDoc[], now: number = Date.now()): ProgrammeTrack[] {
   const journey = sections.find((s) => s.type === 'journey');
   const programmes = ((journey?.data ?? {}) as Partial<JourneyData>).programmes ?? [];
   for (const p of Array.isArray(programmes) ? programmes : []) {
     const tracks = programmeTracks(p);
-    if (tracks.length) return tracks;
+    if (tracks.length) return closeKidAfterDeadline(tracks, now);
   }
   return [];
 }
+
+/** After the idea deadline (1 December 2026) Kid InnoHack takes no more ideas: closed, with that said. */
+export const closeKidAfterDeadline = (tracks: ProgrammeTrack[], now: number = Date.now()): ProgrammeTrack[] =>
+  ideasClosed(now)
+    ? tracks.map((t) =>
+        t.id === 'kid'
+          ? { ...t, registrationOpen: false, closedMessage: { en: 'Idea submissions closed on 1 December 2026', sv: 'Idéinlämningen stängde den 1 december 2026' } }
+          : t,
+      )
+    : tracks;
 
 export const InnohackProvider: React.FC<{ tracks: ProgrammeTrack[]; children: React.ReactNode }> = ({ tracks, children }) => (
   <InnohackContext.Provider value={tracks}>{children}</InnohackContext.Provider>
@@ -34,7 +44,7 @@ export function useInnohackTracks(): ProgrammeTrack[] {
   const fromCms = useContext(InnohackContext);
   const site = useSite();
   if (fromCms.length) return fromCms;
-  return hasFutureInnohack(site) ? innohackTracks((tab) => targetToHref(site.nav.registerRoute, tab)) : [];
+  return hasFutureInnohack(site) ? closeKidAfterDeadline(innohackTracks((tab) => targetToHref(site.nav.registerRoute, tab))) : [];
 }
 
 /** One track by id. */
