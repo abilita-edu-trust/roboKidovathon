@@ -26,6 +26,11 @@ export const ROUTE_PATHS: Record<string, string> = {
   ibk: '/ibk',
   'ibk-register': '/ibk/register',
   'ibk-ideas': '/ibk/ideas',
+  // Kid InnoHack guardian confirmation (from the email) and the privacy notice: vfi and IBK.
+  guardian: '/guardian',
+  privacy: '/privacy',
+  'ibk-guardian': '/ibk/guardian',
+  'ibk-privacy': '/ibk/privacy',
 };
 
 // Event subdomains that only show their own routes, so visitors stay on that event.
@@ -35,8 +40,8 @@ const HOST_ROUTES: Record<string, string[]> = {
   'vxo.iniac.se': ['vxo', 'vxo-register', 'vxo-ideas'],
   'esk.iniac.se': ['esk', 'esk-register', 'esk-ideas'],
   'riga.iniac.se': ['riga', 'riga-register', 'riga-ideas'],
-  'indiskbarnklubb.se': ['ibk', 'ibk-register', 'ibk-ideas'],
-  'www.indiskbarnklubb.se': ['ibk', 'ibk-register', 'ibk-ideas'],
+  'indiskbarnklubb.se': ['ibk', 'ibk-register', 'ibk-ideas', 'ibk-guardian', 'ibk-privacy'],
+  'www.indiskbarnklubb.se': ['ibk', 'ibk-register', 'ibk-ideas', 'ibk-guardian', 'ibk-privacy'],
 };
 
 const hostRoutes = (): string[] | undefined => HOST_ROUTES[window.location.hostname.toLowerCase()];
@@ -59,7 +64,7 @@ const normalizePath = (path: string) => (path.length > 1 ? path.replace(/\/+$/, 
 const SUB_PAGE = /^([a-z]+)\/([a-z0-9][a-z0-9-]{0,39})$/;
 export const isSubPageRoute = (route: string): boolean => {
   const m = SUB_PAGE.exec(route);
-  return Boolean(m && ROUTE_PATHS[`${m[1]}-register`] && !['register', 'ideas'].includes(m[2]));
+  return Boolean(m && ROUTE_PATHS[`${m[1]}-register`] && !['register', 'ideas', 'guardian', 'privacy'].includes(m[2]));
 };
 
 const resolvePath = (path: string): string => {

@@ -8,6 +8,7 @@ import { ideaForm } from './idea';
 import { mentorForm, volunteerForm } from './volunteer';
 import { partnerForm } from './partner';
 import { communityForm } from './community';
+import { kidForm } from './kid';
 
 export const FORMS: Record<FormId, FormDef> = {
   booking: bookingForm,
@@ -19,4 +20,5 @@ export const FORMS: Record<FormId, FormDef> = {
   mentor: mentorForm,
   partner: partnerForm,
   community: communityForm,
+  kid: kidForm,
 };

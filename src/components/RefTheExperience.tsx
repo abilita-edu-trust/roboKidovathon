@@ -4,6 +4,7 @@ import { FutureInnovatorsBanner } from './FutureInnovatorsBanner';
 import { PathwayCard } from './PathwayCard';
 import { RegisterWizard } from '../pages/register/RegisterWizard';
 import { useT } from '../content/useT';
+import { useInnohackTracks } from '../content/innohackContext';
 import type { ExperienceData } from '../content/sections/programmes';
 
 /** The line under "Find your pathway" on the home page. */
@@ -22,6 +23,10 @@ interface RefTheExperienceProps {
 
 export const RefTheExperience: React.FC<RefTheExperienceProps> = ({ data, go, onNavigateVoting }) => {
   const { t } = useT();
+  // Future InnoHack (vfi, IBK): its card shows the Kid and Young track cards from Find Your Path's tracks.
+  const tracks = useInnohackTracks();
+  // Future InnoHack's venues in its navy (other sites' hackathon venues keep their green).
+  const innohack = tracks.length > 0;
   return (
     <section
       id="choose-experience"
@@ -36,7 +41,9 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({ data, go, on
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
 
           {data.cards.map((card, i) => (
-            <PathwayCard key={i} data={card} onCta={go} half delay={i * 0.15} />
+            // Track cards replace the timeline once the card has none (Future InnoHack's content); a card that still has
+            // its timeline keeps it.
+            <PathwayCard key={i} data={card} onCta={go} half delay={i * 0.15} tracks={card.theme === 'hack' && !card.steps.length && tracks.length ? tracks : undefined} />
           ))}
         </div>
 
@@ -47,7 +54,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({ data, go, on
               <div className="p-5 flex items-start gap-4 flex-1">
                 <div
                   className={`w-12 h-12 flex items-center justify-center shrink-0 ${
-                    venue.theme !== 'hack' ? 'bg-[#006AA7]/10 text-[#006AA7]' : 'bg-[#059669]/10 text-[#059669]'
+                    venue.theme !== 'hack' ? 'bg-[#006AA7]/10 text-[#006AA7]' : innohack ? 'bg-[#FFCD00]/25 text-[#0A1930]' : 'bg-[#059669]/10 text-[#059669]'
                   }`}
                 >
                   <MapPin className="w-6 h-6" />
@@ -58,7 +65,7 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({ data, go, on
                   </h5>
                   <p
                     className={`font-headline font-black text-lg sm:text-xl mt-1 leading-tight ${
-                      venue.theme !== 'hack' ? 'text-[#006AA7]' : 'text-[#059669]'
+                      venue.theme !== 'hack' ? 'text-[#006AA7]' : innohack ? 'text-[#0A1930]' : 'text-[#059669]'
                     }`}
                   >
                     {t(venue.name)}

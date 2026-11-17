@@ -1,6 +1,7 @@
 // The two programme boxes of the journey section (vfi): RoboKidovation and Young Future InnoHack, each with
 // its own audiences. Every audience has its own steps, image, "Why participate?" benefits and button.
 import { bi, type Bi, type CmsLink } from '../core';
+import { futureInnohackProgramme } from './innohack';
 
 export interface ProgrammeStep {
   title: Bi;
@@ -106,8 +107,12 @@ const steps = (...list: [string, string, string, string][]): ProgrammeStep[] =>
 
 const WHY = bi('Why participate?', 'Varför delta?');
 
-/** The default programmes; `register(tab)` is the site's register page on that form. */
-export function vfiProgrammes(register: (tab: string) => string): ProgrammeJourney[] {
+/**
+ * The default programmes; `register(tab)` is the site's register page on that form. With `futureInnohack`
+ * (vfi and IBK) the second box is Future InnoHack with its Kid and Young tracks; without it (Riga) the earlier
+ * Young Future InnoHack box.
+ */
+export function vfiProgrammes(register: (tab: string) => string, opts: { futureInnohack?: boolean } = {}): ProgrammeJourney[] {
   const audience = (a: Omit<ProgrammeAudience, 'image' | 'imagePosition' | 'benefitsHeading' | 'cta'> & { cta: [string, string, string] }): ProgrammeAudience => ({
     id: a.id,
     icon: a.icon,
@@ -123,7 +128,7 @@ export function vfiProgrammes(register: (tab: string) => string): ProgrammeJourn
     cta: { label: bi(a.cta[0], a.cta[1]), href: register(a.cta[2]) },
   });
 
-  return [
+  const programmes: ProgrammeJourney[] = [
     {
       id: 'robokidovation',
       title: bi('RoboKidovation'),
@@ -287,4 +292,5 @@ export function vfiProgrammes(register: (tab: string) => string): ProgrammeJourn
       ],
     },
   ];
+  return opts.futureInnohack ? [programmes[0], futureInnohackProgramme(register)] : programmes;
 }

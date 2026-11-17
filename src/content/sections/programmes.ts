@@ -113,7 +113,47 @@ const st = (icon: string, title: string, subtitle: string, date: string, highlig
   highlight,
 });
 
-export const experienceDefaults = (c: SiteConfig): ExperienceData => ({
+/**
+ * Future InnoHack's card in the programme section (vfi and IBK): a short introduction; the Kid and Young track cards
+ * under it come from Find Your Path's tracks, so the detailed steps are not repeated here.
+ */
+export const futureInnohackCard = (c: SiteConfig): PathwayData => ({
+  theme: 'hack',
+  icon: 'Lightbulb',
+  title: bi('Future InnoHack'),
+  tagline: bi('IDEAS TODAY. A BRIGHTER TOMORROW.', 'IDÉER I DAG. EN LJUSARE MORGONDAG.'),
+  intro: [
+    bi('An innovation programme with two tracks.', 'Ett innovationsprogram med två spår.'),
+    bi('Kid InnoHack: grades 3–9 bring their own idea.', 'Kid InnoHack: årskurs 3–9 kommer med en egen idé.'),
+    bi('Young InnoHack: gymnasium, university and professionals take on company challenges.', 'Young InnoHack: gymnasium, universitet och yrkesverksamma antar utmaningar från företag.'),
+  ],
+  steps: [],
+  callout: bi(
+    'Free participation. Final presentations for both tracks on **12 December 2026** at Växhuset, Västerås.',
+    'Gratis deltagande. Slutpresentationer för båda spåren den **12 december 2026** på Växhuset i Västerås.',
+  ),
+  cta: { label: bi('SEE THE STEPS', 'SE STEGEN'), href: targetToHref(`${c.nav.homeRoute}#journey-innohack`) },
+  register: { label: bi('REGISTER', 'ANMÄL DIG'), href: targetToHref(c.nav.registerRoute, 'hackathon') },
+});
+
+/** The venues with Future InnoHack: MISV, then Young InnoHack's online kickoff and the shared final at Växhuset. */
+const FUTURE_INNOHACK_VENUES: VenueData[] = [
+  { label: bi('Future InnoHack Final Venue', 'Finalplats för Future InnoHack'), name: bi('Växhuset'), detail: bi('Västerås · 12 December 2026', 'Västerås · 12 december 2026'), image: '', theme: 'hack' },
+  { label: bi('Young InnoHack Kickoff', 'Kickoff för Young InnoHack'), name: bi('Online', 'Digitalt'), detail: bi('10 December 2026, evening', '10 december 2026, kväll'), image: '', theme: 'hack' },
+];
+
+export const experienceDefaults = (c: SiteConfig): ExperienceData => {
+  const base = baseExperience(c);
+  if (!c.journey?.futureInnohack) return base;
+  return {
+    ...base,
+    cards: [base.cards[0], futureInnohackCard(c)],
+    venues: [base.venues[0], ...FUTURE_INNOHACK_VENUES],
+    stripRight: bi('VÄSTERÅS | 5–12 DECEMBER 2026'),
+  };
+};
+
+const baseExperience = (c: SiteConfig): ExperienceData => ({
   banner: c.banner ?? '',
   cards: [
     {

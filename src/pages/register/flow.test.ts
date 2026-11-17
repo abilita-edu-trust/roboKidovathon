@@ -63,8 +63,10 @@ describe('isAnswered', () => {
 
 describe('?tab= links', () => {
   it('round-trips every tab once the remaining answers are given', () => {
+    // The Future InnoHack links only exist where the hackathon has tracks (vfi, IBK).
+    const tracked = [prog('robo'), { ...prog('hack'), tracks: ['kid', 'young'] } as RegisterProgramme, prog('community')];
     for (const tab of REGISTER_TABS) {
-      const programmes = tab === 'submit-idea' ? ESK : VFI;
+      const programmes = tab === 'submit-idea' ? ESK : tab === 'kid-innohack' || tab === 'young-innohack' ? tracked : VFI;
       const path = { role: 'school' as const, theme: 'Energy', ...pathForTab(tab, programmes) };
       if (path.programme === 'robo' && !path.activity) path.activity = 'workshop';
       expect(tabForPath(path), tab).toBe(tab);

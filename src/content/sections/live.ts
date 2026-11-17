@@ -14,7 +14,8 @@ export interface MeetUsData {
   kinds: { demo: Bi; workshop: Bi; hackathon: Bi; association: Bi };
 }
 
-export const meetUsDefaults = (): MeetUsData => ({
+/** Future InnoHack sites (vfi, IBK) name their hackathon sessions after it; others keep "Young Inno Hack". */
+export const meetUsDefaults = (env?: { config?: { journey?: { futureInnohack?: boolean } } }): MeetUsData => ({
   eyebrow: bi('Workshops & demos near you'),
   title: bi('Meet Us At'),
   studentsLabel: bi('Students Registered'),
@@ -22,7 +23,12 @@ export const meetUsDefaults = (): MeetUsData => ({
   ideasLabel: bi('Ideas Submitted'),
   morning: bi('Morning'),
   afternoon: bi('Afternoon'),
-  kinds: { demo: bi('Demo'), workshop: bi('Workshop'), hackathon: bi('Young Inno Hack'), association: bi('Association') },
+  kinds: {
+    demo: bi('Demo'),
+    workshop: bi('Workshop'),
+    hackathon: bi(env?.config?.journey?.futureInnohack ? 'Future InnoHack' : 'Young Inno Hack'),
+    association: bi('Association'),
+  },
 });
 
 export interface WinnersData {

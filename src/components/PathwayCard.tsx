@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Target } from 'lucide-react';
+import { ArrowRight, CalendarDays, Lock, Target } from 'lucide-react';
 import { useT } from '../content/useT';
 import { useSite } from '../context/SiteContext';
 import { siteIcon } from '../content/icons';
 import { richText } from '../content/richText';
 import { hasLabel } from '../content/sections/frame';
 import { registerLink, stepKind, stepNumbers, type PathwayData, type StepKind } from '../content/sections/programmes';
+import type { ProgrammeTrack } from '../content/sections/audienceJourneys';
+import { targetToHref } from '../content/sections/frame';
 
 /** Breaks and milestones look the same in both colours: a dashed grey pause and a yellow date. */
 const BREAK = { node: 'bg-white border-2 border-dashed border-slate-300 text-slate-400', pill: 'bg-white border border-dashed border-slate-300 text-slate-500' };
@@ -57,7 +59,109 @@ const THEMES = {
     bold: 'font-bold text-[#059669]',
     ctaPrimary: 'bg-[#059669] hover:bg-[#047857]',
   },
+  // Future InnoHack (a hackathon card with tracks): the site's navy and yellow, like its Find Your Path box.
+  innohack: {
+    card: 'border-[#0A1930]',
+    header: 'bg-[#0A1930]',
+    tagline: 'text-[#FFCD00]',
+    intro: 'text-slate-200',
+    step: 'bg-slate-50 border-slate-200 hover:bg-slate-100 hover:border-slate-300',
+    num: 'bg-[#0A1930]',
+    iconBox: 'bg-[#FFCD00]/20 text-[#0A1930] group-hover:bg-[#FFCD00]',
+    pill: 'bg-[#FFCD00]/30 text-[#0A1930]',
+    pillHighlight: 'bg-[#FFCD00] text-[#0A1930] shadow-xs',
+    callout: 'bg-[#FFFBEA] border-[#FFCD00]',
+    calloutIcon: 'bg-[#FFCD00]/30 text-[#0A1930]',
+    cta: 'hover:bg-slate-50 text-[#0A1930] border-[#0A1930]/30',
+    node: 'bg-[#FFCD00]/30 text-[#0A1930]',
+    nodeHighlight: 'bg-[#0A1930] text-white',
+    connector: 'bg-slate-200',
+    connectorDashed: 'border-slate-300',
+    tentative: 'border-[#0A1930] text-[#0A1930]',
+    ctaSolid: 'text-[#0A1930] hover:bg-slate-50',
+    bold: 'font-bold text-[#0A1930]',
+    ctaPrimary: 'bg-[#0A1930] hover:bg-[#006AA7]',
+  },
 } as const;
+
+/**
+ * Future InnoHack's track cards (Kid InnoHack, Young InnoHack) in place of a timeline: choose one to see who it is for,
+ * its dates and its two actions. The details and steps stay in Find Your Path ("See the steps" opens that track there).
+ */
+const TrackCards: React.FC<{ tracks: ProgrammeTrack[]; go: (href: string) => void }> = ({ tracks, go }) => {
+  const { t: tr, L } = useT();
+  const site = useSite();
+  const [active, setActive] = useState(0);
+  const track = tracks[Math.min(active, tracks.length - 1)];
+  const closed = track.registrationOpen === false;
+  const registerTab = track.id === 'kid' ? 'kid-innohack' : track.id === 'young' ? 'young-innohack' : 'hackathon';
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {tracks.map((x, i) => {
+          const selected = i === active;
+          return (
+            <button
+              key={x.id || i}
+              type="button"
+              aria-pressed={selected}
+              onClick={() => setActive(i)}
+              className={`relative text-left p-4 border-2 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#006AA7] ${
+                selected ? 'bg-[#0A1930] border-[#0A1930] text-white' : 'bg-white border-slate-200 hover:border-[#0A1930] text-[#0A1930]'
+              }`}
+            >
+              <span className={`absolute top-0 left-0 right-0 h-1 ${selected ? 'bg-[#FFCD00]' : 'bg-transparent'}`} aria-hidden="true" />
+              <span className="block font-headline font-black text-base uppercase tracking-tight leading-tight">{tr(x.label)}</span>
+              <span className={`block mt-1 text-xs ${selected ? 'text-[#FFCD00]' : 'text-slate-600'}`}>{tr(x.eligibility)}</span>
+              {tr(x.dateLabel) && (
+                <span className={`mt-2 inline-flex items-center gap-1.5 text-[12px] font-mono-code font-bold uppercase tracking-wider ${selected ? 'text-white/90' : 'text-[#006AA7]'}`}>
+                  <CalendarDays className="w-3.5 h-3.5" aria-hidden="true" />
+                  {tr(x.dateLabel)}
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+      <div className="border border-slate-200 bg-slate-50 p-4 space-y-3">
+        <ul className="space-y-1.5">
+          {(track.highlights ?? []).map(tr).filter(Boolean).map((h, i) => (
+            <li key={i} className="flex items-start gap-2 text-sm text-slate-700 leading-snug">
+              <span className="mt-1.5 w-1.5 h-1.5 bg-[#FFCD00] shrink-0" aria-hidden="true" />
+              <span>{h}</span>
+            </li>
+          ))}
+        </ul>
+        {tr(track.venue) && <p className="text-[13px] font-mono-code font-bold uppercase tracking-wider text-[#0A1930]">{tr(track.venue)}</p>}
+        <div className="flex flex-col sm:flex-row gap-2.5">
+          <button
+            type="button"
+            onClick={() => go(targetToHref(`${site.nav.homeRoute}#${track.id ? `innohack-${track.id}` : 'journey-innohack'}`))}
+            className="group flex-1 px-4 py-2.5 border-2 border-[#0A1930] bg-white text-[#0A1930] hover:bg-[#0A1930] hover:text-white text-xs font-bold font-syne uppercase tracking-wider transition-colors inline-flex items-center justify-center gap-2"
+          >
+            <span>{L('See the steps', 'Se stegen')}</span>
+            <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+          </button>
+          {closed ? (
+            <span className="flex-1 px-4 py-2.5 border-2 border-[#FFCD00] bg-[#FFFBEA] text-[#0A1930] text-xs font-bold font-syne uppercase tracking-wider inline-flex items-center justify-center gap-2">
+              <Lock className="w-3.5 h-3.5" aria-hidden="true" />
+              {tr(track.closedMessage) || L('Opens soon', 'Öppnar snart')}
+            </span>
+          ) : (
+            <button
+              type="button"
+              onClick={() => go(targetToHref(site.nav.registerRoute, registerTab))}
+              className="group flex-1 px-4 py-2.5 bg-[#FFCD00] hover:bg-[#E6B800] text-[#0A1930] text-xs font-bold font-syne uppercase tracking-wider transition-colors inline-flex items-center justify-center gap-2"
+            >
+              <span>{L(`Register for ${tr(track.label)}`, `Anmäl dig till ${tr(track.label)}`)}</span>
+              <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 interface PathwayCardProps {
   /** The card from the Site CMS: RoboKidovation (theme "robo", blue) or a hackathon ("hack", green). */
@@ -68,12 +172,15 @@ interface PathwayCardProps {
   half?: boolean;
   /** Entrance delay, so two cards side by side arrive one after the other. */
   delay?: number;
+  /** Future InnoHack: its tracks, shown as cards instead of the timeline. */
+  tracks?: ProgrammeTrack[];
 }
 
-export const PathwayCard: React.FC<PathwayCardProps> = ({ data, onCta: go, half = false, delay = 0 }) => {
+export const PathwayCard: React.FC<PathwayCardProps> = ({ data, onCta: go, half = false, delay = 0, tracks }) => {
   const { t: tr } = useT();
   const site = useSite();
-  const t = THEMES[data.theme === 'hack' ? 'hack' : 'robo'];
+  const withTracks = data.theme === 'hack' && !!tracks?.length;
+  const t = THEMES[withTracks ? 'innohack' : data.theme === 'hack' ? 'hack' : 'robo'];
   const Icon = siteIcon(data.icon);
   const title = tr(data.title);
   const tagline = tr(data.tagline);
@@ -241,6 +348,9 @@ export const PathwayCard: React.FC<PathwayCardProps> = ({ data, onCta: go, half 
 
       {/* Steps: one numbered timeline, dates on the right */}
       <div className="p-5 sm:p-7 space-y-6 flex-1 flex flex-col justify-between">
+        {withTracks ? (
+          <TrackCards tracks={tracks!} go={go} />
+        ) : (
         <ol className="relative">
           {steps.map((step, i) => {
             const StepIcon = step.icon;
@@ -294,6 +404,7 @@ export const PathwayCard: React.FC<PathwayCardProps> = ({ data, onCta: go, half 
             );
           })}
         </ol>
+        )}
 
         {/* Who goes to the final, then register or read more */}
         <div className={`${t.callout} border p-4 sm:p-5 space-y-4`}>

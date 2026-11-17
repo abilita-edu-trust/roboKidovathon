@@ -1719,6 +1719,8 @@ export const svTranslations: Record<string, string> = {
   'CITY FINAL': 'STADSFINAL',
   'City Final': 'Stadsfinal',
   'FINAL DATE': 'FINALDATUM',
+  'ROBOKIDOVATION FINAL': 'ROBOKIDOVATION-FINAL',
+  'FUTURE INNOHACK FINAL': 'FUTURE INNOHACK-FINAL',
   'FOOTPRINT:': 'GOLVYTA:',
   'Form Teams': 'Bilda lag',
   'Grades 3–6': 'Årskurs 3–6',
@@ -1990,6 +1992,7 @@ export const svTranslations: Record<string, string> = {
   'Venue to be confirmed': 'Plats meddelas senare',
   'Registration is open for schools, associations and independent teams ahead of the 12–25 November qualifiers and the 4–5 December 2026 Final.': 'Anmälan är öppen för skolor, föreningar och fristående lag inför kvalet 12–25 november och finalen 4–5 december 2026.',
   'Registration is open for schools, associations and independent teams ahead of the 12–25 November qualifiers and the 5 December 2026 Final.': 'Anmälan är öppen för skolor, föreningar och fristående lag inför kvalet 12–25 november och finalen 5 december 2026.',
+  'Registration is open for schools, associations and independent teams. Finals: RoboKidovation on 5 December 2026 (qualifiers 12–25 November) and Future InnoHack on 12 December 2026.': 'Anmälan är öppen för skolor, föreningar och fristående lag. Finaler: RoboKidovation den 5 december 2026 (kval 12–25 november) och Future InnoHack den 12 december 2026.',
   'A non-profit club for children and youth in Västerås. Host of Västerås Future Innovators 2026 with INIAC and SkillSkolan, and Blix as technology and kit partner.': 'En ideell förening för barn och unga i Västerås. Arrangör av Västerås Future Innovators 2026 tillsammans med INIAC och SkillSkolan, med Blix som teknik- och kitpartner.',
   'Contact IBK': 'Kontakta IBK',
   'Read the full details': 'Läs alla detaljer',
@@ -2441,7 +2444,7 @@ export const svTranslations: Record<string, string> = {
   "Frequently Asked Questions from Principals & Teachers": "Vanliga frågor från rektorer och lärare",
   "Our team delivers all kits, arena mats, tools, and mentor materials directly to your school ahead of the workshop dates. Kits are low-voltage (6V DC) and safe for ordinary classrooms.": "Vårt team levererar alla byggsatser, arenamattor, verktyg och mentorsmaterial direkt till er skola före workshopdatumen. Byggsatserna drivs med lågspänning (6 V DC) och är säkra i vanliga klassrum.",
   "Which grades can participate in Västerås Future Innovators 2026?": "Vilka årskurser kan delta i Västerås Framtida Innovatörer 2026?",
-  "RoboKido Junior is designed for Grades 3–6 (Grundskola). RoboKido Senior is for Grades 7–9. Grades 1–2 can join workshops and demos as a participant category (not a competition category). The RoboKido GYM autonomous challenge is structured for Gymnasium and upper-level students. The Young Inno Hack is open to Grades 7–9 (basic level), Gymnasiet students (medium level) and university students (advanced level).": "RoboKido Junior är till för åk 3–6 (grundskolan). RoboKido Senior är för åk 7–9. Åk 1–2 kan vara med på workshoppar och demos som deltagarkategori (inte som tävlingskategori). Den självgående utmaningen RoboKido GYM är upplagd för gymnasiet och äldre elever. Young Inno Hack är öppen för åk 7–9 (grundnivå), gymnasieelever (mellannivå) och universitetsstudenter (avancerad nivå).",
+  "RoboKido Junior is designed for Grades 3–6 (Grundskola). RoboKido Senior is for Grades 7–9. Grades 1–2 can join workshops and demos as a participant category (not a competition category). The RoboKido GYM autonomous challenge is structured for Gymnasium and upper-level students. Future InnoHack has two tracks: Kid InnoHack for Grades 3–9 (an idea of their own) and Young InnoHack for gymnasium students, university students and professionals.": "RoboKido Junior är till för åk 3–6 (grundskolan). RoboKido Senior är för åk 7–9. Åk 1–2 kan vara med på workshoppar och demos som deltagarkategori (inte som tävlingskategori). Den självgående utmaningen RoboKido GYM är upplagd för gymnasiet och äldre elever. Future InnoHack har två spår: Kid InnoHack för årskurs 3–9 (en egen idé) och Young InnoHack för gymnasieelever, universitetsstudenter och yrkesverksamma.",
   "The programme is structured as a 20-hour project (typically ten 2-hour sessions), or a lighter 10–12 hour format. Sessions can be integrated into regular science/tech classes or run during project weeks.": "Programmet är upplagt som ett projekt på 20 timmar (oftast tio pass à 2 timmar) eller i ett lättare format på 10–12 timmar. Passen kan läggas in i vanliga NO- och tekniklektioner eller köras under temaveckor.",
   "Yes. Students produce design sketches, measurement logs, engineering reflections, and a final competition presentation that teachers can incorporate directly into subject assessments.": "Ja. Eleverna tar fram designskisser, mätprotokoll, tekniska reflektioner och en avslutande tävlingspresentation som lärarna kan använda direkt i ämnesbedömningen.",
   "All electronics operate on safe 6V low-voltage battery packs with zero high-temperature or soldering tools. All student and school data is handled in strict compliance with Swedish GDPR standards.": "All elektronik drivs med säkra batteripaket på 6 V lågspänning, utan heta verktyg eller lödning. Alla uppgifter om elever och skolor hanteras strikt enligt GDPR.",
@@ -2504,6 +2507,13 @@ export const svTranslations: Record<string, string> = {
   'Compete in the Final on 2 December 2026 at IES Eskilstuna. Top 1–2 teams may qualify for flight tickets to the international stage (May 2027)*.': 'Tävla i finalen den 2 december 2026 på IES Eskilstuna. De 1–2 bästa lagen kan kvala till flygbiljetter till den internationella nivån (maj 2027)*.',
   'Attend the Final on 2 December 2026 at IES Eskilstuna and celebrate student achievements.': 'Kom till finalen den 2 december 2026 på IES Eskilstuna och fira elevernas prestationer.',
   'Up to 4 teams per school or association qualify for the Final on 2 December 2026 at IES Eskilstuna.': 'Upp till 4 lag per skola eller förening kvalar till finalen den 2 december 2026 på IES Eskilstuna.',
+  // Future InnoHack (vfi, IBK): texts in the code.
+  "Final presentations · 12 December 2026 · Växhuset, Västerås": "Slutpresentationer · 12 december 2026 · Växhuset, Västerås",
+  "Kid InnoHack · Grades 3–9": "Kid InnoHack · åk 3–9",
+  "Young InnoHack · University & Professionals": "Young InnoHack · universitet och yrkesverksamma",
+  "REGISTER FOR FUTURE INNOHACK": "ANMÄL DIG TILL FUTURE INNOHACK",
+  "The Robo-Sprint City Final is held at Mälardalen International School (MISV) on 5 December 2026. The Future InnoHack final presentations (Kid InnoHack and Young InnoHack) are on 12 December 2026 at Växhuset, Västerås.": "Robo-Sprint-stadsfinalen hålls på Mälardalen International School (MISV) den 5 december 2026. Slutpresentationerna i Future InnoHack (Kid InnoHack och Young InnoHack) är den 12 december 2026 på Växhuset i Västerås.",
+  "A clear timeline of the autumn season in Västerås: qualifiers in participating schools and associations on 12–25 November, then the Robo-Sprint City Final at Mälardalen International School (MISV) on 5 December 2026 and the Future InnoHack final presentations at Växhuset, Västerås on 12 December 2026.": "En tydlig tidslinje för höstsäsongen i Västerås: kval på deltagande skolor och föreningar den 12–25 november, sedan Robo-Sprint-stadsfinalen på Mälardalen International School (MISV) den 5 december 2026 och slutpresentationerna i Future InnoHack på Växhuset i Västerås den 12 december 2026.",
 };
 
 /** Swedish for texts with a name in them; {0} stands for the part that changes. */
