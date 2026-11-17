@@ -181,8 +181,8 @@ const ACTIVITY_CARDS: Record<ActivityId, Choice<ActivityId>> = {
     icon: '💡',
     title: bi('Submit your idea for Kid InnoHack', 'Skicka in din idé till Kid InnoHack'),
     desc: bi(
-      'Describe a problem and how you would solve it. Five ideas are selected for mentoring and the final.',
-      'Beskriv ett problem och hur du skulle lösa det. Fem idéer väljs ut till handledning och finalen.',
+      'Describe a problem and how you would solve it, by 1 December 2026. Five ideas are selected for mentoring and the final.',
+      'Beskriv ett problem och hur du skulle lösa det, senast 1 december 2026. Fem idéer väljs ut till handledning och finalen.',
     ),
   },
   mentor: {
@@ -191,6 +191,15 @@ const ACTIVITY_CARDS: Record<ActivityId, Choice<ActivityId>> = {
     title: bi('Become a mentor (professionals)', 'Bli mentor (yrkesverksamma)'),
     desc: bi('Coach the teams with your experience. You sign up with the mentor form.', 'Coacha lagen med din erfarenhet. Du anmäler dig med mentorsformuläret.'),
   },
+};
+
+/** Young InnoHack's public idea (vfi and IBK) closes on 1 December 2026; other hackathons keep the plain card. */
+const YOUNG_IDEA_CARD: Choice<ActivityId> = {
+  ...ACTIVITY_CARDS.idea,
+  desc: bi(
+    'Send in an idea or a problem to solve by 1 December 2026. Approved ideas go to public voting.',
+    'Skicka in en idé eller ett problem att lösa senast 1 december 2026. Godkända idéer går till publik röstning.',
+  ),
 };
 
 /** Idea areas from the printed Idea Card (stored as the English value). */
@@ -250,7 +259,7 @@ export function activityChoices(programme: ProgrammeId | undefined, accepts: Acc
   if (programme === 'hack' && path.track === 'kid') ids = ['kid-idea'];
   else if (programme === 'hack' && path.track === 'young') ids = path.role === 'individual' ? ['idea', 'participate', 'mentor'] : ['idea', 'participate'];
   else if (programme === 'hack') ids = ['idea', 'participate'];
-  return ids.filter((a) => accepts(ACTIVITY_TAB[a])).map((a) => ACTIVITY_CARDS[a]);
+  return ids.filter((a) => accepts(ACTIVITY_TAB[a])).map((a) => (a === 'idea' && path.track === 'young' ? YOUNG_IDEA_CARD : ACTIVITY_CARDS[a]));
 }
 
 /** The area cards under the pathway: idea areas, or the hackathon's challenge areas. Young InnoHack's squad

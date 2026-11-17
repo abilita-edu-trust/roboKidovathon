@@ -23,6 +23,7 @@ import { useSite, type Bilingual } from '../../context/SiteContext';
 import { useT } from '../../content/useT';
 import { pick } from '../../content/core';
 import { useInnohackTracks } from '../../content/innohackContext';
+import { ideasClosed } from '../../content/sections/innohack';
 import type { ProgrammeTrack } from '../../content/sections/audienceJourneys';
 import {
   TRACK_TABS,
@@ -224,6 +225,8 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
   const green = isGreen(path.programme) && !tracked;
   // Kid InnoHack while it is closed: every step after the track explains that instead of asking.
   const kidBlocked = path.track === 'kid' && !kidOpen;
+  // Young InnoHack's public ideas close with Kid's, on 1 December 2026 (its hackathon and mentor forms stay open).
+  const youngIdeaClosed = path.programme === 'hack' && path.track === 'young' && path.activity === 'idea' && ideasClosed();
   const shownTrack = trackOf(path.track);
   // Build & Play is on the RoboKidovation final's day and at its venue (5 December 2026, MISV).
   const buildPlay = path.programme === 'robo' && path.activity === 'build-play';
@@ -574,10 +577,15 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
             {T(trackOf('kid')?.closedMessage ?? { en: 'Kid InnoHack opens soon.', sv: 'Kid InnoHack öppnar snart.' })}
           </p>
           <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
-            {L(
-              'Kid InnoHack registration opens once guardian confirmation is ready. Young InnoHack is open now.',
-              'Anmälan till Kid InnoHack öppnar när vårdnadshavarnas bekräftelse är klar. Young InnoHack är öppet nu.',
-            )}
+            {ideasClosed()
+              ? L(
+                  'Kid InnoHack took ideas until 1 December 2026. Young InnoHack is open now.',
+                  'Kid InnoHack tog emot idéer till och med den 1 december 2026. Young InnoHack är öppet nu.',
+                )
+              : L(
+                  'Kid InnoHack registration opens once guardian confirmation is ready. Young InnoHack is open now.',
+                  'Anmälan till Kid InnoHack öppnar när vårdnadshavarnas bekräftelse är klar. Young InnoHack är öppet nu.',
+                )}
           </p>
           <button type="button" onClick={() => goToKind('track')} className={outlineBtn}>
             <ArrowLeft className="w-3.5 h-3.5" />
@@ -624,6 +632,23 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
 
     if (kind === 'form') {
       if (!def || !ctx) return null;
+      if (youngIdeaClosed) {
+        return (
+          <div className="p-5 bg-[#FFFBEA] border-2 border-[#FFCD00] space-y-3">
+            <p className="flex items-center gap-2 font-headline font-black text-sm uppercase tracking-tight text-[#0A1930]">
+              <Lock className="w-4 h-4 text-[#006AA7]" aria-hidden="true" />
+              {L('Idea submissions closed on 1 December 2026', 'Idéinlämningen stängde den 1 december 2026')}
+            </p>
+            <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
+              {L('You can still register for the Young InnoHack hackathon.', 'Du kan fortfarande anmäla dig till hackathonet Young InnoHack.')}
+            </p>
+            <button type="button" onClick={() => goToKind('activity')} className={outlineBtn}>
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>{L('Choose another pathway', 'Välj en annan väg')}</span>
+            </button>
+          </div>
+        );
+      }
       const Fields = def.Fields;
       return (
         <form
@@ -882,7 +907,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                   type={kind === 'form' ? 'submit' : 'button'}
                   form={kind === 'form' ? formDomId : undefined}
                   onClick={kind === 'form' ? undefined : next}
-                  disabled={busy || (choiceStep && !isAnswered(kind, path)) || (kidBlocked && kind !== 'programme' && kind !== 'track')}
+                  disabled={busy || (choiceStep && !isAnswered(kind, path)) || (kidBlocked && kind !== 'programme' && kind !== 'track') || (youngIdeaClosed && kind === 'form')}
                   className={`inline-flex items-center gap-2 py-3 px-5 text-white text-xs font-headline font-black uppercase tracking-wider transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                     green ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-[#006AA7] hover:bg-[#013A63]'
                   }`}

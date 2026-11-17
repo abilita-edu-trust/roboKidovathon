@@ -34,7 +34,7 @@ describe('audience journeys (vfi)', () => {
       ['young', 'Young InnoHack', '10–12 December 2026', true],
     ]);
     expect(tracks.map((t) => t.audiences.map((a) => a.id))).toEqual([['kids'], ['gymnasium', 'university', 'professionals']]);
-    expect(tracks[0].schedule.map((r) => r.date.en)).toEqual(['By 4 December 2026', '5 December 2026', '6–11 December 2026', '12 December 2026']);
+    expect(tracks[0].schedule.map((r) => r.date.en)).toEqual(['By 1 December 2026', '5 December 2026', '6–11 December 2026', '12 December 2026']);
     expect(tracks[1].schedule.map((r) => r.date.en)).toEqual(['10 December 2026, evening', '11 December 2026', '12 December 2026']);
     // No company is named before they are confirmed: one hidden, empty challenge as the CMS template.
     expect(tracks[1].challenges).toEqual([{ visible: false, company: '', logo: '', title: { en: '', sv: '' }, problem: { en: '', sv: '' } }]);

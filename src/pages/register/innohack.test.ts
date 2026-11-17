@@ -238,7 +238,7 @@ describe('privacy notice (draft until approved)', () => {
   it('covers the organisations, legal basis, guardian and photo consent, retention and deletion, in English and Swedish', async () => {
     const { PRIVACY_SECTIONS } = await import('../PrivacyNoticePage');
     expect(PRIVACY_SECTIONS.map((s) => s.title.en)).toEqual([
-      'Who is responsible', 'What we collect', 'Why we use it, and the legal basis', 'Guardian confirmation',
+      'Who is responsible', 'What we collect', 'Children’s data', 'Why we use it, and the legal basis', 'Guardian confirmation',
       'Photos and videos (optional)', 'Who sees it', 'How long we keep it', 'Deleting your data', 'Your rights', 'Changes to this notice',
     ]);
     for (const s of PRIVACY_SECTIONS) {
@@ -250,6 +250,52 @@ describe('privacy notice (draft until approved)', () => {
     }
     const text = JSON.stringify(PRIVACY_SECTIONS);
     expect(text).toContain('5 December 2026 at 10:00 Swedish time');
+    // The controller and the one contact address for data requests.
+    expect(text).toContain('INIAC is the data controller');
+    expect(text.match(/contact@iniac\.se/g)?.length).toBeGreaterThanOrEqual(5);
+    expect(text).not.toMatch(/robokidovation\.se/);
+    expect(text).toContain('until 12 December 2027');
+    expect(text).toContain('until 12 December 2028');
     expect(text).toContain('5 december 2026 kl. 10.00 svensk tid');
+  });
+});
+
+describe('idea deadline 1 December 2026 and no fees in the registration forms (vfi and IBK)', () => {
+  it('hides the participation-fee box under every form on vfi and IBK; Riga, Eskilstuna and Växjö already do', () => {
+    expect(VFI_SITE.intake.showFees).toBe(false);
+    expect(CITY_SITES.ibk.site.intake.showFees).toBe(false);
+    for (const s of ['riga', 'esk', 'vxo'] as const) expect(CITY_SITES[s].site.intake.showFees).toBe(false);
+  });
+
+  it('names 1 December 2026 on Kid InnoHack (card, form, timeline) and on Young InnoHack’s public idea', async () => {
+    const { innohackTracks, IDEAS_CLOSE_AT } = await import('../../content/sections/innohack');
+    expect(IDEAS_CLOSE_AT).toBe('2026-12-01T23:59:59+01:00');
+    const kid = innohackTracks((t) => `/register?tab=${t}`)[0];
+    expect(kid.schedule[0].date).toEqual({ en: 'By 1 December 2026', sv: 'Senast 1 december 2026' });
+    expect(JSON.stringify(kid)).not.toContain('4 December');
+    const all = () => true;
+    expect(activityChoices('hack', all, { track: 'kid', role: 'team' })[0].desc.en).toContain('by 1 December 2026');
+    const young = activityChoices('hack', all, { track: 'young', role: 'team' }).find((c) => c.id === 'idea')!;
+    expect(young.desc.en).toBe('Send in an idea or a problem to solve by 1 December 2026. Approved ideas go to public voting.');
+    // Other hackathons (Riga, Växjö) keep the plain card.
+    expect(activityChoices('hack', all, { role: 'team' }).find((c) => c.id === 'idea')!.desc.en).not.toContain('December');
+    const { ideaForm } = await import('./forms/idea');
+    expect(ideaForm.intro(ctxFor({ programme: 'hack', track: 'young', role: 'team', activity: 'idea' }))).toContain('Ideas close on 1 December 2026 at 23:59 Swedish time.');
+    expect(ideaForm.intro(ctxFor({ programme: 'hack', role: 'team', activity: 'idea' }))).not.toContain('December');
+    const done = kidForm.done(ctxFor({ programme: 'hack', track: 'kid', role: 'team', activity: 'kid-idea' }), { email: 'a@b.se' });
+    expect(done.body).toContain('by 5 December 2026 at 10:00');
+  });
+
+  it('closes Kid InnoHack after 1 December 2026 23:59 Swedish time, whatever the Site CMS switch says', async () => {
+    const { ideasClosed, innohackTracks } = await import('../../content/sections/innohack');
+    const { closeKidAfterDeadline } = await import('../../content/innohackContext');
+    const before = Date.parse('2026-12-01T23:59:00+01:00');
+    const after = Date.parse('2026-12-02T00:00:30+01:00');
+    expect([ideasClosed(before), ideasClosed(after)]).toEqual([false, true]);
+    const open = innohackTracks((t) => t).map((t) => (t.id === 'kid' ? { ...t, registrationOpen: true } : t));
+    expect(closeKidAfterDeadline(open, before).find((t) => t.id === 'kid')!.registrationOpen).toBe(true);
+    const closed = closeKidAfterDeadline(open, after);
+    expect(closed.find((t) => t.id === 'kid')).toMatchObject({ registrationOpen: false, closedMessage: { en: 'Idea submissions closed on 1 December 2026' } });
+    expect(closed.find((t) => t.id === 'young')!.registrationOpen).toBe(true);
   });
 });

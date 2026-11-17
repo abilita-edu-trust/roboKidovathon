@@ -1,6 +1,7 @@
 // Idea submission (Young Inno Hack / RoboHack "Register your idea", esk "Bring your idea").
 // The area is the theme card chosen before the form. Approved ideas go to public voting.
 import React from 'react';
+import { IDEAS_CLOSE } from '../../../content/sections/innohack';
 import { CheckCircle2, FileText, Image as ImageIcon, Lightbulb, Upload, Video } from 'lucide-react';
 import { VoiceNoteRecorder } from '../../../components/VoiceNoteRecorder';
 import { submitIdea, uploadIdeaMedia } from '../../../lib/ideasService';
@@ -161,7 +162,7 @@ export const ideaForm: FormDef = {
     ctx.L(
       'Share your idea as text, a drawing or photo, a voice note or a video. A coordinator reviews it, then it goes to public voting.',
       'Dela din idé som text, teckning eller foto, röstmeddelande eller video. En samordnare granskar den, sedan går den till publik röstning.',
-    ),
+    ) + (ctx.path.track === 'young' ? ' ' + ctx.L(`Ideas close on ${IDEAS_CLOSE.en}.`, `Idéinlämningen stänger den ${IDEAS_CLOSE.sv}.`) : ''),
   initial: (ctx) => ({ ...locationInitial(ctx.site), studentAge: '13', videoMode: 'link' }),
   Fields: IdeaFields,
   summary: (v, ctx) => {

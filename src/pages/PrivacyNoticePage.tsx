@@ -1,5 +1,6 @@
-// The privacy notice for Future InnoHack registrations (vfi.iniac.se/privacy, indiskbarnklubb.se/ibk/privacy), linked
-// from the guardian confirmation page. The text is a DRAFT until the organisers approve it: until then the live page
+// The privacy notice for Future InnoHack and RoboKidovation Build & Play registrations (vfi.iniac.se/privacy,
+// indiskbarnklubb.se/ibk/privacy), linked from the guardian confirmation page. Final wording: controller INIAC,
+// contact contact@iniac.se, retention and children's data. It stays unpublished until the organisers approve it: until then the live page
 // says that the notice is being finalised, and only preview builds made with VITE_PRIVACY_DRAFT=1 show the draft.
 // When it is approved: set PRIVACY_NOTICE_APPROVED to true, PRIVACY_VERSION to the approval date, and the same date in
 // the Admin Panel's fut_inno_innohack_settings.privacy_version (stored with each guardian confirmation).
@@ -27,7 +28,10 @@ export const PRIVACY_SECTIONS: PrivacySection[] = [
         'Future InnoHack (Kid InnoHack and Young InnoHack) and RoboKidovation Build & Play are organised by INIAC together with Indisk Barnklubb (IBK) Västerås. INIAC is the data controller: INIAC runs the registration system and decides how the data is used. IBK co-organises the events in Västerås and uses the data only to run them.',
         'Future InnoHack (Kid InnoHack och Young InnoHack) och RoboKidovation Build & Play arrangeras av INIAC tillsammans med Indisk Barnklubb (IBK) Västerås. INIAC är personuppgiftsansvarig: INIAC driver anmälningssystemet och bestämmer hur uppgifterna används. IBK är medarrangör av evenemangen i Västerås och använder uppgifterna enbart för att genomföra dem.',
       ),
-      tx('Questions about your data: contact@iniac.se.', 'Frågor om dina uppgifter: contact@iniac.se.'),
+      tx(
+        'This notice applies to registrations on vfi.iniac.se and indiskbarnklubb.se. Questions about your data, and requests to see, correct or delete it: contact@iniac.se.',
+        'Detta meddelande gäller anmälningar på vfi.iniac.se och indiskbarnklubb.se. Frågor om dina uppgifter, och begäran om att se, rätta eller radera dem: contact@iniac.se.',
+      ),
     ],
   },
   {
@@ -53,6 +57,37 @@ export const PRIVACY_SECTIONS: PrivacySection[] = [
       tx(
         'To protect the forms from misuse, a scrambled (hashed) form of the internet address a form was sent from is kept for two days.',
         'För att skydda formulären mot missbruk sparas en krypterad (hashad) form av den internetadress som formuläret skickades från i två dagar.',
+      ),
+    ],
+  },
+  {
+    title: tx('Children’s data', 'Barns uppgifter'),
+    paragraphs: [
+      tx(
+        'Most participants are children, so we keep what we collect about them to a minimum: their name, grade or age group and, if you give it, their school or preschool. For Kid InnoHack also the idea they send.',
+        'De flesta deltagarna är barn, så vi samlar in så lite som möjligt om dem: namn, årskurs eller ålder och, om du anger det, skola eller förskola. För Kid InnoHack även idén de skickar in.',
+      ),
+    ],
+    items: [
+      tx(
+        'Kid InnoHack: a parent, guardian or teacher sends the idea, and every child’s parent or guardian then confirms by email before the child takes part.',
+        'Kid InnoHack: en förälder, vårdnadshavare eller lärare skickar in idén, och varje barns förälder eller vårdnadshavare bekräftar sedan via e-post innan barnet deltar.',
+      ),
+      tx(
+        'Build & Play: the child’s parent or guardian registers the child and stays with them during the activity.',
+        'Build & Play: barnets förälder eller vårdnadshavare anmäler barnet och stannar med barnet under aktiviteten.',
+      ),
+      tx(
+        'Children’s data is used only to run the activity. It is not used for marketing or profiling, and it is not sold.',
+        'Barns uppgifter används bara för att genomföra aktiviteten. De används inte för marknadsföring eller profilering och säljs inte.',
+      ),
+      tx(
+        'Photos or videos of a child are published only with a parent’s or guardian’s separate consent (see Photos and videos).',
+        'Foton eller filmer av ett barn publiceras bara med ett separat samtycke från förälder eller vårdnadshavare (se Foton och filmer).',
+      ),
+      tx(
+        'Parents and guardians can ask to see, correct or delete their child’s data at contact@iniac.se.',
+        'Föräldrar och vårdnadshavare kan be att få se, rätta eller radera sitt barns uppgifter via contact@iniac.se.',
       ),
     ],
   },
