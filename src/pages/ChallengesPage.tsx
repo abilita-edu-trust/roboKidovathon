@@ -45,15 +45,6 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
       arena: '244 × 122 cm Divided Mat with Arches',
       focus: 'Gearing, Torque, Speed & Match Tactics',
     },
-    {
-      id: 'robo-precision',
-      title: 'RoboKido GYM',
-      grades: 'Gymnasium (15+)',
-      format: '5 Min · Autonomous Build',
-      control: 'Autonomous Coded Sequence',
-      arena: 'Podium Stacking Arena',
-      focus: 'Crane Kinematics, Autonomy & Software',
-    },
   ];
 
   return (
@@ -92,7 +83,7 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
           </h1>
 
           <p className="mt-4 text-sm sm:text-base text-slate-600 font-light max-w-2xl leading-relaxed">
-            Standardized Swedish school arena regulations. Junior and Senior share the official 244 × 122 cm (8 × 4 ft) ball-transfer court in head-to-head 3-minute heats. RoboKido GYM is an autonomous challenge for gymnasium competitors.
+            Standardized Swedish school arena regulations. Junior and Senior share the official 244 × 122 cm (8 × 4 ft) ball-transfer court in head-to-head 3-minute heats. Build & Play (preschool–grade 2) is a free parent-and-child activity, not a competition.
           </p>
           </div>
 

@@ -153,7 +153,10 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
   const trackOf = (id?: string) => trackCards.find((tr) => tr.id === id);
   // Kid InnoHack stays closed until the Site CMS opens it (the database refuses Kid ideas until then too).
   const kidOpen = trackOf('kid')?.registrationOpen === true;
-  const accepts = (tab: IntakeProgramTab) => (TRACK_TABS.includes(tab) ? tracked : true) && (!site.intake.tabs || site.intake.tabs.includes(tab));
+  const accepts = (tab: IntakeProgramTab) =>
+    (TRACK_TABS.includes(tab) ? tracked : true) &&
+    (tab === 'build-play' ? !!site.intake.buildAndPlay : true) &&
+    (!site.intake.tabs || site.intake.tabs.includes(tab));
 
   // Grade labels only name the programmes this site runs: esk has no hackathon (and so no
   // university level), vxo has no RoboKidovation (and so no grade 1–2 participant group).
@@ -222,6 +225,10 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
   // Kid InnoHack while it is closed: every step after the track explains that instead of asking.
   const kidBlocked = path.track === 'kid' && !kidOpen;
   const shownTrack = trackOf(path.track);
+  // Build & Play is on the RoboKidovation final's day and at its venue (5 December 2026, MISV).
+  const buildPlay = path.programme === 'robo' && path.activity === 'build-play';
+  const shownDate = programme?.date;
+  const shownVenue = programme?.venue;
   const accentBg = green ? 'bg-[#059669]' : 'bg-[#006AA7]';
 
   const set = (key: string, value: unknown) => setValues((prev) => ({ ...prev, [key]: value }));
@@ -463,8 +470,8 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
       ...(shownTrack
         ? [[L('Dates', 'Datum'), T(shownTrack.dateLabel)] as SummaryRow, [L('Venue', 'Plats'), T(shownTrack.venue)] as SummaryRow]
         : [
-            ...(programme.date ? [[L('Event date', 'Evenemangsdatum'), T(programme.date)] as SummaryRow] : []),
-            ...(programme.venue ? [[L('Venue', 'Plats'), T(programme.venue)] as SummaryRow] : []),
+            ...(shownDate ? [[L('Event date', 'Evenemangsdatum'), T(shownDate)] as SummaryRow] : []),
+            ...(shownVenue ? [[L('Venue', 'Plats'), T(shownVenue)] as SummaryRow] : []),
           ]),
       ...(role ? [[path.programme === 'community' ? L('Getting involved as', 'Engagerar dig som') : L('Joining as', 'Deltar som'), T(role.title)] as SummaryRow] : []),
       ...(activity ? [[path.programme === 'hack' ? L('Pathway', 'Väg') : L('Activity', 'Aktivitet'), T(activity.title)] as SummaryRow] : []),
@@ -698,7 +705,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
 
   const doneCopy = done && def && ctx ? def.done(ctx, values) : null;
   const choiceStep = kind !== 'form' && kind !== 'review';
-  const footerDate = shownTrack ? shownTrack.dateLabel : programme?.date;
+  const footerDate = shownTrack ? shownTrack.dateLabel : shownDate;
   const footer = programme ? [city, footerDate ? T(footerDate) : ''].filter(Boolean).join(' · ') : `${city} · ${site.nav.brandChip}`;
 
   return (
@@ -735,12 +742,13 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                     <span className={`block font-headline font-black text-lg sm:text-xl uppercase tracking-tight leading-tight ${green ? 'text-[#059669]' : 'text-[#006AA7]'}`}>
                       {T(programme.title)}
                       {shownTrack && <span className="text-[#0A1930]"> · {T(shownTrack.label)}</span>}
+                      {buildPlay && <span className="text-[#0A1930]"> · Build & Play</span>}
                     </span>
                     {shownTrack ? (
                       <span className="block mt-1 text-[13px] font-mono-code font-semibold text-slate-600">{meta({ date: shownTrack.dateLabel, venue: shownTrack.venue })}</span>
                     ) : (
-                      (programme.date || programme.venue) && (
-                        <span className="block mt-1 text-[13px] font-mono-code font-semibold text-slate-600">{meta(programme)}</span>
+                      (shownDate || shownVenue) && (
+                        <span className="block mt-1 text-[13px] font-mono-code font-semibold text-slate-600">{meta({ date: shownDate, venue: shownVenue })}</span>
                       )
                     )}
                   </div>

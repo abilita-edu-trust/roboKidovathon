@@ -20,11 +20,12 @@ export type IntakeProgramTab =
   | 'partner'
   | 'community'
   | 'kid-innohack'
-  | 'young-innohack';
+  | 'young-innohack'
+  | 'build-play';
 
 export const REGISTER_TABS: IntakeProgramTab[] = [
   'workshop', 'demo', 'association', 'competition', 'submit-idea', 'hackathon', 'volunteer', 'mentor', 'partner', 'community',
-  'kid-innohack', 'young-innohack',
+  'kid-innohack', 'young-innohack', 'build-play',
 ];
 
 /** Links that only sites with Future InnoHack tracks accept. */
@@ -32,9 +33,9 @@ export const TRACK_TABS: IntakeProgramTab[] = ['kid-innohack', 'young-innohack']
 
 export type ProgrammeId = 'robo' | 'hack' | 'ideas' | 'community';
 export type RoleId = 'school' | 'team' | 'individual' | 'association' | 'member' | 'volunteer' | 'mentor' | 'partner';
-export type ActivityId = 'demo' | 'workshop' | 'competition' | 'idea' | 'participate' | 'kid-idea' | 'mentor';
+export type ActivityId = 'demo' | 'workshop' | 'competition' | 'build-play' | 'idea' | 'participate' | 'kid-idea' | 'mentor';
 export type StepKind = 'programme' | 'track' | 'role' | 'activity' | 'theme' | 'form' | 'review';
-export type FormId = 'booking' | 'association' | 'competition' | 'squad' | 'idea' | 'volunteer' | 'mentor' | 'partner' | 'community' | 'kid';
+export type FormId = 'booking' | 'association' | 'competition' | 'buildplay' | 'squad' | 'idea' | 'volunteer' | 'mentor' | 'partner' | 'community' | 'kid';
 
 /** The answers so far. */
 export interface RegisterPath {
@@ -157,6 +158,12 @@ const ACTIVITY_CARDS: Record<ActivityId, Choice<ActivityId>> = {
     title: bi('Competition registration', 'Tävlingsanmälan'),
     desc: bi('Enter a team in the RoboKidovation competition.', 'Anmäl ett lag till RoboKidovation-tävlingen.'),
   },
+  'build-play': {
+    id: 'build-play',
+    icon: '🧩',
+    title: bi('Build & Play (preschool–grade 2)', 'Build & Play (förskola–åk 2)'),
+    desc: bi('Free. Build robots together with your child on 5 December 2026. No competition.', 'Gratis. Bygg robotar tillsammans med ditt barn den 5 december 2026. Ingen tävling.'),
+  },
   idea: {
     id: 'idea',
     icon: '💡',
@@ -226,6 +233,7 @@ const ACTIVITY_TAB: Record<ActivityId, IntakeProgramTab> = {
   demo: 'demo',
   workshop: 'workshop',
   competition: 'competition',
+  'build-play': 'build-play',
   idea: 'submit-idea',
   participate: 'hackathon',
   'kid-idea': 'kid-innohack',
@@ -237,7 +245,8 @@ const ACTIVITY_TAB: Record<ActivityId, IntakeProgramTab> = {
  * hackathon squad, and individuals can also choose the mentor form; other hackathons keep idea and squad.
  */
 export function activityChoices(programme: ProgrammeId | undefined, accepts: Accepts, path: RegisterPath = {}): Choice<ActivityId>[] {
-  let ids: ActivityId[] = ['demo', 'workshop', 'competition'];
+  // A parent can also sign up for Build & Play (sites that offer it).
+  let ids: ActivityId[] = path.role === 'individual' ? ['demo', 'workshop', 'competition', 'build-play'] : ['demo', 'workshop', 'competition'];
   if (programme === 'hack' && path.track === 'kid') ids = ['kid-idea'];
   else if (programme === 'hack' && path.track === 'young') ids = path.role === 'individual' ? ['idea', 'participate', 'mentor'] : ['idea', 'participate'];
   else if (programme === 'hack') ids = ['idea', 'participate'];
@@ -332,6 +341,7 @@ export function formFor(path: RegisterPath): FormId | null {
     return path.theme ? (activity === 'idea' ? 'idea' : 'squad') : null;
   }
   if (activity === 'competition') return 'competition';
+  if (activity === 'build-play') return 'buildplay';
   return role === 'association' ? 'association' : 'booking';
 }
 
@@ -354,6 +364,8 @@ export function pathForTab(tab: IntakeProgramTab, programmes: RegisterProgramme[
       return { programme: 'robo', activity: tab };
     case 'association':
       return { programme: 'robo', role: 'association' };
+    case 'build-play':
+      return { programme: 'robo', role: 'individual', activity: 'build-play' };
     case 'submit-idea':
       if (!programmes.some((p) => p.id === 'hack')) return { programme: 'ideas' };
       return tracked ? { programme: 'hack', track: 'young', activity: 'idea' } : { programme: 'hack', activity: 'idea' };
@@ -378,6 +390,8 @@ export function tabForPath(path: RegisterPath): IntakeProgramTab | null {
       return path.track === 'young' ? 'young-innohack' : 'hackathon';
     case 'kid':
       return 'kid-innohack';
+    case 'buildplay':
+      return 'build-play';
     case 'idea':
       return 'submit-idea';
     default:

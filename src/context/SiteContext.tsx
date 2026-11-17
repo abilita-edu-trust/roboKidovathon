@@ -155,6 +155,9 @@ export interface SiteConfig {
     /** Who contacts associations, e.g. "the IBK team". */
     associationContact: string;
     showFees: boolean;
+    /** RoboKidovation's categories are Build & Play (preschool–grade 2, parent and child, free, not a competition), Junior and
+     *  Senior, each with its poster (vfi and IBK); other sites keep Junior, Senior and GYM. */
+    buildAndPlay?: boolean;
     volunteer?: IntakeVolunteerConfig;
     /** Ways a partner can help, on the partner form; omitted = the general list. */
     partnerWays?: Bilingual[];
@@ -204,7 +207,7 @@ export const VFI_SITE: SiteConfig = {
         date: same('5 DECEMBER'),
         title: same('RoboKidovation'),
         kind: { en: 'Robotics Competition', sv: 'Robottävling' },
-        audience: { en: 'Grades 3–9', sv: 'Årskurs 3–9' },
+        audience: { en: 'Preschool–Grade 9', sv: 'Förskola–årskurs 9' },
         target: 'register',
         tab: 'competition',
       },
@@ -220,7 +223,7 @@ export const VFI_SITE: SiteConfig = {
     primary: { label: { en: 'Explore Events & Register', sv: 'Utforska evenemang och registrera dig' }, target: 'events' },
     secondary: { label: same('EXPLORE EVENTS'), target: 'events' },
     facts: [
-      { label: 'GRADES', value: '1–9 + GYM' },
+      { label: 'GRADES', value: 'PRESCHOOL–9' },
       { label: 'PRIZE POOL', value: 'SEK 3,000' },
       { label: 'PROGRAMME', value: '20H STEM' },
       { label: 'LGR22', value: 'CURRICULUM FIT' },
@@ -239,6 +242,7 @@ export const VFI_SITE: SiteConfig = {
       { label: 'School demos', value: '1–14 October 2026' },
       { label: 'School qualifiers', value: '12–25 November 2026' },
       { label: 'RoboKidovation', value: '5 December 2026 (MISV, Västerås)' },
+      { label: 'Build & Play', value: '5 December 2026 (MISV, Västerås)' },
       { label: 'Kid InnoHack', value: '5–12 December 2026 (final at Växhuset, Västerås)' },
       { label: 'Young InnoHack', value: '10–12 December 2026 (final at Växhuset, Västerås)' },
     ],
@@ -293,7 +297,7 @@ export const VFI_SITE: SiteConfig = {
       {
         id: 'robo',
         title: same('RoboKidovation'),
-        subtitle: { en: 'School robotics · Grades 1–9 & GYM', sv: 'Skolrobotik · åk 1–9 och gymnasiet' },
+        subtitle: { en: 'School robotics · Build & Play, Junior Robo Sprint and Senior Robo Sprint · Preschool–Grade 9', sv: 'Skolrobotik · Build & Play, Junior Robo Sprint och Senior Robo Sprint · förskola–årskurs 9' },
         date: { en: '5 December 2026', sv: '5 december 2026' },
         venue: same('MISV, Västerås'),
         image: '/register/robokidovation.jpg',
@@ -318,6 +322,7 @@ export const VFI_SITE: SiteConfig = {
     ],
     associationContact: 'the IBK team',
     showFees: true,
+    buildAndPlay: true,
   },
 };
 

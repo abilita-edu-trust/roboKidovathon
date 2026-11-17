@@ -83,6 +83,10 @@ export const GRADE_GROUP_OPTIONS: string[] = [
   'Mixed ages / Blandade åldrar',
 ];
 
+/** Build & Play (vfi and IBK): preschool to grade 2 with a parent, free, not a competition (stored as its grade group;
+ *  kept out of the other forms' grade lists). */
+export const BUILD_PLAY_GRADE_GROUP = 'Förskola–årskurs 2 (Build & Play · parent and child · not competing)';
+
 /** Young InnoHack's professionals (stored as their grade group; kept out of the other forms' grade lists). */
 export const PROFESSIONALS_GRADE_GROUP = 'Professionals (Young InnoHack)';
 

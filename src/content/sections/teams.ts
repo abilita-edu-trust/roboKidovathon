@@ -1,11 +1,17 @@
-// RoboKidovation categories (with each one's workshop skills), team rules and the final-day format.
+// RoboKidovation categories (with each one's workshop skills), team rules and the final-day format. On vfi and IBK
+// the three category posters (Build & Play, Junior, Senior) show instead of these cards.
+import type { SiteConfig } from '../../context/SiteContext';
 import { ROBOKIDO_CATEGORIES, TEAM_RULES, WORKSHOP_PATHS, FINAL_DAY_STEPS } from '../../data/vfiFacts';
 import { bi, type Bi } from '../core';
 import { biOf } from './frame';
+import { hasBuildAndPlay, robokidoPosters, type CategoryPoster } from './robokido';
 
 export interface TeamsData {
   eyebrow: Bi;
   title: Bi;
+  /** The promotional posters; when there are any, they replace the cards below (vfi and IBK). */
+  postersTitle: Bi;
+  posters: CategoryPoster[];
   codingLabel: Bi;
   skillsLabel: Bi;
   /** `colour`: "Junior" (blue), "Senior" (navy) or "GYM" (yellow). */
@@ -30,12 +36,15 @@ export interface TeamsData {
 
 const FINAL_ICONS = ['ClipboardCheck', 'BookOpen', 'Wrench', 'Gauge', 'Flag'];
 
-export const teamsDefaults = (): TeamsData => ({
+export const teamsDefaults = (c0?: SiteConfig): TeamsData => ({
   eyebrow: bi('RoboKidovation 2026'),
   title: bi('Categories, teams & final day', 'Kategorier, lag & finaldag'),
+  postersTitle: bi('Build & Play, Junior Robo Sprint and Senior Robo Sprint', 'Build & Play, Junior Robo Sprint och Senior Robo Sprint'),
+  posters: robokidoPosters(c0),
   codingLabel: bi('Coding', 'Programmering'),
   skillsLabel: bi('Workshop skills', 'Workshopfärdigheter'),
-  categories: ROBOKIDO_CATEGORIES.map((c) => {
+  // Build & Play replaces GYM on vfi and IBK (it is not a competition, so it has no card here).
+  categories: ROBOKIDO_CATEGORIES.filter((c) => !(hasBuildAndPlay(c0) && c.name === 'RoboKido GYM')).map((c) => {
     const key = c.name.replace('RoboKido ', '');
     return {
       name: bi(c.name),

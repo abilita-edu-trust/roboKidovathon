@@ -112,7 +112,7 @@ const WHY = bi('Why participate?', 'Varför delta?');
  * (vfi and IBK) the second box is Future InnoHack with its Kid and Young tracks; without it (Riga) the earlier
  * Young Future InnoHack box.
  */
-export function vfiProgrammes(register: (tab: string) => string, opts: { futureInnohack?: boolean } = {}): ProgrammeJourney[] {
+export function vfiProgrammes(register: (tab: string) => string, opts: { futureInnohack?: boolean; buildAndPlay?: boolean } = {}): ProgrammeJourney[] {
   const audience = (a: Omit<ProgrammeAudience, 'image' | 'imagePosition' | 'benefitsHeading' | 'cta'> & { cta: [string, string, string] }): ProgrammeAudience => ({
     id: a.id,
     icon: a.icon,
@@ -132,7 +132,9 @@ export function vfiProgrammes(register: (tab: string) => string, opts: { futureI
     {
       id: 'robokidovation',
       title: bi('RoboKidovation'),
-      subtitle: bi('Robotics competition · Grades 3–9', 'Robottävling · Årskurs 3–9'),
+      subtitle: opts.buildAndPlay
+        ? bi('Build & Play and the robotics competition · Preschool–Grade 9', 'Build & Play och robottävlingen · förskola–årskurs 9')
+        : bi('Robotics competition · Grades 3–9', 'Robottävling · Årskurs 3–9'),
       dateLabel: bi('5 December 2026', '5 december 2026'),
       accent: 'blue',
       audiences: [

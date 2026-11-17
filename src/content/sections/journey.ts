@@ -58,7 +58,7 @@ export function journeyDefaults(c: SiteConfig): JourneyData | null {
       : bi(
           'Whether you want to build robots, enroll your child, or bring hands-on STEM into your classroom, follow these clear visual steps to get started immediately.'
         ),
-    programmes: programmes ? vfiProgrammes((tab) => targetToHref(c.nav.registerRoute, tab), { futureInnohack: journey.futureInnohack }) : [],
+    programmes: programmes ? vfiProgrammes((tab) => targetToHref(c.nav.registerRoute, tab), { futureInnohack: journey.futureInnohack, buildAndPlay: c.intake.buildAndPlay }) : [],
     rulesButton: { label: bi('Rules'), href: targetToHref(journey.rulesTarget ?? 'challenges') },
     stepLabel: bi('Step {n} of {total}'),
     dates: journey.dates.map((d) => ({ label: bi(d.label), value: bi(d.value) })),

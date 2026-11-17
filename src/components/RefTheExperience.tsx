@@ -6,6 +6,7 @@ import { RegisterWizard } from '../pages/register/RegisterWizard';
 import { useT } from '../content/useT';
 import { useInnohackTracks } from '../content/innohackContext';
 import type { ExperienceData } from '../content/sections/programmes';
+import { ProgrammeBoxes } from './ProgrammeBoxes';
 
 /** The line under "Find your pathway" on the home page. */
 const REGISTER_INTRO = {
@@ -27,25 +28,34 @@ export const RefTheExperience: React.FC<RefTheExperienceProps> = ({ data, go, on
   const tracks = useInnohackTracks();
   // Future InnoHack's venues in its navy (other sites' hackathon venues keep their green).
   const innohack = tracks.length > 0;
+  // vfi and IBK (RoboKidovation categories and Future InnoHack tracks): the two-box layout, 1200px wide.
+  const roboCard = data.cards.find((c) => c.theme === 'robo');
+  const hackCard = data.cards.find((c) => c.theme === 'hack');
+  const boxes = (data.categories?.length ?? 0) > 0 && innohack && !!roboCard && !!hackCard;
   return (
     <section
       id="choose-experience"
       className="w-full bg-gradient-to-b from-[#F2F8FD] via-[#F8FBFE] to-white text-[#0A1930] py-8 sm:py-10 px-4 sm:px-6 lg:px-10 select-none relative overflow-hidden border-t border-slate-200"
     >
-      <div className="max-w-[1560px] mx-auto space-y-8 relative z-10">
+      <div className={`${boxes ? 'max-w-[1200px] space-y-5 lg:space-y-6' : 'max-w-[1560px] space-y-8'} mx-auto relative z-10`}>
 
         {/* ── 01. CITY BANNER: "<City> Future Innovators 2026" over the city skyline ── */}
         <FutureInnovatorsBanner src={data.banner} />
 
-        {/* ── 02. TWO PRIMARY EVENT PATHWAY CARDS ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
 
-          {data.cards.map((card, i) => (
-            // Track cards replace the timeline once the card has none (Future InnoHack's content); a card that still has
-            // its timeline keeps it.
-            <PathwayCard key={i} data={card} onCta={go} half delay={i * 0.15} tracks={card.theme === 'hack' && !card.steps.length && tracks.length ? tracks : undefined} />
-          ))}
-        </div>
+        {/* ── 02. TWO PRIMARY EVENT PATHWAY CARDS ── */}
+        {boxes ? (
+          // vfi and IBK: RoboKidovation's category rows and Future InnoHack's track panels, side by side.
+          <ProgrammeBoxes data={data} robo={roboCard!} hack={hackCard!} tracks={tracks} go={go} />
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+            {data.cards.map((card, i) => (
+              // Track cards replace the timeline once the card has none (Future InnoHack's content); a card that still has
+              // its timeline keeps it.
+              <PathwayCard key={i} data={card} onCta={go} half delay={i * 0.15} tracks={card.theme === 'hack' && !card.steps.length && tracks.length ? tracks : undefined} />
+            ))}
+          </div>
+        )}
 
         {/* ── 03. VENUES ── */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

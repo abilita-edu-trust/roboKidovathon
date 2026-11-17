@@ -138,11 +138,11 @@ export const Lgr22Page: React.FC<Lgr22PageProps> = ({
               Three Age Pathways, One Family Of Challenges
             </h2>
             <p className="mt-2 text-sm text-slate-600 font-light max-w-2xl leading-relaxed">
-              Junior and Senior play the same Robo-Sprint arena at different pedagogical depths; RoboKido GYM is the autonomous track for gymnasium cohorts.
+              Junior and Senior play the same Robo-Sprint arena at different pedagogical depths.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {AGE_PATHWAYS.map((pathway: AgePathway) => {
               const isOpen = openPathways.has(pathway.id);
               return (
