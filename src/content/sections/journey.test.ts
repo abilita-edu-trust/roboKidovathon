@@ -14,24 +14,41 @@ const { CITY_SITES } = await import('../../components/city/citySites');
 const { journeyDefaults } = await import('./journey');
 
 const vfi = journeyDefaults(VFI_SITE)!;
+// Riga keeps the earlier Young Future InnoHack box; vfi and IBK have Future InnoHack with its tracks.
+const riga = journeyDefaults(CITY_SITES.riga.site)!;
+const allAudiences = (j: typeof vfi) => j.programmes.flatMap((p) => [...p.audiences, ...(p.tracks ?? []).flatMap((t) => t.audiences)]);
 const texts = (a: ProgrammeAudience) =>
   [a.label, a.heading, a.description, a.imageAlt, a.benefitsHeading, a.cta.label, ...a.benefits, ...a.steps.flatMap((s) => [s.title, s.description])]
     .flatMap((b) => [b.en, b.sv]);
 
 describe('audience journeys (vfi)', () => {
-  it('has RoboKidovation and Young Future InnoHack with their dates and audiences', () => {
+  it('has RoboKidovation and Future InnoHack (Kid and Young tracks) with their own dates', () => {
     expect(vfi.programmes.map((p) => [p.id, p.title.en, p.dateLabel.en, p.dateLabel.sv])).toEqual([
       ['robokidovation', 'RoboKidovation', '5 December 2026', '5 december 2026'],
-      ['innohack', 'Young Future InnoHack', '11–12 December 2026', '11–12 december 2026'],
+      ['innohack', 'Future InnoHack', '5–12 December 2026', '5–12 december 2026'],
     ]);
-    expect(vfi.programmes.map((p) => p.audiences.map((a) => a.id))).toEqual([
-      ['students', 'parents', 'teachers'],
-      ['gymnasium', 'university', 'professionals'],
+    expect(vfi.programmes[0].audiences.map((a) => a.id)).toEqual(['students', 'parents', 'teachers']);
+    const tracks = vfi.programmes[1].tracks!;
+    expect(tracks.map((t) => [t.id, t.label.en, t.dateLabel.en, t.registrationOpen])).toEqual([
+      ['kid', 'Kid InnoHack', '5–12 December 2026', false],
+      ['young', 'Young InnoHack', '10–12 December 2026', true],
+    ]);
+    expect(tracks.map((t) => t.audiences.map((a) => a.id))).toEqual([['kids'], ['gymnasium', 'university', 'professionals']]);
+    expect(tracks[0].schedule.map((r) => r.date.en)).toEqual(['By 4 December 2026', '5 December 2026', '6–11 December 2026', '12 December 2026']);
+    expect(tracks[1].schedule.map((r) => r.date.en)).toEqual(['10 December 2026, evening', '11 December 2026', '12 December 2026']);
+    // No company is named before they are confirmed: one hidden, empty challenge as the CMS template.
+    expect(tracks[1].challenges).toEqual([{ visible: false, company: '', logo: '', title: { en: '', sv: '' }, problem: { en: '', sv: '' } }]);
+  });
+
+  it('keeps the earlier box on Riga', () => {
+    expect(riga.programmes.map((p) => [p.id, p.title.en, p.tracks])).toEqual([
+      ['robokidovation', 'RoboKidovation', undefined],
+      ['innohack', 'Young Future InnoHack', undefined],
     ]);
   });
 
   it('gives every audience five steps, three benefits, a button and an empty image slot', () => {
-    for (const a of vfi.programmes.flatMap((p) => p.audiences)) {
+    for (const a of allAudiences(vfi)) {
       expect(a.steps).toHaveLength(5);
       expect(a.benefits).toHaveLength(3);
       expect(a.image).toBe('');
@@ -43,19 +60,22 @@ describe('audience journeys (vfi)', () => {
   });
 
   it("sends each audience's button to its registration form", () => {
-    const hrefs = Object.fromEntries(vfi.programmes.flatMap((p) => p.audiences).map((a) => [a.id, a.cta.href]));
+    const hrefs = Object.fromEntries(allAudiences(vfi).map((a) => [a.id, [a.cta.href, a.secondaryCta?.href ?? '']]));
     expect(hrefs).toEqual({
-      students: '/register?tab=competition',
-      parents: '/register?tab=competition',
-      teachers: '/register?tab=workshop',
-      gymnasium: '/register?tab=hackathon',
-      university: '/register?tab=hackathon',
-      professionals: '/register?tab=mentor',
+      students: ['/register?tab=competition', ''],
+      parents: ['/register?tab=competition', ''],
+      teachers: ['/register?tab=workshop', ''],
+      kids: ['/register?tab=kid-innohack', ''],
+      gymnasium: ['/register?tab=young-innohack', ''],
+      university: ['/register?tab=young-innohack', ''],
+      // Professionals: take part, or the mentor form.
+      professionals: ['/register?tab=young-innohack', '/register?tab=mentor'],
     });
   });
 
   it('keeps robots out of the hackathon audiences', () => {
-    for (const a of vfi.programmes[1].audiences) for (const text of texts(a)) expect(text).not.toMatch(/robo/i);
+    for (const a of vfi.programmes[1].tracks!.flatMap((t) => t.audiences)) for (const text of texts(a)) expect(text).not.toMatch(/robo/i);
+    for (const a of riga.programmes[1].audiences) for (const text of texts(a)) expect(text).not.toMatch(/robo/i);
   });
 
   it('keeps the single guide content alongside the programmes', () => {
@@ -66,29 +86,30 @@ describe('audience journeys (vfi)', () => {
 
 describe('InnoHack tracks (Site CMS content)', () => {
   const bi = (en: string, sv = '') => ({ en, sv });
-  const audience = (id: string): ProgrammeAudience => ({ ...vfi.programmes[1].audiences[0], id, label: bi(id) });
+  const audience = (id: string): ProgrammeAudience => ({ ...riga.programmes[1].audiences[0], id, label: bi(id) });
   const track = (id: string, over: Partial<ProgrammeTrack> = {}): ProgrammeTrack => ({
     id, label: bi(`${id} InnoHack`), eligibility: bi(''), summary: bi(''), dateLabel: bi(''), venue: bi(''), highlights: [], image: '',
     imageAlt: bi(''), registrationOpen: true, closedMessage: bi(''), audiences: [audience(id)], scheduleHeading: bi(''), schedule: [],
     challengesHeading: bi(''), challengesNote: bi(''), challenges: [], ...over,
   });
-  const innohack: ProgrammeJourney = { ...vfi.programmes[1], title: bi('InnoHack'), tracks: [track('kid'), track('young')] };
+  const innohack: ProgrammeJourney = { ...riga.programmes[1], title: bi('InnoHack'), tracks: [track('kid'), track('young')] };
 
-  it('leaves the built-in content of every site without tracks (nothing changes until the CMS content has them)', () => {
-    expect(vfi.programmes.every((p) => p.tracks === undefined)).toBe(true);
+  it('has tracks in the built-in content of vfi and IBK only', () => {
+    expect(vfi.programmes.map((p) => !!p.tracks)).toEqual([false, true]);
     for (const city of Object.values(CITY_SITES)) {
-      for (const p of journeyDefaults(city.site)?.programmes ?? []) expect(p.tracks, city.route).toBeUndefined();
+      const withTracks = (journeyDefaults(city.site)?.programmes ?? []).some((p) => p.tracks);
+      expect(withTracks, city.route).toBe(city.route === 'ibk');
     }
   });
 
   it('keeps saved tracks when the CMS document is laid over the defaults', () => {
-    const merged = mergeData(vfi, { ...vfi, programmes: [vfi.programmes[0], innohack] });
+    const merged = mergeData(riga, { ...riga, programmes: [riga.programmes[0], innohack] });
     expect(merged.programmes[1].tracks).toEqual(innohack.tracks);
     expect(programmeTracks(merged.programmes[1]).map((t) => t.id)).toEqual(['kid', 'young']);
   });
 
-  it('shows saved content without tracks (Riga, Eskilstuna, vfi today) exactly as before', () => {
-    const saved = JSON.parse(JSON.stringify({ ...vfi, programmes: vfi.programmes }));
+  it('shows saved content without tracks (Riga, and vfi and IBK until the content update) exactly as before', () => {
+    const saved = JSON.parse(JSON.stringify({ ...riga, programmes: riga.programmes }));
     const merged = mergeData(vfi, saved);
     for (const p of merged.programmes) {
       expect(p.tracks).toBeUndefined();
@@ -102,7 +123,7 @@ describe('InnoHack tracks (Site CMS content)', () => {
     expect(trackIndexForHash(innohack, '#INNOHACK-KID')).toBe(0);
     expect(trackIndexForHash(innohack, '#journey-innohack')).toBe(-1);
     expect(trackIndexForHash(innohack, '')).toBe(-1);
-    expect(trackIndexForHash(vfi.programmes[0], '#innohack-kid')).toBe(-1);
+    expect(trackIndexForHash(riga.programmes[0], '#innohack-kid')).toBe(-1);
   });
 
   it('skips tracks without a name', () => {

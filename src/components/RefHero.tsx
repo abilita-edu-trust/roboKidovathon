@@ -2,7 +2,7 @@ import React from 'react';
 import { motion, MotionConfig } from 'framer-motion';
 import { ArrowRight, ArrowUpRight, ChevronDown } from 'lucide-react';
 import { useT } from '../content/useT';
-import { hasLabel, type HeroData } from '../content/sections/frame';
+import { hasLabel, visiblePromo, type HeroData, type HeroPromo } from '../content/sections/frame';
 
 interface RefHeroProps {
   /** Texts, buttons, facts and background from the Site CMS. */
@@ -26,9 +26,62 @@ const fadeUp = (delay: number) => ({
   transition: { duration: 0.7, delay, ease: EASE },
 });
 
+/**
+ * The round crop of the badge image: only the white corners of a square logo go. Measured on the Winter Fest 2026
+ * logo (1254 × 1254 px, circle centred at 49.9 % / 49.2 %, radius 49.3 %), just inside its gold rim. A replacement
+ * should be a square image with the circle filling it (or a transparent PNG).
+ */
+const LOGO_CIRCLE = 'circle(49.1% at 49.9% 49.2%)';
+
+/**
+ * The round promotional badge (e.g. the Winter Fest logo), floating in the top-right corner: below the menu,
+ * clear of the headline. From sm up the text column leaves room for it; on phones the hero starts lower instead.
+ */
+const PromoBadge: React.FC<{ promo: HeroPromo; go: (href: string) => void }> = ({ promo, go }) => {
+  const { t } = useT();
+  const label = t(promo.alt);
+  // The site squares every corner (index.css: border-radius 0 !important), so the circle is a clip-path; the glow is
+  // a drop-shadow filter, which follows the round shape. The logo itself is shown exactly as supplied.
+  const image = (
+    <img src={promo.image} alt={promo.href ? '' : label} loading="eager" decoding="async" className="block w-full h-full object-cover" style={{ clipPath: LOGO_CIRCLE }} />
+  );
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.8, delay: 0.3, ease: EASE }}
+      className="absolute z-20 right-3 sm:right-6 top-[4.75rem] sm:top-24 lg:top-28 w-20 sm:w-28 md:w-32 lg:w-44 xl:w-52 aspect-square"
+    >
+      {/* A gentle float and a soft gold glow; still for visitors who prefer reduced motion (MotionConfig). */}
+      <motion.div
+        animate={{ y: [0, -8, 0] }}
+        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+        className="w-full h-full"
+        style={{ filter: 'drop-shadow(0 0 16px rgba(255,205,0,0.35)) drop-shadow(0 12px 22px rgba(0,0,0,0.45))' }}
+      >
+        {promo.href ? (
+          <button
+            type="button"
+            onClick={() => go(promo.href)}
+            aria-label={label || undefined}
+            className="block w-full h-full transition-transform duration-300 hover:scale-[1.03] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FFCD00]"
+          >
+            {image}
+          </button>
+        ) : (
+          image
+        )}
+      </motion.div>
+    </motion.div>
+  );
+};
+
 /** Top label, two-line headline, intro, one card per event and the main button. */
 const EventsHero: React.FC<RefHeroProps> = ({ data: hero, go }) => {
   const { t } = useT();
+  const promo = visiblePromo(hero);
+  // From sm to md the label, headline and intro keep clear of the badge; on phones the hero starts below it.
+  const textRoom = promo ? ' sm:pr-36 md:pr-40 lg:pr-0' : '';
 
   return (
     <MotionConfig reducedMotion="user">
@@ -69,15 +122,17 @@ const EventsHero: React.FC<RefHeroProps> = ({ data: hero, go }) => {
           <div className="absolute top-0 left-0 right-0 h-28 bg-gradient-to-b from-black/70 to-transparent" />
         </div>
 
-        {/* ── CONTENT ── */}
-        <div className="relative z-10 w-full pl-3 pr-3 sm:pl-6 sm:pr-6 pt-28 pb-12 sm:pb-16">
+        {promo && <PromoBadge promo={promo} go={go} />}
+
+        {/* ── CONTENT ── (with the badge: phones start lower, sm–md keep the text clear of it) */}
+        <div className={`relative z-10 w-full pl-3 pr-3 sm:pl-6 sm:pr-6 ${promo ? 'pt-[10.5rem] sm:pt-28' : 'pt-28'} pb-12 sm:pb-16`}>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-end">
             <div className="lg:col-span-7">
 
               {/* Top label */}
               <motion.p
                 {...fadeUp(0)}
-                className="flex items-center gap-3 text-[#FFCD00] text-sm sm:text-base font-mono-code font-bold tracking-[0.18em] uppercase"
+                className={`flex items-center gap-3 text-[#FFCD00] text-sm sm:text-base font-mono-code font-bold tracking-[0.18em] uppercase${textRoom}`}
               >
                 <span className="h-px w-8 bg-[#FFCD00] shrink-0" aria-hidden="true" />
                 <span className="whitespace-pre-line">{t(hero.badge)}</span>
@@ -86,7 +141,7 @@ const EventsHero: React.FC<RefHeroProps> = ({ data: hero, go }) => {
               {/* Headline: the last line is yellow */}
               <motion.h1
                 {...fadeUp(0.08)}
-                className="mt-5 font-headline font-black uppercase text-white tracking-tight leading-[0.95]"
+                className={`mt-5 font-headline font-black uppercase text-white tracking-tight leading-[0.95]${textRoom}`}
                 style={{ fontSize: 'clamp(2.4rem, 5.6vw, 4.75rem)' }}
               >
                 {hero.lines.map((line, i) => (
@@ -99,7 +154,7 @@ const EventsHero: React.FC<RefHeroProps> = ({ data: hero, go }) => {
               {/* Subtitle */}
               <motion.p
                 {...fadeUp(0.16)}
-                className="mt-5 text-base sm:text-lg text-white/85 leading-relaxed max-w-xl"
+                className={`mt-5 text-base sm:text-lg text-white/85 leading-relaxed max-w-xl${textRoom}`}
               >
                 {t(hero.intro)}
               </motion.p>

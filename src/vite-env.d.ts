@@ -3,6 +3,8 @@
 interface ImportMetaEnv {
   readonly VITE_SUPABASE_URL: string;
   readonly VITE_SUPABASE_ANON_KEY: string;
+  /** '1' in preview builds only: show the privacy notice draft for review. */
+  readonly VITE_PRIVACY_DRAFT?: string;
 }
 
 interface ImportMeta {

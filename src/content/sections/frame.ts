@@ -61,7 +61,23 @@ export interface HeroData {
   image: string;
   /** Optional background video (MP4/WebM), muted and looping. */
   video: string;
+  /** A round promotional badge in the hero's top-right corner (e.g. a festival logo); hidden by default. */
+  promo: HeroPromo;
 }
+
+/** The hero's promotional badge: a round logo, shown only when switched on and given an image. */
+export interface HeroPromo {
+  visible: boolean;
+  image: string;
+  /** Read out by screen readers; also the button's name when it links somewhere. */
+  alt: Bi;
+  /** Optional: where a click goes (a site page or https:); empty = not clickable. */
+  href: string;
+}
+
+/** The badge to show, or null (switched off, or no image yet). */
+export const visiblePromo = (hero: Pick<HeroData, 'promo'>): HeroPromo | null =>
+  hero.promo && hero.promo.visible === true && typeof hero.promo.image === 'string' && hero.promo.image.trim() ? hero.promo : null;
 
 export interface VolunteerData {
   eyebrow: Bi;
@@ -116,6 +132,7 @@ export const heroDefaults = (c: SiteConfig): HeroData => ({
   facts: c.hero.facts.map((f) => ({ label: bi(f.label), value: bi(f.value) })),
   image: DEFAULT_HERO_IMAGE,
   video: '',
+  promo: { visible: false, image: '', alt: bi(''), href: '' },
 });
 
 export const volunteerDefaults = (c: SiteConfig): VolunteerData => ({

@@ -117,6 +117,8 @@ export interface SiteConfig {
     rulesTarget?: string;
     /** Show the RoboKidovation and Young Future InnoHack programme boxes instead of the single guide. */
     audienceJourneys?: boolean;
+    /** The hackathon box is Future InnoHack with its Kid and Young tracks (vfi and IBK). */
+    futureInnohack?: boolean;
   };
   footer: {
     title: string;
@@ -165,7 +167,7 @@ export const CITY_SITE_SLUGS = ['vaxjo', 'eskilstuna', 'riga'];
 export const VFI_SITE: SiteConfig = {
   location: null,
   cityName: 'Västerås',
-  hackLabel: 'Young Inno Hack',
+  hackLabel: 'Future InnoHack',
   finalsLabel: 'the Västerås Finals',
   organiser: 'Västerås Future Innovators / INIAC',
   ideasPath: '/ideas',
@@ -207,10 +209,10 @@ export const VFI_SITE: SiteConfig = {
         tab: 'competition',
       },
       {
-        date: same('11–12 DECEMBER'),
-        title: same('Young Future InnoHack'),
-        kind: { en: 'Innovation Hackathon', sv: 'Innovationshackathon' },
-        audience: { en: 'Students and young innovators', sv: 'Elever och unga innovatörer' },
+        date: same('5–12 DECEMBER'),
+        title: same('Future InnoHack'),
+        kind: { en: 'Turn ideas into solutions. Kid and Young tracks.', sv: 'Gör idéer till lösningar. Kid- och Young-spår.' },
+        audience: { en: 'Grades 3–9 · Gymnasium · University · Professionals', sv: 'Årskurs 3–9 · gymnasium · universitet · yrkesverksamma' },
         target: 'register',
         tab: 'hackathon',
       },
@@ -223,7 +225,8 @@ export const VFI_SITE: SiteConfig = {
       { label: 'PROGRAMME', value: '20H STEM' },
       { label: 'LGR22', value: 'CURRICULUM FIT' },
       { label: 'ARENA', value: '244 × 122 CM' },
-      { label: 'FINAL DATE', value: '5 DECEMBER 2026' },
+      { label: 'ROBOKIDOVATION FINAL', value: '5 DECEMBER 2026' },
+      { label: 'FUTURE INNOHACK FINAL', value: '12 DECEMBER 2026' },
     ],
   },
 
@@ -231,11 +234,13 @@ export const VFI_SITE: SiteConfig = {
   journey: {
     finals: 'on 5 December 2026 at MISV, Västerås',
     audienceJourneys: true,
+    futureInnohack: true,
     dates: [
       { label: 'School demos', value: '1–14 October 2026' },
       { label: 'School qualifiers', value: '12–25 November 2026' },
       { label: 'RoboKidovation', value: '5 December 2026 (MISV, Västerås)' },
-      { label: 'Young Inno Hack', value: '11–12 December 2026 (venue TBC)' },
+      { label: 'Kid InnoHack', value: '5–12 December 2026 (final at Växhuset, Västerås)' },
+      { label: 'Young InnoHack', value: '10–12 December 2026 (final at Växhuset, Västerås)' },
     ],
   },
 
@@ -265,7 +270,7 @@ export const VFI_SITE: SiteConfig = {
     email: 'contact@iniac.se',
     orgLines: ['Indisk BarnKlubb (IBK) Västerås & INIAC', 'Västerås, Sweden'],
     registerText: same(
-      'Registration is open for schools, associations and independent teams ahead of the 12–25 November qualifiers and the 5 December 2026 Final.'
+      'Registration is open for schools, associations and independent teams. Finals: RoboKidovation on 5 December 2026 (qualifiers 12–25 November) and Future InnoHack on 12 December 2026.'
     ),
     register: { label: same('REGISTER SCHOOL, ASSOCIATION OR TEAM'), target: 'register' },
     copyright: '© 2026 VÄSTERÅS FUTURE INNOVATORS · INDISK BARNKLUBB VÄSTERÅS',
@@ -295,11 +300,15 @@ export const VFI_SITE: SiteConfig = {
       },
       {
         id: 'hack',
-        title: same('Young Inno Hack'),
-        subtitle: { en: 'Ideas and squads · Grade 7 to university', sv: 'Idéer och lag · åk 7 till universitet' },
-        date: { en: '11–12 December 2026', sv: '11–12 december 2026' },
-        venue: { en: 'Venue to be confirmed', sv: 'Lokal meddelas senare' },
+        title: same('Future InnoHack'),
+        subtitle: {
+          en: 'Kid InnoHack (grades 3–9) · Young InnoHack (gymnasium to professionals)',
+          sv: 'Kid InnoHack (åk 3–9) · Young InnoHack (gymnasium till yrkesverksamma)',
+        },
+        date: { en: '5–12 December 2026', sv: '5–12 december 2026' },
+        venue: same('Växhuset, Västerås'),
         image: '/register/hackathon.jpg',
+        tracks: ['kid', 'young'],
       },
       {
         id: 'community',

@@ -12,7 +12,8 @@ import {
 // Stored values are English and shared with the Fut Inno admin filters.
 const VOLUNTEER_EVENTS: ChipOption[] = [
   { value: 'robo-sprint-city-final', en: 'Robo-Sprint City Final (5 December 2026)', sv: 'Robo-Sprint stadsfinal (5 december 2026)' },
-  { value: 'young-inno-hack', en: 'Young Inno Hack (11–12 December 2026)', sv: 'Young Inno Hack (11–12 december 2026)' },
+  // Stored value unchanged (admin filters, earlier sign-ups); the event is now Future InnoHack.
+  { value: 'young-inno-hack', en: 'Future InnoHack (5–12 December 2026)', sv: 'Future InnoHack (5–12 december 2026)' },
   { value: 'school-workshops-demos', en: 'In-school workshops & demos', sv: 'Workshoppar och demos på skolor' },
   { value: 'any-vfi-event', en: 'Any VFI event', sv: 'Valfritt VFI-evenemang' },
 ];
@@ -42,7 +43,8 @@ const AGE_GROUPS: ChipOption[] = [
 const TSHIRT_SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
 const events = (ctx: FormCtx): ChipOption[] => ctx.site.intake.volunteer?.eventOptions ?? VOLUNTEER_EVENTS;
-const isMentor = (ctx: FormCtx) => ctx.path.role === 'mentor';
+/** The mentor sign-up: Community → Mentor, or Future InnoHack → Young → Become a mentor (professionals). */
+const isMentor = (ctx: FormCtx) => ctx.path.role === 'mentor' || ctx.path.activity === 'mentor';
 const team = (ctx: FormCtx) => ctx.site.intake.volunteer?.teamName ?? 'VFI';
 
 const VolunteerFields: React.FC<FieldsProps> = (props) => {

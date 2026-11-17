@@ -30,7 +30,7 @@ export const ibkSite: SiteConfig = {
     links: [
       { id: 'ibk', label: { en: 'Home', sv: 'Hem' } },
       { id: 'ibk#journey-robokidovation', label: same('RoboKidovation') },
-      { id: 'ibk#journey-innohack', label: same('Young InnoHack') },
+      { id: 'ibk#journey-innohack', label: same('Future InnoHack') },
       { id: 'ibk-register', label: { en: 'Register', sv: 'Registrering' } },
       // IBK's own page (Site CMS): welcome, why join, the board and the contact details.
       { id: 'ibk/about', label: { en: 'About IBK', sv: 'Om IBK' } },

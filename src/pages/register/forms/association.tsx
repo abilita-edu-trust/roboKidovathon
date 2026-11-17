@@ -14,7 +14,7 @@ const ASSOCIATION_WANTS_OPTIONS: ChipOption[] = [
   { value: 'demo', en: 'Robotics demo', sv: 'Robotikdemo' },
   { value: 'competition-teams', en: 'Enter competition teams', sv: 'Anmäla tävlingslag' },
   { value: 'grade-1-2-participants', en: 'Grades 1–2 participant session', sv: 'Deltagarpass för åk 1–2' },
-  { value: 'young-inno-hack', en: 'Young Inno Hack ideas', sv: 'Idéer till Young Inno Hack' },
+  { value: 'young-inno-hack', en: 'Future InnoHack ideas', sv: 'Idéer till Future InnoHack' },
 ];
 
 export const ASSOCIATION_TYPE_OPTIONS: ChipOption[] = [

@@ -20,7 +20,7 @@ export const SITE_META: Record<SiteMetaKey, SiteMeta> = {
   vfi: {
     title: 'Västerås Future Innovators 2026 | INIAC',
     description:
-      'Hands-on robotics and youth innovation for schools, associations and independent teams in Västerås, by INIAC. Final on 5 December 2026.',
+      'Hands-on robotics and youth innovation for schools, associations and independent teams in Västerås, by INIAC. RoboKidovation final on 5 December 2026; Future InnoHack final on 12 December 2026.',
     origin: 'https://vfi.iniac.se',
     image: '/ves.jpeg',
   },

@@ -111,6 +111,10 @@ const ProgrammeBox: React.FC<{ programme: ProgrammeJourney; go: (href: string) =
   const uid = useId();
   const accent = ACCENTS[programme.accent as keyof typeof ACCENTS] ?? ACCENTS.blue;
   const tracks = programmeTracks(programme);
+  // The chosen track (a link such as "#innohack-young" picks it); its own dates show in the badge.
+  const [trackIndex, setTrackIndex] = useState(() => Math.max(0, typeof window === 'undefined' ? 0 : trackIndexForHash(programme, window.location.hash)));
+  const track = tracks[Math.min(trackIndex, Math.max(tracks.length - 1, 0))];
+  const badge = (track && t(track.dateLabel)) || t(programme.dateLabel);
 
   return (
     // The id is a menu anchor: "#journey-robokidovation", "#journey-innohack".
@@ -129,16 +133,16 @@ const ProgrammeBox: React.FC<{ programme: ProgrammeJourney; go: (href: string) =
           </h3>
           {t(programme.subtitle) && <p className="text-sm text-slate-600">{t(programme.subtitle)}</p>}
         </div>
-        {t(programme.dateLabel) && (
+        {badge && (
           <span className={`inline-flex items-center gap-2 self-start sm:self-auto px-3 py-1.5 font-mono-code font-bold text-xs uppercase tracking-wider ${accent.chip}`}>
             <CalendarDays className="w-3.5 h-3.5" aria-hidden="true" />
-            {t(programme.dateLabel)}
+            {badge}
           </span>
         )}
       </header>
 
       {tracks.length > 0 ? (
-        <TrackChoice programme={programme} tracks={tracks} accent={accent} go={go} uid={uid} />
+        <TrackChoice programme={programme} tracks={tracks} accent={accent} go={go} uid={uid} active={trackIndex} onChoose={setTrackIndex} />
       ) : (
         <AudienceTabs audiences={programme.audiences ?? []} label={t(programme.title)} accent={accent} go={go} rules={rules} uid={uid} />
       )}
@@ -247,15 +251,17 @@ const prefersReducedMotion = () =>
  * The track choice (InnoHack: Kid InnoHack, Young InnoHack) and the chosen track: its description, audiences,
  * timeline and company challenges. "#innohack-kid" / "#innohack-young" in the address open a track.
  */
-const TrackChoice: React.FC<{ programme: ProgrammeJourney; tracks: ProgrammeTrack[]; accent: Accent; go: (href: string) => void; uid: string }> = ({
-  programme,
-  tracks,
-  accent,
-  go,
-  uid,
-}) => {
+const TrackChoice: React.FC<{
+  programme: ProgrammeJourney;
+  tracks: ProgrammeTrack[];
+  accent: Accent;
+  go: (href: string) => void;
+  uid: string;
+  /** The chosen track; the box shows its dates in the header badge. */
+  active: number;
+  onChoose: (index: number) => void;
+}> = ({ programme, tracks, accent, go, uid, active, onChoose: setActive }) => {
   const { t } = useT();
-  const [active, setActive] = useState(() => Math.max(0, typeof window === 'undefined' ? 0 : trackIndexForHash(programme, window.location.hash)));
   const switchRef = useRef<HTMLDivElement>(null);
   const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const index = Math.min(active, tracks.length - 1);
@@ -277,18 +283,23 @@ const TrackChoice: React.FC<{ programme: ProgrammeJourney; tracks: ProgrammeTrac
     if (scroll) reveal();
   };
 
-  // A link straight to a track (bookmark, shared link, browser back/forward) opens it.
+  // A link straight to a track opens it: a bookmark or shared link, browser back/forward, and links inside the site
+  // (the app announces the section it scrolls to as a "site-section" event).
   useEffect(() => {
-    const open = () => {
-      const i = trackIndexForHash(programme, window.location.hash);
+    const open = (hash: string) => {
+      const i = trackIndexForHash(programme, hash);
       if (i >= 0) choose(i);
     };
-    open();
-    window.addEventListener('hashchange', open);
-    window.addEventListener('popstate', open);
+    const fromAddress = () => open(window.location.hash);
+    const fromSite = (e: Event) => open(String((e as CustomEvent<string>).detail ?? ''));
+    fromAddress();
+    window.addEventListener('hashchange', fromAddress);
+    window.addEventListener('popstate', fromAddress);
+    window.addEventListener('site-section', fromSite);
     return () => {
-      window.removeEventListener('hashchange', open);
-      window.removeEventListener('popstate', open);
+      window.removeEventListener('hashchange', fromAddress);
+      window.removeEventListener('popstate', fromAddress);
+      window.removeEventListener('site-section', fromSite);
     };
   }, [programme]);
 

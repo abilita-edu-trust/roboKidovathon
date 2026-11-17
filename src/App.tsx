@@ -25,6 +25,9 @@ import { AdminIdeasCurationPage } from './pages/AdminIdeasCurationPage';
 import { AdminLoginGate } from './components/AdminLoginGate';
 import { cityPageFor } from './components/city/citySites';
 import { CityPage } from './components/city/CityPage';
+import { GuardianConfirmPage } from './pages/GuardianConfirmPage';
+import { PrivacyNoticePage } from './pages/PrivacyNoticePage';
+import { InnohackProvider, innohackTracksFrom } from './content/innohackContext';
 import { SITE_META } from './data/siteMeta';
 import { SiteProvider, VFI_SITE } from './context/SiteContext';
 import { HomeSections, type SectionEnv } from './content/registry';
@@ -45,6 +48,8 @@ const toRegisterTab = (tab: string | null): IntakeProgramTab | null =>
   REGISTER_TABS.includes(tab as IntakeProgramTab) ? (tab as IntakeProgramTab) : null;
 
 const scrollToSection = (id: string) => {
+  // Parts of a page that open something for a section (e.g. Find Your Path's "#innohack-kid" track) hear about it.
+  window.dispatchEvent(new CustomEvent('site-section', { detail: id }));
   // Wait for the newly routed page to render before scrolling.
   setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
 };
@@ -155,6 +160,8 @@ export function App() {
   useSiteLanguage(baseSite.secondLanguage ?? 'sv');
   // The site's CMS document (iniac.se Site CMS) over its built-in defaults.
   const { sections, pages, ready } = useSiteDocument(sectionEnv);
+  // Future InnoHack's tracks from the same document, for the programme section's cards and the register page.
+  const innohackTracks = useMemo(() => innohackTracksFrom(sections), [sections]);
   const fadeIn = `transition-opacity duration-300 ${ready ? 'opacity-100' : 'opacity-0'}`;
   // Header and footer from the same document, on every page of the site.
   const site = useMemo(() => applyFrame(baseSite, sections, language), [baseSite, sections, language]);
@@ -169,6 +176,7 @@ export function App() {
     const goIdeas = () => handleNavigate(`${city.route}-ideas`);
     return (
       <SiteProvider site={site}>
+      <InnohackProvider tracks={innohackTracks}>
         <div key={language} className={`min-h-screen bg-white text-[#0A1930] font-sans selection:bg-[#FFCD00] selection:text-[#0A1930] relative overflow-x-hidden ${fadeIn}`}>
           <RoboCursor />
           <Navbar activeTab={currentRoute} onNavigate={navigateOrOpen} onOpenRegister={() => goRegister()} />
@@ -179,6 +187,8 @@ export function App() {
             )}
             {page === 'ideas' && <IdeasVotingPage onNavigateHome={goHome} onNavigateSubmit={() => goRegister('submit-idea')} />}
             {page === 'page' && <CityPage env={sectionEnv} page={pages.find((p) => p.path === path)} ready={ready} onNavigateHome={goHome} />}
+            {page === 'guardian' && <GuardianConfirmPage onNavigateHome={goHome} />}
+            {page === 'privacy' && <PrivacyNoticePage onNavigateHome={goHome} />}
           </main>
           {!city.ownContact && <TeamContact />}
           <RefFooter onNavigate={navigateOrOpen} onSelectPartner={handleSelectPartner} />
@@ -192,12 +202,14 @@ export function App() {
             role={previewPartner?.role}
           />
         </div>
+            </InnohackProvider>
       </SiteProvider>
     );
   }
 
   return (
     <SiteProvider site={site}>
+      <InnohackProvider tracks={innohackTracks}>
     <div key={language} className={`min-h-screen bg-white text-[#0A1930] font-sans selection:bg-[#FFCD00] selection:text-[#0A1930] relative overflow-x-hidden ${fadeIn}`}>
       {/* ── Custom Animated Robot Cursor ── */}
       <RoboCursor />
@@ -314,6 +326,9 @@ export function App() {
           />
         )}
 
+        {currentRoute === 'guardian' && <GuardianConfirmPage onNavigateHome={() => handleNavigate('future-innovators')} />}
+        {currentRoute === 'privacy' && <PrivacyNoticePage onNavigateHome={() => handleNavigate('future-innovators')} />}
+
         {currentRoute === 'admin' && (
           <AdminLoginGate>
             <AdminIdeasCurationPage
@@ -346,12 +361,13 @@ export function App() {
 
 
       {/* Not over the forms or the voting page itself */}
-      {!['admin', 'ideas', 'register'].includes(currentRoute) && (
+      {!['admin', 'ideas', 'register', 'guardian', 'privacy'].includes(currentRoute) && (
         <VotePrompt onGoToVote={goToVote} onSubmitIdea={() => handleNavigate('register', 'submit-idea')} />
       )}
 
     </div>
-    </SiteProvider>
+          </InnohackProvider>
+      </SiteProvider>
   );
 }
 

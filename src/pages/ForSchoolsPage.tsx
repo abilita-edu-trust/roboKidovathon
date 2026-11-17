@@ -45,7 +45,7 @@ const FAQ_ITEMS: FAQItem[] = [
     id: 'faq-2',
     category: 'Eligibility & Grades',
     question: 'Which grades can participate in Västerås Future Innovators 2026?',
-    answer: 'RoboKido Junior is designed for Grades 3–6 (Grundskola). RoboKido Senior is for Grades 7–9. Grades 1–2 can join workshops and demos as a participant category (not a competition category). The RoboKido GYM autonomous challenge is structured for Gymnasium and upper-level students. The Young Inno Hack is open to Grades 7–9 (basic level), Gymnasiet students (medium level) and university students (advanced level).',
+    answer: 'RoboKido Junior is designed for Grades 3–6 (Grundskola). RoboKido Senior is for Grades 7–9. Grades 1–2 can join workshops and demos as a participant category (not a competition category). The RoboKido GYM autonomous challenge is structured for Gymnasium and upper-level students. Future InnoHack has two tracks: Kid InnoHack for Grades 3–9 (an idea of their own) and Young InnoHack for gymnasium students, university students and professionals.',
   },
   {
     id: 'faq-3',

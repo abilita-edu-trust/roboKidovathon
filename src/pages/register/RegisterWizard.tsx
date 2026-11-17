@@ -9,6 +9,8 @@ import {
   Calendar,
   Check,
   CheckCircle2,
+  Lightbulb,
+  Lock,
   MapPin,
   Pencil,
   Share2,
@@ -20,10 +22,14 @@ import { ParticipationFees } from '../../components/ParticipationFees';
 import { useSite, type Bilingual } from '../../context/SiteContext';
 import { useT } from '../../content/useT';
 import { pick } from '../../content/core';
+import { useInnohackTracks } from '../../content/innohackContext';
+import type { ProgrammeTrack } from '../../content/sections/audienceJourneys';
 import {
+  TRACK_TABS,
   activityChoices,
   answerCard,
   formFor,
+  hackTracks,
   isAnswered,
   isGreen,
   pathForTab,
@@ -68,23 +74,46 @@ const ChoiceCard: React.FC<{
   meta?: React.ReactNode;
   green?: boolean;
   small?: boolean;
-}> = ({ selected, onSelect, title, desc, icon, image, meta, green, small }) => {
+  /** Not open yet (Kid InnoHack): greyed, with `badge` saying why; choosing it explains instead of selecting. */
+  disabled?: boolean;
+  badge?: string;
+  /** A picture slot without a picture yet: a navy panel with a lightbulb and this name. */
+  placeholder?: string;
+}> = ({ selected, onSelect, title, desc, icon, image, meta, green, small, disabled, badge, placeholder }) => {
   const tone = selected
     ? `${green ? 'border-[#059669] bg-emerald-50/60' : 'border-[#006AA7] bg-sky-50/70'} shadow-md`
-    : 'bg-white border-slate-200 hover:border-[#0A1930] hover:shadow-lg';
+    : disabled
+      ? 'bg-slate-50 border-slate-200'
+      : 'bg-white border-slate-200 hover:border-[#0A1930] hover:shadow-lg';
   return (
     <button
       type="button"
       onClick={onSelect}
       aria-pressed={selected}
-      className={`relative w-full text-left border-2 transition-all flex flex-col cursor-pointer ${tone}`}
+      aria-disabled={disabled || undefined}
+      className={`relative w-full text-left border-2 transition-all flex flex-col ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'} ${tone}`}
     >
+      {badge && (
+        <span className="absolute top-2 left-2 z-10 inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#FFCD00] text-[#0A1930] text-[11px] font-headline font-black uppercase tracking-wider">
+          <Lock className="w-3 h-3" aria-hidden="true" />
+          {badge}
+        </span>
+      )}
       {selected && (
         <span className={`absolute top-2 right-2 z-10 w-6 h-6 flex items-center justify-center text-white ${green ? 'bg-[#059669]' : 'bg-[#006AA7]'}`}>
           <Check className="w-3.5 h-3.5" />
         </span>
       )}
-      {image && <img src={image} alt="" className="w-full h-40 sm:h-44 object-cover border-b border-slate-200" />}
+      {image ? (
+        <img src={image} alt="" className={`w-full h-40 sm:h-44 object-cover border-b border-slate-200 ${disabled ? 'opacity-60' : ''}`} />
+      ) : placeholder ? (
+        <span className={`w-full h-40 sm:h-44 border-b border-slate-200 bg-gradient-to-br from-[#0A1930] to-[#1E3A5F] flex flex-col items-center justify-center gap-2 text-white ${disabled ? 'opacity-70' : ''}`} aria-hidden="true">
+          <span className="w-14 h-14 bg-white/10 border border-white/25 flex items-center justify-center">
+            <Lightbulb className="w-7 h-7 text-[#FFCD00]" />
+          </span>
+          <span className="font-headline font-black text-xs uppercase tracking-wider text-white/85">{placeholder}</span>
+        </span>
+      ) : null}
       <span className={`block ${small ? 'p-4' : 'p-5'}`}>
         {icon && (
           <span className={`block leading-none mb-2 ${small ? 'text-2xl' : 'text-3xl'}`} aria-hidden="true">
@@ -116,7 +145,15 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
   const city = L(site.cityName, site.cityName);
 
   const programmes = site.intake.programmes;
-  const accepts = (tab: IntakeProgramTab) => !site.intake.tabs || site.intake.tabs.includes(tab);
+  // Future InnoHack (vfi, IBK): the hackathon programme's tracks, with their texts from the Site CMS.
+  const trackIds = hackTracks(programmes);
+  const tracked = trackIds.length > 0;
+  const cmsTracks = useInnohackTracks();
+  const trackCards = trackIds.map((id) => cmsTracks.find((tr) => tr.id === id)).filter((tr): tr is ProgrammeTrack => !!tr);
+  const trackOf = (id?: string) => trackCards.find((tr) => tr.id === id);
+  // Kid InnoHack stays closed until the Site CMS opens it (the database refuses Kid ideas until then too).
+  const kidOpen = trackOf('kid')?.registrationOpen === true;
+  const accepts = (tab: IntakeProgramTab) => (TRACK_TABS.includes(tab) ? tracked : true) && (!site.intake.tabs || site.intake.tabs.includes(tab));
 
   // Grade labels only name the programmes this site runs: esk has no hackathon (and so no
   // university level), vxo has no RoboKidovation (and so no grade 1–2 participant group).
@@ -180,7 +217,11 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
   const def = formId ? FORMS[formId] : null;
   const ctx = ctxFor(path);
   const programme = ctx?.programme ?? null;
-  const green = isGreen(path.programme);
+  // Future InnoHack keeps the site's navy and yellow; other hackathons their green.
+  const green = isGreen(path.programme) && !tracked;
+  // Kid InnoHack while it is closed: every step after the track explains that instead of asking.
+  const kidBlocked = path.track === 'kid' && !kidOpen;
+  const shownTrack = trackOf(path.track);
   const accentBg = green ? 'bg-[#059669]' : 'bg-[#006AA7]';
 
   const set = (key: string, value: unknown) => setValues((prev) => ({ ...prev, [key]: value }));
@@ -222,7 +263,29 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
     setError('');
   };
   // A new programme clears every answer; a new activity clears its theme (the lists differ).
-  const chooseProgramme = (id: RegisterPath['programme']) => choose(id === path.programme ? path : { programme: id });
+  const chooseProgramme = (id: RegisterPath['programme']) => {
+    const nextPath: RegisterPath = id === path.programme ? path : { programme: id };
+    choose(nextPath);
+    // Future InnoHack: its tracks come straight after, scrolled into view.
+    if (id === 'hack' && tracked) goTo(stepsFor(nextPath, programmes).indexOf('track'), nextPath);
+  };
+  /** A track, then on to "How are you joining?". Kid keeps only its idea pathway; Young keeps an idea or squad answer from a link. */
+  const chooseTrack = (id: NonNullable<RegisterPath['track']>) => {
+    if (id === 'kid' && !kidOpen) {
+      setError(T(trackOf('kid')?.closedMessage ?? { en: 'Kid InnoHack opens soon.', sv: 'Kid InnoHack öppnar snart.' }));
+      return;
+    }
+    const keep = id === 'young' && (path.activity === 'idea' || path.activity === 'participate');
+    const nextPath: RegisterPath = {
+      programme: 'hack',
+      track: id,
+      role: path.track === id ? path.role : undefined,
+      activity: id === 'kid' ? 'kid-idea' : keep ? path.activity : undefined,
+      theme: keep ? path.theme : undefined,
+    };
+    choose(nextPath);
+    goTo(stepsFor(nextPath, programmes).indexOf('track') + 1, nextPath);
+  };
   const chooseRole = (id: RegisterPath['role']) => choose({ ...path, role: id });
   const chooseActivity = (id: RegisterPath['activity']) =>
     choose({ ...path, activity: id, theme: id === path.activity ? path.theme : undefined });
@@ -306,7 +369,20 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
           title: L('What would you like to join?', 'Vad vill du delta i?'),
           hint: L('Each programme has its own date and place. Choose one to see its steps.', 'Varje program har sitt eget datum och sin egen plats. Välj ett för att se stegen.'),
         };
+      case 'track':
+        return {
+          title: L('Which track?', 'Vilket spår?'),
+          hint: L(
+            'Kid InnoHack is for grades 3–9 with their own idea. Young InnoHack is for gymnasium, university and professionals.',
+            'Kid InnoHack är för årskurs 3–9 med en egen idé. Young InnoHack är för gymnasium, universitet och yrkesverksamma.',
+          ),
+        };
       case 'role':
+        if (p === 'hack' && path.track === 'kid')
+          return {
+            title: L('How are you joining?', 'Hur deltar du?'),
+            hint: L('Choose who is sending the idea. Each child’s parent or guardian confirms by email.', 'Välj vem som skickar idén. Varje barns förälder eller vårdnadshavare bekräftar via e-post.'),
+          };
         if (p === 'community')
           return {
             title: L('How would you like to get involved?', 'Hur vill du engagera dig?'),
@@ -320,6 +396,19 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
               : L('Choose who you are registering for. Next you choose a demo, a workshop or the competition.', 'Välj vem du anmäler. Sedan väljer du demonstration, workshop eller tävling.'),
         };
       case 'activity':
+        if (p === 'hack' && path.track === 'kid')
+          return {
+            title: L('Your pathway', 'Din väg'),
+            hint: L('Kid InnoHack has one pathway: an idea for the selection on 5 December 2026.', 'Kid InnoHack har en väg: en idé till urvalet den 5 december 2026.'),
+          };
+        if (p === 'hack' && path.track === 'young')
+          return {
+            title: L('Register an idea, take part or mentor?', 'Registrera en idé, delta eller bli mentor?'),
+            hint: L(
+              'An idea goes to the public vote, separate from the hackathon. Taking part registers you for the hackathon. Professionals on their own can also mentor the teams.',
+              'En idé går till den publika omröstningen, skild från hackathonet. Att delta anmäler dig till hackathonet. Yrkesverksamma på egen hand kan också vara mentorer för lagen.',
+            ),
+          };
         return p === 'hack'
           ? {
               title: L('Register an idea or take part?', 'Registrera en idé eller delta?'),
@@ -351,13 +440,17 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
   const { title, hint } = heading();
 
   // "Your choices": every answered question, each with a way back to it.
-  const crumbs = (['role', 'activity', 'theme'] as const)
+  const trackCrumb =
+    shownTrack && steps.includes('track')
+      ? [{ k: 'track', stepKind: 'track' as StepKind, card: { id: shownTrack.id, icon: shownTrack.id === 'kid' ? '🧒' : '🚀', title: shownTrack.label, desc: { en: '', sv: '' } } }]
+      : [];
+  const crumbs = [...trackCrumb, ...(['role', 'activity', 'theme'] as const)
     .map((k) => {
       const card = answerCard(k, path);
       const stepKind: StepKind = k === 'theme' && path.programme === 'hack' ? 'activity' : k;
-      return card && steps.includes(stepKind) ? { k, stepKind, card } : null;
+      return card && steps.includes(stepKind) ? { k: k as string, stepKind, card } : null;
     })
-    .filter((c): c is NonNullable<typeof c> => !!c);
+    .filter((c): c is NonNullable<typeof c> => !!c)];
 
   const reviewRows = (): SummaryRow[] => {
     if (!def || !ctx || !programme) return [];
@@ -366,8 +459,13 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
     const theme = answerCard('theme', path);
     const pathRows: SummaryRow[] = [
       [L('Programme', 'Program'), T(programme.title)],
-      ...(programme.date ? [[L('Event date', 'Evenemangsdatum'), T(programme.date)] as SummaryRow] : []),
-      ...(programme.venue ? [[L('Venue', 'Plats'), T(programme.venue)] as SummaryRow] : []),
+      ...(shownTrack ? [[L('Track', 'Spår'), T(shownTrack.label)] as SummaryRow] : []),
+      ...(shownTrack
+        ? [[L('Dates', 'Datum'), T(shownTrack.dateLabel)] as SummaryRow, [L('Venue', 'Plats'), T(shownTrack.venue)] as SummaryRow]
+        : [
+            ...(programme.date ? [[L('Event date', 'Evenemangsdatum'), T(programme.date)] as SummaryRow] : []),
+            ...(programme.venue ? [[L('Venue', 'Plats'), T(programme.venue)] as SummaryRow] : []),
+          ]),
       ...(role ? [[path.programme === 'community' ? L('Getting involved as', 'Engagerar dig som') : L('Joining as', 'Deltar som'), T(role.title)] as SummaryRow] : []),
       ...(activity ? [[path.programme === 'hack' ? L('Pathway', 'Väg') : L('Activity', 'Aktivitet'), T(activity.title)] as SummaryRow] : []),
       ...(theme ? [[path.programme === 'hack' && path.activity === 'participate' ? L('Challenge area', 'Utmaningsområde') : L('Area', 'Område'), T(theme.title)] as SummaryRow] : []),
@@ -436,8 +534,54 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
       );
     }
 
+    if (kind === 'track') {
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {trackCards.map((tr) => {
+            const closed = tr.id === 'kid' && !kidOpen;
+            return (
+              <ChoiceCard
+                key={tr.id}
+                selected={path.track === tr.id}
+                onSelect={() => chooseTrack(tr.id as NonNullable<RegisterPath['track']>)}
+                image={tr.image || (tr.id === 'young' ? '/register/hackathon.jpg' : undefined)}
+                placeholder={T(tr.label)}
+                title={T(tr.label)}
+                desc={[T(tr.eligibility), ...(tr.highlights ?? []).map(T).filter((h) => h && h !== T(tr.eligibility))].filter(Boolean).join(' · ')}
+                meta={meta({ date: tr.dateLabel, venue: tr.venue })}
+                disabled={closed}
+                badge={closed ? T(tr.closedMessage) : undefined}
+              />
+            );
+          })}
+        </div>
+      );
+    }
+
+    // Kid InnoHack while it is closed (e.g. reached by a link): say so instead of asking on.
+    if (kidBlocked) {
+      return (
+        <div className="p-5 bg-[#FFFBEA] border-2 border-[#FFCD00] space-y-3">
+          <p className="flex items-center gap-2 font-headline font-black text-sm uppercase tracking-tight text-[#0A1930]">
+            <Lock className="w-4 h-4 text-[#006AA7]" aria-hidden="true" />
+            {T(trackOf('kid')?.closedMessage ?? { en: 'Kid InnoHack opens soon.', sv: 'Kid InnoHack öppnar snart.' })}
+          </p>
+          <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
+            {L(
+              'Kid InnoHack registration opens once guardian confirmation is ready. Young InnoHack is open now.',
+              'Anmälan till Kid InnoHack öppnar när vårdnadshavarnas bekräftelse är klar. Young InnoHack är öppet nu.',
+            )}
+          </p>
+          <button type="button" onClick={() => goToKind('track')} className={outlineBtn}>
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>{L('Choose another track', 'Välj ett annat spår')}</span>
+          </button>
+        </div>
+      );
+    }
+
     if (kind === 'role') {
-      const cards = roleChoices(path.programme, accepts);
+      const cards = roleChoices(path.programme, accepts, path.track);
       return (
         <div className={`grid grid-cols-1 sm:grid-cols-2 gap-4 ${cards.length === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-4'}`}>
           {cards.map((c) => (
@@ -448,7 +592,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
     }
 
     if (kind === 'activity') {
-      const cards = activityChoices(path.programme, accepts);
+      const cards = activityChoices(path.programme, accepts, path);
       return (
         <div>
           <div className={`grid grid-cols-1 gap-4 ${cards.length >= 3 ? 'md:grid-cols-3' : 'md:grid-cols-2'}`}>
@@ -456,7 +600,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
               <ChoiceCard key={c.id} small selected={path.activity === c.id} onSelect={() => chooseActivity(c.id)} icon={c.icon} title={T(c.title)} desc={T(c.desc)} green={green} />
             ))}
           </div>
-          {path.programme === 'hack' && path.activity && (
+          {path.programme === 'hack' && path.activity && themeChoices(path).length > 0 && (
             <div className="mt-8">
               <h3 className="font-headline font-black text-lg uppercase tracking-tight text-[#0A1930]">
                 {path.activity === 'participate' ? L('Challenge area', 'Utmaningsområde') : L('Area of your idea', 'Idéns område')}
@@ -484,7 +628,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
           className="space-y-6"
         >
           <Fields v={values} set={set} ctx={ctx} />
-          {def.fees && site.intake.showFees && <ParticipationFees />}
+          {(typeof def.fees === 'function' ? def.fees(ctx) : def.fees) && site.intake.showFees && <ParticipationFees />}
         </form>
       );
     }
@@ -554,7 +698,8 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
 
   const doneCopy = done && def && ctx ? def.done(ctx, values) : null;
   const choiceStep = kind !== 'form' && kind !== 'review';
-  const footer = programme ? [city, programme.date ? T(programme.date) : ''].filter(Boolean).join(' · ') : `${city} · ${site.nav.brandChip}`;
+  const footerDate = shownTrack ? shownTrack.dateLabel : programme?.date;
+  const footer = programme ? [city, footerDate ? T(footerDate) : ''].filter(Boolean).join(' · ') : `${city} · ${site.nav.brandChip}`;
 
   return (
     <>
@@ -589,9 +734,14 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                     </span>
                     <span className={`block font-headline font-black text-lg sm:text-xl uppercase tracking-tight leading-tight ${green ? 'text-[#059669]' : 'text-[#006AA7]'}`}>
                       {T(programme.title)}
+                      {shownTrack && <span className="text-[#0A1930]"> · {T(shownTrack.label)}</span>}
                     </span>
-                    {(programme.date || programme.venue) && (
-                      <span className="block mt-1 text-[13px] font-mono-code font-semibold text-slate-600">{meta(programme)}</span>
+                    {shownTrack ? (
+                      <span className="block mt-1 text-[13px] font-mono-code font-semibold text-slate-600">{meta({ date: shownTrack.dateLabel, venue: shownTrack.venue })}</span>
+                    ) : (
+                      (programme.date || programme.venue) && (
+                        <span className="block mt-1 text-[13px] font-mono-code font-semibold text-slate-600">{meta(programme)}</span>
+                      )
                     )}
                   </div>
                 </div>
@@ -655,7 +805,9 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                       <span className="text-xs font-mono-code text-slate-500 uppercase block mb-1">{L('Your reference', 'Ditt referensnummer')}</span>
                       <span className="font-mono-code font-bold text-xl text-[#006AA7] tracking-wider block">{done.id}</span>
                       <span className="text-[13px] text-slate-500 font-mono-code block mt-1">
-                        {L('Status: waiting for review', 'Status: väntar på granskning')}
+                        {formId === 'kid'
+                          ? L('Status: waiting for guardian confirmation', 'Status: väntar på vårdnadshavarnas bekräftelse')
+                          : L('Status: waiting for review', 'Status: väntar på granskning')}
                       </span>
                     </div>
                   )}
@@ -722,7 +874,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                   type={kind === 'form' ? 'submit' : 'button'}
                   form={kind === 'form' ? formDomId : undefined}
                   onClick={kind === 'form' ? undefined : next}
-                  disabled={busy || (choiceStep && !isAnswered(kind, path))}
+                  disabled={busy || (choiceStep && !isAnswered(kind, path)) || (kidBlocked && kind !== 'programme' && kind !== 'track')}
                   className={`inline-flex items-center gap-2 py-3 px-5 text-white text-xs font-headline font-black uppercase tracking-wider transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                     green ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-[#006AA7] hover:bg-[#013A63]'
                   }`}

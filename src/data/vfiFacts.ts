@@ -10,7 +10,7 @@ export const VFI_FACTS = {
     short: 'MISV',
     full: 'Mälardalen International School Västerås (MISV)',
   },
-  hackVenue: { en: 'Venue to be confirmed', sv: 'Plats meddelas senare' } as Bilingual,
+  hackVenue: { en: 'Växhuset, Västerås', sv: 'Växhuset, Västerås' } as Bilingual,
   qualifiers: { en: '12–25 November 2026', sv: '12–25 november 2026' } as Bilingual,
   qualificationRule: {
     en: 'Up to 4 teams from each participating school or association qualify for the Final.',
@@ -82,6 +82,9 @@ export const GRADE_GROUP_OPTIONS: string[] = [
   'University students (Hackathon Advanced)',
   'Mixed ages / Blandade åldrar',
 ];
+
+/** Young InnoHack's professionals (stored as their grade group; kept out of the other forms' grade lists). */
+export const PROFESSIONALS_GRADE_GROUP = 'Professionals (Young InnoHack)';
 
 /** Participation fees, per kid. */
 export const PARTICIPATION_FEES: { who: Bilingual; fee: Bilingual; note?: Bilingual }[] = [

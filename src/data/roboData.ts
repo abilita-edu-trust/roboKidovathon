@@ -366,15 +366,15 @@ export const UPCOMING_EVENTS: UpcomingEvent[] = [
   },
   {
     id: 'young-innovators-hackathon',
-    date: '11–12 DECEMBER 2026',
-    day: 'FRI–SAT · 11–12 DECEMBER',
-    title: 'Young Inno Hack',
-    subtitle: 'Final presentations · venue to be confirmed',
-    location: 'Venue to be confirmed',
-    categories: ['Basic · Grades 7–9', 'Medium · Gymnasiet', 'Advanced · University'],
+    date: '5–12 DECEMBER 2026',
+    day: 'KID 5–12 · YOUNG 10–12 DECEMBER',
+    title: 'Future InnoHack',
+    subtitle: 'Final presentations · 12 December 2026 · Växhuset, Västerås',
+    location: 'Växhuset, Västerås',
+    categories: ['Kid InnoHack · Grades 3–9', 'Young InnoHack · Gymnasium', 'Young InnoHack · University & Professionals'],
     description: 'An interdisciplinary innovation challenge where student teams tackle a real-world problem — sustainable cities, climate and environment, future schools, energy, accessibility, health, AI or technology for society — and present a concept, model, prototype or digital solution to a jury. Unlike the robotics track, no previous robotics experience is required, so students interested in science, technology, design, creativity or entrepreneurship can take part.',
     curriculumNote: 'For grundskolan, the hackathon supports the broader intentions of Lgr22 by giving students opportunities to use creativity, curiosity, initiative, problem-solving and collaboration in a practical context, following the technology-development process from identifying a need through construction, testing and evaluation. For gymnasium students, it can complement Gy25 through project-based problem-solving, technical development, programming and interdisciplinary work — fitting well with the Technology Programme, where technical processes and links between technology and societal development are important elements.',
-    cta: 'ASK ABOUT THE HACKATHON',
+    cta: 'REGISTER FOR FUTURE INNOHACK',
     ctaAction: 'register',
   },
 ];
@@ -520,7 +520,7 @@ export const FAQ_ITEMS: FAQItem[] = [
   {
     id: 'faq-1',
     question: 'Who can participate in Västerås Future Innovators 2026?',
-    answer: 'Children in Grades 1–9 from schools, associations and independent teams can take part. RoboKidovation has three categories: RoboKido Junior (Grades 3–6, basic), RoboKido Senior (Grades 7–9, advanced) and RoboKido GYM (Gymnasium, programmable bot). The Young Inno Hack has three levels: Grades 7–9 (basic), Gymnasiet students (medium) and university students (advanced). Grades 1–2 join as a participant category, not as a competition category.',
+    answer: 'Children in Grades 1–9 from schools, associations and independent teams can take part. RoboKidovation has three categories: RoboKido Junior (Grades 3–6, basic), RoboKido Senior (Grades 7–9, advanced) and RoboKido GYM (Gymnasium, programmable bot). Future InnoHack has two tracks: Kid InnoHack for Grades 3–9 (an idea of their own) and Young InnoHack for gymnasium students, university students and professionals. Grades 1–2 join as a participant category, not as a competition category.',
     category: 'Eligibility'
   },
   {

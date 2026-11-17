@@ -48,8 +48,9 @@ export interface FormDef {
   submit: (v: Values, ctx: FormCtx) => Promise<string>;
   submitLabel: (ctx: FormCtx) => string;
   done: (ctx: FormCtx, v: Values) => { title: string; body: string };
-  /** Show the participation fees under the form (sites with showFees). */
-  fees?: boolean;
+  /** Show the participation fees under the form (sites with showFees); a function decides per answer
+   *  (Future InnoHack is free). */
+  fees?: boolean | ((ctx: FormCtx) => boolean);
 }
 
 // ── Styles (the register page's own) ──
