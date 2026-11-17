@@ -5,12 +5,15 @@ import { useT } from '../content/useT';
 import { siteIcon } from '../content/icons';
 import { teamsDefaults, type TeamsData } from '../content/sections/teams';
 import { robokidoAnchor } from '../content/sections/robokido';
+import { useSite } from '../context/SiteContext';
 
 /** The categories' detailed sections (vfi, IBK): each full poster (uncropped) with its facts, registration and
  *  rules link, then the team rules and final-day format folded away. A section reached from the programme box is
  *  outlined for a moment. */
 const CategoryPosters: React.FC<{ d: TeamsData; go?: (href: string) => void; className: string }> = ({ d, go, className }) => {
-  const { t } = useT();
+  const { t, L } = useT();
+  // vfi and IBK (designV2): name, grades, kind and tagline show; the fact table opens on request.
+  const { designV2 } = useSite();
   const posters = d.posters;
   const [lit, setLit] = useState('');
   useEffect(() => {
@@ -57,14 +60,28 @@ const CategoryPosters: React.FC<{ d: TeamsData; go?: (href: string) => void; cla
                     <span className="inline-block mt-1.5 bg-[#FFCD00] text-[#0A1930] text-[11px] font-mono-code font-bold uppercase tracking-wider px-2 py-0.5">{t(p.kind)}</span>
                     {t(p.tagline) && <p className="mt-2 text-[15px] font-semibold text-[#0A1930] leading-snug">{t(p.tagline)}</p>}
                   </div>
-                  <dl className="w-full space-y-1.5 text-sm">
-                    {p.facts.map((f, i) => (
-                      <div key={i} className="grid grid-cols-[6.5rem_minmax(0,1fr)] gap-2 border-t border-slate-200 pt-1.5">
-                        <dt className="font-mono-code font-bold text-[12px] uppercase tracking-wider text-slate-500">{t(f.label)}</dt>
-                        <dd className="text-slate-700 leading-snug">{t(f.value)}</dd>
-                      </div>
-                    ))}
-                  </dl>
+                  {(() => {
+                    const facts = (
+                      <dl className="w-full space-y-1.5 text-sm">
+                        {p.facts.map((f, i) => (
+                          <div key={i} className="grid grid-cols-[6.5rem_minmax(0,1fr)] gap-2 border-t border-slate-200 pt-1.5">
+                            <dt className="font-mono-code font-bold text-[12px] uppercase tracking-wider text-slate-500">{t(f.label)}</dt>
+                            <dd className="text-slate-700 leading-snug">{t(f.value)}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                    );
+                    if (!designV2 || !p.facts.length) return facts;
+                    return (
+                      <details className="group w-full border-y border-slate-200">
+                        <summary className="cursor-pointer list-none flex items-center justify-between gap-3 py-3 text-[15px] font-semibold text-[#0A1930] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#006AA7] [&::-webkit-details-marker]:hidden">
+                          {L('Details', 'Detaljer')}
+                          <ChevronDown className="w-5 h-5 shrink-0 motion-safe:transition-transform group-open:rotate-180" aria-hidden="true" />
+                        </summary>
+                        <div className="pb-3">{facts}</div>
+                      </details>
+                    );
+                  })()}
                   <div className="flex flex-wrap gap-2">
                     <a
                       href={p.register.href}

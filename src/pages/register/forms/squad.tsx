@@ -12,7 +12,7 @@ import {
   type ChipOption, type FieldsProps, type FormCtx, type Values,
 } from '../ui';
 
-const SKILL_OPTIONS: ChipOption[] = [
+export const SKILL_OPTIONS: ChipOption[] = [
   { value: 'Robotics & Hardware', en: 'Robotics & Hardware', sv: 'Robotik och hårdvara' },
   { value: 'Coding & Software', en: 'Coding & Software', sv: 'Kod och mjukvara' },
   { value: '3D Design & CAD', en: '3D Design & CAD', sv: '3D-design och CAD' },

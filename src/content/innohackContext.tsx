@@ -8,6 +8,7 @@ import type { JourneyData } from './sections/journey';
 import { programmeTracks, visibleChallenges, type CompanyChallenge, type ProgrammeTrack } from './sections/audienceJourneys';
 import { ideasClosed, innohackTracks, type InnohackTrackId } from './sections/innohack';
 import { targetToHref } from './sections/frame';
+import { useYoungChallenges, type YoungChallenge } from './youngChallenges';
 
 const InnohackContext = createContext<ProgrammeTrack[]>([]);
 
@@ -53,8 +54,18 @@ export function useInnohackTrack(id: InnohackTrackId | undefined): ProgrammeTrac
   return id ? tracks.find((t) => t.id === id) : undefined;
 }
 
-/** Young InnoHack's published company challenges (none until they are switched on in the Site CMS). */
+/** A challenge published in the Admin Panel, in the shape the Site CMS list uses. */
+export const asCompanyChallenge = (c: YoungChallenge): CompanyChallenge => ({ visible: true, company: c.company, logo: c.logo, title: c.title, problem: c.problem });
+
+/** Young InnoHack's company challenges: those published in the Admin Panel, else the Site CMS's switched-on ones. */
+export function useTrackChallenges(track: ProgrammeTrack | undefined): CompanyChallenge[] {
+  const site = useSite();
+  const fromAdmin = useYoungChallenges(track?.id === 'young' && hasFutureInnohack(site) ? (site.nav.homeRoute === 'ibk' ? 'ibk' : 'vfi') : null).challenges;
+  if (!track) return [];
+  return fromAdmin.length ? fromAdmin.map(asCompanyChallenge) : visibleChallenges(track);
+}
+
+/** Young InnoHack's published company challenges (none until they are published). */
 export function usePublishedChallenges(): CompanyChallenge[] {
-  const young = useInnohackTrack('young');
-  return young ? visibleChallenges(young) : [];
+  return useTrackChallenges(useInnohackTrack('young'));
 }

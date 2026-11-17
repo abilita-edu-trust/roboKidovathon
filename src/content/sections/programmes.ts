@@ -171,12 +171,12 @@ const baseExperience = (c: SiteConfig): ExperienceData => ({
   roboFinal: {
     date: bi('5 December 2026', '5 december 2026'),
     venue: bi('MISV, Västerås'),
-    cta: { label: bi('SEE CATEGORIES & RULES', 'SE KATEGORIER OCH REGLER'), href: targetToHref(`${c.nav.homeRoute}#teams-final-day`) },
+    cta: { label: bi('Categories and rules', 'Kategorier och regler'), href: targetToHref(`${c.nav.homeRoute}#teams-final-day`) },
   },
   hackFinal: { date: bi('12 December 2026', '12 december 2026'), venue: bi('Växhuset, Västerås') },
   trackPanels: [
-    { id: 'kid', icon: 'Users', description: bi('Bring your own idea and turn it into a creative solution.', 'Kom med din egen idé och gör den till en kreativ lösning.') },
-    { id: 'young', icon: 'GraduationCap', description: bi('Take on real-world challenges and innovate with impact.', 'Anta verkliga utmaningar och skapa innovationer som gör skillnad.') },
+    { id: 'kid', icon: 'Users', description: bi('Your own idea for a problem you care about.', 'Din egen idé om ett problem du bryr dig om.') },
+    { id: 'young', icon: 'GraduationCap', description: bi('Solve one of six company challenges, alone or in a team.', 'Lös en av sex utmaningar från företag, själv eller i lag.') },
   ],
   cards: [
     {

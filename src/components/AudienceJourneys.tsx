@@ -1,13 +1,15 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
-import { ArrowRight, BookOpen, Building2, CalendarDays, CheckCircle2, Sparkles } from 'lucide-react';
+import { ArrowRight, BookOpen, Building2, CalendarDays, CheckCircle2, ChevronDown, Sparkles } from 'lucide-react';
 import { useT } from '../content/useT';
+import { useSite } from '../context/SiteContext';
+import { useTrackChallenges } from '../content/innohackContext';
 import { sentenceLines } from '../content/richText';
 import { siteIcon } from '../content/icons';
 import { hasLabel } from '../content/sections/frame';
 import type { JourneyData } from '../content/sections/journey';
 import {
-  programmeTracks, trackAnchor, trackIndexForHash, visibleChallenges,
+  programmeTracks, trackAnchor, trackIndexForHash,
   type ProgrammeAudience, type ProgrammeJourney, type ProgrammeTrack,
 } from '../content/sections/audienceJourneys';
 
@@ -54,6 +56,8 @@ interface AudienceJourneysProps {
 /** The journey section with one box per programme, each with its own audience tabs. */
 export const AudienceJourneys: React.FC<AudienceJourneysProps> = ({ data, go }) => {
   const { t } = useT();
+  // vfi and IBK (designV2): the programme boxes above already list every date, so the dates band is left out.
+  const { designV2 } = useSite();
 
   return (
     <MotionConfig reducedMotion="user">
@@ -85,7 +89,7 @@ export const AudienceJourneys: React.FC<AudienceJourneysProps> = ({ data, go }) 
           </div>
 
           {/* ── SEASON DATES ── */}
-          {(data.dates ?? []).length > 0 && (
+          {!designV2 && (data.dates ?? []).length > 0 && (
             <div className="bg-[#0A1930] text-white p-5 sm:p-6 flex flex-col lg:flex-row items-center justify-between gap-4 border border-[#0A1930]">
               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 sm:gap-8 text-xs font-mono-code">
                 {data.dates.map((d, i) => (
@@ -384,8 +388,36 @@ const TrackChoice: React.FC<{
 /** The track's dates (e.g. idea deadline, selection, mentoring, final). */
 const TrackTimeline: React.FC<{ track: ProgrammeTrack }> = ({ track }) => {
   const { t } = useT();
+  const { designV2 } = useSite();
   const rows = (Array.isArray(track.schedule) ? track.schedule : []).filter((r) => t(r.date) || t(r.activity));
   if (!rows.length) return null;
+  // vfi and IBK: the steps above already give the dates, so the full timeline is one click away.
+  if (designV2) {
+    return (
+      <div className="px-5 sm:px-8 pb-7 sm:pb-8">
+        <details className="group border border-slate-200 bg-slate-50">
+          <summary className="cursor-pointer list-none flex items-center justify-between gap-3 px-5 py-4 font-headline font-bold text-base text-[#0A1930] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#006AA7] [&::-webkit-details-marker]:hidden">
+            <span className="flex items-center gap-2">
+              <CalendarDays className="w-4 h-4 text-[#006AA7]" aria-hidden="true" />
+              {t(track.scheduleHeading) || t(track.label)}
+            </span>
+            <ChevronDown className="w-5 h-5 shrink-0 motion-safe:transition-transform group-open:rotate-180" aria-hidden="true" />
+          </summary>
+          <ol className="px-5 pb-5 space-y-3">
+            {rows.map((r, i) => (
+              <li key={i} className="grid grid-cols-1 sm:grid-cols-[11rem_minmax(0,1fr)] gap-1 sm:gap-4 border-t border-slate-200 pt-3">
+                <span className="text-sm font-semibold text-[#006AA7]">{t(r.date)}</span>
+                <span className="text-base text-[#0A1930]">
+                  <span className="font-semibold">{t(r.activity)}</span>
+                  {t(r.detail) && <span className="block text-sm text-slate-600 leading-relaxed whitespace-pre-line">{t(r.detail)}</span>}
+                </span>
+              </li>
+            ))}
+          </ol>
+        </details>
+      </div>
+    );
+  }
   return (
     <div className="px-5 sm:px-8 pb-7 sm:pb-8">
       <div className="border border-slate-200 bg-slate-50 p-5">
@@ -412,7 +444,8 @@ const TrackTimeline: React.FC<{ track: ProgrammeTrack }> = ({ track }) => {
 /** Young InnoHack's company challenges: the ones switched on, or the note while none is. */
 const CompanyChallenges: React.FC<{ track: ProgrammeTrack }> = ({ track }) => {
   const { t } = useT();
-  const shown = visibleChallenges(track);
+  // Published in the Admin Panel (once its challenges exist), else switched on in the Site CMS.
+  const shown = useTrackChallenges(track);
   const note = t(track.challengesNote);
   if (!shown.length && !note) return null;
   return (
@@ -457,10 +490,16 @@ const AudiencePanel: React.FC<{
   /** While the track's registration is closed: shown instead of the register button. */
   closedMessage?: string;
 }> = ({ audience: a, accent, go, rules, closedMessage }) => {
-  const { t } = useT();
+  const { t, L } = useT();
+  const { designV2 } = useSite();
+  const stepsId = useId();
   const benefits = (a.benefits ?? []).filter((b) => t(b));
   const steps = a.steps ?? [];
   const secondary = hasLabel(a.secondaryCta) ? a.secondaryCta : undefined;
+  // vfi and IBK (designV2): the step titles show; their explanations and "Why participate?" open on request.
+  const foldable = !!designV2 && (steps.some((s) => t(s.description)) || benefits.length > 0);
+  const [open, setOpen] = useState(false);
+  const showDetails = !foldable || open;
 
   return (
     <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[55fr_45fr] lg:gap-10">
@@ -473,7 +512,7 @@ const AudiencePanel: React.FC<{
 
         {/* Five numbered steps */}
         {steps.length > 0 && (
-          <ol className="order-3 lg:order-none space-y-0">
+          <ol id={stepsId} className="order-3 lg:order-none space-y-0">
             {steps.map((s, i) => (
               <li key={i} className="relative flex gap-4 pb-4 last:pb-0">
                 {i < steps.length - 1 && <span className={`absolute left-[15px] top-8 bottom-0 w-0.5 ${accent.line}`} aria-hidden="true" />}
@@ -482,11 +521,24 @@ const AudiencePanel: React.FC<{
                 </span>
                 <div className="pt-1 min-w-0">
                   <p className="font-headline font-black text-sm uppercase tracking-tight text-[#0A1930]">{t(s.title)}</p>
-                  {t(s.description) && <p className="mt-0.5 text-[13px] text-slate-600 leading-relaxed">{t(s.description)}</p>}
+                  {showDetails && t(s.description) && <p className="mt-0.5 text-[13px] text-slate-600 leading-relaxed">{t(s.description)}</p>}
                 </div>
               </li>
             ))}
           </ol>
+        )}
+
+        {foldable && (
+          <button
+            type="button"
+            aria-expanded={open}
+            aria-controls={stepsId}
+            onClick={() => setOpen((o) => !o)}
+            className="order-3 lg:order-none -mt-2 self-start inline-flex items-center gap-1.5 text-[15px] font-semibold text-[#006AA7] hover:text-[#00568A] underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#006AA7]"
+          >
+            {open ? L('Show less', 'Visa mindre') : L('What each step involves', 'Vad varje steg innebär')}
+            <ChevronDown className={`w-4 h-4 motion-safe:transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
+          </button>
         )}
 
         {/* Buttons: the audience's (register), the rule book and a second action (e.g. Become a Mentor) */}
@@ -539,7 +591,7 @@ const AudiencePanel: React.FC<{
         </div>
 
         {/* Why participate? */}
-        {(t(a.benefitsHeading) || benefits.length > 0) && (
+        {showDetails && (t(a.benefitsHeading) || benefits.length > 0) && (
           <div className="order-4 lg:order-none bg-slate-50 border border-slate-200 p-5">
             {t(a.benefitsHeading) && <p className="font-headline font-black text-sm uppercase tracking-tight text-[#0A1930]">{t(a.benefitsHeading)}</p>}
             <ul className="mt-3 space-y-2">

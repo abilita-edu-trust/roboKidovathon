@@ -34,6 +34,19 @@ export interface FieldsProps {
   ctx: FormCtx;
 }
 
+/** What a sent form shows on its done screen besides the reference. */
+export interface SubmitResult {
+  id: string;
+  /** Young InnoHack: the team created or joined, and (for its captain) the invite code and link, shown once. */
+  team?: string;
+  inviteCode?: string;
+  inviteLink?: string;
+  role?: 'individual' | 'captain' | 'member';
+}
+
+/** An error whose message is written for the visitor (shown as it is, instead of "Something went wrong"). */
+export class UserFacingError extends Error {}
+
 /** One form at the end of the questions. Native `required` covers plain inputs. */
 export interface FormDef {
   title: (ctx: FormCtx) => string;
@@ -44,8 +57,9 @@ export interface FormDef {
   /** Checks native validation can't do (chip groups, member lists); '' when fine. */
   validate?: (v: Values, ctx: FormCtx) => string;
   summary: (v: Values, ctx: FormCtx) => SummaryRow[];
-  /** Sends the entry; returns its reference. v.consentAgreed / v.gdprAgreed are set on Review. */
-  submit: (v: Values, ctx: FormCtx) => Promise<string>;
+  /** Sends the entry; returns its reference (or the reference with more to show, e.g. a team's invite code).
+   *  v.consentAgreed / v.gdprAgreed are set on Review. */
+  submit: (v: Values, ctx: FormCtx) => Promise<string | SubmitResult>;
   submitLabel: (ctx: FormCtx) => string;
   done: (ctx: FormCtx, v: Values) => { title: string; body: string };
   /** Show the participation fees under the form (sites with showFees); a function decides per answer

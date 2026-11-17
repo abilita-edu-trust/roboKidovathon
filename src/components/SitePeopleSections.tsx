@@ -1,11 +1,14 @@
 import React from 'react';
-import { pickLang } from '../context/SiteContext';
+import { pickLang, useSite } from '../context/SiteContext';
 import type { Language } from '../context/LanguageContext';
 import { initials, type PeopleSection } from '../lib/siteContent';
 
 /** One people section (Jury, Speakers, …): a grid of cards, or its "announced soon" text while empty. */
 export const PeopleBlock: React.FC<{ section: PeopleSection; lang: Language }> = ({ section, lang }) => {
+  const { designV2 } = useSite();
   const intro = pickLang(section.intro, lang);
+  // vfi and IBK: an empty section stays hidden until someone is added, instead of an "announced soon" box.
+  if (designV2 && section.people.length === 0) return null;
   return (
     <section id={section.id} data-no-translate="true" className="w-full bg-white text-[#0A1930] py-5 sm:py-6 px-4 sm:px-6 lg:px-10 scroll-mt-20">
       <div className="max-w-[1560px] mx-auto">

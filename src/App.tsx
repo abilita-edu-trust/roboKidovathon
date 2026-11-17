@@ -178,7 +178,7 @@ export function App() {
     return (
       <SiteProvider site={site}>
       <InnohackProvider tracks={innohackTracks}>
-        <div key={language} className={`min-h-screen bg-white text-[#0A1930] font-sans selection:bg-[#FFCD00] selection:text-[#0A1930] relative overflow-x-hidden ${fadeIn}`}>
+        <div key={language} className={`min-h-screen bg-white text-[#0A1930] font-sans selection:bg-[#FFCD00] selection:text-[#0A1930] relative overflow-x-hidden ${site.designV2 ? 'site-v2' : ''} ${fadeIn}`}>
           <RoboCursor />
           <Navbar activeTab={currentRoute} onNavigate={navigateOrOpen} onOpenRegister={() => goRegister()} />
           <main className="w-full">
@@ -211,7 +211,7 @@ export function App() {
   return (
     <SiteProvider site={site}>
       <InnohackProvider tracks={innohackTracks}>
-    <div key={language} className={`min-h-screen bg-white text-[#0A1930] font-sans selection:bg-[#FFCD00] selection:text-[#0A1930] relative overflow-x-hidden ${fadeIn}`}>
+    <div key={language} className={`min-h-screen bg-white text-[#0A1930] font-sans selection:bg-[#FFCD00] selection:text-[#0A1930] relative overflow-x-hidden ${site.designV2 ? 'site-v2' : ''} ${fadeIn}`}>
       {/* ── Custom Animated Robot Cursor ── */}
       <RoboCursor />
       
