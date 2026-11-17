@@ -357,10 +357,10 @@ export const UPCOMING_EVENTS: UpcomingEvent[] = [
     date: '5 DECEMBER 2026',
     day: 'SAT · 5 DECEMBER',
     title: 'Västerås Future Innovators — Robo-Sprint City Final',
-    subtitle: 'RoboKido Junior (Grades 3–6), Senior (Grades 7–9) & GYM (Gymnasium) Championships',
+    subtitle: 'RoboKido Junior (Grades 3–6) & Senior (Grades 7–9) Championships',
     location: 'Mälardalen International School, Västerås',
     description: 'Qualified teams from the autumn STEM project compete live in the Robo-Sprint arena, judged across match performance, engineering design, teamwork and technical explanation.',
-    categories: ['Junior · Grades 3–6', 'Senior · Grades 7–9', 'GYM · Gymnasium'],
+    categories: ['Build & Play · Preschool–Grade 2 (free, with a parent)', 'Junior · Grades 3–6', 'Senior · Grades 7–9'],
     cta: 'REGISTER SCHOOL, ASSOCIATION OR TEAM',
     ctaAction: 'register',
   },
@@ -444,14 +444,6 @@ export const AGE_PATHWAYS: AgePathway[] = [
     message: 'Design, measure and optimise a technical solution for competition.',
     detail: 'The question shifts to: "How can we engineer, measure and optimise a better solution?" Senior teams go deeper into control, sensors and strategy within the same 20-hour project, then compete in the same 3-minute Robo-Sprint arena — judged 60% on match performance, 25% on engineering & technical design, and 15% on testing, documentation & explanation.',
   },
-  {
-    id: 'precision',
-    grades: 'Gymnasium · 15+',
-    name: 'RoboKido GYM',
-    focus: ['Autonomous control', 'Crane & servo kinematics', 'Balance and stability', 'Precision manipulation', 'Sensor feedback', 'Technical documentation'],
-    message: 'Engineer a fully autonomous crane arm that builds the tallest stable tower — zero human touch once the build begins.',
-    detail: 'A gymnasium-level track that pairs naturally with Gy25\'s programming and software-development focus. RoboKido GYM teams programme the entire build sequence in advance — no manual control once the 5-minute match starts — and are judged 60% on tower height & stability, 30% on engineering & autonomy design, and 10% on documentation & explanation.',
-  },
 ];
 
 export interface Gy25Connection {
@@ -502,7 +494,7 @@ export const LEARNING_BLOCKS: LearningBlock[] = [
   {
     tag: 'CODE',
     desc: 'Logic, control, programming and automation',
-    detail: 'Programming and sensor-assisted control come in at the Senior (Grades 7–9) and RoboKido GYM (Gymnasium/Gy25) levels, where teams move from manual control into control logic and autonomy.',
+    detail: 'Programming and sensor-assisted control come in at the Senior level (Grades 7–9), where teams move from manual control into control logic.',
   },
   {
     tag: 'CREATE',
@@ -520,7 +512,7 @@ export const FAQ_ITEMS: FAQItem[] = [
   {
     id: 'faq-1',
     question: 'Who can participate in Västerås Future Innovators 2026?',
-    answer: 'Children in Grades 1–9 from schools, associations and independent teams can take part. RoboKidovation has three categories: RoboKido Junior (Grades 3–6, basic), RoboKido Senior (Grades 7–9, advanced) and RoboKido GYM (Gymnasium, programmable bot). Future InnoHack has two tracks: Kid InnoHack for Grades 3–9 (an idea of their own) and Young InnoHack for gymnasium students, university students and professionals. Grades 1–2 join as a participant category, not as a competition category.',
+    answer: 'Children in Grades 1–9 from schools, associations and independent teams can take part. RoboKidovation has two competition categories, RoboKido Junior (Grades 3–6, basic) and RoboKido Senior (Grades 7–9, advanced), and Build & Play for children from preschool to grade 2: a free parent-and-child activity on 5 December 2026 at MISV, with no competition. Future InnoHack has two tracks: Kid InnoHack for Grades 3–9 (an idea of their own) and Young InnoHack for gymnasium students, university students and professionals.',
     category: 'Eligibility'
   },
   {

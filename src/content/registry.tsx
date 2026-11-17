@@ -104,9 +104,9 @@ export const SECTION_DEFS: Record<string, SectionDef> = {
     render: (d, env) => <CityProgramme data={d} env={env} />,
   }),
   winners: def<WinnersData>({ defaults: winnersDefaults, render: (d) => <HackathonWinners data={d} /> }),
-  teams: def<TeamsData>({ defaults: teamsDefaults, render: (d) => <RoboKidoTeamsFinalDay data={d} /> }),
+  teams: def<TeamsData>({ defaults: (env) => teamsDefaults(env.config), render: (d, env) => <RoboKidoTeamsFinalDay data={d} go={env.go} /> }),
   fees: def<FeesData>({
-    defaults: feesDefaults,
+    defaults: (env) => feesDefaults(env.config),
     render: (d) => (
       <section className="w-full bg-white px-4 sm:px-6 lg:px-10 pb-8">
         <div className="max-w-[1560px] mx-auto">

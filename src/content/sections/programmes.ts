@@ -6,6 +6,7 @@ import type { CitySite } from '../../components/city/citySites';
 import { bi, type Bi, type CmsLink } from '../core';
 import { iconName } from '../icons';
 import { targetToHref } from './frame';
+import { hasBuildAndPlay, robokidoCategoryCards, type CategoryCard } from './robokido';
 
 export interface PathwayStepData {
   icon: string;
@@ -97,6 +98,15 @@ export interface VenueData {
 
 export interface ExperienceData {
   banner: string;
+  /** The RoboKidovation box's rows (vfi and IBK): one per category, each linking to its section with the poster. */
+  categoriesLabel: Bi;
+  categories: CategoryCard[];
+  /** The two programme boxes' footers (vfi and IBK): the final day and its venue, and the RoboKidovation link. */
+  finalLabel: Bi;
+  roboFinal: { date: Bi; venue: Bi; cta: CmsLink };
+  hackFinal: { date: Bi; venue: Bi };
+  /** Future InnoHack's track panels (vfi and IBK): an icon and one short line per track of Find Your Path. */
+  trackPanels: { id: string; icon: string; description: Bi }[];
   cards: PathwayData[];
   venues: VenueData[];
   noImage: Bi;
@@ -155,6 +165,19 @@ export const experienceDefaults = (c: SiteConfig): ExperienceData => {
 
 const baseExperience = (c: SiteConfig): ExperienceData => ({
   banner: c.banner ?? '',
+  categoriesLabel: bi('RoboKidovation categories', 'RoboKidovations kategorier'),
+  categories: robokidoCategoryCards(c),
+  finalLabel: bi('Final day', 'Finaldag'),
+  roboFinal: {
+    date: bi('5 December 2026', '5 december 2026'),
+    venue: bi('MISV, Västerås'),
+    cta: { label: bi('SEE CATEGORIES & RULES', 'SE KATEGORIER OCH REGLER'), href: targetToHref(`${c.nav.homeRoute}#teams-final-day`) },
+  },
+  hackFinal: { date: bi('12 December 2026', '12 december 2026'), venue: bi('Växhuset, Västerås') },
+  trackPanels: [
+    { id: 'kid', icon: 'Users', description: bi('Bring your own idea and turn it into a creative solution.', 'Kom med din egen idé och gör den till en kreativ lösning.') },
+    { id: 'young', icon: 'GraduationCap', description: bi('Take on real-world challenges and innovate with impact.', 'Anta verkliga utmaningar och skapa innovationer som gör skillnad.') },
+  ],
   cards: [
     {
       theme: 'robo',
@@ -164,7 +187,12 @@ const baseExperience = (c: SiteConfig): ExperienceData => ({
       intro: [
         bi('Hands-on robotics challenge for teams from schools and associations.'),
         bi('No previous experience needed.'),
-        bi('Junior: grades 3–6 · Senior: grades 7–9 · GYM: programmable bot.'),
+        hasBuildAndPlay(c)
+          ? bi(
+              'Build & Play: preschool–grade 2, with a parent, free · Junior: grades 3–6 · Senior: grades 7–9.',
+              'Build & Play: förskola–åk 2, med en förälder, gratis · Junior: åk 3–6 · Senior: åk 7–9.',
+            )
+          : bi('Junior: grades 3–6 · Senior: grades 7–9 · GYM: programmable bot.'),
       ],
       steps: [
         st('Presentation', 'School Demo', 'See the robots, try simple challenges', '1–14 October 2026'),

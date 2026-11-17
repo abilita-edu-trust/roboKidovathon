@@ -3,6 +3,7 @@ import type { FormDef } from '../ui';
 import { bookingForm } from './booking';
 import { associationForm } from './association';
 import { competitionForm } from './competition';
+import { buildPlayForm } from './buildPlay';
 import { squadForm } from './squad';
 import { ideaForm } from './idea';
 import { mentorForm, volunteerForm } from './volunteer';
@@ -14,6 +15,7 @@ export const FORMS: Record<FormId, FormDef> = {
   booking: bookingForm,
   association: associationForm,
   competition: competitionForm,
+  buildplay: buildPlayForm,
   squad: squadForm,
   idea: ideaForm,
   volunteer: volunteerForm,

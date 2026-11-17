@@ -24,8 +24,8 @@ export const PRIVACY_SECTIONS: PrivacySection[] = [
     title: tx('Who is responsible', 'Vem som ansvarar'),
     paragraphs: [
       tx(
-        'Future InnoHack (Kid InnoHack and Young InnoHack) is organised by INIAC together with Indisk Barnklubb (IBK) Västerås. INIAC is the data controller: INIAC runs the registration system and decides how the data is used. IBK co-organises the event in Västerås and uses the data only to run it.',
-        'Future InnoHack (Kid InnoHack och Young InnoHack) arrangeras av INIAC tillsammans med Indisk Barnklubb (IBK) Västerås. INIAC är personuppgiftsansvarig: INIAC driver anmälningssystemet och bestämmer hur uppgifterna används. IBK är medarrangör av evenemanget i Västerås och använder uppgifterna enbart för att genomföra det.',
+        'Future InnoHack (Kid InnoHack and Young InnoHack) and RoboKidovation Build & Play are organised by INIAC together with Indisk Barnklubb (IBK) Västerås. INIAC is the data controller: INIAC runs the registration system and decides how the data is used. IBK co-organises the events in Västerås and uses the data only to run them.',
+        'Future InnoHack (Kid InnoHack och Young InnoHack) och RoboKidovation Build & Play arrangeras av INIAC tillsammans med Indisk Barnklubb (IBK) Västerås. INIAC är personuppgiftsansvarig: INIAC driver anmälningssystemet och bestämmer hur uppgifterna används. IBK är medarrangör av evenemangen i Västerås och använder uppgifterna enbart för att genomföra dem.',
       ),
       tx('Questions about your data: contact@iniac.se.', 'Frågor om dina uppgifter: contact@iniac.se.'),
     ],
@@ -47,6 +47,10 @@ export const PRIVACY_SECTIONS: PrivacySection[] = [
         'Mentorer: namn, kontaktuppgifter, organisation och kompetens.',
       ),
       tx(
+        'Build & Play: the name, email address and phone number of the parent or guardian; each child’s name and age group (preschool to grade 2) and, if you give it, their preschool or school; that a parent or guardian stays with the child; and whether photos may be published.',
+        'Build & Play: namn, e-postadress och telefonnummer till föräldern eller vårdnadshavaren; varje barns namn och ålder (förskola till årskurs 2) och, om du anger det, barnets förskola eller skola; att en förälder eller vårdnadshavare stannar med barnet; samt om foton får publiceras.',
+      ),
+      tx(
         'To protect the forms from misuse, a scrambled (hashed) form of the internet address a form was sent from is kept for two days.',
         'För att skydda formulären mot missbruk sparas en krypterad (hashad) form av den internetadress som formuläret skickades från i två dagar.',
       ),
@@ -65,8 +69,8 @@ export const PRIVACY_SECTIONS: PrivacySection[] = [
         'Tills alla vårdnadshavare har svarat sparas en inskickad Kid-idé enbart för att be om deras bekräftelse (berättigat intresse, artikel 6.1 f).',
       ),
       tx(
-        'Young InnoHack and mentor registrations: to handle your registration and run the event you signed up for (Article 6(1)(b)).',
-        'Anmälningar till Young InnoHack och som mentor: för att hantera din anmälan och genomföra evenemanget du har anmält dig till (artikel 6.1 b).',
+        'Young InnoHack, Build & Play and mentor registrations: to handle your registration and run the event you signed up for (Article 6(1)(b)). For Build & Play, the parent or guardian registers their own child.',
+        'Anmälningar till Young InnoHack, Build & Play och som mentor: för att hantera din anmälan och genomföra evenemanget du har anmält dig till (artikel 6.1 b). Till Build & Play anmäler föräldern eller vårdnadshavaren sitt eget barn.',
       ),
       tx(
         'Publishing photos and videos: separate, optional consent (Article 6(1)(a)).',
@@ -99,8 +103,8 @@ export const PRIVACY_SECTIONS: PrivacySection[] = [
     title: tx('Photos and videos (optional)', 'Foton och filmer (frivilligt)'),
     paragraphs: [
       tx(
-        'Photos or videos of a child are only published by the organisers (on our websites and social media) with the separate, optional consent of the child’s parent or guardian, asked on the confirmation page. Saying no does not affect taking part.',
-        'Foton eller filmer av ett barn publiceras av arrangörerna (på våra webbplatser och i sociala medier) bara med ett separat, frivilligt samtycke från barnets förälder eller vårdnadshavare, som efterfrågas på bekräftelsesidan. Att säga nej påverkar inte deltagandet.',
+        'Photos or videos of a child are only published by the organisers (on our websites and social media) with the separate, optional consent of the child’s parent or guardian: for Kid InnoHack on the confirmation page, for Build & Play in the registration form. Saying no does not affect taking part.',
+        'Foton eller filmer av ett barn publiceras av arrangörerna (på våra webbplatser och i sociala medier) bara med ett separat, frivilligt samtycke från barnets förälder eller vårdnadshavare: för Kid InnoHack på bekräftelsesidan, för Build & Play i anmälningsformuläret. Att säga nej påverkar inte deltagandet.',
       ),
       tx(
         'This consent can be withdrawn at any time by emailing contact@iniac.se. We then stop using the material and remove it from our own channels. Material that others have already shared or printed may not be possible to remove.',
@@ -130,8 +134,8 @@ export const PRIVACY_SECTIONS: PrivacySection[] = [
         'Kid-idéer där inte alla vårdnadshavare har bekräftat senast den 5 december 2026 kl. 10.00: raderas inom 30 dagar.',
       ),
       tx(
-        'Registrations, ideas and mentor registrations: 12 months after the final, until 12 December 2027.',
-        'Anmälningar, idéer och mentorsanmälningar: 12 månader efter finalen, till och med den 12 december 2027.',
+        'Registrations (Future InnoHack and Build & Play), ideas and mentor registrations: until 12 December 2027.',
+        'Anmälningar (Future InnoHack och Build & Play), idéer och mentorsanmälningar: till och med den 12 december 2027.',
       ),
       tx(
         'Guardians’ answers and consent records: 24 months after the final, until 12 December 2028.',
@@ -205,7 +209,7 @@ export const PrivacyNoticePage: React.FC<{ onNavigateHome: () => void }> = ({ on
             {L('Privacy notice', 'Integritetsmeddelande')}
           </h1>
           <p className="text-sm text-slate-600">
-            {L(`Future InnoHack 2026 registrations · version ${PRIVACY_VERSION}`, `Anmälningar till Future InnoHack 2026 · version ${PRIVACY_VERSION}`)}
+            {L(`Future InnoHack and Build & Play registrations · version ${PRIVACY_VERSION}`, `Anmälningar till Future InnoHack och Build & Play · version ${PRIVACY_VERSION}`)}
           </p>
         </div>
 

@@ -1,9 +1,129 @@
-import React from 'react';
-import { ChevronDown, Code2, EyeOff, Timer, Users, type LucideIcon } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { ArrowRight, ChevronDown, Code2, EyeOff, Timer, Users, type LucideIcon } from 'lucide-react';
 import { fill } from '../content/core';
 import { useT } from '../content/useT';
 import { siteIcon } from '../content/icons';
 import { teamsDefaults, type TeamsData } from '../content/sections/teams';
+import { robokidoAnchor } from '../content/sections/robokido';
+
+/** The categories' detailed sections (vfi, IBK): each full poster (uncropped) with its facts, registration and
+ *  rules link, then the team rules and final-day format folded away. A section reached from the programme box is
+ *  outlined for a moment. */
+const CategoryPosters: React.FC<{ d: TeamsData; go?: (href: string) => void; className: string }> = ({ d, go, className }) => {
+  const { t } = useT();
+  const posters = d.posters;
+  const [lit, setLit] = useState('');
+  useEffect(() => {
+    const onSection = (e: Event) => {
+      const id = (e as CustomEvent<string>).detail;
+      if (!posters.some((p) => robokidoAnchor(p.id) === id)) return;
+      setLit(id);
+      window.setTimeout(() => setLit((cur) => (cur === id ? '' : cur)), 2400);
+    };
+    window.addEventListener('site-section', onSection);
+    return () => window.removeEventListener('site-section', onSection);
+  }, [posters]);
+  const follow = (href: string) => (e: React.MouseEvent) => {
+    if (!go || /^https?:/.test(href)) return;
+    e.preventDefault();
+    go(href);
+  };
+  return (
+    <section id="teams-final-day" data-no-translate="true" className={`w-full bg-white text-[#0A1930] py-8 sm:py-10 px-4 sm:px-6 lg:px-10 scroll-mt-20 ${className}`}>
+      <div className="max-w-[1200px] mx-auto space-y-6 sm:space-y-8">
+        <div>
+          <span className="block text-[13px] sm:text-sm font-mono-code font-bold tracking-[0.25em] text-[#006AA7] uppercase mb-3">{t(d.eyebrow)}</span>
+          <h2 className="font-headline font-black uppercase tracking-tight leading-[1] text-[#0A1930]" style={{ fontSize: 'clamp(1.8rem, 3.6vw, 2.8rem)' }}>
+            {t(d.postersTitle)}
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-8">
+          {posters.map((p) => {
+            const anchor = robokidoAnchor(p.id);
+            return (
+              <article
+                key={p.id}
+                id={anchor}
+                aria-labelledby={`${anchor}-name`}
+                className={`scroll-mt-24 grid grid-cols-1 md:grid-cols-[minmax(0,300px)_minmax(0,1fr)] lg:grid-cols-1 gap-5 md:gap-6 lg:gap-4 content-start p-3 -m-3 outline outline-4 motion-safe:transition-[outline-color] motion-safe:duration-500 ${
+                  lit === anchor ? 'outline-[#FFCD00]' : 'outline-transparent'
+                }`}
+              >
+                <img src={p.image} alt={t(p.imageAlt)} width={941} height={1672} loading="lazy" className="w-full max-w-[420px] mx-auto h-auto shadow-lg" />
+                <div className="min-w-0 flex flex-col items-start gap-3">
+                  <div>
+                    <h3 id={`${anchor}-name`} className="font-headline font-black uppercase text-xl leading-tight">{t(p.name)}</h3>
+                    <p className="font-headline font-black text-[#006AA7] text-lg leading-tight">{t(p.grades)}</p>
+                    <span className="inline-block mt-1.5 bg-[#FFCD00] text-[#0A1930] text-[11px] font-mono-code font-bold uppercase tracking-wider px-2 py-0.5">{t(p.kind)}</span>
+                    {t(p.tagline) && <p className="mt-2 text-[15px] font-semibold text-[#0A1930] leading-snug">{t(p.tagline)}</p>}
+                  </div>
+                  <dl className="w-full space-y-1.5 text-sm">
+                    {p.facts.map((f, i) => (
+                      <div key={i} className="grid grid-cols-[6.5rem_minmax(0,1fr)] gap-2 border-t border-slate-200 pt-1.5">
+                        <dt className="font-mono-code font-bold text-[12px] uppercase tracking-wider text-slate-500">{t(f.label)}</dt>
+                        <dd className="text-slate-700 leading-snug">{t(f.value)}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                  <div className="flex flex-wrap gap-2">
+                    <a
+                      href={p.register.href}
+                      onClick={follow(p.register.href)}
+                      className="inline-flex items-center gap-2 bg-[#0A1930] text-white hover:bg-[#006AA7] px-4 py-2.5 text-xs font-headline font-black uppercase tracking-wider motion-safe:transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#006AA7]"
+                    >
+                      {t(p.register.label)}
+                      <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                    </a>
+                    {p.rules?.href && t(p.rules.label) && (
+                      <a
+                        href={p.rules.href}
+                        onClick={follow(p.rules.href)}
+                        className="inline-flex items-center gap-2 border-2 border-[#0A1930] text-[#0A1930] hover:bg-[#0A1930] hover:text-white px-4 py-2 text-xs font-headline font-black uppercase tracking-wider motion-safe:transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#006AA7]"
+                      >
+                        {t(p.rules.label)}
+                        <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+        <details className="group border border-slate-200 bg-[#F8FAFC]">
+          <summary className="cursor-pointer list-none flex items-center justify-between gap-3 px-4 sm:px-5 py-3.5 font-headline font-black uppercase text-sm tracking-wide focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#006AA7]">
+            <span>
+              {t(d.teamsTitle)} · {t(d.finalTitle)}
+            </span>
+            <ChevronDown className="w-5 h-5 shrink-0 motion-safe:transition-transform group-open:rotate-180" aria-hidden="true" />
+          </summary>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 sm:px-5 pb-5 text-sm text-slate-700 leading-relaxed">
+            <div>
+              <h4 className="font-headline font-black uppercase text-[#0A1930] mb-2">{t(d.teamsTitle)}</h4>
+              <ol className="list-decimal pl-5 space-y-1.5">
+                {d.rules.map((r, i) => (
+                  <li key={i}>{t(r)}</li>
+                ))}
+              </ol>
+            </div>
+            <div>
+              <h4 className="font-headline font-black uppercase text-[#0A1930] mb-2">{t(d.finalTitle)}</h4>
+              <p className="mb-2">{t(d.finalIntro)}</p>
+              <ol className="space-y-1.5">
+                {d.finalSteps.map((s, i) => (
+                  <li key={i} className="grid grid-cols-[5.5rem_minmax(0,1fr)] gap-2">
+                    <span className="font-mono-code font-bold text-[12px] uppercase text-[#006AA7]">{t(s.time)}</span>
+                    <span>{t(s.label)}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+  );
+};
 
 // One colour per category, used on its card header, skill markers and the coding badge.
 const CATEGORY_STYLES: Record<string, { band: string; dot: string; badge: string }> = {
@@ -32,9 +152,15 @@ const PanelHeader: React.FC<{ icon: LucideIcon; title: string; badge?: string }>
 );
 
 /** RoboKidovation categories (with each one's workshop skill path), team rules and the final-day format. */
-export const RoboKidoTeamsFinalDay: React.FC<{ className?: string; data?: TeamsData }> = ({ className = '', data }) => {
+export const RoboKidoTeamsFinalDay: React.FC<{ className?: string; data?: TeamsData; go?: (href: string) => void; textOnly?: boolean }> = ({
+  className = '',
+  data,
+  go,
+  textOnly = false,
+}) => {
   const { t } = useT();
   const d = data ?? teamsDefaults();
+  if (!textOnly && d.posters?.length) return <CategoryPosters d={d} go={go} className={className} />;
 
   const timedSteps = d.finalSteps.filter((s) => s.minutes > 0);
   const totalMinutes = timedSteps.reduce((sum, s) => sum + s.minutes, 0);
@@ -63,7 +189,7 @@ export const RoboKidoTeamsFinalDay: React.FC<{ className?: string; data?: TeamsD
         </div>
 
         {/* ── Categories, each with the skills its workshops build ── */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
+        <div className={`grid grid-cols-1 ${d.categories.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-4 sm:gap-5`}>
           {d.categories.map((c, i) => {
             const style = CATEGORY_STYLES[c.colour] ?? CATEGORY_STYLES.Junior;
             return (

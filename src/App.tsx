@@ -10,6 +10,7 @@ import { RefFooter } from './components/RefFooter';
 import { TeamContact } from './components/TeamContact';
 import { ParticipationFees } from './components/ParticipationFees';
 import { RoboKidoTeamsFinalDay } from './components/RoboKidoTeamsFinalDay';
+import { teamsDefaults } from './content/sections/teams';
 
 import { ChallengesPage } from './pages/ChallengesPage';
 import { HowItWorksPage } from './pages/HowItWorksPage';
@@ -237,7 +238,7 @@ export function App() {
         {currentRoute === 'challenges' && (
           <>
             <RefCompetitionFlow onOpenRegister={openRegister} onNavigate={handleNavigate} />
-            <RoboKidoTeamsFinalDay />
+            <RoboKidoTeamsFinalDay data={teamsDefaults(sectionEnv.config)} textOnly />
             <RefTrackComparison onNavigate={handleNavigate} onOpenRegister={openRegister} />
             <section className="w-full bg-white px-4 sm:px-6 lg:px-10 pb-16">
               <div className="max-w-[1560px] mx-auto">

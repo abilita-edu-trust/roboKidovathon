@@ -1,4 +1,5 @@
 // Partner logos, the vfi "Read the full details" links and the participation fees.
+import type { SiteConfig } from '../../context/SiteContext';
 import type { Language } from '../../context/LanguageContext';
 import { PARTNER_LOGOS, type PartnerLogo } from '../../data/roboData';
 import { PARTICIPATION_FEES, PAYMENT } from '../../data/vfiFacts';
@@ -56,9 +57,19 @@ export interface FeesData {
   payNow: Bi;
 }
 
-export const feesDefaults = (): FeesData => ({
+/** The free programmes of vfi and IBK, listed after the RoboKidovation competition fees. */
+const FREE_ROWS = (c?: SiteConfig) => [
+  ...(c?.journey?.futureInnohack
+    ? [{ who: bi('Future InnoHack (Kid InnoHack and Young InnoHack)', 'Future InnoHack (Kid InnoHack och Young InnoHack)'), fee: bi('Free participation', 'Gratis deltagande'), note: bi('') }]
+    : []),
+  ...(c?.intake.buildAndPlay
+    ? [{ who: bi('RoboKidovation Build & Play (preschool–grade 2, with a parent)', 'RoboKidovation Build & Play (förskola–årskurs 2, med en förälder)'), fee: bi('Free participation', 'Gratis deltagande'), note: bi('') }]
+    : []),
+];
+
+export const feesDefaults = (c?: SiteConfig): FeesData => ({
   title: bi('Participation fees', 'Deltagaravgifter'),
-  fees: PARTICIPATION_FEES.map((f) => ({ who: biOf(f.who), fee: biOf(f.fee), note: f.note ? biOf(f.note) : bi('') })),
+  fees: [...PARTICIPATION_FEES.map((f) => ({ who: biOf(f.who), fee: biOf(f.fee), note: f.note ? biOf(f.note) : bi('') })), ...FREE_ROWS(c)],
   showPayment: true,
   payTo: bi('Pay to', 'Betala till'),
   bankgiro: PAYMENT.bankgiro,
