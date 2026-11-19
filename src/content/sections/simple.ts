@@ -67,10 +67,20 @@ const FREE_ROWS = (c?: SiteConfig) => [
     : []),
 ];
 
+/** vfi and IBK: RoboKidovation is free for everyone (Junior and Senior Robo Sprint, Build & Play; confirmed
+ *  19 November 2026), like Future InnoHack, so there is nothing to pay. */
+const ROBOKIDO_FREE_ROW = {
+  who: bi('RoboKidovation: Junior and Senior Robo Sprint (grades 3–9)', 'RoboKidovation: Junior och Senior Robo Sprint (årskurs 3–9)'),
+  fee: bi('Free participation', 'Gratis deltagande'),
+  note: bi(''),
+};
+
 export const feesDefaults = (c?: SiteConfig): FeesData => ({
-  title: bi('Participation fees', 'Deltagaravgifter'),
-  fees: [...PARTICIPATION_FEES.map((f) => ({ who: biOf(f.who), fee: biOf(f.fee), note: f.note ? biOf(f.note) : bi('') })), ...FREE_ROWS(c)],
-  showPayment: true,
+  title: c?.designV2 ? bi('Participation is free', 'Deltagandet är gratis') : bi('Participation fees', 'Deltagaravgifter'),
+  fees: c?.designV2
+    ? [ROBOKIDO_FREE_ROW, ...FREE_ROWS(c)]
+    : [...PARTICIPATION_FEES.map((f) => ({ who: biOf(f.who), fee: biOf(f.fee), note: f.note ? biOf(f.note) : bi('') })), ...FREE_ROWS(c)],
+  showPayment: !c?.designV2,
   payTo: bi('Pay to', 'Betala till'),
   bankgiro: PAYMENT.bankgiro,
   nameLabel: bi('Name', 'Namn'),

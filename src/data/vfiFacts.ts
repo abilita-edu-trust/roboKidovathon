@@ -93,7 +93,8 @@ export const BUILD_PLAY_GRADE_GROUP = 'Förskola–årskurs 2 (Build & Play · p
 /** Young InnoHack's professionals (stored as their grade group; kept out of the other forms' grade lists). */
 export const PROFESSIONALS_GRADE_GROUP = 'Professionals (Young InnoHack)';
 
-/** Participation fees, per kid. */
+/** The former RoboKidovation fees, per kid. Not shown on vfi or IBK: RoboKidovation is free for everyone there
+ *  (confirmed 19 November 2026; feesDefaults). Kept only as the default of other sites' fee sections. */
 export const PARTICIPATION_FEES: { who: Bilingual; fee: Bilingual; note?: Bilingual }[] = [
   {
     who: { en: 'Schools, associations and independent teams', sv: 'Skolor, föreningar och fristående lag' },

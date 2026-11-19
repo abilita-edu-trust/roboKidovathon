@@ -102,7 +102,7 @@ describe('RoboKidovation categories on vfi and IBK: Build & Play, Junior Robo Sp
     const fees = feesDefaults(VFI_SITE).fees.map((f) => [f.who.en, f.fee.en]);
     expect(fees).toContainEqual(['RoboKidovation Build & Play (preschool–grade 2, with a parent)', 'Free participation']);
     expect(fees).toContainEqual(['Future InnoHack (Kid InnoHack and Young InnoHack)', 'Free participation']);
-    expect(fees[0]).toEqual(['Schools, associations and independent teams', '200 SEK / kid']);
+    expect(fees[0]).toEqual(['RoboKidovation: Junior and Senior Robo Sprint (grades 3–9)', 'Free participation']);
     // Riga keeps its own.
     expect(heroDefaults(RIGA).facts[0].value.en).toBe('1–9 + GYM');
     expect(feesDefaults(RIGA).fees.map((f) => f.who.en).join()).not.toContain('Build & Play');
@@ -218,6 +218,32 @@ describe('RoboKidovation registration deadline: 24 November 2026 on vfi and IBK 
     for (const site of [RIGA, ESK, CITY_SITES.vxo.site]) {
       expect(FORMS.competition.intro(ctxFor(competitionPaths[0], site))).toBe('Sign up your child for the RoboKidovation competition. We find them a team.');
       expect(FORMS.competition.intro(ctxFor(competitionPaths[1], site))).toBe('Enter your team in the RoboKidovation competition: qualifiers first, then the Final.');
+    }
+  });
+});
+
+describe('RoboKidovation is free for everyone on vfi and IBK (19 November 2026)', () => {
+  it('lists only free participation, with nothing to pay, in English and Swedish', () => {
+    for (const site of [VFI_SITE, IBK]) {
+      const d = feesDefaults(site);
+      expect(d.title).toEqual({ en: 'Participation is free', sv: 'Deltagandet är gratis' });
+      expect(d.fees.map((f) => [f.fee.en, f.fee.sv])).toEqual(d.fees.map(() => ['Free participation', 'Gratis deltagande']));
+      expect(d.fees.map((f) => f.who.en)).toEqual([
+        'RoboKidovation: Junior and Senior Robo Sprint (grades 3–9)',
+        'Future InnoHack (Kid InnoHack and Young InnoHack)',
+        'RoboKidovation Build & Play (preschool–grade 2, with a parent)',
+      ]);
+      expect(d.showPayment).toBe(false);
+      expect(JSON.stringify(d.fees)).not.toMatch(/SEK|\bkr\b|rabatt|discount/);
+    }
+  });
+
+  it('leaves the fee defaults of the other city sites exactly as before', () => {
+    for (const site of [RIGA, ESK, CITY_SITES.vxo.site]) {
+      const d = feesDefaults(site);
+      expect(d.title.en).toBe('Participation fees');
+      expect(d.fees[0]).toEqual({ who: { en: 'Schools, associations and independent teams', sv: 'Skolor, föreningar och fristående lag' }, fee: { en: '200 SEK / kid', sv: '200 kr / barn' }, note: { en: '', sv: '' } });
+      expect(d.showPayment).toBe(true);
     }
   });
 });

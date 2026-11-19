@@ -2,6 +2,7 @@ import React from 'react';
 import { Landmark, Tag } from 'lucide-react';
 import { useT } from '../content/useT';
 import { feesDefaults, type FeesData } from '../content/sections/simple';
+import { useSite } from '../context/SiteContext';
 
 interface ParticipationFeesProps {
   /** Show the Bankgiro payment details under the fee list (when there is no CMS data). */
@@ -14,8 +15,10 @@ interface ParticipationFeesProps {
 /** Participation fee table (per kid) with optional Bankgiro payment details. */
 export const ParticipationFees: React.FC<ParticipationFeesProps> = ({ showPayment = true, className = '', data }) => {
   const { t } = useT();
-  const d = data ?? feesDefaults();
-  const withPayment = data ? data.showPayment : showPayment;
+  const site = useSite();
+  // Without CMS data, the site's own defaults (vfi and IBK: free, nothing to pay).
+  const d = data ?? feesDefaults(site);
+  const withPayment = data ? data.showPayment : showPayment && d.showPayment;
 
   return (
     <div data-no-translate="true" className={`border-2 border-[#FFCD00] bg-[#FFFBEA] text-[#0A1930] p-5 sm:p-6 space-y-4 ${className}`}>
