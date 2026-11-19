@@ -160,6 +160,7 @@ export const WinterSplashPage: React.FC<{ onNavigateHome: () => void }> = ({ onN
     <div className="space-y-4">
       <Section title={L('Photos (optional)', 'Foton (frivilligt)')} icon={Users}>
         <Tick id="ws-photo" checked={values.photo} onChange={(x) => set('photo', x)}>{photoText}</Tick>
+        <p className="text-[13px] text-slate-600 pl-[1.625rem]">{L('For children, only a parent or legal guardian can give this consent.', 'För barn kan bara en förälder eller vårdnadshavare lämna det här samtycket.')}</p>
       </Section>
       <Tick id="ws-privacy" checked={values.privacy} onChange={(x) => set('privacy', x)}>
         {L('I have read the', 'Jag har läst')}{' '}

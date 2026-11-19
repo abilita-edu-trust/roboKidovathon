@@ -3,7 +3,7 @@
 // Controller: Indisk Barnklubb (IBK) Västerås; processor: INIAC (the registration system). Contact, also the emails'
 // reply-to: Vasteras@indiskbarnklubb.se (confirmed 19 November 2026). Until the organisers approve the text, the live
 // page says the notice is being finalised, and only preview builds made with VITE_PRIVACY_DRAFT=1 show it.
-// Publish (WINTER_SPLASH_PRIVACY_APPROVED = true, WINTER_SPLASH_PRIVACY_VERSION = the approval date) only when the text is
+// Text approved by the organisers on 19 November 2026, subject to the agreement below. Publish (WINTER_SPLASH_PRIVACY_APPROVED = true, WINTER_SPLASH_PRIVACY_VERSION = the approval date) only when the text is
 // approved AND the data processing agreement between IBK and INIAC (covering Supabase and Hostinger as subcontractors)
 // is confirmed in place: the notice says it exists.
 import React from 'react';
