@@ -3,7 +3,9 @@
 // Controller: Indisk Barnklubb (IBK) Västerås; processor: INIAC (the registration system). Contact, also the emails'
 // reply-to: Vasteras@indiskbarnklubb.se (confirmed 19 November 2026). Until the organisers approve the text, the live
 // page says the notice is being finalised, and only preview builds made with VITE_PRIVACY_DRAFT=1 show it.
-// When approved: set WINTER_SPLASH_PRIVACY_APPROVED to true and WINTER_SPLASH_PRIVACY_VERSION to the approval date.
+// Publish (WINTER_SPLASH_PRIVACY_APPROVED = true, WINTER_SPLASH_PRIVACY_VERSION = the approval date) only when the text is
+// approved AND the data processing agreement between IBK and INIAC (covering Supabase and Hostinger as subcontractors)
+// is confirmed in place: the notice says it exists.
 import React from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useT } from '../content/useT';
@@ -23,8 +25,8 @@ export const WINTER_SPLASH_PRIVACY: PrivacySection[] = [
     title: tx('Who is responsible', 'Vem som ansvarar'),
     paragraphs: [
       tx(
-        `Winter Splash 2026 is organised by Indisk Barnklubb (IBK) Västerås, which is responsible for the personal data you give when you register (the data controller). INIAC runs the registration system for IBK and handles the data only on IBK's instructions (the data processor). Questions, and requests to see, correct or delete your data: ${C}.`,
-        `Winter Splash 2026 arrangeras av Indisk Barnklubb (IBK) Västerås, som ansvarar för de personuppgifter du lämnar när du anmäler dig (personuppgiftsansvarig). INIAC driver anmälningssystemet för IBK och behandlar uppgifterna bara enligt IBK:s instruktioner (personuppgiftsbiträde). Frågor, och önskemål om att se, rätta eller radera dina uppgifter: ${C}.`,
+        `Winter Splash 2026 is organised by Indisk Barnklubb (IBK) Västerås, which is responsible for the personal data you give when you register (the data controller). INIAC runs the registration system for IBK and handles the data only on IBK's instructions, under a data processing agreement between IBK and INIAC (the data processor). Questions, and requests to see, correct or delete your data: ${C}.`,
+        `Winter Splash 2026 arrangeras av Indisk Barnklubb (IBK) Västerås, som ansvarar för de personuppgifter du lämnar när du anmäler dig (personuppgiftsansvarig). INIAC driver anmälningssystemet för IBK och behandlar uppgifterna bara enligt IBK:s instruktioner, enligt ett personuppgiftsbiträdesavtal mellan IBK och INIAC (personuppgiftsbiträde). Frågor, och önskemål om att se, rätta eller radera dina uppgifter: ${C}.`,
       ),
     ],
   },
@@ -61,8 +63,8 @@ export const WINTER_SPLASH_PRIVACY: PrivacySection[] = [
       tx('To handle your registration, your payment and the event (GDPR Article 6(1)(b)).', 'För att hantera din anmälan, din betalning och evenemanget (artikel 6.1 b i dataskyddsförordningen).'),
       tx('To keep the payment records that the Swedish Bookkeeping Act requires (Article 6(1)(c)).', 'För att spara de betalningsuppgifter som bokföringslagen kräver (artikel 6.1 c).'),
       tx(
-        'To publish photos or videos in which you or your children can be seen: only with your separate, optional consent (Article 6(1)(a)). Saying no does not affect taking part.',
-        'För att publicera foton eller filmer där du eller dina barn syns: bara med ditt separata, frivilliga samtycke (artikel 6.1 a). Att säga nej påverkar inte deltagandet.',
+        'To publish photos or videos in which you or your children can be seen: only with separate, optional consent (Article 6(1)(a)). For children, the consent is given by a parent or legal guardian, separately from the registration. Saying no does not affect taking part.',
+        'För att publicera foton eller filmer där du eller dina barn syns: bara med ett separat, frivilligt samtycke (artikel 6.1 a). För barn lämnas samtycket av en förälder eller vårdnadshavare, separat från anmälan. Att säga nej påverkar inte deltagandet.',
       ),
     ],
   },
@@ -80,7 +82,10 @@ export const WINTER_SPLASH_PRIVACY: PrivacySection[] = [
     paragraphs: [],
     items: [
       tx("Payment screenshots: deleted from IBK's inbox once the payment has been verified and reconciled.", 'Skärmbilder av betalningar: raderas från IBK:s inkorg när betalningen har kontrollerats och stämts av.'),
-      tx('Registration details: until 31 March 2027, then deleted.', 'Anmälningsuppgifter: till och med 31 mars 2027, sedan raderas de.'),
+      tx(
+        'Registration details: deleted by 31 March 2027, except information that must be kept to meet legal accounting obligations (the payment records below).',
+        'Anmälningsuppgifter: raderas senast 31 mars 2027, utom uppgifter som måste sparas för att uppfylla lagkrav på bokföring (betalningsuppgifterna nedan).',
+      ),
       tx(
         "Payment records (amount, date, reference): in IBK's accounts for as long as the Bookkeeping Act requires, until the end of the seventh year after the year in which the financial year ended.",
         'Betalningsuppgifter (belopp, datum, referens): i IBK:s bokföring så länge bokföringslagen kräver, till och med det sjunde året efter utgången av det kalenderår då räkenskapsåret avslutades.',
