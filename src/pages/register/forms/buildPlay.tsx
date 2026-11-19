@@ -222,7 +222,7 @@ export const buildPlayForm: FormDef = {
         accompanied_by_guardian: !!v.accompany,
         media_consent: !!v.mediaConsent,
       },
-    });
+    }, ctx);
   },
   submitLabel: (ctx) => ctx.L('Book our places', 'Boka våra platser'),
   done: (ctx, v) => ({

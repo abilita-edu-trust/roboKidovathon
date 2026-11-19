@@ -75,7 +75,7 @@ export const communityForm: FormDef = {
       consent_agreed: !!v.consentAgreed,
       form_type: 'community',
       intake_details: { interests: v.interests ?? [], message: str(v.message) },
-    }),
+    }, ctx),
   submitLabel: (ctx) => byDesign(ctx, ctx.L('Join the list', 'Gå med'), ctx.L('Join the community', 'Gå med')),
   done: (ctx, v) => ({
     title: byDesign(ctx, ctx.L('You’re on the list', 'Du är med på listan'), ctx.L('Welcome to the community!', 'Välkommen till gemenskapen!')),

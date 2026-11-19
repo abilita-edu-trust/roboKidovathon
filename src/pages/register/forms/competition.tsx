@@ -186,7 +186,7 @@ export const competitionForm: FormDef = {
         team_count: isOrg(ctx) ? str(v.teamCount) : '1',
         team_members: members.map((m) => (m.grade ? `${m.full_name} (${m.grade})` : m.full_name)),
       },
-    });
+    }, ctx);
   },
   submitLabel: (ctx) => byDesign(ctx, (role(ctx) === 'individual' ? ctx.L('Sign up my child', 'Anmäl mitt barn') : ctx.L('Enter the team', 'Anmäl laget')), ctx.L('Send competition registration', 'Skicka tävlingsanmälan')),
   done: (ctx, v) => ({

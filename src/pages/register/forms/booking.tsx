@@ -204,7 +204,7 @@ export const bookingForm: FormDef = {
             guardian_name: str(v.guardianName),
             guardian_phone: str(v.guardianPhone),
           },
-    });
+    }, ctx);
   },
   submitLabel: (ctx) => byDesign(ctx, (isDemo(ctx) ? ctx.L('Ask for a demo', 'Be om en demo') : ctx.L('Send the booking request', 'Skicka bokningsförfrågan')), (isDemo(ctx) ? ctx.L('Request demo session', 'Skicka demoförfrågan') : ctx.L('Send workshop request', 'Skicka workshopförfrågan'))),
   done: (ctx, v) => ({

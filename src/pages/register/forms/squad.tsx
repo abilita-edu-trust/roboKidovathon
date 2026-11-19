@@ -239,7 +239,7 @@ export const squadForm: FormDef = {
       ),
     ];
   },
-  submit: (v, ctx) => submitRegistration(squadPayload(v, ctx)),
+  submit: (v, ctx) => submitRegistration(squadPayload(v, ctx), ctx),
   submitLabel: (ctx) => ctx.L('Register squad', 'Anmäl laget'),
   done: (ctx, v) => ({
     title: ctx.L('Squad registered!', 'Laget är anmält!'),

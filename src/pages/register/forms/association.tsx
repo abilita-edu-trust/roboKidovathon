@@ -123,7 +123,7 @@ export const associationForm: FormDef = {
         would_like_to: v.associationWants ?? [],
         team_count: str(v.teamCount),
       },
-    }),
+    }, ctx),
   submitLabel: (ctx) => byDesign(ctx, ctx.L('Register the group', 'Anmäl gruppen'), ctx.L('Register group / association', 'Anmäl grupp / förening')),
   done: (ctx, v) => ({
     title: byDesign(ctx, ctx.L('Your group is registered', 'Er grupp är anmäld'), ctx.L('Registration received!', 'Anmälan mottagen!')),
