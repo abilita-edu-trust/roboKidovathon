@@ -96,8 +96,8 @@ export const WINTER_SPLASH_PRIVACY: PrivacySection[] = [
     title: tx('Your rights', 'Dina rättigheter'),
     paragraphs: [
       tx(
-        `You can ask to see, correct or delete your data, restrict or object to how it is used, and withdraw your photo consent at any time, by emailing ${C}. If you are unhappy with how we handle your data, you can complain to the Swedish Authority for Privacy Protection (IMY), imy.se.`,
-        `Du kan be att få se, rätta eller radera dina uppgifter, begränsa eller invända mot hur de används, och när som helst återkalla ditt fotosamtycke, genom att mejla ${C}. Om du är missnöjd med hur vi hanterar dina uppgifter kan du klaga hos Integritetsskyddsmyndigheten (IMY), imy.se.`,
+        `You can ask to see, correct or delete your data, restrict or object to how it is used, and receive it in a portable format. You can withdraw your photo consent at any time; this does not affect what was done before. Email ${C}. If you are unhappy with how we handle your data, you can complain to the Swedish Authority for Privacy Protection (IMY), imy.se.`,
+        `Du kan be att få se, rätta eller radera dina uppgifter, begränsa eller invända mot hur de används och få ut dem i ett överförbart format. Du kan när som helst återkalla ditt fotosamtycke; det påverkar inte det som redan har gjorts. Mejla ${C}. Om du är missnöjd med hur vi hanterar dina uppgifter kan du klaga hos Integritetsskyddsmyndigheten (IMY), imy.se.`,
       ),
     ],
   },
