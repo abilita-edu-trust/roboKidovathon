@@ -1,8 +1,8 @@
 // The privacy notice for Winter Splash 2026 registrations (indiskbarnklubb.se/ibk/winter-splash/privacy), linked from
 // both Winter Splash forms. Separate from the Future InnoHack notice because IBK, not INIAC, organises Winter Splash.
-// DRAFT: it stays unpublished until the organisers approve it. Until then the live page says the notice is being
-// finalised, and only preview builds made with VITE_PRIVACY_DRAFT=1 show the draft. To confirm: IBK as the data
-// controller with INIAC as its processor, the contact address, the retention dates and the bookkeeping period.
+// Controller: Indisk Barnklubb (IBK) Västerås; processor: INIAC (the registration system). Contact, also the emails'
+// reply-to: Vasteras@indiskbarnklubb.se (confirmed 19 November 2026). Until the organisers approve the text, the live
+// page says the notice is being finalised, and only preview builds made with VITE_PRIVACY_DRAFT=1 show it.
 // When approved: set WINTER_SPLASH_PRIVACY_APPROVED to true and WINTER_SPLASH_PRIVACY_VERSION to the approval date.
 import React from 'react';
 import { ArrowLeft } from 'lucide-react';
@@ -12,7 +12,7 @@ import type { PrivacySection } from './PrivacyNoticePage';
 export const WINTER_SPLASH_PRIVACY_VERSION = 'draft 2026-11-19';
 /** False until the organisers approve the text below. */
 export const WINTER_SPLASH_PRIVACY_APPROVED = false;
-/** Provisional: IBK's contact address for data requests (the reply-to address of the Winter Splash emails). */
+/** IBK's contact address for data requests (also the reply-to of the Winter Splash emails; confirmed). */
 export const WINTER_SPLASH_CONTACT = 'Vasteras@indiskbarnklubb.se';
 
 const tx = (en: string, sv: string) => ({ en, sv });
@@ -23,8 +23,8 @@ export const WINTER_SPLASH_PRIVACY: PrivacySection[] = [
     title: tx('Who is responsible', 'Vem som ansvarar'),
     paragraphs: [
       tx(
-        `Winter Splash 2026 is organised by Indisk Barnklubb (IBK) Västerås, which is responsible for the data you give when you register (the data controller). INIAC runs the registration system on IBK's behalf. Questions, and requests to see, correct or delete your data: ${C}.`,
-        `Winter Splash 2026 arrangeras av Indisk Barnklubb (IBK) Västerås, som ansvarar för de uppgifter du lämnar när du anmäler dig (personuppgiftsansvarig). INIAC driver anmälningssystemet för IBK:s räkning. Frågor, och önskemål om att se, rätta eller radera dina uppgifter: ${C}.`,
+        `Winter Splash 2026 is organised by Indisk Barnklubb (IBK) Västerås, which is responsible for the personal data you give when you register (the data controller). INIAC runs the registration system for IBK and handles the data only on IBK's instructions (the data processor). Questions, and requests to see, correct or delete your data: ${C}.`,
+        `Winter Splash 2026 arrangeras av Indisk Barnklubb (IBK) Västerås, som ansvarar för de personuppgifter du lämnar när du anmäler dig (personuppgiftsansvarig). INIAC driver anmälningssystemet för IBK och behandlar uppgifterna bara enligt IBK:s instruktioner (personuppgiftsbiträde). Frågor, och önskemål om att se, rätta eller radera dina uppgifter: ${C}.`,
       ),
     ],
   },
@@ -49,8 +49,8 @@ export const WINTER_SPLASH_PRIVACY: PrivacySection[] = [
         'Om du betalar: priset som sparades när du anmälde dig, betalningens status och skärmbilden av betalningen som du skickar via e-post.',
       ),
       tx(
-        'To protect the form from misuse, a scrambled (hashed) form of the internet address it was sent from is kept for two days.',
-        'För att skydda formuläret mot missbruk sparas en krypterad (hashad) form av den internetadress som det skickades från i två dagar.',
+        'To protect the form from misuse: a scrambled (hashed) form of the internet address it was sent from.',
+        'För att skydda formuläret mot missbruk: en krypterad (hashad) form av den internetadress som det skickades från.',
       ),
     ],
   },
@@ -70,8 +70,8 @@ export const WINTER_SPLASH_PRIVACY: PrivacySection[] = [
     title: tx('Who sees it', 'Vem som ser uppgifterna'),
     paragraphs: [
       tx(
-        "IBK's organisers of Winter Splash 2026. INIAC (the registration system), Supabase (the database) and Hostinger (the website and email) process the data on IBK's behalf. We don't sell your data or use it for marketing.",
-        'IBK:s arrangörer av Winter Splash 2026. INIAC (anmälningssystemet), Supabase (databasen) och Hostinger (webbplatsen och e-posten) behandlar uppgifterna för IBK:s räkning. Vi säljer inte dina uppgifter och använder dem inte för marknadsföring.',
+        "IBK's organisers of Winter Splash 2026. INIAC (the registration system), with Supabase (the database) and Hostinger (the website and email) as its subcontractors, processes the data on IBK's behalf. We don't sell your data or use it for marketing.",
+        'IBK:s arrangörer av Winter Splash 2026. INIAC (anmälningssystemet), med Supabase (databasen) och Hostinger (webbplatsen och e-posten) som underbiträden, behandlar uppgifterna för IBK:s räkning. Vi säljer inte dina uppgifter och använder dem inte för marknadsföring.',
       ),
     ],
   },
@@ -80,8 +80,12 @@ export const WINTER_SPLASH_PRIVACY: PrivacySection[] = [
     paragraphs: [],
     items: [
       tx("Payment screenshots: deleted from IBK's inbox once the payment has been verified and reconciled.", 'Skärmbilder av betalningar: raderas från IBK:s inkorg när betalningen har kontrollerats och stämts av.'),
-      tx('Registration details: until 31 March 2027.', 'Anmälningsuppgifter: till och med 31 mars 2027.'),
-      tx('Payment records (amount, date, reference): as long as the Bookkeeping Act requires, seven years.', 'Betalningsuppgifter (belopp, datum, referens): så länge bokföringslagen kräver, sju år.'),
+      tx('Registration details: until 31 March 2027, then deleted.', 'Anmälningsuppgifter: till och med 31 mars 2027, sedan raderas de.'),
+      tx(
+        "Payment records (amount, date, reference): in IBK's accounts for as long as the Bookkeeping Act requires, until the end of the seventh year after the year in which the financial year ended.",
+        'Betalningsuppgifter (belopp, datum, referens): i IBK:s bokföring så länge bokföringslagen kräver, till och med det sjunde året efter utgången av det kalenderår då räkenskapsåret avslutades.',
+      ),
+      tx('The scrambled internet address used against misuse: two days.', 'Den krypterade internetadressen som används mot missbruk: två dagar.'),
       tx(
         'Photos and videos published with consent: until you withdraw your consent, and at most until 12 December 2028.',
         'Foton och filmer som publicerats med samtycke: tills du återkallar samtycket, dock längst till och med 12 december 2028.',

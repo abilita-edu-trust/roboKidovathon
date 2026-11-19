@@ -17,6 +17,11 @@ const STEPS: Step[] = ['choose', 'details', 'check'];
 const PRIVACY_HREF = '/ibk/winter-splash/privacy';
 /** The evening starts at 17:00 on 12 December; registration is shown as closed from then (text only, nothing closes). */
 const EVENT_START = new Date('2026-12-12T17:00:00+01:00');
+/** /ibk/winter-splash?test shows the form while registration is closed, for the organisers' one controlled test. The
+ *  database accepts only its test address (vfi@iniac.se) until registration opens; anyone else is told it's closed. */
+const testLink = () => {
+  try { return new URLSearchParams(window.location.search).has('test'); } catch { return false; }
+};
 
 const outlineBtn =
   'inline-flex items-center gap-2 py-3 px-4 bg-white hover:bg-slate-50 border border-slate-300 text-[#0A1930] text-xs font-headline font-bold uppercase tracking-wider transition-colors';
@@ -77,7 +82,9 @@ export const WinterSplashPage: React.FC<{ onNavigateHome: () => void }> = ({ onN
   const general = choice === 'general';
   const today = pub && pub !== 'error' ? { price: pub.price_now, band: pub.band_now } : wsPriceAt(new Date());
   const attendees = wsAttendees(values);
-  const open = pub !== null && pub !== 'error' && pub.registration_open;
+  const publicOpen = pub !== null && pub !== 'error' && pub.registration_open;
+  const testMode = pub !== null && pub !== 'error' && !pub.registration_open && testLink();
+  const open = publicOpen || testMode;
   const scrollUp = () => panel.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   const go = (s: Step) => { setStep(s); setError(''); scrollUp(); };
 
@@ -360,6 +367,11 @@ export const WinterSplashPage: React.FC<{ onNavigateHome: () => void }> = ({ onN
               </div>
             </div>
 
+            {testMode && (
+              <p role="status" className="px-4 sm:px-6 py-3 bg-[#0A1930] text-white text-sm font-semibold">
+                {L('Test mode: registration is closed to the public. Only the organisers’ test address can be sent.', 'Testläge: anmälan är stängd för allmänheten. Bara arrangörernas testadress kan skickas.')}
+              </p>
+            )}
             {pub === null ? (
               <div className="p-8 text-sm text-slate-500">{L('Loading…', 'Laddar…')}</div>
             ) : !open && !receipt ? (
