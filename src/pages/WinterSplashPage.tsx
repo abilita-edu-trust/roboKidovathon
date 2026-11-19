@@ -234,8 +234,11 @@ export const WinterSplashPage: React.FC<{ onNavigateHome: () => void }> = ({ onN
     [L('Email', 'E-post'), values.email.trim()],
     [L('Phone', 'Telefon'), values.phone.trim()],
     ...(general
-      ? [[L('Attendees', 'Deltagare'), L(`${attendees} (${values.adults} ${Number(values.adults) === 1 ? 'adult' : 'adults'}, ${values.children} ${Number(values.children) === 1 ? 'child' : 'children'})`,
-        `${attendees} (${values.adults} ${Number(values.adults) === 1 ? 'vuxen' : 'vuxna'}, ${values.children} barn)`)] as [string, string]]
+      ? [[L('Attendees', 'Deltagare'), (() => {
+        const a = Number(values.adults), c = Number(values.children);
+        return L(`${attendees} (${a} ${a === 1 ? 'adult' : 'adults'}${c ? `, ${c} ${c === 1 ? 'child' : 'children'}` : ''})`,
+          `${attendees} (${a} ${a === 1 ? 'vuxen' : 'vuxna'}${c ? `, ${c} barn` : ''})`);
+      })()] as [string, string]]
       : [
         [values.kind === 'performer' ? L('Performers', 'Antal som uppträder') : L('People', 'Personer'), values.people] as [string, string],
         ...(values.groupName.trim() ? [[L('Group name', 'Gruppens namn'), values.groupName.trim()] as [string, string]] : []),
