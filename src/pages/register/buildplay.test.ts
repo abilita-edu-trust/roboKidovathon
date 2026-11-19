@@ -102,7 +102,7 @@ describe('RoboKidovation categories on vfi and IBK: Build & Play, Junior Robo Sp
     const fees = feesDefaults(VFI_SITE).fees.map((f) => [f.who.en, f.fee.en]);
     expect(fees).toContainEqual(['RoboKidovation Build & Play (preschool–grade 2, with a parent)', 'Free participation']);
     expect(fees).toContainEqual(['Future InnoHack (Kid InnoHack and Young InnoHack)', 'Free participation']);
-    expect(fees[0]).toEqual(['Schools, associations and independent teams', '200 SEK / kid']);
+    expect(fees[0]).toEqual(['RoboKidovation: Junior and Senior Robo Sprint (grades 3–9)', 'Free participation']);
     // Riga keeps its own.
     expect(heroDefaults(RIGA).facts[0].value.en).toBe('1–9 + GYM');
     expect(feesDefaults(RIGA).fees.map((f) => f.who.en).join()).not.toContain('Build & Play');
@@ -158,7 +158,7 @@ describe('Build & Play registration (a parent and child, free, no competition)',
     const summary = Object.fromEntries(buildPlayForm.summary({ contactName: 'P', email: 'p@example.org', phone: '1', children: [{ full_name: 'Ada', grade: 'preschool' }], accompany: true, mediaConsent: false }, ctx));
     expect(summary).toMatchObject({ Fee: 'Free', Children: 'Ada (preschool)', 'Accompanied by': 'A parent or guardian', 'Photos and videos': 'Not published' });
     expect(Object.keys(summary).join()).not.toMatch(/team|category|score|judg/i);
-    expect(buildPlayForm.intro(ctx)).toMatch(/^Free on 5 December at MISV\. A parent or guardian stays with each child\.$/);
+    expect(buildPlayForm.intro(ctx)).toMatch(/^Free on 5 December at MISV\. A parent or guardian stays with each child\. Registration closes on 24 November 2026\.$/);
     const done = buildPlayForm.done(ctx, { email: 'p@example.org' });
     expect(done.title).toBe('See you on 5 December');
     expect(done.body).toContain('Mälardalen International School (MISV) in Västerås, and it’s free.');
@@ -192,5 +192,58 @@ describe('Build & Play registration (a parent and child, free, no competition)',
       },
     });
     expect(BUILD_PLAY_GRADE_GROUP).toBe('Förskola–årskurs 2 (Build & Play · parent and child · not competing)');
+  });
+});
+
+describe('RoboKidovation registration deadline: 24 November 2026 on vfi and IBK only', () => {
+  const svCtx = (path: Path, site: Site) => ({ ...ctxFor(path, site), language: 'sv', lang: 'sv', sv: true, L: (_en: string, sv: string) => sv }) as import('./ui').FormCtx;
+  const competitionPaths: Path[] = ['individual', 'team', 'school', 'association'].map((role) => ({ programme: 'robo', role, activity: 'competition' }) as Path);
+
+  it('ends the competition and Build & Play intros with the deadline, in English and Swedish', () => {
+    for (const site of [VFI_SITE, IBK]) {
+      for (const p of competitionPaths) {
+        expect(FORMS.competition.intro(ctxFor(p, site))).toMatch(/ Registration closes on 24 November 2026\.$/);
+        expect(FORMS.competition.intro(svCtx(p, site))).toMatch(/ Anmälan stänger den 24 november 2026\.$/);
+      }
+      expect(buildPlayForm.intro(ctxFor(BP, site))).toBe(
+        'Free on 5 December at MISV. A parent or guardian stays with each child. Registration closes on 24 November 2026.',
+      );
+      expect(buildPlayForm.intro(svCtx(BP, site))).toBe(
+        'Gratis den 5 december på MISV. En förälder eller vårdnadshavare stannar med varje barn. Anmälan stänger den 24 november 2026.',
+      );
+    }
+  });
+
+  it('leaves the competition intro of Riga, Eskilstuna and Växjö exactly as before', () => {
+    for (const site of [RIGA, ESK, CITY_SITES.vxo.site]) {
+      expect(FORMS.competition.intro(ctxFor(competitionPaths[0], site))).toBe('Sign up your child for the RoboKidovation competition. We find them a team.');
+      expect(FORMS.competition.intro(ctxFor(competitionPaths[1], site))).toBe('Enter your team in the RoboKidovation competition: qualifiers first, then the Final.');
+    }
+  });
+});
+
+describe('RoboKidovation is free for everyone on vfi and IBK (19 November 2026)', () => {
+  it('lists only free participation, with nothing to pay, in English and Swedish', () => {
+    for (const site of [VFI_SITE, IBK]) {
+      const d = feesDefaults(site);
+      expect(d.title).toEqual({ en: 'Participation is free', sv: 'Deltagandet är gratis' });
+      expect(d.fees.map((f) => [f.fee.en, f.fee.sv])).toEqual(d.fees.map(() => ['Free participation', 'Gratis deltagande']));
+      expect(d.fees.map((f) => f.who.en)).toEqual([
+        'RoboKidovation: Junior and Senior Robo Sprint (grades 3–9)',
+        'Future InnoHack (Kid InnoHack and Young InnoHack)',
+        'RoboKidovation Build & Play (preschool–grade 2, with a parent)',
+      ]);
+      expect(d.showPayment).toBe(false);
+      expect(JSON.stringify(d.fees)).not.toMatch(/SEK|\bkr\b|rabatt|discount/);
+    }
+  });
+
+  it('leaves the fee defaults of the other city sites exactly as before', () => {
+    for (const site of [RIGA, ESK, CITY_SITES.vxo.site]) {
+      const d = feesDefaults(site);
+      expect(d.title.en).toBe('Participation fees');
+      expect(d.fees[0]).toEqual({ who: { en: 'Schools, associations and independent teams', sv: 'Skolor, föreningar och fristående lag' }, fee: { en: '200 SEK / kid', sv: '200 kr / barn' }, note: { en: '', sv: '' } });
+      expect(d.showPayment).toBe(true);
+    }
   });
 });

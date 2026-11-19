@@ -12,6 +12,9 @@ export const VFI_FACTS = {
   },
   hackVenue: { en: 'Växhuset, Västerås', sv: 'Växhuset, Västerås' } as Bilingual,
   qualifiers: { en: '12–25 November 2026', sv: '12–25 november 2026' } as Bilingual,
+  /** RoboKidovation registration deadline (competition and Build & Play, vfi and IBK). Shown only: organisers close the
+   *  forms by hand, and a later date needs only this line. */
+  registrationCloses: { en: '24 November 2026', sv: '24 november 2026' } as Bilingual,
   qualificationRule: {
     en: 'Up to 4 teams from each participating school or association qualify for the Final.',
     sv: 'Upp till 4 lag från varje deltagande skola eller förening går vidare till finalen.',
@@ -90,7 +93,8 @@ export const BUILD_PLAY_GRADE_GROUP = 'Förskola–årskurs 2 (Build & Play · p
 /** Young InnoHack's professionals (stored as their grade group; kept out of the other forms' grade lists). */
 export const PROFESSIONALS_GRADE_GROUP = 'Professionals (Young InnoHack)';
 
-/** Participation fees, per kid. */
+/** The former RoboKidovation fees, per kid. Not shown on vfi or IBK: RoboKidovation is free for everyone there
+ *  (confirmed 19 November 2026; feesDefaults). Kept only as the default of other sites' fee sections. */
 export const PARTICIPATION_FEES: { who: Bilingual; fee: Bilingual; note?: Bilingual }[] = [
   {
     who: { en: 'Schools, associations and independent teams', sv: 'Skolor, föreningar och fristående lag' },

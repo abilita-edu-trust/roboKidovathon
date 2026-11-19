@@ -428,9 +428,17 @@ export const chipLabels = (values: unknown, options: ChipOption[], lang: Languag
     .map((o) => optionLabel(o!, lang))
     .join(', ');
 
-/** School bookings, groups, squads, teams and community sign-ups (registrations table). */
-export async function submitRegistration(payload: Record<string, unknown>): Promise<string> {
-  const { data, error } = await supabase.rpc('submit_fut_inno_registration', { payload });
+/** vfi and IBK: the site a registration is sent from (decided 19 November 2026). Other city sites: none. */
+export const sourceSite = (ctx: FormCtx): 'vfi' | 'ibk' | null =>
+  ctx.site.designV2 ? (ctx.site.nav.homeRoute === 'ibk' ? 'ibk' : 'vfi') : null;
+
+/** School bookings, groups, squads, teams and community sign-ups (registrations table). On vfi and IBK the details
+ *  also say which site the registration came from ("site": "vfi" or "ibk"); the Admin Panel shows it with the other
+ *  details. No database change: the details are free JSON, and older registrations simply have no site. */
+export async function submitRegistration(payload: Record<string, unknown>, ctx: FormCtx): Promise<string> {
+  const site = sourceSite(ctx);
+  const body = site ? { ...payload, intake_details: { ...((payload.intake_details as Record<string, unknown> | undefined) ?? {}), site } } : payload;
+  const { data, error } = await supabase.rpc('submit_fut_inno_registration', { payload: body });
   if (error) throw new Error(error.message || 'Failed to submit registration');
   return (data as string) || '';
 }

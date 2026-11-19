@@ -6,6 +6,7 @@
 import React from 'react';
 import { Puzzle, ShieldCheck, Users } from 'lucide-react';
 import { BUILD_PLAY_GRADE_GROUP } from '../../../data/vfiFacts';
+import { robokidoDeadline } from './competition';
 import {
   FormDef, Grid, Note, Section, TextField, inputCls, labelCls, resolveLocation, rows, str, submitRegistration,
   type FieldsProps, type SetValue, type Values,
@@ -169,7 +170,7 @@ export const buildPlayForm: FormDef = {
     ctx.L(
       'Free on 5 December at MISV. A parent or guardian stays with each child.',
       'Gratis den 5 december på MISV. En förälder eller vårdnadshavare stannar med varje barn.',
-    ),
+    ) + robokidoDeadline(ctx),
   initial: () => ({ children: [blankChild()], accompany: false, mediaConsent: false }),
   Fields: BuildPlayFields,
   validate: (v, ctx) => {
@@ -221,7 +222,7 @@ export const buildPlayForm: FormDef = {
         accompanied_by_guardian: !!v.accompany,
         media_consent: !!v.mediaConsent,
       },
-    });
+    }, ctx);
   },
   submitLabel: (ctx) => ctx.L('Book our places', 'Boka våra platser'),
   done: (ctx, v) => ({
