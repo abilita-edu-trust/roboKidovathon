@@ -3,7 +3,7 @@
 // form_type 'competition', with the members in intake_details.team_members.
 import React from 'react';
 import { Trophy } from 'lucide-react';
-import { GRADE_GROUP_OPTIONS } from '../../../data/vfiFacts';
+import { GRADE_GROUP_OPTIONS, VFI_FACTS } from '../../../data/vfiFacts';
 import { pick } from '../../../content/core';
 import {
   Chips, FormDef, Grid, LocationFields, MemberRows, Note, Section, TextField,
@@ -21,6 +21,12 @@ const CATEGORY_OPTIONS: ChipOption[] = [
 /** The site's competition categories: on vfi and IBK only Junior and Senior compete (Build & Play, preschool–grade 2, has
  *  its own form and replaces GYM there; older GYM registrations keep their grade group). */
 export const categoryOptions = (ctx: FormCtx): ChipOption[] => (ctx.site.intake.buildAndPlay ? CATEGORY_OPTIONS.slice(0, 2) : CATEGORY_OPTIONS);
+
+/** vfi and IBK: RoboKidovation's registration deadline, after the form's intro (other cities: nothing). */
+export const robokidoDeadline = (ctx: FormCtx) =>
+  ctx.site.designV2
+    ? ' ' + ctx.L(`Registration closes on ${VFI_FACTS.registrationCloses.en}.`, `Anmälan stänger den ${VFI_FACTS.registrationCloses.sv}.`)
+    : '';
 
 const role = (ctx: FormCtx) => ctx.path.role;
 /** Schools and associations may enter several teams and send the names later. */
@@ -121,9 +127,10 @@ export const competitionForm: FormDef = {
   fees: true,
   title: (ctx) => byDesign(ctx, (role(ctx) === 'individual' ? ctx.L('Sign up your child', 'Anmäl ditt barn') : ctx.L('Enter a team', 'Anmäl ett lag')), ctx.L('Competition registration', 'Tävlingsanmälan')),
   intro: (ctx) =>
-    role(ctx) === 'individual'
+    (role(ctx) === 'individual'
       ? byDesign(ctx, ctx.L('For Robo Sprint, grades 3–9. We find your child a team.', 'För Robo Sprint, årskurs 3–9. Vi hittar ett lag åt ditt barn.'), ctx.L('Sign up your child for the RoboKidovation competition. We find them a team.', 'Anmäl ditt barn till RoboKidovation-tävlingen. Vi hittar ett lag åt hen.'))
-      : byDesign(ctx, finalLine(ctx), ctx.L('Enter your team in the RoboKidovation competition: qualifiers first, then the Final.', 'Anmäl ert lag till RoboKidovation-tävlingen: först kvalet, sedan finalen.')),
+      : byDesign(ctx, finalLine(ctx), ctx.L('Enter your team in the RoboKidovation competition: qualifiers first, then the Final.', 'Anmäl ert lag till RoboKidovation-tävlingen: först kvalet, sedan finalen.'))) +
+    robokidoDeadline(ctx),
   initial: (ctx) => ({
     ...locationInitial(ctx.site),
     teamCount: isOrg(ctx) ? '1' : '',

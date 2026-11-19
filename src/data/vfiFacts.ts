@@ -12,6 +12,9 @@ export const VFI_FACTS = {
   },
   hackVenue: { en: 'Växhuset, Västerås', sv: 'Växhuset, Västerås' } as Bilingual,
   qualifiers: { en: '12–25 November 2026', sv: '12–25 november 2026' } as Bilingual,
+  /** RoboKidovation registration deadline (competition and Build & Play, vfi and IBK). Shown only: organisers close the
+   *  forms by hand, and a later date needs only this line. */
+  registrationCloses: { en: '24 November 2026', sv: '24 november 2026' } as Bilingual,
   qualificationRule: {
     en: 'Up to 4 teams from each participating school or association qualify for the Final.',
     sv: 'Upp till 4 lag från varje deltagande skola eller förening går vidare till finalen.',

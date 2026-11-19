@@ -158,7 +158,7 @@ describe('Build & Play registration (a parent and child, free, no competition)',
     const summary = Object.fromEntries(buildPlayForm.summary({ contactName: 'P', email: 'p@example.org', phone: '1', children: [{ full_name: 'Ada', grade: 'preschool' }], accompany: true, mediaConsent: false }, ctx));
     expect(summary).toMatchObject({ Fee: 'Free', Children: 'Ada (preschool)', 'Accompanied by': 'A parent or guardian', 'Photos and videos': 'Not published' });
     expect(Object.keys(summary).join()).not.toMatch(/team|category|score|judg/i);
-    expect(buildPlayForm.intro(ctx)).toMatch(/^Free on 5 December at MISV\. A parent or guardian stays with each child\.$/);
+    expect(buildPlayForm.intro(ctx)).toMatch(/^Free on 5 December at MISV\. A parent or guardian stays with each child\. Registration closes on 24 November 2026\.$/);
     const done = buildPlayForm.done(ctx, { email: 'p@example.org' });
     expect(done.title).toBe('See you on 5 December');
     expect(done.body).toContain('Mälardalen International School (MISV) in Västerås, and it’s free.');
@@ -192,5 +192,32 @@ describe('Build & Play registration (a parent and child, free, no competition)',
       },
     });
     expect(BUILD_PLAY_GRADE_GROUP).toBe('Förskola–årskurs 2 (Build & Play · parent and child · not competing)');
+  });
+});
+
+describe('RoboKidovation registration deadline: 24 November 2026 on vfi and IBK only', () => {
+  const svCtx = (path: Path, site: Site) => ({ ...ctxFor(path, site), language: 'sv', lang: 'sv', sv: true, L: (_en: string, sv: string) => sv }) as import('./ui').FormCtx;
+  const competitionPaths: Path[] = ['individual', 'team', 'school', 'association'].map((role) => ({ programme: 'robo', role, activity: 'competition' }) as Path);
+
+  it('ends the competition and Build & Play intros with the deadline, in English and Swedish', () => {
+    for (const site of [VFI_SITE, IBK]) {
+      for (const p of competitionPaths) {
+        expect(FORMS.competition.intro(ctxFor(p, site))).toMatch(/ Registration closes on 24 November 2026\.$/);
+        expect(FORMS.competition.intro(svCtx(p, site))).toMatch(/ Anmälan stänger den 24 november 2026\.$/);
+      }
+      expect(buildPlayForm.intro(ctxFor(BP, site))).toBe(
+        'Free on 5 December at MISV. A parent or guardian stays with each child. Registration closes on 24 November 2026.',
+      );
+      expect(buildPlayForm.intro(svCtx(BP, site))).toBe(
+        'Gratis den 5 december på MISV. En förälder eller vårdnadshavare stannar med varje barn. Anmälan stänger den 24 november 2026.',
+      );
+    }
+  });
+
+  it('leaves the competition intro of Riga, Eskilstuna and Växjö exactly as before', () => {
+    for (const site of [RIGA, ESK, CITY_SITES.vxo.site]) {
+      expect(FORMS.competition.intro(ctxFor(competitionPaths[0], site))).toBe('Sign up your child for the RoboKidovation competition. We find them a team.');
+      expect(FORMS.competition.intro(ctxFor(competitionPaths[1], site))).toBe('Enter your team in the RoboKidovation competition: qualifiers first, then the Final.');
+    }
   });
 });
