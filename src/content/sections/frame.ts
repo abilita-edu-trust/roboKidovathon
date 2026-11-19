@@ -73,7 +73,25 @@ export interface HeroPromo {
   alt: Bi;
   /** Optional: where a click goes (a site page or https:); empty = not clickable. */
   href: string;
+  /** Optional caption under the badge (large screens) or in a strip under the main button (phones and tablets):
+   *  a heading, a date line and a button. IBK: Winter Splash 2026. Shown only when the heading and button are set. */
+  title?: Bi;
+  when?: Bi;
+  cta?: CmsLink;
 }
+
+/** IBK's caption for its Winter Fest badge: Winter Splash 2026 at Växhuset, 12 December 2026. */
+export const WINTER_SPLASH_CAPTION: Required<Pick<HeroPromo, 'title' | 'when' | 'cta'>> = {
+  title: { en: 'Celebrate With Us!', sv: 'Fira med oss!' },
+  when: { en: '12 December 2026 · 17:00–21:00', sv: '12 december 2026 · kl. 17.00–21.00' },
+  cta: { label: { en: 'Register for Winter Splash 2026', sv: 'Anmäl dig till Winter Splash 2026' }, href: '/ibk/winter-splash' },
+};
+
+/** The badge's caption, or null (no heading or no button). */
+export const promoCaption = (promo: HeroPromo): Required<Pick<HeroPromo, 'title' | 'when' | 'cta'>> | null =>
+  promo.title && (promo.title.en || promo.title.sv) && promo.cta && hasLabel(promo.cta) && promo.cta.href
+    ? { title: promo.title, when: promo.when ?? { en: '', sv: '' }, cta: promo.cta }
+    : null;
 
 /** The badge to show, or null (switched off, or no image yet). */
 export const visiblePromo = (hero: Pick<HeroData, 'promo'>): HeroPromo | null =>
@@ -132,7 +150,8 @@ export const heroDefaults = (c: SiteConfig): HeroData => ({
   facts: c.hero.facts.map((f) => ({ label: bi(f.label), value: bi(f.value) })),
   image: DEFAULT_HERO_IMAGE,
   video: '',
-  promo: { visible: false, image: '', alt: bi(''), href: '' },
+  // IBK: the caption under its Winter Fest badge (the badge itself is switched on in the Site CMS).
+  promo: { visible: false, image: '', alt: bi(''), href: '', ...(c.nav.homeRoute === 'ibk' ? WINTER_SPLASH_CAPTION : {}) },
 });
 
 export const volunteerDefaults = (c: SiteConfig): VolunteerData => ({

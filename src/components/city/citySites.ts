@@ -88,7 +88,7 @@ export const CITY_SITES: Record<string, CitySite> = {
 
 /** 'page' is one of the site's own pages from the Site CMS (route '<site>/<path>', e.g. 'ibk/about');
  *  'guardian' and 'privacy' are Future InnoHack's guardian confirmation and privacy notice (IBK). */
-export type CityPageKind = 'home' | 'register' | 'ideas' | 'page' | 'guardian' | 'privacy';
+export type CityPageKind = 'home' | 'register' | 'ideas' | 'page' | 'guardian' | 'privacy' | 'winter-splash' | 'winter-splash-privacy';
 
 /** The city site and page a route belongs to (with the page's address for 'page'), or null for VFI routes. */
 export function cityPageFor(route: string): { city: CitySite; page: CityPageKind; path?: string } | null {
@@ -97,7 +97,7 @@ export function cityPageFor(route: string): { city: CitySite; page: CityPageKind
     const city = CITY_SITES[base];
     return city && path ? { city, page: 'page', path } : null;
   }
-  const [base, suffix] = route.split(/-(register|ideas|guardian|privacy)$/);
+  const [base, suffix] = route.split(/-(winter-splash-privacy|winter-splash|register|ideas|guardian|privacy)$/);
   const city = CITY_SITES[base];
   if (!city) return null;
   return { city, page: (suffix as CityPageKind | undefined) ?? 'home' };
