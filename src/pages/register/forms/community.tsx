@@ -3,7 +3,7 @@
 import React from 'react';
 import {
   Chips, FormDef, Grid, LocationFields, TextArea, TextField,
-  chipLabels, locationInitial, locationRow, resolveLocation, rows, str, submitRegistration,
+  byDesign, chipLabels, locationInitial, locationRow, resolveLocation, rows, str, submitRegistration,
   type ChipOption, type FieldsProps,
 } from '../ui';
 
@@ -33,12 +33,15 @@ const CommunityFields: React.FC<FieldsProps> = (props) => {
 };
 
 export const communityForm: FormDef = {
-  title: (ctx) => ctx.L('Join the innovation community', 'Gå med i innovationsgemenskapen'),
+  title: (ctx) => byDesign(ctx, ctx.L('Stay in touch', 'Håll kontakten'), ctx.L('Join the innovation community', 'Gå med i innovationsgemenskapen')),
   intro: (ctx) =>
-    ctx.L(
+    byDesign(ctx, ctx.L(
+      'Occasional news about workshops, competitions, hackathons and ways to help.',
+      'Nyheter då och då om workshoppar, tävlingar, hackathons och sätt att hjälpa till.',
+    ), ctx.L(
       'Get news about workshops, competitions, hackathons and ways to help. You can talk to the team about anything specific later.',
       'Få nyheter om workshoppar, tävlingar, hackathons och sätt att hjälpa till. Du kan prata med teamet om något särskilt senare.',
-    ),
+    )),
   initial: (ctx) => locationInitial(ctx.site),
   Fields: CommunityFields,
   validate: (v, ctx) => ((v.interests ?? []).length === 0 ? ctx.L('Choose at least one interest.', 'Välj minst ett intresse.') : ''),
@@ -73,12 +76,15 @@ export const communityForm: FormDef = {
       form_type: 'community',
       intake_details: { interests: v.interests ?? [], message: str(v.message) },
     }),
-  submitLabel: (ctx) => ctx.L('Join the community', 'Gå med'),
+  submitLabel: (ctx) => byDesign(ctx, ctx.L('Join the list', 'Gå med'), ctx.L('Join the community', 'Gå med')),
   done: (ctx, v) => ({
-    title: ctx.L('Welcome to the community!', 'Välkommen till gemenskapen!'),
-    body: ctx.L(
+    title: byDesign(ctx, ctx.L('You’re on the list', 'Du är med på listan'), ctx.L('Welcome to the community!', 'Välkommen till gemenskapen!')),
+    body: byDesign(ctx, ctx.L(
+      `A confirmation is on its way to ${str(v.email)}.`,
+      `En bekräftelse är på väg till ${str(v.email)}.`,
+    ), ctx.L(
       `A confirmation is on its way to ${str(v.email)}. We will email you about upcoming activities.`,
       `En bekräftelse är på väg till ${str(v.email)}. Vi mejlar dig om kommande aktiviteter.`,
-    ),
+    )),
   }),
 };

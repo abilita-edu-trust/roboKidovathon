@@ -1,6 +1,7 @@
-// Young InnoHack with company challenges (vfi and IBK), step 3: your details. The challenge and the team (on your own,
-// a new team or one you join) were chosen on the two steps before; submit_fut_inno_young_registration checks them all
-// again, keeps one registration per email and returns the team's invite code to its captain.
+// Young InnoHack with company challenges (vfi and IBK), step 3: about you. How you take part (on your own, a new team
+// or one you join) and the two challenge choices (a team's when joining it) come from the two steps before;
+// submit_fut_inno_young_registration checks them all again, keeps one registration per email and returns a new
+// team's invite code to its captain. Organisers allocate the final challenge later.
 import React from 'react';
 import { UserRound } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
@@ -20,8 +21,10 @@ export function youngPayload(v: Values, ctx: FormCtx): Record<string, unknown> {
   return {
     site: kidSiteKey(ctx),
     language: ctx.language,
-    challenge_id: ctx.path.challenge,
     participation: PARTICIPATION[team],
+    // A team's choices are the team's: the database ignores these for someone joining it.
+    first_choice_id: team === 'join' ? null : ctx.path.first,
+    second_choice_id: team === 'join' ? null : ctx.path.second,
     team:
       team === 'create'
         ? { name: str(v.teamName), listed: !!v.teamListed }
@@ -46,23 +49,21 @@ export function youngError(hint: string, L: FormCtx['L']): string {
   switch (hint) {
     case 'already_registered':
       return L(
-        'This email is already registered for Young InnoHack. To change your team or challenge, contact the organisers.',
-        'Den här e-postadressen är redan anmäld till Young InnoHack. Kontakta arrangörerna om du vill byta lag eller utmaning.',
+        'This email is already registered for Young InnoHack. Write to the organisers if you need to change team.',
+        'Den här e-postadressen är redan anmäld till Young InnoHack. Skriv till arrangörerna om du behöver byta lag.',
       );
     case 'team_name_taken':
-      return L('A team with this name already takes on this challenge. Choose another name.', 'Ett lag med det namnet finns redan i den här utmaningen. Välj ett annat namn.');
+      return L('Another team already has that name. Try a different one.', 'Ett annat lag har redan det namnet. Prova ett annat.');
     case 'team_full':
-      return L('This team is not taking new members. Choose another team, or take part on your own.', 'Laget tar inte emot fler medlemmar. Välj ett annat lag eller delta på egen hand.');
+      return L('That team is full or not taking new people. Choose another way to take part.', 'Laget är fullt eller tar inte emot fler. Välj ett annat sätt att delta.');
     case 'team_not_found':
-    case 'wrong_challenge':
-      return L('We could not find that team in this challenge. Check the invite code with your captain.', 'Vi hittar inte laget i den här utmaningen. Kontrollera inbjudningskoden med din lagkapten.');
-    case 'challenge_full':
-      return L('This challenge has no room for more teams. Join a team or take part on your own.', 'Utmaningen har inte plats för fler lag. Gå med i ett lag eller delta på egen hand.');
+      return L('We can’t find that team. Ask your captain to check the code.', 'Vi hittar inte laget. Be din lagkapten kontrollera koden.');
+    case 'invalid_choice':
+      return L('One of your choices isn’t available any more. Go back and choose again.', 'Ett av dina val finns inte längre. Gå tillbaka och välj igen.');
     case 'closed':
-    case 'not_found':
-      return L('Registration for this challenge is closed.', 'Anmälan till den här utmaningen är stängd.');
+      return L('Registration for the company challenges is closed.', 'Anmälan till företagens utmaningar är stängd.');
     case 'rate_limited':
-      return L('Too many attempts from this network. Please try again in an hour.', 'För många försök från det här nätverket. Försök igen om en timme.');
+      return L('Too many tries from this network. Please try again in an hour.', 'För många försök från det här nätverket. Försök igen om en timme.');
     default:
       return '';
   }
@@ -72,16 +73,16 @@ const YoungFields: React.FC<FieldsProps> = ({ v, set, ctx }) => {
   const { L, lang } = ctx;
   return (
     <>
-      <Section title={L('You', 'Du')} icon={UserRound} green={false}>
+      <Section title={L('About you', 'Om dig')} icon={UserRound} green={false}>
         <Grid>
           <TextField k="contactName" v={v} set={set} required maxLength={120} label={L('Your name', 'Ditt namn')} placeholder={L('First and last name', 'För- och efternamn')} />
           <TextField k="email" v={v} set={set} type="email" required maxLength={254} label={L('Email', 'E-post')} />
           <TextField k="phone" v={v} set={set} type="tel" maxLength={40} label={L('Phone (optional)', 'Telefon (valfritt)')} placeholder="+46 70 123 4567" />
-          <TextField k="organisation" v={v} set={set} maxLength={200} label={L('School, university or workplace (optional)', 'Skola, universitet eller arbetsplats (valfritt)')} />
+          <TextField k="organisation" v={v} set={set} maxLength={200} label={L('Where you study or work (optional)', 'Var du pluggar eller jobbar (valfritt)')} />
         </Grid>
         <Chips k="category" v={v} set={set} lang={lang} required label={L('You are a', 'Du är')} options={YOUNG_CATEGORIES} />
-        <Chips k="skills" v={v} set={set} lang={lang} multi label={L('What you are good at (optional)', 'Vad du är bra på (valfritt)')} options={SKILL_OPTIONS} />
-        <TextArea k="experience" v={v} set={set} rows={2} label={L('Anything the organisers should know (optional)', 'Något arrangörerna bör veta (valfritt)')} />
+        <Chips k="skills" v={v} set={set} lang={lang} multi label={L('What you’re good at (optional)', 'Vad du är bra på (valfritt)')} options={SKILL_OPTIONS} />
+        <TextArea k="experience" v={v} set={set} rows={2} label={L('Anything we should know? (optional)', 'Något vi bör veta? (valfritt)')} />
       </Section>
     </>
   );
@@ -89,17 +90,17 @@ const YoungFields: React.FC<FieldsProps> = ({ v, set, ctx }) => {
 
 export const youngForm: FormDef = {
   fees: false,
-  title: (ctx) => ctx.L('Your details', 'Dina uppgifter'),
+  title: (ctx) => ctx.L('About you', 'Om dig'),
   intro: (ctx) =>
     ctx.L(
-      'We use these to confirm your place and to send you the event details.',
-      'Vi använder dem för att bekräfta din plats och skicka information om evenemanget.',
+      'We use this to confirm your place and send you the event details.',
+      'Vi använder det för att bekräfta din plats och skicka information om evenemanget.',
     ),
   initial: () => ({ category: '', skills: [] }),
   Fields: YoungFields,
   validate: (v, ctx) =>
     !YOUNG_CATEGORIES.some((c) => c.value === v.category)
-      ? ctx.L('Choose whether you are a gymnasium student, a university student or a professional.', 'Välj om du är gymnasieelev, universitetsstudent eller yrkesverksam.')
+      ? ctx.L('Tell us whether you’re at gymnasium, at university or working.', 'Berätta om du går på gymnasiet, pluggar på universitetet eller jobbar.')
       : '',
   summary: (v, ctx) => {
     const { L, lang } = ctx;
@@ -108,9 +109,9 @@ export const youngForm: FormDef = {
       [L('Email', 'E-post'), str(v.email)],
       [L('Phone', 'Telefon'), str(v.phone)],
       [L('You are a', 'Du är'), chipLabels([v.category].filter(Boolean), YOUNG_CATEGORIES, lang)],
-      [L('School, university or workplace', 'Skola, universitet eller arbetsplats'), str(v.organisation)],
+      [L('Studies or works at', 'Pluggar eller jobbar på'), str(v.organisation)],
       [L('Good at', 'Bra på'), chipLabels(v.skills, SKILL_OPTIONS, lang)],
-      [L('For the organisers', 'Till arrangörerna'), str(v.experience)],
+      [L('Note to the organisers', 'Till arrangörerna'), str(v.experience)],
     );
   },
   submit: async (v, ctx) => {
@@ -131,7 +132,7 @@ export const youngForm: FormDef = {
   },
   submitLabel: (ctx) =>
     ctx.path.team === 'create'
-      ? ctx.L('Create the team and register', 'Skapa laget och anmäl dig')
+      ? ctx.L('Start the team', 'Starta laget')
       : ctx.path.team === 'join'
         ? ctx.L('Join the team', 'Gå med i laget')
         : ctx.L('Register', 'Anmäl dig'),
@@ -140,14 +141,22 @@ export const youngForm: FormDef = {
       ctx.path.team === 'create'
         ? ctx.L('Your team is registered', 'Ditt lag är anmält')
         : ctx.path.team === 'join'
-          ? ctx.L('You have joined the team', 'Du har gått med i laget')
-          : ctx.L('You are registered', 'Du är anmäld'),
+          ? ctx.L('You’re in the team', 'Du är med i laget')
+          : ctx.L('You’re registered', 'Du är anmäld'),
     body:
       ctx.path.team === 'create'
         ? ctx.L(
-            `Share the invite code below with your teammates; we also emailed it to ${str(v.email)} with a receipt.`,
-            `Dela inbjudningskoden nedan med dina lagkamrater; vi har också mejlat den till ${str(v.email)} med ett kvitto.`,
+            `Share the code below with your teammates. We’ll email ${str(v.email)} which challenge your team gets.`,
+            `Dela koden nedan med dina lagkamrater. Vi mejlar ${str(v.email)} vilken utmaning laget får.`,
           )
-        : ctx.L(`A receipt is on its way to ${str(v.email)}. The organisers contact you before the kickoff.`, `Ett kvitto är på väg till ${str(v.email)}. Arrangörerna hör av sig före kickoffen.`),
+        : ctx.path.team === 'join'
+          ? ctx.L(
+              `We’ll email ${str(v.email)} which challenge you get. The organisers decide using everyone’s choices.`,
+              `Vi mejlar ${str(v.email)} vilken utmaning du får. Arrangörerna bestämmer utifrån allas val.`,
+            )
+          : ctx.L(
+              `We’ll email ${str(v.email)} which challenge you get. The organisers decide using everyone’s choices, and they may put you in a team with others.`,
+              `Vi mejlar ${str(v.email)} vilken utmaning du får. Arrangörerna bestämmer utifrån allas val, och de kan sätta ihop dig med andra i ett lag.`,
+            ),
   }),
 };

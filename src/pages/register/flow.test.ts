@@ -2,12 +2,14 @@ import { describe, expect, it } from 'vitest';
 import {
   REGISTER_TABS,
   activityChoices,
+  answerCard,
   formFor,
   isAnswered,
   pathForTab,
   roleChoices,
   stepsFor,
   tabForPath,
+  themeChoices,
   type IntakeProgramTab,
   type RegisterProgramme,
 } from './flow';
@@ -90,5 +92,26 @@ describe('choices follow the forms a site accepts', () => {
   });
   it('offers every community role on vfi', () => {
     expect(roleChoices('community', all).map((c) => c.id)).toEqual(['member', 'volunteer', 'mentor', 'partner']);
+  });
+});
+
+describe('Riga, Eskilstuna and Växjö keep the earlier cards; vfi and IBK (v2) have the redesigned ones', () => {
+  it('keeps the earlier titles and emoji icons without v2', () => {
+    expect(roleChoices('robo', all).map((c) => [c.title.en, c.icon])).toEqual([
+      ['School / Teacher', '🏫'], ['Existing team', '👥'], ['Individual / Parent', '🙋'], ['Association / Club', '🤝'],
+    ]);
+    expect(roleChoices('hack', all).map((c) => c.title.en)).toEqual(['School / Teacher', 'Existing team', 'Individual']);
+    expect(activityChoices('robo', all, { role: 'school' }).map((c) => c.title.en)).toEqual(['Request a demo', 'Request a workshop', 'Competition registration']);
+    expect(themeChoices({ programme: 'ideas' })[0]).toMatchObject({ title: { en: 'Sustainability' }, icon: '🌱' });
+    expect(answerCard('activity', { programme: 'robo', activity: 'competition' })?.title.en).toBe('Competition registration');
+  });
+
+  it('uses the redesigned titles and line icons with v2', () => {
+    expect(roleChoices('robo', all, undefined, true).map((c) => [c.title.en, c.icon])).toEqual([
+      ['A school or class', 'School'], ['A team we already have', 'Users'], ['Myself or my child', 'User'], ['A club or association', 'Tent'],
+    ]);
+    expect(activityChoices('robo', all, { role: 'school', v2: true }).map((c) => c.title.en)).toEqual(['A school demo', 'A workshop', 'Robo Sprint competition']);
+    expect(themeChoices({ programme: 'ideas', v2: true })[0]).toMatchObject({ title: { en: 'Sustainability' }, icon: 'Leaf' });
+    expect(answerCard('activity', { programme: 'robo', activity: 'competition', v2: true })?.title.en).toBe('Robo Sprint competition');
   });
 });

@@ -1,6 +1,7 @@
-// Young InnoHack's company challenges (vfi and IBK), as the Admin Panel publishes them (fut_inno_young_challenges).
-// Only published challenges ever reach the website. Until the database has the challenges (its migration is not
-// applied yet), or while none is published, the list is empty and the site keeps the general Young InnoHack form.
+// Young InnoHack's company challenges (vfi and IBK), as the Admin Panel publishes them. Participants give a 1st and a
+// 2nd choice; organisers allocate the final challenge. Only published challenges reach the website, and the database
+// decides whether registration is open (one switch, at least two published challenges). While nothing is published,
+// the site keeps the general Young InnoHack form.
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import type { Bilingual } from '../context/SiteContext';
@@ -11,62 +12,82 @@ export interface YoungChallenge {
   company: string;
   logo: string;
   title: Bilingual;
+  /** The card's short description (up to 200 characters). */
+  short: Bilingual;
   problem: Bilingual;
   requirements: Bilingual;
-  registration_open: boolean;
-  /** Null: not decided yet (no limit applies). */
-  team_size_min: number | null;
-  team_size_max: number | null;
-  max_teams: number | null;
-  /** Captains may list their team for anyone to join without the code. */
-  listed_teams: boolean;
-  teams: number;
-  /** No room for more teams (joining a team can still be possible). */
-  full: boolean;
 }
+
+/** What the website knows: published challenges, whether registration is open, and the team rules. */
+export interface YoungState {
+  registrationOpen: boolean;
+  /** Null: not decided yet. */
+  teamSizeMin: number | null;
+  teamSizeMax: number | null;
+  listedTeams: boolean;
+  challenges: YoungChallenge[];
+}
+
+export const NO_YOUNG: YoungState = { registrationOpen: false, teamSizeMin: null, teamSizeMax: null, listedTeams: false, challenges: [] };
 
 export interface OpenTeam {
   id: string;
   name: string;
   members: number;
   spaces: number | null;
+  first_choice: string;
+  second_choice: string;
 }
 
 export interface TeamLookup {
   team: string;
-  challenge_id: string;
   members: number;
   spaces: number | null;
+  first_choice: string;
+  second_choice: string;
   joinable: boolean;
 }
 
 export type YoungSite = 'vfi' | 'ibk';
 
-const cache = new Map<YoungSite, Promise<YoungChallenge[]>>();
+/** The database's answer as the website uses it; anything else (an older database, an error) means "nothing yet". */
+export function toYoungState(data: unknown): YoungState {
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return NO_YOUNG;
+  const d = data as Record<string, unknown>;
+  const challenges = Array.isArray(d.challenges) ? (d.challenges as YoungChallenge[]) : [];
+  const n = (x: unknown) => (typeof x === 'number' ? x : null);
+  return {
+    registrationOpen: d.registration_open === true && challenges.length >= 2,
+    teamSizeMin: n(d.team_size_min),
+    teamSizeMax: n(d.team_size_max),
+    listedTeams: d.listed_teams === true,
+    challenges,
+  };
+}
 
-/** The site's published challenges, in slot order; [] when there are none or the database doesn't have them yet. */
-export function fetchYoungChallenges(site: YoungSite): Promise<YoungChallenge[]> {
+const cache = new Map<YoungSite, Promise<YoungState>>();
+
+export function fetchYoungState(site: YoungSite): Promise<YoungState> {
   if (!cache.has(site)) {
     cache.set(
       site,
       Promise.resolve(supabase.rpc('fut_inno_young_challenges_public', { _site: site }))
-        .then(({ data, error }) => (error || !Array.isArray(data) ? [] : (data as YoungChallenge[])))
-        .catch(() => []),
+        .then(({ data, error }) => (error ? NO_YOUNG : toYoungState(data)))
+        .catch(() => NO_YOUNG),
     );
   }
   return cache.get(site)!;
 }
 
-/** For tests and after a registration (team counts change). */
+/** For tests and after a registration. */
 export const forgetYoungChallenges = () => cache.clear();
 
-/** The published challenges, and whether the answer is in. */
-export function useYoungChallenges(site: YoungSite | null): { challenges: YoungChallenge[]; ready: boolean } {
-  const [state, setState] = useState<{ challenges: YoungChallenge[]; ready: boolean }>({ challenges: [], ready: !site });
+export function useYoungState(site: YoungSite | null): YoungState & { ready: boolean } {
+  const [state, setState] = useState<YoungState & { ready: boolean }>({ ...NO_YOUNG, ready: !site });
   useEffect(() => {
     if (!site) return;
     let live = true;
-    fetchYoungChallenges(site).then((challenges) => live && setState({ challenges, ready: true }));
+    fetchYoungState(site).then((s) => live && setState({ ...s, ready: true }));
     return () => {
       live = false;
     };
@@ -74,9 +95,9 @@ export function useYoungChallenges(site: YoungSite | null): { challenges: YoungC
   return state;
 }
 
-/** Teams anyone may join (listed by their captain, open, not full): name and size only. */
-export async function fetchOpenTeams(challengeId: string): Promise<OpenTeam[]> {
-  const { data, error } = await supabase.rpc('fut_inno_young_open_teams', { _challenge_id: challengeId });
+/** Teams anyone may join (listed by their captain, while the organisers allow it): name, size and their choices. */
+export async function fetchOpenTeams(site: YoungSite): Promise<OpenTeam[]> {
+  const { data, error } = await supabase.rpc('fut_inno_young_open_teams', { _site: site });
   return error || !Array.isArray(data) ? [] : (data as OpenTeam[]);
 }
 
@@ -94,10 +115,12 @@ export const normaliseCode = (raw: string) => raw.toUpperCase().replace(/[^A-Z0-
 export const formatCode = (code: string) => (code.length === 10 ? `${code.slice(0, 5)}-${code.slice(5)}` : code);
 
 /** "2–4 people", "up to 4 people", "at least 2 people", or null while the organisers haven't decided. */
-export function teamSizeText(c: Pick<YoungChallenge, 'team_size_min' | 'team_size_max'>, L: (en: string, sv: string) => string): string | null {
-  const { team_size_min: min, team_size_max: max } = c;
+export function teamSizeText(min: number | null, max: number | null, L: (en: string, sv: string) => string): string | null {
   if (min != null && max != null) return min === max ? L(`${max} people`, `${max} personer`) : L(`${min}–${max} people`, `${min}–${max} personer`);
-  if (max != null) return L(`Up to ${max} people`, `Upp till ${max} personer`);
-  if (min != null) return L(`At least ${min} people`, `Minst ${min} personer`);
+  if (max != null) return L(`up to ${max} people`, `upp till ${max} personer`);
+  if (min != null) return L(`at least ${min} people`, `minst ${min} personer`);
   return null;
 }
+
+/** "Company: Title" in the visitor's language. */
+export const challengeName = (c: YoungChallenge | undefined, T: (b: Bilingual) => string) => (c ? `${c.company}: ${T(c.title)}` : '');

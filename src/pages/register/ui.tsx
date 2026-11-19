@@ -1,7 +1,8 @@
 // Building blocks shared by the register forms: one values object per wizard, field
 // components bound to it by key, and the contract each form fills in (FormDef).
 import React from 'react';
-import type { LucideIcon } from 'lucide-react';
+import { Check, type LucideIcon } from 'lucide-react';
+import { ACCENTS, useAccent } from './ChoiceCards';
 import { supabase } from '../../lib/supabase';
 import type { SiteConfig } from '../../context/SiteContext';
 import type { Language } from '../../context/LanguageContext';
@@ -156,6 +157,9 @@ export type ChipOption = { value: string; en: string; sv: string; lv?: string };
 export const optionLabel = (o: ChipOption, lang: Language) => pick(o, lang);
 
 /** Toggle chips; `multi` keeps a list, otherwise one value (click again to clear). */
+/** vfi and IBK (SiteConfig.designV2) have the redesigned wording; Riga, Eskilstuna and Växjö keep the earlier text. */
+export const byDesign = <T,>(ctx: { site: Pick<SiteConfig, 'designV2'> }, v2: T, earlier: T): T => (ctx.site.designV2 ? v2 : earlier);
+
 export const Chips: React.FC<{
   k: string;
   v: Values;
@@ -165,18 +169,50 @@ export const Chips: React.FC<{
   lang: Language;
   multi?: boolean;
   required?: boolean;
+  /** The earlier look's hackathon green (sites without the vfi and IBK redesign). */
   green?: boolean;
 }> = ({ k, v, set, label, options, lang, multi, required, green }) => {
-  const on = green ? 'bg-[#059669] border-[#059669]' : 'bg-[#006AA7] border-[#006AA7]';
+  // vfi and IBK's wizard gives the programme's accent; everywhere else (other cities, the kiosk) the chips keep the
+  // look they had.
+  const accent = useAccent();
   const selected = multi ? list(v[k]) : v[k] ? [v[k]] : [];
   const toggle = (value: string) => {
     if (multi) set(k, selected.includes(value) ? selected.filter((x) => x !== value) : [...selected, value]);
     else set(k, v[k] === value ? '' : value);
   };
+  if (!accent) {
+    const on = green ? 'bg-[#059669] border-[#059669]' : 'bg-[#006AA7] border-[#006AA7]';
+    return (
+      <div>
+        <span className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-2">
+          {label} {required && '*'}
+        </span>
+        <div className="flex flex-wrap gap-2">
+          {options.map((o) => {
+            const active = selected.includes(o.value);
+            return (
+              <button
+                key={o.value}
+                type="button"
+                onClick={() => toggle(o.value)}
+                aria-pressed={active}
+                className={`py-1.5 px-3 text-xs border transition-all text-left ${
+                  active ? `${on} text-white font-bold` : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
+                }`}
+              >
+                {optionLabel(o, lang)}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+  const a = ACCENTS[accent];
   return (
-    <div>
-      <span className="block text-xs font-headline font-bold uppercase tracking-wider text-slate-700 mb-2">
-        {label} {required && '*'}
+    <div role="group" aria-label={label}>
+      <span className="block text-[15px] font-semibold text-[#0A1930] mb-2">
+        {label} {required && <span aria-hidden="true">*</span>}
       </span>
       <div className="flex flex-wrap gap-2">
         {options.map((o) => {
@@ -187,10 +223,11 @@ export const Chips: React.FC<{
               type="button"
               onClick={() => toggle(o.value)}
               aria-pressed={active}
-              className={`py-1.5 px-3 text-xs border transition-all text-left ${
-                active ? `${on} text-white font-bold` : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
+              className={`inline-flex items-center gap-1.5 min-h-[40px] py-2 px-3.5 text-[15px] border-2 text-left transition-colors motion-reduce:transition-none focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-2 ${a.focus} ${
+                active ? `${a.chipOn} font-semibold` : 'bg-white text-slate-700 border-[#E1E7EF] hover:border-slate-400'
               }`}
             >
+              {active && <Check className="w-4 h-4 shrink-0" strokeWidth={3} aria-hidden="true" />}
               {optionLabel(o, lang)}
             </button>
           );

@@ -5,7 +5,7 @@ import { supabase } from '../../../lib/supabase';
 import type { Bilingual } from '../../../context/SiteContext';
 import {
   Chips, FormDef, Grid, LocationFields, TextArea, TextField,
-  chipLabels, locationInitial, locationRow, resolveLocation, rows, str,
+  byDesign, chipLabels, locationInitial, locationRow, resolveLocation, rows, str,
   type ChipOption, type FieldsProps, type FormCtx,
 } from '../ui';
 
@@ -41,15 +41,18 @@ const PartnerFields: React.FC<FieldsProps> = (props) => {
 };
 
 export const partnerForm: FormDef = {
-  title: (ctx) => ctx.L('Become a partner', 'Bli partner'),
+  title: (ctx) => byDesign(ctx, ctx.L('Partner with us', 'Bli partner'), ctx.L('Become a partner', 'Bli partner')),
   intro: (ctx) =>
-    ctx.L(
+    byDesign(ctx, ctx.L(
+      'Tell us how your organisation would like to take part: a challenge, mentors, workshops, equipment or sponsorship.',
+      'Berätta hur er organisation vill vara med: en utmaning, mentorer, workshoppar, utrustning eller sponsring.',
+    ), ctx.L(
       'Bring problem statements, mentors, workshops, equipment or sponsorship. We contact you to talk about how to work together.',
       'Bidra med problemformuleringar, mentorer, workshoppar, utrustning eller sponsring. Vi kontaktar er för att prata om samarbetet.',
-    ),
+    )),
   initial: (ctx) => locationInitial(ctx.site),
   Fields: PartnerFields,
-  validate: (v, ctx) => ((v.ways ?? []).length === 0 ? ctx.L('Please choose at least one way to take part.', 'Välj minst ett sätt att delta.') : ''),
+  validate: (v, ctx) => ((v.ways ?? []).length === 0 ? byDesign(ctx, ctx.L('Choose at least one way to take part.', 'Välj minst ett sätt att vara med.'), ctx.L('Please choose at least one way to take part.', 'Välj minst ett sätt att delta.')) : ''),
   summary: (v, ctx) => {
     const { L, lang } = ctx;
     return [
@@ -84,9 +87,9 @@ export const partnerForm: FormDef = {
     if (error) throw new Error(error.message || 'Failed to submit');
     return (data as string) || '';
   },
-  submitLabel: (ctx) => ctx.L('Send partner request', 'Skicka partnerförfrågan'),
+  submitLabel: (ctx) => byDesign(ctx, ctx.L('Send to the team', 'Skicka till teamet'), ctx.L('Send partner request', 'Skicka partnerförfrågan')),
   done: (ctx) => ({
-    title: ctx.L('Thank you!', 'Tack!'),
-    body: ctx.L('We have received your partner request and will contact you soon.', 'Vi har tagit emot er partnerförfrågan och kontaktar er snart.'),
+    title: byDesign(ctx, ctx.L('Thanks, we’ll get back to you', 'Tack, vi återkommer'), ctx.L('Thank you!', 'Tack!')),
+    body: byDesign(ctx, ctx.L('Someone from the team will contact you to talk it through.', 'Någon i teamet kontaktar er för att prata igenom det.'), ctx.L('We have received your partner request and will contact you soon.', 'Vi har tagit emot er partnerförfrågan och kontaktar er snart.')),
   }),
 };

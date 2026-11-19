@@ -46,7 +46,7 @@ const ChildRows: React.FC<{ v: Values; set: SetValue; L: Lf }> = ({ v, set, L })
       {children.map((c, i) => (
         <div key={i} className="grid grid-cols-1 sm:grid-cols-[1fr_20rem_auto] gap-2 items-end">
           <label className="block">
-            <span className={labelCls}>{L(`Child ${i + 1}: name`, `Barn ${i + 1}: namn`)} *</span>
+            <span className={labelCls}>{L(`Child ${i + 1}`, `Barn ${i + 1}`)} *</span>
             <input
               id={`reg-child-${i}-name`}
               type="text"
@@ -54,7 +54,7 @@ const ChildRows: React.FC<{ v: Values; set: SetValue; L: Lf }> = ({ v, set, L })
               maxLength={200}
               value={c.full_name}
               onChange={(e) => update(children.map((x, j) => (j === i ? { ...x, full_name: e.target.value } : x)))}
-              placeholder={L('Full name', 'Fullständigt namn')}
+              placeholder={L('First and last name', 'För- och efternamn')}
               className={inputCls}
             />
           </label>
@@ -89,7 +89,7 @@ const ChildRows: React.FC<{ v: Values; set: SetValue; L: Lf }> = ({ v, set, L })
       ))}
       {children.length < BUILD_PLAY_MAX_CHILDREN && (
         <button type="button" onClick={() => update([...children, blankChild()])} className="text-xs font-mono-code font-bold uppercase text-[#006AA7] hover:underline">
-          + {L('Add another child', 'Lägg till ett barn till')}
+          {L('Add another child', 'Lägg till ett barn till')}
         </button>
       )}
     </div>
@@ -119,24 +119,24 @@ const BuildPlayFields: React.FC<FieldsProps> = ({ v, set, ctx }) => {
         <span>{L(BUILD_PLAY_DATE.en, BUILD_PLAY_DATE.sv)}</span>
         <span>{L(BUILD_PLAY_VENUE.en, BUILD_PLAY_VENUE.sv)}</span>
       </p>
-      <Section title={L('Parent / guardian', 'Förälder / vårdnadshavare')} icon={Users}>
+      <Section title={L('You', 'Du')} icon={Users}>
         <Grid>
-          <TextField k="contactName" v={v} set={set} required label={L('Your name', 'Ditt namn')} placeholder={L('Full name', 'Fullständigt namn')} />
+          <TextField k="contactName" v={v} set={set} required label={L('Your name', 'Ditt namn')} placeholder={L('First and last name', 'För- och efternamn')} />
           <TextField k="email" v={v} set={set} type="email" required label={L('Email', 'E-post')} />
           <TextField k="phone" v={v} set={set} type="tel" required label={L('Phone', 'Telefon')} placeholder="+46 70 123 4567" />
           <TextField k="orgName" v={v} set={set} list="registered-schools-list" label={L("Child's preschool or school (optional)", 'Barnets förskola eller skola (frivilligt)')} />
         </Grid>
       </Section>
-      <Section title={L('Your child', 'Ditt barn')} icon={Puzzle}>
+      <Section title={L('The children', 'Barnen')} icon={Puzzle}>
         <ChildRows v={v} set={set} L={L} />
         <Note>
           {L(
-            'For children from preschool to grade 2, including children younger than förskoleklass. You build robots together: there is no competition, scoring, judging, rankings or prizes, and no previous robotics knowledge is needed.',
-            'För barn från förskola till årskurs 2, även barn som är yngre än förskoleklass. Ni bygger robotar tillsammans: det finns ingen tävling, poäng, jury, rankning eller priser, och inga förkunskaper i robotik behövs.',
+            'From preschool to grade 2, including children younger than förskoleklass. You build together: there’s no competition, scoring, judging, ranking or prizes, and no experience is needed.',
+            'Från förskola till årskurs 2, även barn som är yngre än förskoleklass. Ni bygger tillsammans: ingen tävling, inga poäng, ingen jury, rankning eller priser, och inga förkunskaper behövs.',
           )}
         </Note>
       </Section>
-      <Section title={L('Accompanying adult and privacy', 'Medföljande vuxen och integritet')} icon={ShieldCheck}>
+      <Section title={L('Safety and privacy', 'Trygghet och integritet')} icon={ShieldCheck}>
         <Check k="accompany" v={v} set={set} required>
           {L(
             "I am the child's parent or guardian, and I (or another parent or guardian) will stay with the child during Build & Play. *",
@@ -164,11 +164,11 @@ const BuildPlayFields: React.FC<FieldsProps> = ({ v, set, ctx }) => {
 export const buildPlayForm: FormDef = {
   // Build & Play is free: no fees are shown.
   fees: false,
-  title: (ctx) => ctx.L('Build & Play registration', 'Anmälan till Build & Play'),
+  title: (ctx) => ctx.L('Come and build together', 'Kom och bygg tillsammans'),
   intro: (ctx) =>
     ctx.L(
-      'Sign up for RoboKidovation Build & Play: a free, hands-on robotics activity for a parent and child, from preschool to grade 2.',
-      'Anmäl er till RoboKidovation Build & Play: en gratis, praktisk robotikaktivitet för förälder och barn, från förskola till årskurs 2.',
+      'Free on 5 December at MISV. A parent or guardian stays with each child.',
+      'Gratis den 5 december på MISV. En förälder eller vårdnadshavare stannar med varje barn.',
     ),
   initial: () => ({ children: [blankChild()], accompany: false, mediaConsent: false }),
   Fields: BuildPlayFields,
@@ -177,7 +177,7 @@ export const buildPlayForm: FormDef = {
     if (!children.length) return ctx.L("Add your child's name.", 'Lägg till ditt barns namn.');
     if (children.some((c) => !BUILD_PLAY_GRADES.includes(c.grade)))
       return ctx.L('Choose an age group for each child: preschool, förskoleklass, grade 1 or grade 2.', 'Välj ålder för varje barn: förskola, förskoleklass, årskurs 1 eller årskurs 2.');
-    if (!v.accompany) return ctx.L('Confirm that a parent or guardian stays with the child.', 'Bekräfta att en förälder eller vårdnadshavare stannar med barnet.');
+    if (!v.accompany) return ctx.L('Tick the box to confirm that a parent or guardian stays with the child.', 'Kryssa i rutan för att bekräfta att en förälder eller vårdnadshavare stannar med barnet.');
     return '';
   },
   summary: (v, ctx) => {
@@ -223,12 +223,12 @@ export const buildPlayForm: FormDef = {
       },
     });
   },
-  submitLabel: (ctx) => ctx.L('Send Build & Play registration', 'Skicka anmälan till Build & Play'),
+  submitLabel: (ctx) => ctx.L('Book our places', 'Boka våra platser'),
   done: (ctx, v) => ({
-    title: ctx.L('Build & Play registration received!', 'Anmälan till Build & Play mottagen!'),
+    title: ctx.L('See you on 5 December', 'Vi ses den 5 december'),
     body: ctx.L(
-      `See you on 5 December 2026 at Mälardalen International School (MISV), Västerås. Participation is free. A receipt is on its way to ${str(v.email)}.`,
-      `Vi ses den 5 december 2026 på Mälardalen International School (MISV) i Västerås. Deltagandet är gratis. Ett kvitto är på väg till ${str(v.email)}.`,
+      `Build & Play is at Mälardalen International School (MISV) in Västerås, and it’s free. A confirmation is on its way to ${str(v.email)}.`,
+      `Build & Play är på Mälardalen International School (MISV) i Västerås, och det är gratis. En bekräftelse är på väg till ${str(v.email)}.`,
     ),
   }),
 };

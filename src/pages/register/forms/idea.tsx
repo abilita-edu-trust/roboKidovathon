@@ -7,7 +7,7 @@ import { VoiceNoteRecorder } from '../../../components/VoiceNoteRecorder';
 import { submitIdea, uploadIdeaMedia } from '../../../lib/ideasService';
 import {
   Chips, FormDef, Grid, LocationFields, TextArea, TextField,
-  chipLabels, labelCls, locationInitial, locationRow, resolveLocation, rows, str,
+  byDesign, chipLabels, labelCls, locationInitial, locationRow, resolveLocation, rows, str,
   type ChipOption, type FieldsProps,
 } from '../ui';
 
@@ -157,12 +157,15 @@ const IdeaFields: React.FC<FieldsProps> = (props) => {
 };
 
 export const ideaForm: FormDef = {
-  title: (ctx) => ctx.L('Submit your innovation idea', 'Skicka in din innovationsidé'),
+  title: (ctx) => byDesign(ctx, ctx.L('Put your idea to the public vote', 'Låt alla rösta på din idé'), ctx.L('Submit your innovation idea', 'Skicka in din innovationsidé')),
   intro: (ctx) =>
-    ctx.L(
+    byDesign(ctx, ctx.L(
+      'Write it, draw it, record it or film it. A coordinator reads each idea before it goes public.',
+      'Skriv, rita, spela in eller filma den. En samordnare läser varje idé innan den visas.',
+    ), ctx.L(
       'Share your idea as text, a drawing or photo, a voice note or a video. A coordinator reviews it, then it goes to public voting.',
       'Dela din idé som text, teckning eller foto, röstmeddelande eller video. En samordnare granskar den, sedan går den till publik röstning.',
-    ) + (ctx.path.track === 'young' ? ' ' + ctx.L(`Ideas close on ${IDEAS_CLOSE.en}.`, `Idéinlämningen stänger den ${IDEAS_CLOSE.sv}.`) : ''),
+    )) + (ctx.path.track === 'young' ? ' ' + ctx.L(`Ideas close on ${IDEAS_CLOSE.en}.`, `Idéinlämningen stänger den ${IDEAS_CLOSE.sv}.`) : ''),
   initial: (ctx) => ({ ...locationInitial(ctx.site), studentAge: '13', videoMode: 'link' }),
   Fields: IdeaFields,
   summary: (v, ctx) => {
@@ -222,12 +225,15 @@ export const ideaForm: FormDef = {
     });
     return res.public_id;
   },
-  submitLabel: (ctx) => ctx.L('Submit idea for review', 'Skicka idén för granskning'),
+  submitLabel: (ctx) => byDesign(ctx, ctx.L('Send for review', 'Skicka för granskning'), ctx.L('Submit idea for review', 'Skicka idén för granskning')),
   done: (ctx) => ({
-    title: ctx.L('Idea submitted for review!', 'Idén är inskickad för granskning!'),
-    body: ctx.L(
+    title: byDesign(ctx, ctx.L('Sent for review', 'Skickad för granskning'), ctx.L('Idea submitted for review!', 'Idén är inskickad för granskning!')),
+    body: byDesign(ctx, ctx.L(
+      'Once a coordinator has approved it, your idea appears on the ideas page for everyone to vote on.',
+      'När en samordnare har godkänt idén visas den på idésidan så att alla kan rösta.',
+    ), ctx.L(
       'Your idea is saved. Once a coordinator approves it, it appears on the public ideas page where people can vote.',
       'Din idé är sparad. När en samordnare har godkänt den visas den på den publika idésidan där alla kan rösta.',
-    ),
+    )),
   }),
 };

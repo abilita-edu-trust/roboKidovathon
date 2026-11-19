@@ -5,7 +5,7 @@ import { pick } from '../../../content/core';
 import { supabase } from '../../../lib/supabase';
 import {
   Chips, FormDef, Grid, LocationFields, SelectField, TextArea, TextField,
-  chipLabels, locationInitial, locationRow, resolveLocation, rows, str,
+  byDesign, chipLabels, locationInitial, locationRow, resolveLocation, rows, str,
   type ChipOption, type FieldsProps, type FormCtx,
 } from '../ui';
 
@@ -95,16 +95,19 @@ const VolunteerFields: React.FC<FieldsProps> = (props) => {
 };
 
 const makeForm = (mentor: boolean): FormDef => ({
-  title: (ctx) => (mentor ? ctx.L('Become a mentor', 'Bli mentor') : ctx.L('Work as a volunteer', 'Arbeta som volontär')),
+  title: (ctx) => byDesign(ctx, (mentor ? ctx.L('Mentor a team', 'Bli mentor för ett lag') : ctx.L('Help on the day', 'Hjälp till på plats')), (mentor ? ctx.L('Become a mentor', 'Bli mentor') : ctx.L('Work as a volunteer', 'Arbeta som volontär'))),
   intro: (ctx) =>
     mentor
-      ? ctx.L('Support student teams and their projects. All fields are required.', 'Stötta elevlag och deras projekt. Alla fält är obligatoriska.')
+      ? byDesign(ctx, ctx.L('Help student teams sharpen their ideas.', 'Hjälp elevlagen att vässa sina idéer.'), ctx.L('Support student teams and their projects. All fields are required.', 'Stötta elevlag och deras projekt. Alla fält är obligatoriska.'))
       : ctx.site.intake.volunteer
       ? pick(ctx.site.intake.volunteer.intro, ctx.lang)
-      : ctx.L(
+      : byDesign(ctx, ctx.L(
+          'Pick the events and roles that suit you.',
+          'Välj de evenemang och roller som passar dig.',
+        ), ctx.L(
           'Help us run Västerås Future Innovators events. All fields are required.',
           'Hjälp oss att genomföra Västerås Future Innovators evenemang. Alla fält är obligatoriska.',
-        ),
+        )),
   initial: (ctx) => {
     const options = events(ctx);
     return {
@@ -169,13 +172,16 @@ const makeForm = (mentor: boolean): FormDef => ({
     if (error) throw new Error(error.message || 'Failed to submit');
     return (data as string) || '';
   },
-  submitLabel: (ctx) => (mentor ? ctx.L('Send mentor sign-up', 'Skicka mentorsanmälan') : ctx.L('Send volunteer sign-up', 'Skicka volontäranmälan')),
+  submitLabel: (ctx) => byDesign(ctx, (mentor ? ctx.L('Offer to mentor', 'Erbjud dig som mentor') : ctx.L('Sign up to help', 'Anmäl dig som volontär')), (mentor ? ctx.L('Send mentor sign-up', 'Skicka mentorsanmälan') : ctx.L('Send volunteer sign-up', 'Skicka volontäranmälan'))),
   done: (ctx) => ({
-    title: mentor ? ctx.L('Thank you for offering to mentor!', 'Tack för att du vill bli mentor!') : ctx.L('Thank you for volunteering!', 'Tack för att du vill bli volontär!'),
-    body: ctx.L(
+    title: byDesign(ctx, mentor ? ctx.L('Thank you for offering your time', 'Tack för att du erbjuder din tid') : ctx.L('Thanks for helping out', 'Tack för att du hjälper till'), mentor ? ctx.L('Thank you for offering to mentor!', 'Tack för att du vill bli mentor!') : ctx.L('Thank you for volunteering!', 'Tack för att du vill bli volontär!')),
+    body: byDesign(ctx, ctx.L(
+      `The ${team(ctx)} team will email you about what happens next.`,
+      `${team(ctx)}-teamet mejlar dig om vad som händer härnäst.`,
+    ), ctx.L(
       `We have received your sign-up. The ${team(ctx)} team will contact you by email with the next steps.`,
       `Vi har tagit emot din anmälan. ${team(ctx)}-teamet kontaktar dig via e-post med nästa steg.`,
-    ),
+    )),
   }),
 });
 
