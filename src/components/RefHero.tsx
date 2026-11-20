@@ -2,7 +2,7 @@ import React from 'react';
 import { motion, MotionConfig } from 'framer-motion';
 import { ArrowRight, ArrowUpRight, ChevronDown } from 'lucide-react';
 import { useT } from '../content/useT';
-import { hasLabel, visiblePromo, type HeroData, type HeroPromo } from '../content/sections/frame';
+import { hasLabel, promoCaption, visiblePromo, type HeroData, type HeroPromo } from '../content/sections/frame';
 
 interface RefHeroProps {
   /** Texts, buttons, facts and background from the Site CMS. */
@@ -45,13 +45,16 @@ const PromoBadge: React.FC<{ promo: HeroPromo; go: (href: string) => void }> = (
   const image = (
     <img src={promo.image} alt={promo.href ? '' : label} loading="eager" decoding="async" className="block w-full h-full object-cover" style={{ clipPath: LOGO_CIRCLE }} />
   );
+  const caption = promoCaption(promo);
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.8, delay: 0.3, ease: EASE }}
-      className="absolute z-20 right-3 sm:right-6 top-[4.75rem] sm:top-24 lg:top-28 w-20 sm:w-28 md:w-32 lg:w-44 xl:w-52 aspect-square"
+      className={`absolute z-20 right-3 sm:right-6 top-[4.75rem] sm:top-24 ${caption ? 'lg:top-24 xl:top-28' : 'lg:top-28'} flex flex-col items-center`}
     >
+    {/* With a caption, the badge is a little smaller on 1024–1279 px screens so the caption clears the fact boxes. */}
+    <div className={`w-20 sm:w-28 md:w-32 ${caption ? 'lg:w-32' : 'lg:w-44'} xl:w-52 aspect-square`}>
       {/* A gentle float and a soft gold glow; still for visitors who prefer reduced motion (MotionConfig). */}
       <motion.div
         animate={{ y: [0, -8, 0] }}
@@ -72,6 +75,49 @@ const PromoBadge: React.FC<{ promo: HeroPromo; go: (href: string) => void }> = (
           image
         )}
       </motion.div>
+    </div>
+      {/* Large screens: the caption under the badge (phones and tablets get PromoStrip near the top of the hero). */}
+      {caption && (
+        <div className="hidden lg:flex flex-col items-center gap-1.5 mt-3 text-center w-[20rem]">
+          <span className="font-headline font-black text-xl xl:text-2xl text-[#FFCD00] leading-tight" style={{ textWrap: 'balance' }}>{t(caption.title)}</span>
+          {t(caption.when) && <span className="text-sm xl:text-[15px] font-semibold text-white leading-snug" style={{ textWrap: 'balance' }}>{t(caption.when)}</span>}
+          {t(caption.note) && <span className="mt-0.5 px-2.5 py-1 border border-[#FFCD00]/70 bg-[#FFCD00]/15 text-[#FFCD00] text-[13px] xl:text-sm font-bold whitespace-nowrap">{t(caption.note)}</span>}
+          <button
+            type="button"
+            onClick={() => go(caption.cta.href)}
+            className="group mt-1.5 inline-flex items-center gap-2 px-4 py-3 bg-[#FFCD00] hover:bg-[#E6B800] text-[#0A1930] font-syne font-black text-xs tracking-wider uppercase whitespace-nowrap shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFCD00] transition-colors duration-200"
+          >
+            <span>{t(caption.cta.label)}</span>
+            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
+          </button>
+        </div>
+      )}
+    </motion.div>
+  );
+};
+
+/** Phones and tablets: the badge's caption as a strip right under the intro (on the first screen), with a small copy
+ *  of the badge. */
+const PromoStrip: React.FC<{ promo: HeroPromo; go: (href: string) => void }> = ({ promo, go }) => {
+  const { t } = useT();
+  const caption = promoCaption(promo);
+  if (!caption) return null;
+  return (
+    <motion.div {...fadeUp(0.2)} className="lg:hidden mt-5 sm:max-w-md grid grid-cols-[4.5rem_1fr] gap-x-3 gap-y-3 items-center p-3.5 border border-[#FFCD00]/65 bg-[#0A1930]/60 backdrop-blur-md">
+      <img src={promo.image} alt="" className="w-[4.5rem] h-[4.5rem] object-cover" style={{ clipPath: LOGO_CIRCLE }} />
+      <div className="min-w-0">
+        <span className="block font-headline font-black text-lg text-[#FFCD00] leading-tight">{t(caption.title)}</span>
+        {t(caption.when) && <span className="block mt-0.5 text-sm font-semibold text-white">{t(caption.when)}</span>}
+        {t(caption.note) && <span className="inline-block mt-1.5 px-2 py-0.5 border border-[#FFCD00]/70 bg-[#FFCD00]/15 text-[#FFCD00] text-[13px] font-bold">{t(caption.note)}</span>}
+      </div>
+      <button
+        type="button"
+        onClick={() => go(caption.cta.href)}
+        className="col-span-2 inline-flex items-center justify-center gap-2 px-4 py-3 bg-[#FFCD00] hover:bg-[#E6B800] text-[#0A1930] font-syne font-black text-xs tracking-wider uppercase focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFCD00] transition-colors duration-200"
+      >
+        <span>{t(caption.cta.label)}</span>
+        <ArrowRight className="w-4 h-4" aria-hidden="true" />
+      </button>
     </motion.div>
   );
 };
@@ -158,6 +204,9 @@ const EventsHero: React.FC<RefHeroProps> = ({ data: hero, go }) => {
               >
                 {t(hero.intro)}
               </motion.p>
+
+              {/* Phones and tablets: Winter Splash (IBK) straight after the intro, before the event cards */}
+              {promo && <PromoStrip promo={promo} go={go} />}
 
               {/* Event cards: side by side, stacked on phones */}
               <motion.div {...fadeUp(0.24)} className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">

@@ -28,6 +28,8 @@ import { cityPageFor } from './components/city/citySites';
 import { CityPage } from './components/city/CityPage';
 import { GuardianConfirmPage } from './pages/GuardianConfirmPage';
 import { PrivacyNoticePage } from './pages/PrivacyNoticePage';
+import { WinterSplashPage } from './pages/WinterSplashPage';
+import { WinterSplashPrivacyPage } from './pages/WinterSplashPrivacyPage';
 import { InnohackProvider, innohackTracksFrom } from './content/innohackContext';
 import { SITE_META } from './data/siteMeta';
 import { SiteProvider, VFI_SITE } from './context/SiteContext';
@@ -190,6 +192,8 @@ export function App() {
             {page === 'page' && <CityPage env={sectionEnv} page={pages.find((p) => p.path === path)} ready={ready} onNavigateHome={goHome} />}
             {page === 'guardian' && <GuardianConfirmPage onNavigateHome={goHome} />}
             {page === 'privacy' && <PrivacyNoticePage onNavigateHome={goHome} />}
+            {page === 'winter-splash' && <WinterSplashPage onNavigateHome={goHome} />}
+            {page === 'winter-splash-privacy' && <WinterSplashPrivacyPage onBack={() => handleNavigate('ibk-winter-splash')} />}
           </main>
           {!city.ownContact && <TeamContact />}
           <RefFooter onNavigate={navigateOrOpen} onSelectPartner={handleSelectPartner} />
