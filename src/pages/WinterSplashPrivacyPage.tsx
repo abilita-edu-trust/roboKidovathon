@@ -11,9 +11,9 @@ import { ArrowLeft } from 'lucide-react';
 import { useT } from '../content/useT';
 import type { PrivacySection } from './PrivacyNoticePage';
 
-export const WINTER_SPLASH_PRIVACY_VERSION = 'draft 2026-11-19';
+export const WINTER_SPLASH_PRIVACY_VERSION = '2026-11-20';
 /** False until the organisers approve the text below. */
-export const WINTER_SPLASH_PRIVACY_APPROVED = false;
+export const WINTER_SPLASH_PRIVACY_APPROVED = true;
 /** IBK's contact address for data requests (also the reply-to of the Winter Splash emails; confirmed). */
 export const WINTER_SPLASH_CONTACT = 'Vasteras@indiskbarnklubb.se';
 
