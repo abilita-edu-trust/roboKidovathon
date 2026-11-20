@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 };
 const { VFI_SITE } = await import('../../context/SiteContext');
 const { CITY_SITES } = await import('../../components/city/citySites');
-const { heroDefaults, visiblePromo, promoCaption, WINTER_SPLASH_CAPTION } = await import('./frame');
+const { heroDefaults, visiblePromo, promoCaption, winterSplashCaption } = await import('./frame');
 const { mergeData } = await import('../core');
 
 const bi = (en: string, sv = '') => ({ en, sv });
@@ -16,7 +16,7 @@ describe('the hero promotional badge (e.g. the Winter Fest logo)', () => {
     for (const site of [VFI_SITE, ...Object.values(CITY_SITES).map((c) => c.site)]) {
       const hero = heroDefaults(site);
       // IBK's default also carries the Winter Splash caption, shown only with a switched-on badge.
-      const caption = site.nav.homeRoute === 'ibk' ? WINTER_SPLASH_CAPTION : {};
+      const caption = site.nav.homeRoute === 'ibk' ? winterSplashCaption() : {};
       expect(hero.promo).toEqual({ visible: false, image: '', alt: bi(''), href: '', ...caption });
       expect(visiblePromo(hero)).toBeNull();
     }
@@ -27,11 +27,16 @@ describe('the hero promotional badge (e.g. the Winter Fest logo)', () => {
     const live = { visible: true, image: '/site/winter-fest-2026.jpg', alt: bi('Spark, Shine & Celebrate – Winter Fest 2026', 'Spark, Shine & Celebrate – Winter Fest 2026'), href: '' };
     const promo = visiblePromo(mergeData(base, { promo: live }))!;
     expect(promo).toMatchObject(live);
-    expect(promoCaption(promo)).toEqual({
-      title: { en: 'Celebrate With Us!', sv: 'Fira med oss!' },
-      when: { en: '12 December 2026 · 17:00–21:00', sv: '12 december 2026 · kl. 17.00–21.00' },
-      cta: { label: { en: 'Register for Winter Splash 2026', sv: 'Anmäl dig till Winter Splash 2026' }, href: '/ibk/winter-splash' },
+    expect(promoCaption({ ...promo, ...winterSplashCaption(new Date('2026-11-19T12:00:00Z')) })).toEqual({
+      title: { en: 'Winter Splash 2026 – Celebrate With Us!', sv: 'Winter Splash 2026 – Fira med oss!' },
+      when: { en: '12 December 2026, 17:00–21:00, Växhuset', sv: '12 december 2026, kl. 17.00–21.00, Växhuset' },
+      note: { en: 'Early Bird: 50 SEK until 25 November', sv: 'Early Bird: 50 kr till och med 25 november' },
+      cta: { label: { en: 'Register Now', sv: 'Anmäl dig nu' }, href: '/ibk/winter-splash' },
     });
+    // The price line follows the price periods (Swedish time).
+    expect(winterSplashCaption(new Date('2026-11-25T22:59:59Z')).note.en).toBe('Early Bird: 50 SEK until 25 November');
+    expect(winterSplashCaption(new Date('2026-11-25T23:00:00Z')).note).toEqual({ en: '75 SEK per person until 9 December', sv: '75 kr per person till och med 9 december' });
+    expect(winterSplashCaption(new Date('2026-12-10T08:00:00Z')).note.en).toBe('100 SEK per person');
     // vfi's badge (if switched on) has no caption.
     expect(promoCaption(visiblePromo(mergeData(heroDefaults(VFI_SITE), { promo: live }))!)).toBeNull();
     // A caption without a button is not shown.

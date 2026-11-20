@@ -5,6 +5,7 @@ import type { Bilingual, SiteAction, SiteConfig, SiteLink } from '../../context/
 import type { IntakeProgramTab } from '../../pages/IntakeRegisterPage';
 import { hrefToTarget, isExternalHref, pathForRoute } from '../../lib/routes';
 import { bi, pick, type Bi, type CmsLink } from '../core';
+import { wsPriceAt } from '../../lib/winterSplash';
 import type { SectionDoc } from '../document';
 import { toPartnerLogos, type PartnersData } from './simple';
 
@@ -73,24 +74,35 @@ export interface HeroPromo {
   alt: Bi;
   /** Optional: where a click goes (a site page or https:); empty = not clickable. */
   href: string;
-  /** Optional caption under the badge (large screens) or in a strip under the main button (phones and tablets):
-   *  a heading, a date line and a button. IBK: Winter Splash 2026. Shown only when the heading and button are set. */
+  /** Optional caption under the badge (large screens) or in a strip near the top of the hero (phones and tablets):
+   *  a heading, a date line, a price line and a button. IBK: Winter Splash 2026. Shown only when the heading and
+   *  button are set. */
   title?: Bi;
   when?: Bi;
+  note?: Bi;
   cta?: CmsLink;
 }
+type Caption = Required<Pick<HeroPromo, 'title' | 'when' | 'note' | 'cta'>>;
 
-/** IBK's caption for its Winter Fest badge: Winter Splash 2026 at Växhuset, 12 December 2026. */
-export const WINTER_SPLASH_CAPTION: Required<Pick<HeroPromo, 'title' | 'when' | 'cta'>> = {
-  title: { en: 'Celebrate With Us!', sv: 'Fira med oss!' },
-  when: { en: '12 December 2026 · 17:00–21:00', sv: '12 december 2026 · kl. 17.00–21.00' },
-  cta: { label: { en: 'Register for Winter Splash 2026', sv: 'Anmäl dig till Winter Splash 2026' }, href: '/ibk/winter-splash' },
+/** The price line for the day (the same periods as the database): Early Bird until 25 November, then 75, then 100. */
+const WS_NOTE: Record<string, Bi> = {
+  until_25_november: { en: 'Early Bird: 50 SEK until 25 November', sv: 'Early Bird: 50 kr till och med 25 november' },
+  '26_november_9_december': { en: '75 SEK per person until 9 December', sv: '75 kr per person till och med 9 december' },
+  '10_12_december': { en: '100 SEK per person', sv: '100 kr per person' },
 };
 
+/** IBK's caption for its Winter Fest badge: Winter Splash 2026 at Växhuset, 12 December 2026, with the day's price. */
+export const winterSplashCaption = (at: Date = new Date()): Caption => ({
+  title: { en: 'Winter Splash 2026 – Celebrate With Us!', sv: 'Winter Splash 2026 – Fira med oss!' },
+  when: { en: '12 December 2026, 17:00–21:00, Växhuset', sv: '12 december 2026, kl. 17.00–21.00, Växhuset' },
+  note: WS_NOTE[wsPriceAt(at).band],
+  cta: { label: { en: 'Register Now', sv: 'Anmäl dig nu' }, href: '/ibk/winter-splash' },
+});
+
 /** The badge's caption, or null (no heading or no button). */
-export const promoCaption = (promo: HeroPromo): Required<Pick<HeroPromo, 'title' | 'when' | 'cta'>> | null =>
+export const promoCaption = (promo: HeroPromo): Caption | null =>
   promo.title && (promo.title.en || promo.title.sv) && promo.cta && hasLabel(promo.cta) && promo.cta.href
-    ? { title: promo.title, when: promo.when ?? { en: '', sv: '' }, cta: promo.cta }
+    ? { title: promo.title, when: promo.when ?? { en: '', sv: '' }, note: promo.note ?? { en: '', sv: '' }, cta: promo.cta }
     : null;
 
 /** The badge to show, or null (switched off, or no image yet). */
@@ -151,7 +163,7 @@ export const heroDefaults = (c: SiteConfig): HeroData => ({
   image: DEFAULT_HERO_IMAGE,
   video: '',
   // IBK: the caption under its Winter Fest badge (the badge itself is switched on in the Site CMS).
-  promo: { visible: false, image: '', alt: bi(''), href: '', ...(c.nav.homeRoute === 'ibk' ? WINTER_SPLASH_CAPTION : {}) },
+  promo: { visible: false, image: '', alt: bi(''), href: '', ...(c.nav.homeRoute === 'ibk' ? winterSplashCaption() : {}) },
 });
 
 export const volunteerDefaults = (c: SiteConfig): VolunteerData => ({
