@@ -12,7 +12,7 @@ import { useT } from '../content/useT';
 export const PRIVACY_VERSION = '2026-11-17';
 
 /** False until the organisers approve the text below. Kid InnoHack must not open before this is true. */
-export const PRIVACY_NOTICE_APPROVED = false;
+export const PRIVACY_NOTICE_APPROVED = true;
 
 interface Text { en: string; sv: string }
 export interface PrivacySection { title: Text; paragraphs: Text[]; items?: Text[] }
