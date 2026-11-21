@@ -142,7 +142,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   key={`${item.id}-${index}`}
                   href={hrefFor(item.id)}
                   onClick={(e) => handleLinkClick(e, item.id)}
-                  className={`relative px-2.5 2xl:px-3 py-1.5 text-xs font-display font-medium tracking-wide whitespace-nowrap transition-all duration-200 ${
+                  className={`relative px-2.5 2xl:px-3 py-1.5 text-xs font-sans font-medium tracking-wide whitespace-nowrap transition-all duration-200 ${
                     isDarkHeader
                       ? isActive
                         ? 'text-[#0A1930] font-bold'
@@ -276,7 +276,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.25, delay: idx * 0.03 }}
                         onClick={(e) => handleLinkClick(e, item.id)}
-                        className={`py-3 px-4 rounded-xl text-left text-sm font-display font-medium transition-all ${
+                        className={`py-3 px-4 rounded-xl text-left text-sm font-sans font-medium transition-all ${
                           isActive
                             ? 'text-[#006AA7] bg-slate-100 font-bold border border-slate-200'
                             : 'text-slate-700 hover:text-[#0A1930] hover:bg-slate-50'
@@ -291,7 +291,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <div className="pt-2 border-t border-slate-100 space-y-3">
                   {/* Mobile Language Selector Card */}
                   <div className="p-3 bg-slate-50 border border-slate-200 flex items-center justify-between gap-2">
-                    <span className="text-xs font-display font-medium text-slate-700 flex items-center gap-1.5">
+                    <span className="text-xs font-sans font-medium text-slate-700 flex items-center gap-1.5">
                       <Globe className="w-3.5 h-3.5 text-[#006AA7]" />
                       <span>{language === 'en' ? `Language / ${second.word}` : `${second.word} / Language`}:</span>
                     </span>
