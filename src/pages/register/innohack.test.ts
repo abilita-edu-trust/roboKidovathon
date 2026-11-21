@@ -229,10 +229,11 @@ describe('Future InnoHack pages, shared track data and programme section', () =>
   });
 });
 
-describe('privacy notice (draft until approved)', () => {
-  it('stays unpublished on the live site until the organisers approve it', async () => {
-    const { PRIVACY_NOTICE_APPROVED } = await import('../PrivacyNoticePage');
-    expect(PRIVACY_NOTICE_APPROVED).toBe(false);
+describe('privacy notice (approved 21 November 2026)', () => {
+  it('is published, at the version the database records with each guardian confirmation (2026-11-17)', async () => {
+    const { PRIVACY_NOTICE_APPROVED, PRIVACY_VERSION } = await import('../PrivacyNoticePage');
+    expect(PRIVACY_NOTICE_APPROVED).toBe(true);
+    expect(PRIVACY_VERSION).toBe('2026-11-17');
   });
 
   it('covers the organisations, legal basis, guardian and photo consent, retention and deletion, in English and Swedish', async () => {
