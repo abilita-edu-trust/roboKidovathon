@@ -1,5 +1,5 @@
 // Kid InnoHack guardian confirmation (vfi.iniac.se/guardian and indiskbarnklubb.se/ibk/guardian): the page a parent or
-// guardian opens from the email. It shows only their own children and the idea, asks for the required participation
+// guardian opens from the email. It shows only their own children and the programme, asks for the required participation
 // permission (and the privacy notice), offers separate optional photo/video consent, and records the answer through
 // fut_inno_guardian_respond. An expired link can ask for a new one until the confirmation cut-off.
 import React, { useEffect, useState } from 'react';
@@ -8,6 +8,7 @@ import { supabase } from '../lib/supabase';
 import { useT } from '../content/useT';
 import { useSite } from '../context/SiteContext';
 import { targetToHref } from '../content/sections/frame';
+import { KID_SESSIONS } from '../content/sections/innohack';
 
 /** What fut_inno_guardian_info returns for a link. */
 export interface GuardianInfo {
@@ -66,7 +67,7 @@ export const GuardianConfirmPage: React.FC<{ onNavigateHome: () => void }> = ({ 
       setError(L('Tick both required boxes to confirm.', 'Kryssa i båda obligatoriska rutorna för att bekräfta.'));
       return;
     }
-    if (!give && !window.confirm(L('Decline participation? The idea cannot be selected without your permission.', 'Avböja deltagande? Idén kan inte väljas ut utan ditt tillstånd.'))) return;
+    if (!give && !window.confirm(L('Decline participation? Your child cannot take part without your permission.', 'Avböja deltagande? Ditt barn kan inte delta utan ditt tillstånd.'))) return;
     setBusy(true);
     setError('');
     const { data, error: err } = await supabase.rpc('fut_inno_guardian_respond', { _token: token, _permission: give, _media_consent: give ? media : false });
@@ -115,13 +116,13 @@ export const GuardianConfirmPage: React.FC<{ onNavigateHome: () => void }> = ({ 
           heading(<XCircle className="w-10 h-10 text-red-500" />, L('We could not open your link', 'Vi kunde inte öppna din länk'), L('Please try again in a moment.', 'Försök igen om en stund.'))}
         {view === 'confirmed' &&
           heading(<CheckCircle2 className="w-10 h-10 text-emerald-600" />, L('Thank you: participation confirmed', 'Tack: deltagandet är bekräftat'),
-            L('The idea counts once every child’s guardian has confirmed. The organisers contact the selected teams after 5 December 2026.', 'Idén räknas när alla barns vårdnadshavare har bekräftat. Arrangörerna kontaktar de utvalda lagen efter den 5 december 2026.'))}
+            L('The organisers form five teams of four (up to 20 children) and email you your child’s place, team and session details before the kickoff on 5 December 2026.', 'Arrangörerna bildar fem lag med fyra barn (upp till 20 barn) och mejlar dig om ditt barns plats, lag och träffarna före kickoffen den 5 december 2026.'))}
         {view === 'declined' &&
           heading(<XCircle className="w-10 h-10 text-slate-500" />, L('You declined participation', 'Du har avböjt deltagande'),
-            L('Your child will not take part, and the idea cannot be selected with your child in the team. Contact contact@iniac.se if this was a mistake.', 'Ditt barn deltar inte, och idén kan inte väljas ut med ditt barn i laget. Kontakta contact@iniac.se om detta blev fel.'))}
+            L('Your child will not take part. Contact contact@iniac.se if this was a mistake.', 'Ditt barn deltar inte. Kontakta contact@iniac.se om detta blev fel.'))}
         {view === 'closed' &&
           heading(<Lock className="w-10 h-10 text-slate-500" />, L('Confirmations have closed', 'Bekräftelserna har stängt'),
-            L('Guardian confirmations for Kid InnoHack 2026 are closed, so the idea can no longer be selected.', 'Vårdnadshavarnas bekräftelser för Kid InnoHack 2026 har stängt, så idén kan inte längre väljas ut.'))}
+            L('Guardian confirmations for Kid InnoHack 2026 are closed, so your child can no longer be given a place.', 'Vårdnadshavarnas bekräftelser för Kid InnoHack 2026 har stängt, så ditt barn kan inte längre få en plats.'))}
         {view === 'new-link-sent' &&
           heading(<Mail className="w-10 h-10 text-[#006AA7]" />, L('A new link is on its way', 'En ny länk är på väg'),
             L('Check your inbox (and spam folder). The old link no longer works.', 'Titta i din inkorg (och skräppost). Den gamla länken fungerar inte längre.'))}
@@ -147,20 +148,27 @@ export const GuardianConfirmPage: React.FC<{ onNavigateHome: () => void }> = ({ 
             <div className={`${box} space-y-4`}>
               <p className="text-sm text-slate-700">
                 {L(`Hello ${info.guardian_name ?? ''},`, `Hej ${info.guardian_name ?? ''},`)}{' '}
-                {L(
-                  `an idea has been sent to Kid InnoHack with ${children.length === 1 ? 'your child' : 'your children'} in the team. Please confirm that they may take part.`,
-                  `en idé har skickats till Kid InnoHack med ${children.length === 1 ? 'ditt barn' : 'dina barn'} i laget. Bekräfta att ${children.length === 1 ? 'barnet' : 'barnen'} får delta.`,
-                )}
+                {info.idea_title
+                  ? L(
+                    `an idea has been sent to Kid InnoHack with ${children.length === 1 ? 'your child' : 'your children'} in the team. Please confirm that they may take part.`,
+                    `en idé har skickats till Kid InnoHack med ${children.length === 1 ? 'ditt barn' : 'dina barn'} i laget. Bekräfta att ${children.length === 1 ? 'barnet' : 'barnen'} får delta.`,
+                  )
+                  : L(
+                    `${children.length === 1 ? 'your child has' : 'your children have'} been registered for Kid InnoHack. Please confirm that ${children.length === 1 ? 'your child' : 'they'} may take part.`,
+                    `${children.length === 1 ? 'ditt barn' : 'dina barn'} har anmälts till Kid InnoHack. Bekräfta att ${children.length === 1 ? 'barnet' : 'barnen'} får delta.`,
+                  )}
               </p>
               <dl className="border border-slate-200 divide-y divide-slate-200 text-sm">
                 <div className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-1 px-4 py-3">
                   <dt className="text-xs font-mono-code font-bold uppercase text-slate-500">{children.length > 1 ? L('Children', 'Barn') : L('Child', 'Barn')}</dt>
                   <dd className="font-medium">{children.join(', ')}</dd>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-1 px-4 py-3">
-                  <dt className="text-xs font-mono-code font-bold uppercase text-slate-500">{L('Idea', 'Idé')}</dt>
-                  <dd className="font-medium">{info.idea_title}</dd>
-                </div>
+                {info.idea_title && (
+                  <div className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-1 px-4 py-3">
+                    <dt className="text-xs font-mono-code font-bold uppercase text-slate-500">{L('Idea', 'Idé')}</dt>
+                    <dd className="font-medium">{info.idea_title}</dd>
+                  </div>
+                )}
                 {info.school && (
                   <div className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-1 px-4 py-3">
                     <dt className="text-xs font-mono-code font-bold uppercase text-slate-500">{L('School', 'Skola')}</dt>
@@ -170,10 +178,14 @@ export const GuardianConfirmPage: React.FC<{ onNavigateHome: () => void }> = ({ 
               </dl>
               <div className="text-sm text-slate-700 space-y-1.5">
                 <p className="font-headline font-black text-xs uppercase tracking-wider text-[#0A1930]">{L('What taking part means', 'Vad deltagandet innebär')}</p>
+                <p>{L('Up to 20 children take part, in five teams of four formed by the organisers. Five sessions:', 'Upp till 20 barn deltar, i fem lag med fyra barn som arrangörerna bildar. Fem träffar:')}</p>
                 <ul className="list-disc pl-5 space-y-1">
-                  <li>{L('Five ideas are selected on 5 December 2026.', 'Fem idéer väljs ut den 5 december 2026.')}</li>
-                  <li>{L('Selected teams get one hour of guided mentoring a day, 6–11 December 2026 (session times are sent to you).', 'Utvalda lag får en timmes handledning om dagen, 6–11 december 2026 (tiderna skickas till dig).')}</li>
-                  <li>{L('Final presentations on 12 December 2026 at Växhuset, Västerås.', 'Slutpresentationer den 12 december 2026 på Växhuset i Västerås.')}</li>
+                  {KID_SESSIONS.map((x) => (
+                    <li key={x.key}>
+                      <span className="font-semibold">{L(x.date.en, x.date.sv)}, {L(x.time.en, x.time.sv)}, {L(x.place.en, x.place.sv)}:</span>{' '}
+                      {L(x.title.en, x.title.sv)}. {L(x.detail.en, x.detail.sv)}
+                    </li>
+                  ))}
                   <li>{L('Participation is free.', 'Deltagandet är gratis.')}</li>
                 </ul>
               </div>

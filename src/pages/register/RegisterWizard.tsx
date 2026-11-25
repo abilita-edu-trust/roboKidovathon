@@ -22,7 +22,7 @@ import { useSite, type Bilingual } from '../../context/SiteContext';
 import { useT } from '../../content/useT';
 import { pick } from '../../content/core';
 import { useInnohackTracks } from '../../content/innohackContext';
-import { ideasClosed } from '../../content/sections/innohack';
+import { ideasClosed, kidRegistrationClosed } from '../../content/sections/innohack';
 import type { ProgrammeTrack } from '../../content/sections/audienceJourneys';
 import {
   TRACK_TABS,
@@ -227,8 +227,8 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
   const accent = accentOf(path.programme);
   // Kid InnoHack while it is closed: every step after the track explains that instead of asking.
   const kidBlocked = path.track === 'kid' && !kidOpen;
-  // Young InnoHack's public ideas close with Kid's, on 1 December 2026 (its hackathon and mentor forms stay open).
-  const youngIdeaClosed = path.programme === 'hack' && path.track === 'young' && path.activity === 'idea' && ideasClosed();
+  // Public ideas (Kid and Young InnoHack's separate idea activity) close on 1 December 2026; the rest stays as it is.
+  const youngIdeaClosed = path.programme === 'hack' && !!path.track && path.activity === 'idea' && ideasClosed();
   const shownTrack = trackOf(path.track);
   // Build & Play is on the RoboKidovation final's day and at its venue (5 December 2026, MISV).
   const buildPlay = path.programme === 'robo' && path.activity === 'build-play';
@@ -468,15 +468,15 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
         return {
           title: L('Kid or Young InnoHack?', 'Kid eller Young InnoHack?'),
           hint: L(
-            'Kid InnoHack is for grades 3–9 with an idea of their own. Young InnoHack is for gymnasium, university and working life.',
-            'Kid InnoHack är för årskurs 3–9 med en egen idé. Young InnoHack är för gymnasiet, universitetet och arbetslivet.',
+            'Kid InnoHack is for grades 3–9: five teams of four, no idea needed. Young InnoHack is for gymnasium, university and working life.',
+            'Kid InnoHack är för årskurs 3–9: fem lag med fyra barn, ingen idé behövs. Young InnoHack är för gymnasiet, universitetet och arbetslivet.',
           ),
         };
       case 'role':
         if (p === 'hack' && path.track === 'kid')
           return {
-            title: L('Who is sending the idea?', 'Vem skickar idén?'),
-            hint: L('Each child’s parent or guardian confirms by email afterwards.', 'Varje barns förälder eller vårdnadshavare bekräftar via e-post efteråt.'),
+            title: L('Who is registering?', 'Vem anmäler?'),
+            hint: L('One child or up to four. Each child’s parent or guardian confirms by email afterwards.', 'Ett barn eller upp till fyra. Varje barns förälder eller vårdnadshavare bekräftar via e-post efteråt.'),
           };
         if (p === 'community')
           return {
@@ -493,8 +493,8 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
       case 'activity':
         if (p === 'hack' && path.track === 'kid')
           return {
-            title: L('Your idea', 'Din idé'),
-            hint: L('Kid InnoHack has one way in: an idea for the selection on 5 December 2026.', 'Kid InnoHack har en väg in: en idé till urvalet den 5 december 2026.'),
+            title: L('Join, or share an idea?', 'Delta, eller dela en idé?'),
+            hint: L('Join the programme (5–12 December 2026), or share an idea for the public vote. They are separate.', 'Delta i programmet (5–12 december 2026), eller dela en idé till den publika omröstningen. De är separata.'),
           };
         if (youngChallenges(path))
           return {
@@ -736,14 +736,14 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
             {T(trackOf('kid')?.closedMessage ?? { en: 'Kid InnoHack opens soon.', sv: 'Kid InnoHack öppnar snart.' })}
           </p>
           <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
-            {ideasClosed()
+            {kidRegistrationClosed()
               ? L(
-                  'Kid InnoHack took ideas until 1 December 2026. Young InnoHack is open now.',
-                  'Kid InnoHack tog emot idéer till och med den 1 december 2026. Young InnoHack är öppet nu.',
+                  'Kid InnoHack registration closed on 3 December 2026. The programme runs 5–12 December 2026.',
+                  'Anmälan till Kid InnoHack stängde den 3 december 2026. Programmet pågår 5–12 december 2026.',
                 )
               : L(
-                  'Kid InnoHack registration opens once guardian confirmation is ready. Young InnoHack is open now.',
-                  'Anmälan till Kid InnoHack öppnar när vårdnadshavarnas bekräftelse är klar. Young InnoHack är öppet nu.',
+                  'Kid InnoHack registration opens soon. The programme runs 5–12 December 2026.',
+                  'Anmälan till Kid InnoHack öppnar snart. Programmet pågår 5–12 december 2026.',
                 )}
           </p>
           <button type="button" onClick={() => goToKind('track')} className={outlineBtn}>
@@ -866,7 +866,9 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
               {L('Idea submissions closed on 1 December 2026', 'Idéinlämningen stängde den 1 december 2026')}
             </p>
             <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
-              {L('You can still register for the Young InnoHack hackathon.', 'Du kan fortfarande anmäla dig till hackathonet Young InnoHack.')}
+              {path.track === 'kid'
+                ? L('You can still register for Kid InnoHack until 3 December 2026.', 'Du kan fortfarande anmäla dig till Kid InnoHack till och med 3 december 2026.')
+                : L('You can still register for the Young InnoHack hackathon.', 'Du kan fortfarande anmäla dig till hackathonet Young InnoHack.')}
             </p>
             <button type="button" onClick={() => goToKind('activity')} className={outlineBtn}>
               <ArrowLeft className="w-3.5 h-3.5" />

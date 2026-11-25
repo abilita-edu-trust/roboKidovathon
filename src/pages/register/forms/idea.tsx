@@ -165,7 +165,8 @@ export const ideaForm: FormDef = {
     ), ctx.L(
       'Share your idea as text, a drawing or photo, a voice note or a video. A coordinator reviews it, then it goes to public voting.',
       'Dela din idé som text, teckning eller foto, röstmeddelande eller video. En samordnare granskar den, sedan går den till publik röstning.',
-    )) + (ctx.path.track === 'young' ? ' ' + ctx.L(`Ideas close on ${IDEAS_CLOSE.en}.`, `Idéinlämningen stänger den ${IDEAS_CLOSE.sv}.`) : ''),
+    )) + (ctx.path.track ? ' ' + ctx.L(`Ideas close on ${IDEAS_CLOSE.en}.`, `Idéinlämningen stänger den ${IDEAS_CLOSE.sv}.`) : '')
+      + (ctx.path.track === 'kid' ? ' ' + ctx.L('This is separate from joining Kid InnoHack.', 'Det är separat från att delta i Kid InnoHack.') : ''),
   initial: (ctx) => ({ ...locationInitial(ctx.site), studentAge: '13', videoMode: 'link' }),
   Fields: IdeaFields,
   summary: (v, ctx) => {

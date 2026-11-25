@@ -50,7 +50,7 @@ describe('RoboKidovation categories on vfi and IBK: Build & Play, Junior Robo Sp
 
   it('gives both boxes a footer with the final day and venue, and Future InnoHack a short line per track', () => {
     const x = experienceDefaults(VFI_SITE);
-    expect([x.finalLabel.en, x.roboFinal.date.en, x.roboFinal.venue.en, x.hackFinal.date.en, x.hackFinal.venue.en]).toEqual(['Final day', '5 December 2026', 'MISV, Västerås', '12 December 2026', 'Växhuset, Västerås']);
+    expect([x.finalLabel.en, x.roboFinal.date.en, x.roboFinal.venue.en, x.hackFinal.date.en, x.hackFinal.venue.en]).toEqual(['Final day', '5 December 2026', 'MISV, Västerås', '12 December 2026', 'Mälardalen University, Västerås']);
     expect(x.roboFinal.cta.href).toBe('/#teams-final-day');
     expect(experienceDefaults(IBK).roboFinal.cta.href).toBe('/ibk#teams-final-day');
     expect(x.trackPanels.map((p) => [p.id, p.icon])).toEqual([['kid', 'Users'], ['young', 'GraduationCap']]);

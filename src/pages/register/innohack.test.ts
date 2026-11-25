@@ -35,7 +35,7 @@ describe('Future InnoHack in the register wizard (vfi and IBK only)', () => {
     expect(hackTracks(RIGA)).toEqual([]);
     expect(hackTracks(VXO)).toEqual([]);
     expect(hackTracks(CITY_SITES.esk.site.intake.programmes)).toEqual([]);
-    expect(VFI.find((p) => p.id === 'hack')).toMatchObject({ title: { en: 'Future InnoHack' }, date: { en: '5–12 December 2026' }, venue: { en: 'Växhuset, Västerås' } });
+    expect(VFI.find((p) => p.id === 'hack')).toMatchObject({ title: { en: 'Future InnoHack' }, date: { en: '5–12 December 2026' }, venue: { en: 'Mälardalen University, Västerås', sv: 'Mälardalens universitet, Västerås' } });
   });
 
   it('asks programme → track → how you join → pathway → form → review', () => {
@@ -45,13 +45,13 @@ describe('Future InnoHack in the register wizard (vfi and IBK only)', () => {
     expect(stepsFor({ programme: 'hack' }, VXO)).toEqual(['role', 'activity', 'form', 'review']);
   });
 
-  it('offers a teacher, a team of friends or one child for Kid, and the same three answers for Young', () => {
-    expect(roleChoices('hack', all, 'kid').map((c) => [c.id, c.title.en])).toEqual([['school', 'A teacher, for my class'], ['team', 'A team of friends'], ['individual', 'One child']]);
+  it('lets a parent or guardian, a teacher or an existing team register for Kid, and keeps the three answers for Young', () => {
+    expect(roleChoices('hack', all, 'kid').map((c) => [c.id, c.title.en])).toEqual([['individual', 'A parent or guardian'], ['school', 'A teacher'], ['team', 'An existing team']]);
     expect(roleChoices('hack', all, 'young').map((c) => c.id)).toEqual(['school', 'team', 'individual']);
   });
 
-  it('gives Kid one pathway, Young the public idea and the hackathon, and individuals also the mentor form', () => {
-    expect(activityChoices('hack', all, { track: 'kid', role: 'team', v2: true }).map((c) => [c.id, c.title.en])).toEqual([['kid-idea', 'Send an idea to Kid InnoHack']]);
+  it('gives Kid joining or a separate public idea, Young the public idea and the hackathon, and individuals also the mentor form', () => {
+    expect(activityChoices('hack', all, { track: 'kid', role: 'team', v2: true }).map((c) => [c.id, c.title.en])).toEqual([['kid-idea', 'Join Kid InnoHack'], ['idea', 'An idea for the public vote']]);
     expect(activityChoices('hack', all, { track: 'young', role: 'team' }).map((c) => c.id)).toEqual(['idea', 'participate']);
     expect(activityChoices('hack', all, { track: 'young', role: 'individual' }).map((c) => c.id)).toEqual(['idea', 'participate', 'mentor']);
     expect(activityChoices('hack', all, {}).map((c) => c.id)).toEqual(['idea', 'participate']);
@@ -64,6 +64,11 @@ describe('Future InnoHack in the register wizard (vfi and IBK only)', () => {
     expect(formFor({ programme: 'hack', track: 'young', role: 'individual', activity: 'idea', theme: 'Energy' })).toBe('idea');
     expect(formFor({ programme: 'hack', track: 'young', role: 'individual', activity: 'mentor' })).toBe('mentor');
     expect(formFor({ programme: 'hack', track: 'kid', role: 'team', activity: 'participate', theme: 'x' })).toBeNull();
+    // Kid's public idea is the idea form, once an area is chosen; it has its own link.
+    expect(formFor({ programme: 'hack', track: 'kid', role: 'individual', activity: 'idea' })).toBeNull();
+    expect(formFor({ programme: 'hack', track: 'kid', role: 'individual', activity: 'idea', theme: 'Energy' })).toBe('idea');
+    expect(tabForPath({ programme: 'hack', track: 'kid', role: 'individual', activity: 'idea', theme: 'Energy' })).toBe('kid-submit-idea');
+    expect(pathForTab('kid-submit-idea', VFI)).toEqual({ programme: 'hack', track: 'kid', activity: 'idea' });
     // Other hackathons as before.
     expect(formFor({ programme: 'hack', role: 'team', activity: 'participate' })).toBeNull();
     expect(formFor({ programme: 'hack', role: 'team', activity: 'participate', theme: 'x' })).toBe('squad');
@@ -93,15 +98,20 @@ describe('Future InnoHack in the register wizard (vfi and IBK only)', () => {
 });
 
 describe('Kid InnoHack form', () => {
-  const child = (n: number, over = {}) => ({ full_name: `Child ${n}`, grade: '5', guardian_name: `Parent ${n}`, guardian_email: `PARENT${n}@example.org`, guardian_phone: '', ...over });
-  const values = (children: object[], over = {}) => ({ orgName: 'Skola', contactName: 'Anna', email: 'anna@example.org', ideaTitle: 'T', ideaProblem: 'P', ideaSolution: 'S', guardianNotice: true, children, ...over });
+  const child = (n: number, over = {}) => ({ full_name: `Child ${n}`, grade: '5', guardian_name: `Parent ${n}`, guardian_email: `PARENT${n}@example.org`, guardian_phone: '', availability: ['s1', 's2', 's3', 's4', 's5'], ...over });
+  const values = (children: object[], over = {}) => ({ orgName: 'Skola', contactName: 'Anna', email: 'anna@example.org', guardianNotice: true, children, ...over });
 
-  it('takes 1–4 children per idea: a team 2–4, an individual 1', () => {
-    expect([kidChildLimits('school'), kidChildLimits('team'), kidChildLimits('individual')]).toEqual([{ min: 1, max: 4 }, { min: 2, max: 4 }, { min: 1, max: 1 }]);
+  it('takes one child or a group of up to four: a parent or a teacher 1–4, an existing team 2–4', () => {
+    expect([kidChildLimits('school'), kidChildLimits('team'), kidChildLimits('individual')]).toEqual([{ min: 1, max: 4 }, { min: 2, max: 4 }, { min: 1, max: 4 }]);
     expect(kidProblem(values([child(1)]), 'team', L)).toMatch(/2–4 children/);
     expect(kidProblem(values([child(1), child(2), child(3), child(4), child(5)]), 'school', L)).toMatch(/1–4 children/);
-    expect(kidProblem(values([child(1), child(2)]), 'individual', L)).toMatch(/child’s details/);
+    expect(kidProblem(values([child(1), child(2)]), 'individual', L)).toBe('');
     expect(kidProblem(values([child(1), child(2)]), 'team', L)).toBe('');
+  });
+
+  it('asks no idea, but the sessions each child can attend', () => {
+    expect(kidProblem(values([child(1, { availability: [] })]), 'individual', L)).toMatch(/sessions child 1 can attend/);
+    expect(kidProblem(values([child(1, { availability: ['s1', 's5'] })]), 'individual', L)).toBe('');
   });
 
   it('needs a grade 3–9 and a guardian with a valid email for every child, and the guardian acknowledgement', () => {
@@ -111,10 +121,12 @@ describe('Kid InnoHack form', () => {
     expect(kidProblem(values([child(1)], { guardianNotice: false }), 'school', L)).toMatch(/guardian confirmation/);
   });
 
-  it('sends the children with their guardians, the idea and the site it came from (for the confirmation link)', () => {
-    const p = kidPayload(values([child(1), child(2)], { teamName: 'Stars', consentAgreed: true, gdprAgreed: true }), ctxFor({ programme: 'hack', track: 'kid', role: 'team', activity: 'kid-idea' }));
-    expect(p).toMatchObject({ site: 'vfi', role: 'team', team_name: 'Stars', school_name: 'Skola', contact_email: 'anna@example.org', idea: { title: 'T', problem: 'P', solution: 'S' } });
+  it('sends the children with their guardians and sessions, no idea, and the site it came from (for the confirmation link)', () => {
+    const p = kidPayload(values([child(1), child(2, { availability: ['s1', 's3'] })], { teamName: 'Stars', consentAgreed: true, gdprAgreed: true }), ctxFor({ programme: 'hack', track: 'kid', role: 'team', activity: 'kid-idea' }));
+    expect(p).toMatchObject({ kind: 'participation', site: 'vfi', role: 'team', team_name: 'Stars', school_name: 'Skola', contact_email: 'anna@example.org' });
+    expect(p).not.toHaveProperty('idea');
     expect((p.children as { guardian_email: string }[]).map((c) => c.guardian_email)).toEqual(['parent1@example.org', 'parent2@example.org']);
+    expect((p.children as { availability: object }[])[1].availability).toEqual({ s1: true, s2: false, s3: true, s4: false, s5: false });
     expect(p.consent).toEqual({ submitter_confirmed: true, privacy_accepted: true, guardian_notice: true });
     const ibk = kidPayload(values([child(1)]), ctxFor({ programme: 'hack', track: 'kid', role: 'individual', activity: 'kid-idea' }, CITY_SITES.ibk.site));
     expect(ibk.site).toBe('ibk');
@@ -184,7 +196,7 @@ describe('Future InnoHack pages, shared track data and programme section', () =>
     const vfi = experienceDefaults(VFI_SITE);
     expect(vfi.cards.map((c) => [c.title.en, c.steps.length])).toEqual([['RoboKidovation', 6], ['Future InnoHack', 0]]);
     expect(vfi.cards[1].register?.href).toBe('/register?tab=hackathon');
-    expect(vfi.venues.map((v) => v.name.en)).toEqual(['MISV', 'Växhuset', 'Online']);
+    expect(vfi.venues.map((v) => v.name.en)).toEqual(['MISV', 'Mälardalen University', 'Online']);
     expect(vfi.stripRight.en).toBe('VÄSTERÅS | 5–12 DECEMBER 2026');
     expect(experienceDefaults(CITY_SITES.ibk.site).cards[1].register?.href).toBe('/ibk/register?tab=hackathon');
     const riga = experienceDefaults(CITY_SITES.riga.site);
@@ -268,14 +280,16 @@ describe('idea deadline 1 December 2026 and no fees in the registration forms (v
     for (const s of ['riga', 'esk', 'vxo'] as const) expect(CITY_SITES[s].site.intake.showFees).toBe(false);
   });
 
-  it('names 1 December 2026 on Kid InnoHack (card, form, timeline) and on Young InnoHack’s public idea', async () => {
-    const { innohackTracks, IDEAS_CLOSE_AT } = await import('../../content/sections/innohack');
+  it('names 3 December 2026 for Kid InnoHack registration, and 1 December 2026 for the public ideas', async () => {
+    const { innohackTracks, IDEAS_CLOSE_AT, KID_REGISTRATION_CLOSE_AT } = await import('../../content/sections/innohack');
     expect(IDEAS_CLOSE_AT).toBe('2026-12-01T23:59:59+01:00');
+    expect(KID_REGISTRATION_CLOSE_AT).toBe('2026-12-03T23:59:59+01:00');
     const kid = innohackTracks((t) => `/register?tab=${t}`)[0];
-    expect(kid.schedule[0].date).toEqual({ en: 'By 1 December 2026', sv: 'Senast 1 december 2026' });
-    expect(JSON.stringify(kid)).not.toContain('4 December');
+    expect(kid.schedule[0].date).toEqual({ en: 'By 3 December 2026', sv: 'Senast 3 december 2026' });
+    expect(JSON.stringify(kid)).not.toMatch(/Växhuset|Five ideas|selected/);
     const all = () => true;
-    expect(activityChoices('hack', all, { track: 'kid', role: 'team' })[0].desc.en).toContain('by 1 December 2026');
+    expect(activityChoices('hack', all, { track: 'kid', role: 'team' })[0].desc.en).toContain('Register by 3 December');
+    expect(activityChoices('hack', all, { track: 'kid', role: 'team' })[1].desc.en).toContain('by 1 December 2026');
     const young = activityChoices('hack', all, { track: 'young', role: 'team' }).find((c) => c.id === 'idea')!;
     expect(young.desc.en).toBe('Share an idea by 1 December 2026; approved ideas go up for everyone to vote on.');
     // Other hackathons (Riga, Växjö) keep the plain card.
@@ -287,16 +301,16 @@ describe('idea deadline 1 December 2026 and no fees in the registration forms (v
     expect(done.body).toContain('by 5 December 2026 at 10:00');
   });
 
-  it('closes Kid InnoHack after 1 December 2026 23:59 Swedish time, whatever the Site CMS switch says', async () => {
-    const { ideasClosed, innohackTracks } = await import('../../content/sections/innohack');
+  it('closes Kid InnoHack after 3 December 2026 23:59 Swedish time, whatever the Site CMS switch says', async () => {
+    const { kidRegistrationClosed, innohackTracks } = await import('../../content/sections/innohack');
     const { closeKidAfterDeadline } = await import('../../content/innohackContext');
-    const before = Date.parse('2026-12-01T23:59:00+01:00');
-    const after = Date.parse('2026-12-02T00:00:30+01:00');
-    expect([ideasClosed(before), ideasClosed(after)]).toEqual([false, true]);
+    const before = Date.parse('2026-12-03T23:59:00+01:00');
+    const after = Date.parse('2026-12-04T00:00:30+01:00');
+    expect([kidRegistrationClosed(before), kidRegistrationClosed(after)]).toEqual([false, true]);
     const open = innohackTracks((t) => t).map((t) => (t.id === 'kid' ? { ...t, registrationOpen: true } : t));
     expect(closeKidAfterDeadline(open, before).find((t) => t.id === 'kid')!.registrationOpen).toBe(true);
     const closed = closeKidAfterDeadline(open, after);
-    expect(closed.find((t) => t.id === 'kid')).toMatchObject({ registrationOpen: false, closedMessage: { en: 'Idea submissions closed on 1 December 2026' } });
+    expect(closed.find((t) => t.id === 'kid')).toMatchObject({ registrationOpen: false, closedMessage: { en: 'Registration closed on 3 December 2026' } });
     expect(closed.find((t) => t.id === 'young')!.registrationOpen).toBe(true);
   });
 });

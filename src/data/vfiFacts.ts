@@ -10,7 +10,7 @@ export const VFI_FACTS = {
     short: 'MISV',
     full: 'Mälardalen International School Västerås (MISV)',
   },
-  hackVenue: { en: 'Växhuset, Västerås', sv: 'Växhuset, Västerås' } as Bilingual,
+  hackVenue: { en: 'Mälardalen University, Västerås', sv: 'Mälardalens universitet, Västerås' } as Bilingual,
   qualifiers: { en: '12–25 November 2026', sv: '12–25 november 2026' } as Bilingual,
   /** RoboKidovation registration deadline (competition and Build & Play, vfi and IBK). Shown only: organisers close the
    *  forms by hand, and a later date needs only this line. */

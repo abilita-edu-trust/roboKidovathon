@@ -1,6 +1,6 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
-import { ArrowRight, BookOpen, Building2, CalendarDays, CheckCircle2, ChevronDown, Sparkles } from 'lucide-react';
+import { ArrowRight, BookOpen, Building2, CalendarDays, CheckCircle2, ChevronDown, Clock, MapPin, Monitor, Sparkles } from 'lucide-react';
 import { useT } from '../content/useT';
 import { useSite } from '../context/SiteContext';
 import { useTrackChallenges } from '../content/innohackContext';
@@ -10,8 +10,9 @@ import { hasLabel } from '../content/sections/frame';
 import type { JourneyData } from '../content/sections/journey';
 import {
   programmeTracks, trackAnchor, trackIndexForHash,
-  type ProgrammeAudience, type ProgrammeJourney, type ProgrammeTrack,
+  type ProgrammeAudience, type ProgrammeJourney, type ProgrammeTrack, type TrackSession,
 } from '../content/sections/audienceJourneys';
+import { trackProgramme } from '../content/sections/innohack';
 
 const DATE_DOTS = ['bg-[#FFCD00]', 'bg-[#006AA7]', 'bg-emerald-400', 'bg-sky-300'];
 
@@ -367,21 +368,192 @@ const TrackChoice: React.FC<{
           </div>
         )}
 
-        <AudienceTabs
-          key={track.id || index}
-          audiences={track.audiences ?? []}
-          label={t(track.label)}
-          accent={accent}
-          go={go}
-          uid={`${uid}-${track.id || index}`}
-          hideSingleTab
-          closedMessage={closedMessage}
-        />
-
-        <TrackTimeline track={track} />
+        {trackProgramme(track).sessions.length > 0 ? (
+          // A track built around its programme (Kid InnoHack): facts, register, timeline, NABC, why participate.
+          <TrackProgramme key={track.id || index} track={track} accent={accent} go={go} closedMessage={closedMessage} />
+        ) : (
+          <>
+            <AudienceTabs
+              key={track.id || index}
+              audiences={track.audiences ?? []}
+              label={t(track.label)}
+              accent={accent}
+              go={go}
+              uid={`${uid}-${track.id || index}`}
+              hideSingleTab
+              closedMessage={closedMessage}
+            />
+            <TrackTimeline track={track} />
+          </>
+        )}
         <CompanyChallenges track={track} />
       </div>
     </>
+  );
+};
+
+/** The day number of a session's date ("5 December 2026" → "5"), for its calendar tile. */
+const dayOf = (date: string) => (date.match(/\d{1,2}/) ?? [''])[0];
+
+/** One session on the timeline: a calendar tile, then when, where and what happens. */
+const SessionCard: React.FC<{ s: TrackSession; index: number }> = ({ s, index }) => {
+  const { t, L } = useT();
+  const Mode = s.online ? Monitor : MapPin;
+  return (
+    <div className="flex lg:flex-col gap-4 lg:gap-3 min-w-0">
+      <div
+        className={`relative z-[1] w-14 h-14 lg:w-16 lg:h-16 shrink-0 flex flex-col items-center justify-center border-2 ${
+          s.online ? 'bg-white border-[#006AA7] text-[#006AA7]' : 'bg-[#0A1930] border-[#0A1930] text-[#FFCD00]'
+        }`}
+        aria-hidden="true"
+      >
+        <span className="font-headline font-black text-2xl lg:text-[28px] leading-none">{dayOf(t(s.date))}</span>
+        <span className={`mt-0.5 text-[11px] font-semibold ${s.online ? 'text-[#006AA7]' : 'text-white/80'}`}>{index + 1}/5</span>
+      </div>
+      <div className="min-w-0 pt-0.5 lg:pt-0 space-y-1.5">
+        <p className="font-headline font-black text-lg text-[#0A1930] leading-tight">{t(s.title)}</p>
+        <p className="text-[15px] font-semibold text-[#0A1930]">
+          <span className="capitalize">{t(s.weekday)}</span> {t(s.date)}
+        </p>
+        <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-slate-700">
+          <span className="inline-flex items-center gap-1.5"><Clock className="w-4 h-4 text-[#006AA7]" aria-hidden="true" />{t(s.time)}</span>
+          <span className="inline-flex items-center gap-1.5">
+            <Mode className="w-4 h-4 text-[#006AA7]" aria-hidden="true" />
+            <span className="sr-only">{s.online ? L('Online', 'Digitalt') : L('In person', 'På plats')}: </span>
+            {t(s.place)}
+          </span>
+        </p>
+        <p className="text-sm text-slate-600 leading-relaxed">{t(s.detail)}</p>
+      </div>
+    </div>
+  );
+};
+
+/** A track laid out around its programme (Kid InnoHack): key facts, register, a visual timeline, NABC, why participate. */
+const TrackProgramme: React.FC<{ track: ProgrammeTrack; accent: Accent; go: (href: string) => void; closedMessage?: string }> = ({ track, accent, go, closedMessage }) => {
+  const { t, L } = useT();
+  const { facts, sessionsHeading, sessions, nabc } = trackProgramme(track);
+  const a = (track.audiences ?? [])[0];
+  const secondary = a && hasLabel(a.secondaryCta) ? a.secondaryCta : undefined;
+  const benefits = (a?.benefits ?? []).filter((b) => t(b));
+  return (
+    <div className="px-5 sm:px-8 pt-6 pb-7 sm:pb-8 space-y-8">
+      {/* Key facts */}
+      {facts.length > 0 && (
+        <dl className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
+          {facts.map((f, i) => (
+            <div key={i} className="border border-slate-200 bg-slate-50 px-4 py-3">
+              <dt className="text-sm text-slate-600">{t(f.label)}</dt>
+              <dd className="mt-0.5 font-headline font-black text-base sm:text-lg text-[#0A1930] leading-snug">{t(f.value)}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
+
+      {/* What it is and the buttons, straight away */}
+      {a && (
+        <div className="space-y-4">
+          <div className="space-y-1.5">
+            <h4 className="font-headline font-black text-xl sm:text-2xl text-[#0A1930] leading-tight">{t(a.heading)}</h4>
+            {t(a.description) && <p className="text-base text-slate-700 leading-relaxed max-w-3xl">{t(a.description)}</p>}
+          </div>
+          <div className="flex flex-col sm:flex-row flex-wrap gap-3">
+            {closedMessage ? (
+              <p className="w-full sm:w-auto inline-flex items-center gap-2 px-5 py-3.5 border-2 border-[#FFCD00] bg-[#FFFBEA] text-[#0A1930] font-headline font-black text-sm">
+                <CalendarDays className="w-4 h-4 shrink-0 text-[#006AA7]" aria-hidden="true" />
+                <span>{closedMessage}</span>
+              </p>
+            ) : (
+              hasLabel(a.cta) && (
+                <button
+                  type="button"
+                  onClick={() => go(a.cta.href)}
+                  className={`group inline-flex w-full sm:w-auto items-center justify-center gap-2 px-6 py-3.5 font-headline font-black text-sm shadow-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#006AA7] ${accent.button}`}
+                >
+                  <span>{t(a.cta.label)}</span>
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                </button>
+              )
+            )}
+            {secondary && (
+              <button
+                type="button"
+                onClick={() => go(secondary.href)}
+                className="group inline-flex w-full sm:w-auto items-center justify-center gap-2 px-6 py-3.5 border-2 border-[#0A1930] bg-white text-[#0A1930] font-headline font-black text-sm transition-colors hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#006AA7]"
+              >
+                <span>{t(secondary.label)}</span>
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* The programme: a vertical timeline on phones and tablets, five columns on large screens */}
+      <section aria-labelledby={`${track.id}-programme`} className="space-y-4">
+        <h4 id={`${track.id}-programme`} className="flex items-center gap-2 font-headline font-black text-xl sm:text-2xl text-[#0A1930]">
+          <CalendarDays className="w-5 h-5 text-[#006AA7]" aria-hidden="true" />
+          {t(sessionsHeading)}
+        </h4>
+        <ol className="relative grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-5">
+          {/* The line that joins the sessions */}
+          <span className="absolute left-7 top-7 bottom-7 w-0.5 bg-[#FFCD00]/60 lg:hidden" aria-hidden="true" />
+          <span className="hidden lg:block absolute left-8 right-8 top-8 h-0.5 bg-[#FFCD00]/60" aria-hidden="true" />
+          {sessions.map((s, i) => (
+            <li key={s.key || i} className="relative">
+              <SessionCard s={s} index={i} />
+            </li>
+          ))}
+        </ol>
+        <p className="flex flex-wrap gap-x-5 gap-y-1 text-sm text-slate-600">
+          <span className="inline-flex items-center gap-1.5"><span className="w-3.5 h-3.5 bg-[#0A1930]" aria-hidden="true" />{L('In person', 'På plats')}</span>
+          <span className="inline-flex items-center gap-1.5"><span className="w-3.5 h-3.5 border-2 border-[#006AA7] bg-white" aria-hidden="true" />{L('Online', 'Digitalt')}</span>
+        </p>
+      </section>
+
+      {/* NABC, explained for children */}
+      {nabc && (
+        <section aria-labelledby={`${track.id}-nabc`} className="border-2 border-[#0A1930] bg-[#FFFBEA] p-5 sm:p-6 space-y-4">
+          <div className="space-y-1.5">
+            <h4 id={`${track.id}-nabc`} className="font-headline font-black text-xl sm:text-2xl text-[#0A1930]">{t(nabc.heading)}</h4>
+            <p className="text-base text-slate-700 leading-relaxed max-w-3xl">{t(nabc.intro)}</p>
+          </div>
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {nabc.parts.map((p, i) => (
+              <li key={p.letter || i} className="bg-white border border-slate-200 p-4 flex flex-col gap-2">
+                <div className="flex items-center gap-3">
+                  <span className="w-11 h-11 shrink-0 flex items-center justify-center bg-[#0A1930] text-[#FFCD00] font-headline font-black text-2xl" aria-hidden="true">
+                    {p.letter}
+                  </span>
+                  <span className="font-headline font-black text-lg text-[#0A1930]">{t(p.word)}</span>
+                </div>
+                <p className="text-base font-semibold text-[#0A1930] leading-snug">{t(p.question)}</p>
+                {t(p.example) && (
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    <span className="font-semibold text-[#006AA7]">{t(nabc.exampleLabel)}:</span> {t(p.example)}
+                  </p>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {/* Why participate */}
+      {benefits.length > 0 && (
+        <div className="space-y-2">
+          <p className="font-headline font-black text-lg text-[#0A1930]">{t(a!.benefitsHeading) || L('Why participate?', 'Varför delta?')}</p>
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
+            {benefits.map((b, i) => (
+              <li key={i} className="flex items-start gap-2 text-base text-slate-700">
+                <CheckCircle2 className={`w-5 h-5 mt-0.5 shrink-0 ${accent.check}`} aria-hidden="true" />
+                <span>{t(b)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
   );
 };
 
