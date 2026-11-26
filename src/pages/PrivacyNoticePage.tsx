@@ -9,7 +9,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useT } from '../content/useT';
 
 /** The version guardians confirm against (also stored with each confirmation by the database). */
-export const PRIVACY_VERSION = '2026-11-17';
+export const PRIVACY_VERSION = '2026-11-26';
 
 /** False until the organisers approve the text below. Kid InnoHack must not open before this is true. */
 export const PRIVACY_NOTICE_APPROVED = true;
@@ -39,12 +39,12 @@ export const PRIVACY_SECTIONS: PrivacySection[] = [
     paragraphs: [],
     items: [
       tx(
-        'Kid InnoHack: each child’s name, grade and school; the idea; the name, email address and phone number of each child’s parent or guardian and of the person who sends the idea; and each guardian’s answer (confirmed or declined, when, and to which version of this notice).',
-        'Kid InnoHack: varje barns namn, årskurs och skola; idén; namn, e-postadress och telefonnummer till varje barns förälder eller vårdnadshavare och till den som skickar idén; samt varje vårdnadshavares svar (bekräftat eller avböjt, när, och mot vilken version av detta meddelande).',
+        'Kid InnoHack: each child’s name, grade and, if given, school; which of the five sessions each child can attend, and their attendance; their place and team; the name, email address and phone number of each child’s parent or guardian and of the person who registers them (a parent, guardian or teacher); and each guardian’s answer (confirmed or declined, when, and to which version of this notice). Registrations sent with the earlier idea form also hold the idea.',
+        'Kid InnoHack: varje barns namn, årskurs och, om det anges, skola; vilka av de fem träffarna varje barn kan vara med på, och deras närvaro; plats och lag; namn, e-postadress och telefonnummer till varje barns förälder eller vårdnadshavare och till den som anmäler dem (förälder, vårdnadshavare eller lärare); samt varje vårdnadshavares svar (bekräftat eller avböjt, när, och mot vilken version av detta meddelande). Anmälningar som skickades med det tidigare idéformuläret innehåller även idén.',
       ),
       tx(
-        'Young InnoHack: the names of team members, contact details, category (gymnasium, university or professional), organisation, skills, experience and the challenges you are interested in.',
-        'Young InnoHack: lagmedlemmarnas namn, kontaktuppgifter, kategori (gymnasium, universitet eller yrkesverksam), organisation, färdigheter, erfarenhet och de utmaningar du är intresserad av.',
+        'Young InnoHack: your name, contact details, category (gymnasium, university or professional), organisation, skills and experience; whether you take part hybrid or fully online, which sessions you can attend, and your attendance; the themes you choose and your team; and whether you are under 18. If you are, your parent or guardian’s name, email address and phone number, and their answer.',
+        'Young InnoHack: ditt namn, kontaktuppgifter, kategori (gymnasium, universitet eller yrkesverksam), organisation, färdigheter och erfarenhet; om du deltar hybrid eller helt digitalt, vilka träffar du kan vara med på, och din närvaro; de teman du väljer och ditt lag; samt om du är under 18 år. Om du är det: din förälders eller vårdnadshavares namn, e-postadress och telefonnummer, och deras svar.',
       ),
       tx(
         'Mentors: name, contact details, organisation and expertise.',
@@ -64,14 +64,18 @@ export const PRIVACY_SECTIONS: PrivacySection[] = [
     title: tx('Children’s data', 'Barns uppgifter'),
     paragraphs: [
       tx(
-        'Most participants are children, so we keep what we collect about them to a minimum: their name, grade or age group and, if you give it, their school or preschool. For Kid InnoHack also the idea they send.',
-        'De flesta deltagarna är barn, så vi samlar in så lite som möjligt om dem: namn, årskurs eller ålder och, om du anger det, skola eller förskola. För Kid InnoHack även idén de skickar in.',
+        'Most participants are children, so we keep what we collect about them to a minimum: their name, grade or age group and, if you give it, their school or preschool. For Kid InnoHack also which sessions they can attend, their attendance and their team.',
+        'De flesta deltagarna är barn, så vi samlar in så lite som möjligt om dem: namn, årskurs eller ålder och, om du anger det, skola eller förskola. För Kid InnoHack även vilka träffar de kan vara med på, deras närvaro och deras lag.',
       ),
     ],
     items: [
       tx(
-        'Kid InnoHack: a parent, guardian or teacher sends the idea, and every child’s parent or guardian then confirms by email before the child takes part.',
-        'Kid InnoHack: en förälder, vårdnadshavare eller lärare skickar in idén, och varje barns förälder eller vårdnadshavare bekräftar sedan via e-post innan barnet deltar.',
+        'Kid InnoHack: a parent, guardian or teacher registers the child, and every child’s parent or guardian then confirms by email before the child can get a place.',
+        'Kid InnoHack: en förälder, vårdnadshavare eller lärare anmäler barnet, och varje barns förälder eller vårdnadshavare bekräftar sedan via e-post innan barnet kan få en plats.',
+      ),
+      tx(
+        'Young InnoHack: participants under 18 register themselves and give a parent or guardian, who confirms by email that they may take part.',
+        'Young InnoHack: deltagare under 18 år anmäler sig själva och anger en förälder eller vårdnadshavare, som bekräftar via e-post att de får delta.',
       ),
       tx(
         'Build & Play: the child’s parent or guardian registers the child and stays with them during the activity.',
@@ -96,12 +100,12 @@ export const PRIVACY_SECTIONS: PrivacySection[] = [
     paragraphs: [],
     items: [
       tx(
-        'A child’s participation in Kid InnoHack: the consent of the child’s parent or guardian (GDPR Article 6(1)(a)), given through the email confirmation.',
-        'Ett barns deltagande i Kid InnoHack: samtycke från barnets förälder eller vårdnadshavare (artikel 6.1 a i dataskyddsförordningen, GDPR), som lämnas genom bekräftelsen via e-post.',
+        'A child’s participation in Kid InnoHack, and that of a Young InnoHack participant under 18: the consent of their parent or guardian (GDPR Article 6(1)(a)), given through the email confirmation.',
+        'Ett barns deltagande i Kid InnoHack, och en deltagares under 18 år i Young InnoHack: samtycke från förälder eller vårdnadshavare (artikel 6.1 a i dataskyddsförordningen, GDPR), som lämnas genom bekräftelsen via e-post.',
       ),
       tx(
-        'Until every guardian has answered, a submitted Kid idea is kept only to ask for their confirmation (legitimate interest, Article 6(1)(f)).',
-        'Tills alla vårdnadshavare har svarat sparas en inskickad Kid-idé enbart för att be om deras bekräftelse (berättigat intresse, artikel 6.1 f).',
+        'Until the guardian has answered, a registration is kept only to ask for their confirmation (legitimate interest, Article 6(1)(f)).',
+        'Tills vårdnadshavaren har svarat sparas en anmälan enbart för att be om bekräftelsen (berättigat intresse, artikel 6.1 f).',
       ),
       tx(
         'Young InnoHack, Build & Play and mentor registrations: to handle your registration and run the event you signed up for (Article 6(1)(b)). For Build & Play, the parent or guardian registers their own child.',
@@ -121,12 +125,12 @@ export const PRIVACY_SECTIONS: PrivacySection[] = [
     title: tx('Guardian confirmation', 'Vårdnadshavarens bekräftelse'),
     paragraphs: [
       tx(
-        'Every child in Kid InnoHack needs their parent’s or guardian’s confirmation. When an idea is sent, each guardian named in the form gets an email with a personal link. The link works for 7 days, and at the latest until 5 December 2026 at 10:00 Swedish time. A guardian whose link has expired can ask for a new one on the confirmation page until then.',
-        'Varje barn i Kid InnoHack behöver bekräftelse från sin förälder eller vårdnadshavare. När en idé skickas in får varje vårdnadshavare som anges i formuläret ett e-postmeddelande med en personlig länk. Länken gäller i 7 dagar, dock längst till den 5 december 2026 kl. 10.00 svensk tid. En vårdnadshavare vars länk har gått ut kan be om en ny på bekräftelsesidan fram till dess.',
+        'Every child in Kid InnoHack, and every Young InnoHack participant under 18, needs their parent’s or guardian’s confirmation. When a registration is sent, each guardian named in the form gets an email with a personal link. The link works for 7 days, and at the latest until 5 December 2026 at 10:00 Swedish time (Kid InnoHack) or 10 December 2026 at 12:00 (Young InnoHack). A guardian whose link has expired can ask for a new one on the confirmation page until then.',
+        'Varje barn i Kid InnoHack, och varje deltagare under 18 år i Young InnoHack, behöver bekräftelse från sin förälder eller vårdnadshavare. När en anmälan skickas in får varje vårdnadshavare som anges i formuläret ett e-postmeddelande med en personlig länk. Länken gäller i 7 dagar, dock längst till den 5 december 2026 kl. 10.00 svensk tid (Kid InnoHack) eller den 10 december 2026 kl. 12.00 (Young InnoHack). En vårdnadshavare vars länk har gått ut kan be om en ny på bekräftelsesidan fram till dess.',
       ),
       tx(
-        'An idea can only be selected when every child’s guardian has confirmed by then. If a guardian declines, or has not confirmed in time, the idea is not selected.',
-        'En idé kan bara väljas ut när alla barns vårdnadshavare har bekräftat inom den tiden. Om en vårdnadshavare tackar nej, eller inte har bekräftat i tid, väljs idén inte ut.',
+        'A child or participant can only take part when their guardian has confirmed by then. If a guardian declines, or has not confirmed in time, they do not take part.',
+        'Ett barn eller en deltagare kan bara delta när vårdnadshavaren har bekräftat inom den tiden. Om vårdnadshavaren tackar nej, eller inte har bekräftat i tid, deltar de inte.',
       ),
       tx(
         'A guardian can withdraw their consent at any time by emailing contact@iniac.se. The child then no longer takes part.',
@@ -138,8 +142,8 @@ export const PRIVACY_SECTIONS: PrivacySection[] = [
     title: tx('Photos and videos (optional)', 'Foton och filmer (frivilligt)'),
     paragraphs: [
       tx(
-        'Photos or videos of a child are only published by the organisers (on our websites and social media) with the separate, optional consent of the child’s parent or guardian: for Kid InnoHack on the confirmation page, for Build & Play in the registration form. Saying no does not affect taking part.',
-        'Foton eller filmer av ett barn publiceras av arrangörerna (på våra webbplatser och i sociala medier) bara med ett separat, frivilligt samtycke från barnets förälder eller vårdnadshavare: för Kid InnoHack på bekräftelsesidan, för Build & Play i anmälningsformuläret. Att säga nej påverkar inte deltagandet.',
+        'Photos or videos of a child are only published by the organisers (on our websites and social media) with the separate, optional consent of the child’s parent or guardian: for Kid InnoHack and Young InnoHack participants under 18 on the confirmation page, for Build & Play in the registration form. Saying no does not affect taking part.',
+        'Foton eller filmer av ett barn publiceras av arrangörerna (på våra webbplatser och i sociala medier) bara med ett separat, frivilligt samtycke från barnets förälder eller vårdnadshavare: för Kid InnoHack och för deltagare under 18 år i Young InnoHack på bekräftelsesidan, för Build & Play i anmälningsformuläret. Att säga nej påverkar inte deltagandet.',
       ),
       tx(
         'This consent can be withdrawn at any time by emailing contact@iniac.se. We then stop using the material and remove it from our own channels. Material that others have already shared or printed may not be possible to remove.',
@@ -151,8 +155,8 @@ export const PRIVACY_SECTIONS: PrivacySection[] = [
     title: tx('Who sees it', 'Vem som ser uppgifterna'),
     paragraphs: [
       tx(
-        'The organisers’ coordinators, and the mentors and judges of the selected ideas, see what they need for their part of the event.',
-        'Arrangörernas samordnare, samt mentorerna och juryn för de utvalda idéerna, ser det de behöver för sin del av evenemanget.',
+        'The organisers’ coordinators, and the teams’ mentors and the judges, see what they need for their part of the event.',
+        'Arrangörernas samordnare, samt lagens mentorer och juryn, ser det de behöver för sin del av evenemanget.',
       ),
       tx(
         'Our service providers process the data on our behalf: Supabase (database and registration system) and Hostinger (website hosting and email delivery). We do not sell your data or use it for advertising.',
@@ -165,8 +169,8 @@ export const PRIVACY_SECTIONS: PrivacySection[] = [
     paragraphs: [tx('When a period ends, the data is deleted.', 'När en period har löpt ut raderas uppgifterna.')],
     items: [
       tx(
-        'Kid ideas whose guardians did not all confirm by 5 December 2026 at 10:00: deleted within 30 days.',
-        'Kid-idéer där inte alla vårdnadshavare har bekräftat senast den 5 december 2026 kl. 10.00: raderas inom 30 dagar.',
+        'Registrations whose guardian did not confirm in time (Kid InnoHack by 5 December 2026 at 10:00, Young InnoHack under 18 by 10 December 2026 at 12:00): deleted within 30 days.',
+        'Anmälningar där vårdnadshavaren inte bekräftade i tid (Kid InnoHack senast den 5 december 2026 kl. 10.00, Young InnoHack under 18 år senast den 10 december 2026 kl. 12.00): raderas inom 30 dagar.',
       ),
       tx(
         'Registrations (Future InnoHack and Build & Play), ideas and mentor registrations: until 12 December 2027.',

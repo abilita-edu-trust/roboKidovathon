@@ -47,7 +47,7 @@ import {
 } from './flow';
 import { FORMS } from './forms';
 import { UserFacingError, type FormCtx, type SubmitResult, type SummaryRow, type Values } from './ui';
-import { challengeName, lookupTeamCode, normaliseCode, useYoungState } from '../../content/youngChallenges';
+import { challengeName, lookupTeamCode, normaliseCode, useYoungState, youngRegistrationClosed } from '../../content/youngChallenges';
 import { ChallengesClosed, ChoicesStep, TeamStep, choicesError, teamStepError } from './YoungSteps';
 import { AccentContext, ACCENTS, ChoiceGroup, type Accent, type ChoiceItem } from './ChoiceCards';
 import { ClassicChoiceCard } from './ClassicChoiceCard';
@@ -319,6 +319,8 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
   const byChallenge = (id?: string) => young.challenges.find((c) => c.id === id);
   // Published challenges but the switch off (or fewer than two): Young InnoHack's taking part is closed.
   const youngClosed = youngChallenges(path) && path.activity === 'participate' && !young.registrationOpen;
+  // After 7 December 2026 the closed message says so instead of "opening soon".
+  const youngDeadlinePassed = youngRegistrationClosed() || (!!young.closeAt && Date.now() > Date.parse(young.closeAt));
 
   const startOver = () => {
     setPath(basePath);
@@ -499,7 +501,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
         if (youngChallenges(path))
           return {
             title: L('What would you like to do?', 'Vad vill du göra?'),
-            hint: L('Take on a company challenge, put an idea to the public vote, or mentor the teams.', 'Anta en utmaning från ett företag, låt alla rösta på din idé eller bli mentor för lagen.'),
+            hint: L('Join the hackathon (10–12 December 2026), put an idea to the public vote, or mentor the teams. They are separate.', 'Delta i hackathonet (10–12 december 2026), låt alla rösta på din idé eller bli mentor för lagen. De är separata.'),
           };
         if (p === 'hack' && path.track === 'young')
           return {
@@ -524,24 +526,26 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
       case 'team':
         return youngClosed
           ? {
-              title: L('Registration opening soon', 'Anmälan öppnar snart'),
-              hint: L(
-                'These are the company challenges for Young InnoHack. When registration opens, you choose two of them, on your own or as a team.',
-                'Här är företagens utmaningar i Young InnoHack. När anmälan öppnar väljer du två av dem, själv eller som lag.',
-              ),
+              title: youngDeadlinePassed ? L('Registration closed', 'Anmälan är stängd') : L('Registration opening soon', 'Anmälan öppnar snart'),
+              hint: youngDeadlinePassed
+                ? L('Registration for Young InnoHack closed on 7 December 2026.', 'Anmälan till Young InnoHack stängde den 7 december 2026.')
+                : L(
+                    'These are the three themes for Young InnoHack. When registration opens, you choose two of them, on your own or as a team.',
+                    'Här är de tre temana i Young InnoHack. När anmälan öppnar väljer du två av dem, själv eller som lag.',
+                  ),
             }
           : {
               title: L('How will you take part?', 'Hur vill du delta?'),
-              hint: L('You can be in one team. A team chooses its challenges together.', 'Du kan vara med i ett lag. Laget väljer sina utmaningar tillsammans.'),
+              hint: L('Register individually and get allocated to a team, create a team, or join an existing team. You can be in one team.', 'Anmäl dig själv och bli placerad i ett lag, skapa ett lag eller gå med i ett befintligt lag. Du kan vara med i ett lag.'),
             };
       case 'choices':
         return path.team === 'join'
           ? { title: L('Your team’s choices', 'Lagets val'), hint: '' }
           : {
-              title: L('Choose two challenges', 'Välj två utmaningar'),
+              title: L('Choose two themes', 'Välj två teman'),
               hint: L(
-                'Pick a first and a second choice. The organisers match every team with a challenge, using everyone’s choices and the places each company has. We can’t promise your first choice.',
-                'Välj ett förstahands- och ett andrahandsval. Arrangörerna matchar varje lag med en utmaning utifrån allas val och hur många platser varje företag har. Vi kan inte lova ditt förstahandsval.',
+                'Pick a first and a second choice. The organisers place every team in a theme using everyone’s choices; the detailed problem statements come at the kickoff. We can’t promise your first choice.',
+                'Välj ett förstahands- och ett andrahandsval. Arrangörerna placerar varje lag i ett tema utifrån allas val; de detaljerade problemen presenteras på kickoffen. Vi kan inte lova ditt förstahandsval.',
               ),
             };
       case 'theme':
@@ -615,7 +619,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
             [L('Taking part', 'Deltar'), T(teamAnswer())] as SummaryRow,
             [L('1st choice', '1:a val'), challengeName(byChallenge(path.first), T)] as SummaryRow,
             [L('2nd choice', '2:a val'), challengeName(byChallenge(path.second), T)] as SummaryRow,
-            [L('Final challenge', 'Slutlig utmaning'), L('Decided by the organisers', 'Bestäms av arrangörerna')] as SummaryRow,
+            [L('Final theme', 'Slutligt tema'), L('Decided by the organisers', 'Bestäms av arrangörerna')] as SummaryRow,
           ]
         : []),
     ];
@@ -1109,7 +1113,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                           : formId === 'kid'
                           ? L('Next: each guardian confirms by email', 'Nästa steg: varje vårdnadshavare bekräftar via e-post')
                           : formId === 'young'
-                            ? L('Next: the organisers match you with a challenge', 'Nästa steg: arrangörerna matchar dig med en utmaning')
+                            ? L('Next: the organisers place you in a theme and a team', 'Nästa steg: arrangörerna placerar dig i ett tema och ett lag')
                             : L('We’ll look it over and get back to you', 'Vi går igenom den och hör av oss')}
                       </span>
                     </div>

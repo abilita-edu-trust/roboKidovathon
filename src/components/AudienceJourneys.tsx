@@ -450,8 +450,9 @@ const TrackProgramme: React.FC<{ track: ProgrammeTrack; accent: Accent; go: (hre
         </dl>
       )}
 
-      {/* What it is and the buttons, straight away */}
+      {/* What it is and the buttons, straight away; the track's picture beside them (as in the other tracks) */}
       {a && (
+        <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[55fr_45fr] lg:gap-10 lg:items-start">
         <div className="space-y-4">
           <div className="space-y-1.5">
             <h4 className="font-headline font-black text-xl sm:text-2xl text-[#0A1930] leading-tight">{t(a.heading)}</h4>
@@ -486,6 +487,8 @@ const TrackProgramme: React.FC<{ track: ProgrammeTrack; accent: Accent; go: (hre
               </button>
             )}
           </div>
+        </div>
+        <AudienceImage audience={a} accent={accent} />
         </div>
       )}
 

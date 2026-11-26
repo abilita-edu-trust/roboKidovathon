@@ -36,7 +36,7 @@ export function teamStepError(choice: TeamChoice | undefined, v: Values, L: L): 
 
 /** Step 2's answer is complete. */
 export const choicesError = (first: string | undefined, second: string | undefined, L: L) =>
-  first && second && first !== second ? '' : L('Choose a first and a second challenge.', 'Välj en första och en andra utmaning.');
+  first && second && first !== second ? '' : L('Choose a first and a second theme.', 'Välj ett första och ett andra tema.');
 
 const ChallengeHead: React.FC<{ c: YoungChallenge; T: T }> = ({ c, T }) => (
   <div className="flex gap-3.5 items-start">
@@ -57,7 +57,7 @@ const ChallengeMore: React.FC<{ c: YoungChallenge; L: L; T: T }> = ({ c, L, T })
   T(c.problem) || T(c.requirements) ? (
     <details className="group mt-3 border-t border-slate-200">
       <summary className="cursor-pointer list-none flex items-center justify-between gap-2 pt-3 text-[15px] font-semibold text-[#0A1930] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-[#0A1930] [&::-webkit-details-marker]:hidden">
-        {L('More about this challenge', 'Mer om utmaningen')}
+        {L('More about this theme', 'Mer om temat')}
         <ChevronDown className="w-4 h-4 motion-safe:transition-transform group-open:rotate-180" aria-hidden="true" />
       </summary>
       {T(c.problem) && (
@@ -93,7 +93,9 @@ export const ChallengesClosed: React.FC<{ state: YoungState; L: L; T: T }> = ({ 
   <div className="space-y-5">
     <p className="flex items-center gap-2.5 p-4 bg-[#FFF8E1] border border-[#F3DE9A] text-[15px] font-semibold text-[#0A1930]">
       <Lock className="w-4 h-4 shrink-0" aria-hidden="true" />
-      {L('Registration opening soon: you can read the challenges now, but not register yet.', 'Anmälan öppnar snart: du kan läsa om utmaningarna nu, men inte anmäla dig än.')}
+      {state.closeAt && Date.now() > Date.parse(state.closeAt)
+        ? L('Registration closed on 7 December 2026.', 'Anmälan stängde den 7 december 2026.')
+        : L('Registration opening soon: you can read the themes now, but not register yet.', 'Anmälan öppnar snart: du kan läsa om temana nu, men inte anmäla dig än.')}
     </p>
     <ChallengeList challenges={state.challenges} L={L} T={T} />
   </div>
@@ -168,9 +170,9 @@ export const TeamStep: React.FC<{
         value={choice}
         onChoose={(id) => onChoose(id as TeamChoice)}
         items={[
-          { id: 'individual', icon: User, title: L('On my own', 'På egen hand'), desc: L('Register alone. The organisers can put you in a team with others.', 'Anmäl dig själv. Arrangörerna kan sätta ihop dig med andra i ett lag.') },
-          { id: 'create', icon: Users, title: L('Start a team', 'Starta ett lag'), desc: L('You choose the challenges and get a code for your teammates.', 'Du väljer utmaningarna och får en kod till dina lagkamrater.') },
-          { id: 'join', icon: KeyRound, title: L('Join a team', 'Gå med i ett lag'), desc: L('Use the code your captain sent you.', 'Använd koden från din lagkapten.') },
+          { id: 'individual', icon: User, title: L('On my own', 'På egen hand'), desc: L('Register alone and get allocated to a team.', 'Anmäl dig själv och bli placerad i ett lag.') },
+          { id: 'create', icon: Users, title: L('Create a team', 'Skapa ett lag'), desc: state.places && state.places.teams <= 0 ? L('All 15 teams have been started.', 'Alla 15 lag är startade.') : L('You choose the themes and get a code for your teammates.', 'Du väljer temana och får en kod till dina lagkamrater.') },
+          { id: 'join', icon: KeyRound, title: L('Join an existing team', 'Gå med i ett befintligt lag'), desc: L('Use the code your captain sent you.', 'Använd koden från din lagkapten.') },
         ]}
       />
       <p className="text-[15px] text-slate-600">
@@ -308,7 +310,7 @@ export const ChoicesStep: React.FC<{
   const uid = useId();
   const [said, setSaid] = useState('');
   const byId = (id?: string) => state.challenges.find((c) => c.id === id);
-  const notShown = L('a challenge that is no longer shown', 'en utmaning som inte längre visas');
+  const notShown = L('a theme that is no longer shown', 'ett tema som inte längre visas');
 
   if (joining) {
     return (
@@ -319,8 +321,8 @@ export const ChoicesStep: React.FC<{
         </div>
         <p className="text-[15px] text-slate-600">
           {L(
-            `${teamName ?? 'Your team'}’s captain chose these for the whole team. The organisers decide the final match for the team.`,
-            `Lagkaptenen i ${teamName ?? 'laget'} valde dem för hela laget. Arrangörerna bestämmer vilken utmaning laget får.`,
+            `${teamName ?? 'Your team'}’s captain chose these themes for the whole team. The organisers decide the team’s final theme.`,
+            `Lagkaptenen i ${teamName ?? 'laget'} valde temana för hela laget. Arrangörerna bestämmer vilket tema laget får.`,
           )}
         </p>
       </div>

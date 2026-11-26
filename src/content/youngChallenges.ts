@@ -1,4 +1,4 @@
-// Young InnoHack's company challenges (vfi and IBK), as the Admin Panel publishes them. Participants give a 1st and a
+// Young InnoHack's themes (and any company challenges) for vfi and IBK, as the Admin Panel publishes them. Participants give a 1st and a
 // 2nd choice; organisers allocate the final challenge. Only published challenges reach the website, and the database
 // decides whether registration is open (one switch, at least two published challenges). While nothing is published,
 // the site keeps the general Young InnoHack form.
@@ -26,9 +26,17 @@ export interface YoungState {
   teamSizeMax: number | null;
   listedTeams: boolean;
   challenges: YoungChallenge[];
+  /** When registration closes (7 December 2026, 23:59), if the database says. */
+  closeAt?: string | null;
+  /** Places left: on campus (hybrid), online, and teams that can still be started. Null: not known. */
+  places?: { hybrid: number; online: number; teams: number } | null;
 }
 
 export const NO_YOUNG: YoungState = { registrationOpen: false, teamSizeMin: null, teamSizeMax: null, listedTeams: false, challenges: [] };
+
+/** Young InnoHack's registration deadline: 7 December 2026 at 23:59 Swedish time. */
+export const YOUNG_REGISTRATION_CLOSE_AT = '2026-12-07T23:59:59+01:00';
+export const youngRegistrationClosed = (now: number = Date.now()) => now > Date.parse(YOUNG_REGISTRATION_CLOSE_AT);
 
 export interface OpenTeam {
   id: string;
@@ -62,6 +70,15 @@ export function toYoungState(data: unknown): YoungState {
     teamSizeMax: n(d.team_size_max),
     listedTeams: d.listed_teams === true,
     challenges,
+    closeAt: typeof d.registration_close_at === 'string' ? d.registration_close_at : null,
+    places:
+      d.places && typeof d.places === 'object'
+        ? {
+            hybrid: n((d.places as Record<string, unknown>).hybrid) ?? 0,
+            online: n((d.places as Record<string, unknown>).online) ?? 0,
+            teams: n((d.places as Record<string, unknown>).teams) ?? 0,
+          }
+        : null,
   };
 }
 

@@ -16,7 +16,7 @@ describe('Kid InnoHack 2026 programme', () => {
       ['s2', '7 December 2026', '17:30–18:30', 'Online', true, 'Checkpoint 1'],
       ['s3', '9 December 2026', '17:30–18:30', 'Online', true, 'Checkpoint 2'],
       ['s4', '11 December 2026', '17:30–18:30', 'Online', true, 'Checkpoint 3'],
-      ['s5', '12 December 2026', 'From the morning', 'Mälardalen University, Västerås', false, 'Final day'],
+      ['s5', '12 December 2026', 'From the morning', 'Mälardalen University (MDU), Västerås', false, 'Grand Finale'],
     ]);
     expect(KID_SESSIONS.map((s) => s.weekday.en)).toEqual(['Saturday', 'Monday', 'Wednesday', 'Friday', 'Saturday']);
     expect(KID_SESSIONS.map((s) => s.time.sv)).toEqual(['kl. 11.00–12.00', 'kl. 17.30–18.30', 'kl. 17.30–18.30', 'kl. 17.30–18.30', 'Från förmiddagen']);

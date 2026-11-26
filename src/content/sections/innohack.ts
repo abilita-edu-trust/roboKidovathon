@@ -66,10 +66,24 @@ export const KID_SESSIONS: TrackSession[] = [
     ['Checkpoint 3', 'Avstämning 3'],
     ['Practise your NABC pitch, get feedback from your mentor and get ready for the final.',
       'Öva er NABC-pitch, få återkoppling från er mentor och gör er redo för finalen.']),
-  session('s5', ['12 December 2026', '12 december 2026'], ['Saturday', 'lördag'], ['From the morning', 'Från förmiddagen'], ['Mälardalen University, Västerås', 'Mälardalens universitet, Västerås'], false,
-    ['Final day', 'Finaldag'],
+  session('s5', ['12 December 2026', '12 december 2026'], ['Saturday', 'lördag'], ['From the morning', 'Från förmiddagen'], ['Mälardalen University (MDU), Västerås', 'Mälardalens universitet (MDU), Västerås'], false,
+    ['Grand Finale', 'Stora finalen'],
     ['Finish your prototype and presentation, present your idea, then the closing ceremony and awards.',
       'Gör klart prototypen och presentationen, presentera er idé, och sedan avslutning och prisutdelning.']),
+];
+
+/** Young InnoHack's three days (10–12 December 2026): online kickoff, online checkpoints, hybrid finale at MDU. */
+export const YOUNG_SESSIONS: TrackSession[] = [
+  session('y1', ['10 December 2026', '10 december 2026'], ['Thursday', 'torsdag'], ['17:00–18:30', 'kl. 17.00–18.30'], ONLINE, true,
+    ['Online kickoff', 'Digital kickoff'],
+    ['Meet the organisers and the themes, and get started with your team.', 'Träffa arrangörerna och temana, och kom igång med ert lag.']),
+  session('y2', ['11 December 2026', '11 december 2026'], ['Friday', 'fredag'], ['Flexible', 'Flexibelt'], ONLINE, true,
+    ['Online checkpoints', 'Digitala avstämningar'],
+    ['Short checkpoints with mentors, and team work at your own pace.', 'Korta avstämningar med mentorer, och lagarbete i egen takt.']),
+  session('y3', ['12 December 2026', '12 december 2026'], ['Saturday', 'lördag'], ['09:00–17:00', 'kl. 09.00–17.00'],
+    ['Mälardalen University (MDU), Västerås, or online', 'Mälardalens universitet (MDU), Västerås, eller digitalt'], false,
+    ['Hybrid finale', 'Hybridfinal'],
+    ['Build, pitch to the jury and celebrate: on campus at MDU or online.', 'Bygg, pitcha för juryn och fira: på campus på MDU eller digitalt.']),
 ];
 
 const nabc = (letter: string, word: [string, string], question: [string, string], example: [string, string]): NabcPart => ({
@@ -121,6 +135,15 @@ export function trackProgramme(t: ProgrammeTrack): { facts: TrackFact[]; session
   };
 }
 
+/** Young InnoHack's steps (shared by its three audiences). */
+const YOUNG_STEPS = steps(
+  ['Choose how you take part', 'Välj hur du deltar', 'Hybrid (online 10–11 December, at MDU on 12 December) or fully online.', 'Hybrid (digitalt 10–11 december, på MDU 12 december) eller helt digitalt.'],
+  ['Join a team', 'Gå med i ett lag', 'Register alone and get allocated to a team, create a team, or join one with its code.', 'Anmäl dig själv och bli placerad i ett lag, skapa ett lag eller gå med i ett med dess kod.'],
+  ['Pick two themes', 'Välj två teman', 'AI Apps & Fan Engagement, Smart Systems & Automation, or Circular Battery & Sustainability.', 'AI-appar och publikengagemang, Smarta system och automation, eller Cirkulära batterier och hållbarhet.'],
+  ['Kick off and build', 'Kickoff och bygg', 'Online kickoff on 10 December, 17:00–18:30; online checkpoints on 11 December.', 'Digital kickoff 10 december kl. 17.00–18.30; digitala avstämningar 11 december.'],
+  ['Pitch at the finale', 'Pitcha på finalen', 'Hybrid finale at MDU on 12 December 2026, 09:00–17:00.', 'Hybridfinal på MDU 12 december 2026 kl. 09.00–17.00.'],
+);
+
 /** The two tracks; `register(tab)` is the site's register page on that form. */
 export function innohackTracks(register: (tab: string) => string): ProgrammeTrack[] {
   return [
@@ -154,7 +177,7 @@ export function innohackTracks(register: (tab: string) => string): ProgrammeTrac
             ['Checkpoint 1', 'Avstämning 1', '7 December, 17:30–18:30 online: understand the problem and what the customer needs.', '7 december kl. 17.30–18.30 digitalt: förstå problemet och vad kunden behöver.'],
             ['Checkpoint 2', 'Avstämning 2', '9 December, 17:30–18:30 online: show a sketch or first prototype, the benefits and what already exists.', '9 december kl. 17.30–18.30 digitalt: visa en skiss eller första prototyp, nyttan och vad som redan finns.'],
             ['Checkpoint 3', 'Avstämning 3', '11 December, 17:30–18:30 online: practise your NABC pitch and get feedback from your mentor.', '11 december kl. 17.30–18.30 digitalt: öva er NABC-pitch och få återkoppling från er mentor.'],
-            ['Final day', 'Finaldag', '12 December from the morning at Mälardalen University: finish, present, and celebrate at the closing ceremony and awards.', '12 december från förmiddagen på Mälardalens universitet: gör klart, presentera och fira vid avslutningen och prisutdelningen.'],
+            ['Grand Finale', 'Stora finalen', '12 December from the morning at MDU: finish, present, and celebrate at the closing ceremony and awards.', '12 december från förmiddagen på MDU: gör klart, presentera och fira vid avslutningen och prisutdelningen.'],
           ),
           imageAlt: bi('Children explaining their idea to a mentor', 'Barn som berättar om sin idé för en mentor'),
           benefits: [
@@ -179,7 +202,7 @@ export function innohackTracks(register: (tab: string) => string): ProgrammeTrac
           bi('Sketch or first prototype, benefits and existing solutions.', 'Skiss eller första prototyp, nytta och befintliga lösningar.')),
         row(bi('11 December 2026, 17:30–18:30', '11 december 2026 kl. 17.30–18.30'), bi('Checkpoint 3 (online)', 'Avstämning 3 (digitalt)'),
           bi('Practise the NABC pitch, mentor feedback, get ready for the final.', 'Öva NABC-pitchen, återkoppling från mentorn, gör er redo för finalen.')),
-        row(bi('12 December 2026, from the morning', '12 december 2026 från förmiddagen'), bi('Final at Mälardalen University', 'Final på Mälardalens universitet'),
+        row(bi('12 December 2026, from the morning', '12 december 2026 från förmiddagen'), bi('Grand Finale at MDU', 'Stora finalen på MDU'),
           bi('Finish prototypes and presentations, present, closing ceremony and awards.', 'Gör klart prototyper och presentationer, presentera, avslutning och prisutdelning.')),
       ],
       challengesHeading: bi(''),
@@ -195,15 +218,15 @@ export function innohackTracks(register: (tab: string) => string): ProgrammeTrac
       label: bi('Young InnoHack'),
       eligibility: bi('Gymnasium, University and Professionals', 'Gymnasium, universitet och yrkesverksamma'),
       summary: bi(
-        'Six companies bring six real-world problem statements. Register on your own or as a team, choose a challenge and build a solution with mentors. Professionals can take part or mentor the teams.',
-        'Sex företag kommer med sex verkliga problem. Anmäl dig själv eller som lag, välj en utmaning och bygg en lösning med stöd av mentorer. Yrkesverksamma kan delta eller vara mentorer för lagen.',
+        'Free, 10–12 December 2026: online kickoff and checkpoints, then a hybrid finale at MDU. 50 places on campus and 25 online, up to 15 teams. Register by 7 December 2026.',
+        'Gratis, 10–12 december 2026: digital kickoff och avstämningar, sedan hybridfinal på MDU. 50 platser på campus och 25 digitalt, upp till 15 lag. Anmäl dig senast 7 december 2026.',
       ),
       dateLabel: bi('10–12 December 2026', '10–12 december 2026'),
       venue: FINAL_VENUE,
       highlights: [
         bi('Gymnasium, University and Professionals', 'Gymnasium, universitet och yrkesverksamma'),
-        bi('Six company problem statements', 'Sex problem från företag'),
-        bi('Team-based innovation challenge', 'Innovationsutmaning i lag'),
+        bi('50 on campus · 25 online', '50 på campus · 25 digitalt'),
+        bi('Up to 15 teams, three themes', 'Upp till 15 lag, tre teman'),
       ],
       image: '',
       imageAlt: bi('Students and professionals working on a challenge', 'Studenter och yrkesverksamma som arbetar med en utmaning'),
@@ -216,16 +239,10 @@ export function innohackTracks(register: (tab: string) => string): ProgrammeTrac
           label: bi('Gymnasium'),
           heading: bi('Turn ideas into solutions', 'Gör idéer till lösningar'),
           description: bi(
-            'Form a team, pick a real-world challenge and develop a solution you pitch to mentors and judges.',
-            'Bilda ett lag, välj en verklig utmaning och utveckla en lösning som ni presenterar för mentorer och jury.',
+            'Register alone or with your team, pick two themes and build a solution you pitch to mentors and the jury.',
+            'Anmäl dig själv eller med ditt lag, välj två teman och bygg en lösning som ni presenterar för mentorer och jury.',
           ),
-          steps: steps(
-            ['Form your team', 'Bilda ert lag', 'Team up with classmates, or join alone and meet new teammates.', 'Gå ihop med klasskompisar, eller kom själv och träffa nya lagkamrater.'],
-            ['Choose a challenge', 'Välj en utmaning', 'Pick one of six company challenges, revealed at the online kickoff on 10 December 2026.', 'Välj en av sex utmaningar från företag, som presenteras på den digitala kickoffen den 10 december 2026.'],
-            ['Brainstorm and plan', 'Brainstorma och planera', 'Explore the problem and plan your solution remotely on 11 December 2026.', 'Utforska problemet och planera er lösning på distans den 11 december 2026.'],
-            ['Build a prototype', 'Bygg en prototyp', 'Develop your idea with help from mentors.', 'Utveckla idén med stöd från mentorer.'],
-            ['Pitch to the judges', 'Pitcha för juryn', 'Present your solution at Mälardalen University on 12 December 2026.', 'Presentera er lösning på Mälardalens universitet den 12 december 2026.'],
-          ),
+          steps: YOUNG_STEPS,
           imageAlt: bi('Upper-secondary students brainstorming ideas on sticky notes around a table', 'Gymnasieelever som brainstormar idéer på lappar runt ett bord'),
           benefits: [
             bi('Solve real-world challenges', 'Lös verkliga utmaningar'),
@@ -240,16 +257,10 @@ export function innohackTracks(register: (tab: string) => string): ProgrammeTrac
           label: bi('University', 'Universitet'),
           heading: bi('Build and ship a digital solution', 'Bygg och lansera en digital lösning'),
           description: bi(
-            'Code, design and prototype an app or service for a real challenge, together with mentors from industry.',
-            'Koda, designa och ta fram en prototyp av en app eller tjänst för en verklig utmaning, tillsammans med mentorer från näringslivet.',
+            'Code, design and prototype an app or service for one of three themes, together with mentors from industry.',
+            'Koda, designa och ta fram en prototyp av en app eller tjänst inom ett av tre teman, tillsammans med mentorer från näringslivet.',
           ),
-          steps: steps(
-            ['Register your team', 'Anmäl ert lag', 'Sign up as a team or on your own.', 'Anmäl er som lag eller på egen hand.'],
-            ['Pick a challenge', 'Välj en utmaning', 'Choose one of six problems set by companies, revealed on 10 December 2026.', 'Välj ett av sex problem från företag, som presenteras den 10 december 2026.'],
-            ['Design the solution', 'Designa lösningen', 'Map users, needs and the features that matter most.', 'Kartlägg användare, behov och de viktigaste funktionerna.'],
-            ['Code a prototype', 'Koda en prototyp', 'Build a working demo with feedback from mentors.', 'Bygg en fungerande demo med återkoppling från mentorer.'],
-            ['Demo and pitch', 'Demo och pitch', 'Show your prototype to the jury at Mälardalen University on 12 December 2026.', 'Visa er prototyp för juryn på Mälardalens universitet den 12 december 2026.'],
-          ),
+          steps: YOUNG_STEPS,
           imageAlt: bi('University students coding and prototyping an app together on laptops', 'Universitetsstudenter som kodar och tar fram en app tillsammans på sina datorer'),
           benefits: [
             bi('Develop practical portfolio projects', 'Ta fram praktiska portfolioprojekt'),
@@ -264,16 +275,10 @@ export function innohackTracks(register: (tab: string) => string): ProgrammeTrac
           label: bi('Professionals', 'Yrkesverksamma'),
           heading: bi('Take part or mentor', 'Delta eller bli mentor'),
           description: bi(
-            'Join a team and take on a company challenge yourself, or share your expertise as a mentor for the teams.',
-            'Gå med i ett lag och anta en utmaning själv, eller dela med dig av din kunskap som mentor för lagen.',
+            'Join a team and work on one of three themes yourself, or share your expertise as a mentor for the teams.',
+            'Gå med i ett lag och arbeta med ett av tre teman själv, eller dela med dig av din kunskap som mentor för lagen.',
           ),
-          steps: steps(
-            ['Choose your role', 'Välj din roll', 'Take part in a team, or mentor the teams.', 'Delta i ett lag, eller bli mentor för lagen.'],
-            ['Join the kickoff', 'Var med på kickoffen', 'Meet the teams and hear the six challenges online on the evening of 10 December 2026.', 'Träffa lagen och hör de sex utmaningarna digitalt på kvällen den 10 december 2026.'],
-            ['Prepare remotely', 'Förbered på distans', 'Research and plan on 11 December 2026.', 'Research och planering den 11 december 2026.'],
-            ['Build or coach', 'Bygg eller coacha', 'Develop a solution, or help teams sharpen theirs.', 'Utveckla en lösning, eller hjälp lagen att vässa sina.'],
-            ['Final day', 'Finaldagen', 'Present or coach at Mälardalen University on 12 December 2026.', 'Presentera eller coacha på Mälardalens universitet den 12 december 2026.'],
-          ),
+          steps: [...steps(['Choose your role', 'Välj din roll', 'Take part in a team, or mentor the teams.', 'Delta i ett lag, eller bli mentor för lagen.']), ...YOUNG_STEPS.slice(1)],
           imageAlt: bi('An industry mentor giving feedback to a student team during a pitch', 'En mentor från näringslivet som ger återkoppling till ett studentlag under en pitch'),
           benefits: [
             bi('Apply your expertise to real challenges', 'Använd din kunskap på verkliga utmaningar'),
@@ -284,16 +289,17 @@ export function innohackTracks(register: (tab: string) => string): ProgrammeTrac
           secondaryCta: link('Become a Mentor', 'Bli mentor', register('mentor')),
         }),
       ],
-      scheduleHeading: bi('Young InnoHack timeline', 'Tidslinje för Young InnoHack'),
+      scheduleHeading: bi('Young InnoHack programme', 'Program för Young InnoHack'),
       schedule: [
-        row(bi('10 December 2026, evening', '10 december 2026, kväll'), bi('Online kickoff', 'Digital kickoff'), bi('Challenge reveal and team formation.', 'Utmaningarna presenteras och lagen bildas.')),
-        row(bi('11 December 2026', '11 december 2026'), bi('Remote preparation', 'Förberedelser på distans'), bi('Research and plan with your team.', 'Research och planering med laget.')),
-        row(bi('12 December 2026', '12 december 2026'), bi('In-person hackathon', 'Hackathon på plats'), bi('Hackathon and presentations at Mälardalen University, Västerås.', 'Hackathon och presentationer på Mälardalens universitet i Västerås.')),
+        row(bi('By 7 December 2026', 'Senast 7 december 2026'), bi('Register', 'Anmälan'), bi('Free. Choose hybrid or fully online, two themes and how you join a team.', 'Gratis. Välj hybrid eller helt digitalt, två teman och hur du går med i ett lag.')),
+        row(bi('10 December 2026, 17:00–18:30', '10 december 2026 kl. 17.00–18.30'), bi('Online kickoff', 'Digital kickoff'), bi('Meet the themes, the mentors and your team.', 'Träffa temana, mentorerna och ert lag.')),
+        row(bi('11 December 2026', '11 december 2026'), bi('Online checkpoints', 'Digitala avstämningar'), bi('Checkpoints with mentors and flexible team development.', 'Avstämningar med mentorer och flexibelt lagarbete.')),
+        row(bi('12 December 2026, 09:00–17:00', '12 december 2026 kl. 09.00–17.00'), bi('Hybrid finale at MDU', 'Hybridfinal på MDU'), bi('On campus at Mälardalen University, Västerås, or online: build, pitch and awards.', 'På campus på Mälardalens universitet i Västerås, eller digitalt: bygg, pitcha och prisutdelning.')),
       ],
-      challengesHeading: bi('Company challenges', 'Utmaningar från företag'),
+      challengesHeading: bi('Three innovation themes', 'Tre innovationsteman'),
       challengesNote: bi(
-        'Six companies will each bring a real problem statement. The challenges are revealed at the online kickoff on 10 December 2026.',
-        'Sex företag kommer med var sitt verkligt problem. Utmaningarna presenteras på den digitala kickoffen den 10 december 2026.',
+        'AI Apps & Fan Engagement · Smart Systems & Automation · Circular Battery & Sustainability. You choose two when you register; detailed problem statements come at the kickoff.',
+        'AI-appar och publikengagemang · Smarta system och automation · Cirkulära batterier och hållbarhet. Du väljer två när du anmäler dig; detaljerade problem presenteras på kickoffen.',
       ),
       // One hidden, empty challenge: the Site CMS's template for adding the six real ones once they are confirmed.
       challenges: [{ visible: false, company: '', logo: '', title: bi(''), problem: bi('') }],

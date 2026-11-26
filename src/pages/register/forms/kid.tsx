@@ -53,7 +53,8 @@ export const kidSessionLabel = (key: string, L: FormCtx['L']) => {
   const s = KID_SESSIONS.find((x) => x.key === key)!;
   // An empty Swedish text means "the same as the English" (bi), e.g. "Kickoff".
   const both = (b: { en: string; sv: string }) => L(b.en, b.sv || b.en);
-  return `${both(s.date).replace(/ \d{4}$/, '')} · ${both(s.title)}`;
+  const where = s.online ? L('online', 'digitalt') : key === 's1' ? L('in person at MISV', 'på plats på MISV') : L('in person at MDU', 'på plats på MDU');
+  return `${both(s.date).replace(/ \d{4}$/, '')} · ${both(s.title)} · ${where}`;
 };
 
 /** What stops the form from going to review, in the visitor's language; '' when it is complete. */
@@ -149,6 +150,12 @@ const ChildRows: React.FC<{ v: Values; set: SetValue; ctx: FormCtx }> = ({ v, se
           </div>
           <fieldset className="space-y-2">
             <legend className={labelCls}>{L('Sessions the child can attend', 'Träffar barnet kan vara med på')} *</legend>
+            <p className="text-sm text-slate-600">
+              {L(
+                '5 and 12 December are in person in Västerås (MISV and MDU). The checkpoints on 7, 9 and 11 December are online; we email the link.',
+                '5 och 12 december är på plats i Västerås (MISV och MDU). Avstämningarna 7, 9 och 11 december är digitala; vi mejlar länken.',
+              )}
+            </p>
             <div className="flex flex-wrap gap-2">
               {KID_SESSION_KEYS.map((key) => {
                 const on = c.availability.includes(key);

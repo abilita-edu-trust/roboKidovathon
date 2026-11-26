@@ -1,5 +1,5 @@
-// Kid InnoHack guardian confirmation (vfi.iniac.se/guardian and indiskbarnklubb.se/ibk/guardian): the page a parent or
-// guardian opens from the email. It shows only their own children and the programme, asks for the required participation
+// Kid InnoHack and Young InnoHack (under 18) guardian confirmation (vfi.iniac.se/guardian and
+// indiskbarnklubb.se/ibk/guardian): the page a parent or guardian opens from the email. It shows only their own children and the programme, asks for the required participation
 // permission (and the privacy notice), offers separate optional photo/video consent, and records the answer through
 // fut_inno_guardian_respond. An expired link can ask for a new one until the confirmation cut-off.
 import React, { useEffect, useState } from 'react';
@@ -8,11 +8,15 @@ import { supabase } from '../lib/supabase';
 import { useT } from '../content/useT';
 import { useSite } from '../context/SiteContext';
 import { targetToHref } from '../content/sections/frame';
-import { KID_SESSIONS } from '../content/sections/innohack';
+import { KID_SESSIONS, YOUNG_SESSIONS } from '../content/sections/innohack';
 
 /** What fut_inno_guardian_info returns for a link. */
 export interface GuardianInfo {
   status: 'pending' | 'confirmed' | 'declined' | 'expired' | 'closed' | 'invalid';
+  /** kid, or young (a participant under 18). */
+  track?: 'kid' | 'young';
+  team?: string;
+  attendance?: 'hybrid' | 'online';
   guardian_name?: string;
   children?: string[];
   idea_title?: string;
@@ -86,6 +90,8 @@ export const GuardianConfirmPage: React.FC<{ onNavigateHome: () => void }> = ({ 
   };
 
   const children = info?.children ?? [];
+  const young = info?.track === 'young';
+  const P = young ? 'Young InnoHack' : 'Kid InnoHack';
   const heading = (icon: React.ReactNode, title: string, body: string) => (
     <div className={`${box} text-center flex flex-col items-center gap-3`}>
       {icon}
@@ -103,7 +109,7 @@ export const GuardianConfirmPage: React.FC<{ onNavigateHome: () => void }> = ({ 
         <div className="space-y-2">
           <p className="inline-flex items-center gap-2 text-xs font-mono-code font-bold uppercase tracking-widest text-[#006AA7]">
             <ShieldCheck className="w-4 h-4" aria-hidden="true" />
-            {L('Future InnoHack · Kid InnoHack', 'Future InnoHack · Kid InnoHack')}
+            {`Future InnoHack · ${P}`}
           </p>
           <h1 className="font-headline font-black uppercase tracking-tight leading-tight" style={{ fontSize: 'clamp(1.8rem, 4.5vw, 3rem)' }}>
             {L('Guardian confirmation', 'Vårdnadshavarens bekräftelse')}
@@ -118,13 +124,15 @@ export const GuardianConfirmPage: React.FC<{ onNavigateHome: () => void }> = ({ 
           heading(<XCircle className="w-10 h-10 text-red-500" />, L('We could not open your link', 'Vi kunde inte öppna din länk'), L('Please try again in a moment.', 'Försök igen om en stund.'))}
         {view === 'confirmed' &&
           heading(<CheckCircle2 className="w-10 h-10 text-emerald-600" />, L('Thank you: participation confirmed', 'Tack: deltagandet är bekräftat'),
-            L('The organisers form five teams of four (up to 20 children) and email you your child’s place, team and session details before the kickoff on 5 December 2026.', 'Arrangörerna bildar fem lag med fyra barn (upp till 20 barn) och mejlar dig om ditt barns plats, lag och träffarna före kickoffen den 5 december 2026.'))}
+            young
+              ? L('The organisers email the participant their theme, team and session details before the online kickoff on 10 December 2026.', 'Arrangörerna mejlar deltagaren om tema, lag och träffarna före den digitala kickoffen den 10 december 2026.')
+              : L('The organisers form five teams of four (up to 20 children) and email you your child’s place, team and session details before the kickoff on 5 December 2026.', 'Arrangörerna bildar fem lag med fyra barn (upp till 20 barn) och mejlar dig om ditt barns plats, lag och träffarna före kickoffen den 5 december 2026.'))}
         {view === 'declined' &&
           heading(<XCircle className="w-10 h-10 text-slate-500" />, L('You declined participation', 'Du har avböjt deltagande'),
             L('Your child will not take part. Contact contact@iniac.se if this was a mistake.', 'Ditt barn deltar inte. Kontakta contact@iniac.se om detta blev fel.'))}
         {view === 'closed' &&
           heading(<Lock className="w-10 h-10 text-slate-500" />, L('Confirmations have closed', 'Bekräftelserna har stängt'),
-            L('Guardian confirmations for Kid InnoHack 2026 are closed, so your child can no longer be given a place.', 'Vårdnadshavarnas bekräftelser för Kid InnoHack 2026 har stängt, så ditt barn kan inte längre få en plats.'))}
+            L(`Guardian confirmations for ${P} 2026 are closed, so your child can no longer be given a place.`, `Vårdnadshavarnas bekräftelser för ${P} 2026 har stängt, så ditt barn kan inte längre få en plats.`))}
         {view === 'new-link-sent' &&
           heading(<Mail className="w-10 h-10 text-[#006AA7]" />, L('A new link is on its way', 'En ny länk är på väg'),
             L('Check your inbox (and spam folder). The old link no longer works.', 'Titta i din inkorg (och skräppost). Den gamla länken fungerar inte längre.'))}
@@ -150,7 +158,12 @@ export const GuardianConfirmPage: React.FC<{ onNavigateHome: () => void }> = ({ 
             <div className={`${box} space-y-4`}>
               <p className="text-sm text-slate-700">
                 {L(`Hello ${info.guardian_name ?? ''},`, `Hej ${info.guardian_name ?? ''},`)}{' '}
-                {info.idea_title
+                {young
+                  ? L(
+                    `${children.join(', ')} has registered for Young InnoHack and gave you as their parent or guardian, because they are under 18. Please confirm that they may take part.`,
+                    `${children.join(', ')} har anmält sig till Young InnoHack och angett dig som förälder eller vårdnadshavare, eftersom hen är under 18 år. Bekräfta att hen får delta.`,
+                  )
+                  : info.idea_title
                   ? L(
                     `an idea has been sent to Kid InnoHack with ${children.length === 1 ? 'your child' : 'your children'} in the team. Please confirm that they may take part.`,
                     `en idé har skickats till Kid InnoHack med ${children.length === 1 ? 'ditt barn' : 'dina barn'} i laget. Bekräfta att ${children.length === 1 ? 'barnet' : 'barnen'} får delta.`,
@@ -162,13 +175,29 @@ export const GuardianConfirmPage: React.FC<{ onNavigateHome: () => void }> = ({ 
               </p>
               <dl className="border border-slate-200 divide-y divide-slate-200 text-sm">
                 <div className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-1 px-4 py-3">
-                  <dt className="text-xs font-mono-code font-bold uppercase text-slate-500">{children.length > 1 ? L('Children', 'Barn') : L('Child', 'Barn')}</dt>
+                  <dt className="text-xs font-mono-code font-bold uppercase text-slate-500">{young ? L('Participant', 'Deltagare') : children.length > 1 ? L('Children', 'Barn') : L('Child', 'Barn')}</dt>
                   <dd className="font-medium">{children.join(', ')}</dd>
                 </div>
                 {info.idea_title && (
                   <div className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-1 px-4 py-3">
                     <dt className="text-xs font-mono-code font-bold uppercase text-slate-500">{L('Idea', 'Idé')}</dt>
                     <dd className="font-medium">{info.idea_title}</dd>
+                  </div>
+                )}
+                {young && info.team && (
+                  <div className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-1 px-4 py-3">
+                    <dt className="text-xs font-mono-code font-bold uppercase text-slate-500">{L('Team', 'Lag')}</dt>
+                    <dd className="font-medium">{info.team}</dd>
+                  </div>
+                )}
+                {young && info.attendance && (
+                  <div className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-1 px-4 py-3">
+                    <dt className="text-xs font-mono-code font-bold uppercase text-slate-500">{L('Taking part', 'Deltar')}</dt>
+                    <dd className="font-medium">
+                      {info.attendance === 'online'
+                        ? L('Fully online, throughout the hackathon', 'Helt digitalt, under hela hackathonet')
+                        : L('Hybrid: online on 10–11 December, at MDU on 12 December', 'Hybrid: digitalt 10–11 december, på MDU 12 december')}
+                    </dd>
                   </div>
                 )}
                 {info.school && (
@@ -180,9 +209,13 @@ export const GuardianConfirmPage: React.FC<{ onNavigateHome: () => void }> = ({ 
               </dl>
               <div className="text-sm text-slate-700 space-y-1.5">
                 <p className="font-headline font-black text-xs uppercase tracking-wider text-[#0A1930]">{L('What taking part means', 'Vad deltagandet innebär')}</p>
-                <p>{L('Up to 20 children take part, in five teams of four formed by the organisers. Five sessions:', 'Upp till 20 barn deltar, i fem lag med fyra barn som arrangörerna bildar. Fem träffar:')}</p>
+                <p>
+                  {young
+                    ? L('Up to 75 participants (50 on campus, 25 online) in up to 15 teams. Three days:', 'Upp till 75 deltagare (50 på campus, 25 digitalt) i upp till 15 lag. Tre dagar:')
+                    : L('Up to 20 children take part, in five teams of four formed by the organisers. Five sessions:', 'Upp till 20 barn deltar, i fem lag med fyra barn som arrangörerna bildar. Fem träffar:')}
+                </p>
                 <ul className="list-disc pl-5 space-y-1">
-                  {KID_SESSIONS.map((x) => (
+                  {(young ? YOUNG_SESSIONS : KID_SESSIONS).map((x) => (
                     <li key={x.key}>
                       <span className="font-semibold">{both(x.date)}, {both(x.time)}, {both(x.place)}:</span>{' '}
                       {both(x.title)}. {both(x.detail)}
@@ -197,7 +230,12 @@ export const GuardianConfirmPage: React.FC<{ onNavigateHome: () => void }> = ({ 
               <label className="flex items-start gap-3 cursor-pointer select-none">
                 <input type="checkbox" checked={permission} onChange={(e) => setPermission(e.target.checked)} className="mt-0.5 w-5 h-5 cursor-pointer accent-[#006AA7]" />
                 <span className="text-sm text-slate-800 leading-snug">
-                  {children.length > 1
+                  {young
+                    ? L(
+                        'I am the parent or legal guardian of the participant named above, and I give permission for them to take part in Young InnoHack. *',
+                        'Jag är förälder eller vårdnadshavare till deltagaren ovan och ger tillstånd till att hen deltar i Young InnoHack. *',
+                      )
+                    : children.length > 1
                     ? L(
                         'I am the parent or legal guardian of the children named above, and I give permission for them to take part in Kid InnoHack. *',
                         'Jag är förälder eller vårdnadshavare till barnen ovan och ger tillstånd till att de deltar i Kid InnoHack. *',
@@ -223,7 +261,12 @@ export const GuardianConfirmPage: React.FC<{ onNavigateHome: () => void }> = ({ 
                   <input type="checkbox" checked={media} onChange={(e) => setMedia(e.target.checked)} className="mt-0.5 w-5 h-5 cursor-pointer accent-[#006AA7]" />
                   <span className="text-sm text-slate-800 leading-snug">
                     <span className="font-semibold">{L('Optional: photos and videos. ', 'Valfritt: foton och filmer. ')}</span>
-                    {children.length > 1
+                    {young
+                      ? L(
+                          'I allow photos or videos of the participant from Young InnoHack to be published by the organisers. You can say no and they still take part.',
+                          'Jag tillåter att arrangörerna publicerar foton eller filmer av deltagaren från Young InnoHack. Du kan säga nej och hen deltar ändå.',
+                        )
+                      : children.length > 1
                       ? L(
                           'I allow photos or videos of my children from Kid InnoHack to be published by the organisers. You can say no and your children still take part.',
                           'Jag tillåter att arrangörerna publicerar foton eller filmer av mina barn från Kid InnoHack. Du kan säga nej och dina barn deltar ändå.',

@@ -222,8 +222,8 @@ const ACTIVITY_CARDS: Record<ActivityId, Choice<ActivityId>> = {
 const CHALLENGE_CARD: Choice<ActivityId> = {
   id: 'participate',
   icon: 'Target',
-  title: bi('Take on a company challenge', 'Anta en utmaning från ett företag'),
-  desc: bi('On your own or in a team; you give two choices and the organisers match you.', 'Själv eller i lag; du gör två val och arrangörerna matchar dig.'),
+  title: bi('Join Young InnoHack', 'Delta i Young InnoHack'),
+  desc: bi('10–12 December 2026, hybrid or fully online. On your own or in a team; choose two themes. Register by 7 December.', '10–12 december 2026, hybrid eller helt digitalt. Själv eller i lag; välj två teman. Anmäl dig senast 7 december.'),
 };
 
 /** Kid and Young InnoHack's public idea (vfi and IBK) closes on 1 December 2026; other hackathons keep the plain card. */

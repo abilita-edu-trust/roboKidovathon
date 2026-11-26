@@ -116,8 +116,12 @@ describe('Kid InnoHack form', () => {
 
   it('names the five sessions in English and Swedish, including texts that are the same in both ("Kickoff")', () => {
     const SV = (_en: string, sv: string) => sv;
-    expect(['s1', 's2', 's3', 's4', 's5'].map((k) => kidSessionLabel(k, L))).toEqual(['5 December · Kickoff', '7 December · Checkpoint 1', '9 December · Checkpoint 2', '11 December · Checkpoint 3', '12 December · Final day']);
-    expect(['s1', 's2', 's3', 's4', 's5'].map((k) => kidSessionLabel(k, SV))).toEqual(['5 december · Kickoff', '7 december · Avstämning 1', '9 december · Avstämning 2', '11 december · Avstämning 3', '12 december · Finaldag']);
+    expect(['s1', 's2', 's3', 's4', 's5'].map((k) => kidSessionLabel(k, L))).toEqual([
+      '5 December · Kickoff · in person at MISV', '7 December · Checkpoint 1 · online', '9 December · Checkpoint 2 · online', '11 December · Checkpoint 3 · online', '12 December · Grand Finale · in person at MDU',
+    ]);
+    expect(['s1', 's2', 's3', 's4', 's5'].map((k) => kidSessionLabel(k, SV))).toEqual([
+      '5 december · Kickoff · på plats på MISV', '7 december · Avstämning 1 · digitalt', '9 december · Avstämning 2 · digitalt', '11 december · Avstämning 3 · digitalt', '12 december · Stora finalen · på plats på MDU',
+    ]);
   });
 
   it('needs a grade 3–9 and a guardian with a valid email for every child, and the guardian acknowledgement', () => {
@@ -248,10 +252,10 @@ describe('Future InnoHack pages, shared track data and programme section', () =>
 });
 
 describe('privacy notice (approved 21 November 2026)', () => {
-  it('is published, at the version the database records with each guardian confirmation (2026-11-17)', async () => {
+  it('is published, at the version the database records with each guardian confirmation (2026-11-26)', async () => {
     const { PRIVACY_NOTICE_APPROVED, PRIVACY_VERSION } = await import('../PrivacyNoticePage');
     expect(PRIVACY_NOTICE_APPROVED).toBe(true);
-    expect(PRIVACY_VERSION).toBe('2026-11-17');
+    expect(PRIVACY_VERSION).toBe('2026-11-26');
   });
 
   it('covers the organisations, legal basis, guardian and photo consent, retention and deletion, in English and Swedish', async () => {

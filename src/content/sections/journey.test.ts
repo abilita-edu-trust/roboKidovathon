@@ -35,7 +35,7 @@ describe('audience journeys (vfi)', () => {
     ]);
     expect(tracks.map((t) => t.audiences.map((a) => a.id))).toEqual([['kids'], ['gymnasium', 'university', 'professionals']]);
     expect(tracks[0].schedule.map((r) => r.date.en)).toEqual(['By 3 December 2026', '5 December 2026, 11:00–12:00', '7 December 2026, 17:30–18:30', '9 December 2026, 17:30–18:30', '11 December 2026, 17:30–18:30', '12 December 2026, from the morning']);
-    expect(tracks[1].schedule.map((r) => r.date.en)).toEqual(['10 December 2026, evening', '11 December 2026', '12 December 2026']);
+    expect(tracks[1].schedule.map((r) => r.date.en)).toEqual(['By 7 December 2026', '10 December 2026, 17:00–18:30', '11 December 2026', '12 December 2026, 09:00–17:00']);
     // No company is named before they are confirmed: one hidden, empty challenge as the CMS template.
     expect(tracks[1].challenges).toEqual([{ visible: false, company: '', logo: '', title: { en: '', sv: '' }, problem: { en: '', sv: '' } }]);
   });
