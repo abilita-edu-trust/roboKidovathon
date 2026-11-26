@@ -141,8 +141,8 @@ const YoungFields: React.FC<FieldsProps> = ({ v, set, ctx }) => {
           value={typeof v.attendance === 'string' ? v.attendance : undefined}
           onChoose={(id) => set('attendance', id)}
           items={[
-            { id: 'hybrid', icon: MapPin, title: L('Hybrid', 'Hybrid'), desc: `${ATTENDANCE(L).hybrid}. ${L('50 places.', '50 platser.')}` },
-            { id: 'online', icon: Laptop, title: L('Fully online', 'Helt digitalt'), desc: `${ATTENDANCE(L).online}. ${L('25 places.', '25 platser.')}` },
+            { id: 'hybrid', icon: MapPin, title: L('Hybrid', 'Hybrid'), desc: L('Online on 10–11 December, in person at MDU on 12 December. 50 places.', 'Digitalt 10–11 december, på plats på MDU 12 december. 50 platser.') },
+            { id: 'online', icon: Laptop, title: L('Fully online', 'Helt digitalt'), desc: L('Remote throughout the hackathon, 10–12 December. 25 places.', 'På distans under hela hackathonet, 10–12 december. 25 platser.') },
           ]}
         />
         <fieldset className="space-y-2">
