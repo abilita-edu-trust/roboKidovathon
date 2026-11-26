@@ -134,22 +134,22 @@ export const futureInnohackCard = (c: SiteConfig): PathwayData => ({
   tagline: bi('IDEAS TODAY. A BRIGHTER TOMORROW.', 'IDÉER I DAG. EN LJUSARE MORGONDAG.'),
   intro: [
     bi('An innovation programme with two tracks.', 'Ett innovationsprogram med två spår.'),
-    bi('Kid InnoHack: grades 3–9 bring their own idea.', 'Kid InnoHack: årskurs 3–9 kommer med en egen idé.'),
-    bi('Young InnoHack: gymnasium, university and professionals take on company challenges.', 'Young InnoHack: gymnasium, universitet och yrkesverksamma antar utmaningar från företag.'),
+    bi('Kid InnoHack: grades 3–9 in five teams of four, 5–12 December.', 'Kid InnoHack: årskurs 3–9 i fem lag med fyra barn, 5–12 december.'),
+    bi('Young InnoHack: gymnasium, university and professionals, three themes, hybrid or online, 10–12 December.', 'Young InnoHack: gymnasium, universitet och yrkesverksamma, tre teman, hybrid eller digitalt, 10–12 december.'),
   ],
   steps: [],
   callout: bi(
-    'Free participation. Final presentations for both tracks on **12 December 2026** at Växhuset, Västerås.',
-    'Gratis deltagande. Slutpresentationer för båda spåren den **12 december 2026** på Växhuset i Västerås.',
+    'Free participation. Final presentations for both tracks on **12 December 2026** at Mälardalen University, Västerås.',
+    'Gratis deltagande. Slutpresentationer för båda spåren den **12 december 2026** på Mälardalens universitet i Västerås.',
   ),
   cta: { label: bi('SEE THE STEPS', 'SE STEGEN'), href: targetToHref(`${c.nav.homeRoute}#journey-innohack`) },
   register: { label: bi('REGISTER', 'ANMÄL DIG'), href: targetToHref(c.nav.registerRoute, 'hackathon') },
 });
 
-/** The venues with Future InnoHack: MISV, then Young InnoHack's online kickoff and the shared final at Växhuset. */
+/** The venues with Future InnoHack: MISV, then Young InnoHack's online kickoff and the shared final at Mälardalen University. */
 const FUTURE_INNOHACK_VENUES: VenueData[] = [
-  { label: bi('Future InnoHack Final Venue', 'Finalplats för Future InnoHack'), name: bi('Växhuset'), detail: bi('Västerås · 12 December 2026', 'Västerås · 12 december 2026'), image: '', theme: 'hack' },
-  { label: bi('Young InnoHack Kickoff', 'Kickoff för Young InnoHack'), name: bi('Online', 'Digitalt'), detail: bi('10 December 2026, evening', '10 december 2026, kväll'), image: '', theme: 'hack' },
+  { label: bi('Future InnoHack Final Venue', 'Finalplats för Future InnoHack'), name: bi('Mälardalen University', 'Mälardalens universitet'), detail: bi('Västerås · 12 December 2026', 'Västerås · 12 december 2026'), image: '', theme: 'hack' },
+  { label: bi('Young InnoHack Kickoff', 'Kickoff för Young InnoHack'), name: bi('Online', 'Digitalt'), detail: bi('10 December 2026, 17:00–18:30', '10 december 2026 kl. 17.00–18.30'), image: '', theme: 'hack' },
 ];
 
 export const experienceDefaults = (c: SiteConfig): ExperienceData => {
@@ -173,7 +173,7 @@ const baseExperience = (c: SiteConfig): ExperienceData => ({
     venue: bi('MISV, Västerås'),
     cta: { label: bi('Categories and rules', 'Kategorier och regler'), href: targetToHref(`${c.nav.homeRoute}#teams-final-day`) },
   },
-  hackFinal: { date: bi('12 December 2026', '12 december 2026'), venue: bi('Växhuset, Västerås') },
+  hackFinal: { date: bi('12 December 2026', '12 december 2026'), venue: bi('Mälardalen University, Västerås', 'Mälardalens universitet, Västerås') },
   trackPanels: [
     { id: 'kid', icon: 'Users', description: bi('Your own idea for a problem you care about.', 'Din egen idé om ett problem du bryr dig om.') },
     { id: 'young', icon: 'GraduationCap', description: bi('Solve one of six company challenges, alone or in a team.', 'Lös en av sex utmaningar från företag, själv eller i lag.') },

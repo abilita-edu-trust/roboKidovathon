@@ -2492,7 +2492,7 @@ export const AdminIdeasCurationPage: React.FC<AdminIdeasCurationPageProps> = ({
                             <div className="font-headline font-bold text-slate-800">
                               Young Innovators Challenge
                             </div>
-                            <div className="text-slate-500">12 December 2026 Final · Växhuset, Västerås</div>
+                            <div className="text-slate-500">12 December 2026 Final · Mälardalen University, Västerås</div>
                           </div>
 
                           <div>

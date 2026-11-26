@@ -43,6 +43,8 @@ export interface SubmitResult {
   inviteCode?: string;
   inviteLink?: string;
   role?: 'individual' | 'captain' | 'member';
+  /** A line shown under the confirmation (Young InnoHack: on the waiting list). */
+  notice?: string;
 }
 
 /** An error whose message is written for the visitor (shown as it is, instead of "Something went wrong"). */

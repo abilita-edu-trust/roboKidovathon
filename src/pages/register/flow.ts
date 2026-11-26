@@ -2,8 +2,8 @@
 // fits the answers, then a review. The site's programmes (SiteConfig.intake.programmes)
 // decide which questions it asks; SiteConfig.intake.tabs decides which forms it accepts.
 // Future InnoHack (vfi and IBK: a hackathon programme with `tracks`) asks its track right after
-// the programme: Kid InnoHack (an idea for selection, guardians confirm) or Young InnoHack (an
-// idea for the public vote, the hackathon squad, or the mentor form for professionals).
+// the programme: Kid InnoHack (joining the programme, guardians confirm; or an idea for the public vote) or Young
+// InnoHack (an idea for the public vote, the hackathon squad, or the mentor form for professionals).
 // Once the Admin Panel publishes Young InnoHack's company challenges (path.challengeMode), taking part in Young
 // InnoHack is four steps: the challenge, on your own or in a team (create one or join one), your details, review.
 import type { Bilingual } from '../../context/SiteContext';
@@ -24,15 +24,16 @@ export type IntakeProgramTab =
   | 'community'
   | 'kid-innohack'
   | 'young-innohack'
+  | 'kid-submit-idea'
   | 'build-play';
 
 export const REGISTER_TABS: IntakeProgramTab[] = [
   'workshop', 'demo', 'association', 'competition', 'submit-idea', 'hackathon', 'volunteer', 'mentor', 'partner', 'community',
-  'kid-innohack', 'young-innohack', 'build-play',
+  'kid-innohack', 'young-innohack', 'kid-submit-idea', 'build-play',
 ];
 
 /** Links that only sites with Future InnoHack tracks accept. */
-export const TRACK_TABS: IntakeProgramTab[] = ['kid-innohack', 'young-innohack'];
+export const TRACK_TABS: IntakeProgramTab[] = ['kid-innohack', 'young-innohack', 'kid-submit-idea'];
 
 export type ProgrammeId = 'robo' | 'hack' | 'ideas' | 'community';
 export type RoleId = 'school' | 'team' | 'individual' | 'association' | 'member' | 'volunteer' | 'mentor' | 'partner';
@@ -66,8 +67,8 @@ export interface RegisterPath {
 /** Young InnoHack with published company challenges: asks how you take part and two choices instead of who you are. */
 export const youngChallenges = (path: RegisterPath) => path.programme === 'hack' && path.track === 'young' && !!path.challengeMode;
 
-/** A 1st and a 2nd choice, different from each other. */
-export const twoChoices = (path: RegisterPath) => !!path.first && !!path.second && path.first !== path.second;
+/** A 1st theme (or "open to any theme") and, if given, a different 2nd; someone joining a team keeps the team's. */
+export const twoChoices = (path: RegisterPath) => path.team === 'join' || (!!path.first && path.first !== path.second);
 
 /** A step-1 card: one programme of the site, with its own date and place. */
 export interface RegisterProgramme {
@@ -144,25 +145,26 @@ const HACK_INDIVIDUAL: Choice<RoleId> = {
   desc: bi('Come on your own; we help you find a team.', 'Kom ensam; vi hjälper dig att hitta ett lag.'),
 };
 
-/** Kid InnoHack: who sends the idea (each child's guardian confirms by email). */
+/** Kid InnoHack: who registers (each child's guardian confirms by email). The ids are the ones the database stores:
+ *  individual = a parent or guardian, school = a teacher, team = an existing team. */
 const KID_ROLE_CARDS: Record<'school' | 'team' | 'individual', Choice<RoleId>> = {
+  individual: {
+    id: 'individual',
+    icon: 'User',
+    title: bi('A parent or guardian', 'En förälder eller vårdnadshavare'),
+    desc: bi('Register your child, or up to four children.', 'Anmäl ditt barn, eller upp till fyra barn.'),
+  },
   school: {
     id: 'school',
     icon: 'School',
-    title: bi('A teacher, for my class', 'En lärare, för min klass'),
-    desc: bi('One idea per group of 1–4 pupils.', 'En idé per grupp med 1–4 elever.'),
+    title: bi('A teacher', 'En lärare'),
+    desc: bi('Register 1–4 pupils. The organisers form the teams.', 'Anmäl 1–4 elever. Arrangörerna bildar lagen.'),
   },
   team: {
     id: 'team',
     icon: 'Users',
-    title: bi('A team of friends', 'Ett gäng kompisar'),
-    desc: bi('2–4 children with one idea together.', '2–4 barn med en gemensam idé.'),
-  },
-  individual: {
-    id: 'individual',
-    icon: 'User',
-    title: bi('One child', 'Ett barn'),
-    desc: bi('Sent by a parent, guardian or teacher.', 'Skickas av en förälder, vårdnadshavare eller lärare.'),
+    title: bi('An existing team', 'Ett lag som redan finns'),
+    desc: bi('2–4 children who want to be in the same team.', '2–4 barn som vill vara i samma lag.'),
   },
 };
 
@@ -198,13 +200,14 @@ const ACTIVITY_CARDS: Record<ActivityId, Choice<ActivityId>> = {
     title: bi('Take part in the hackathon', 'Delta i hackathonet'),
     desc: bi('Register a team and build on the day.', 'Anmäl ett lag och bygg på plats.'),
   },
+  // Kid InnoHack's registration (the id is kept from the earlier idea form; no idea is asked any more).
   'kid-idea': {
     id: 'kid-idea',
     icon: 'Lightbulb',
-    title: bi('Send an idea to Kid InnoHack', 'Skicka en idé till Kid InnoHack'),
+    title: bi('Join Kid InnoHack', 'Delta i Kid InnoHack'),
     desc: bi(
-      'A problem you have noticed and how you would fix it, by 1 December 2026. Five ideas go on to mentoring and the final.',
-      'Ett problem du har sett och hur du skulle lösa det, senast 1 december 2026. Fem idéer går vidare till handledning och finalen.',
+      '5–12 December 2026. No idea needed: we form five teams of four and give each team a challenge. Register by 3 December.',
+      '5–12 december 2026. Ingen idé behövs: vi bildar fem lag med fyra barn och ger varje lag en utmaning. Anmäl senast 3 december.',
     ),
   },
   mentor: {
@@ -219,11 +222,11 @@ const ACTIVITY_CARDS: Record<ActivityId, Choice<ActivityId>> = {
 const CHALLENGE_CARD: Choice<ActivityId> = {
   id: 'participate',
   icon: 'Target',
-  title: bi('Take on a company challenge', 'Anta en utmaning från ett företag'),
-  desc: bi('On your own or in a team; you give two choices and the organisers match you.', 'Själv eller i lag; du gör två val och arrangörerna matchar dig.'),
+  title: bi('Join Young InnoHack', 'Delta i Young InnoHack'),
+  desc: bi('10–12 December 2026, hybrid or fully online. On your own or in a team; choose two themes. Register by 7 December.', '10–12 december 2026, hybrid eller helt digitalt. Själv eller i lag; välj två teman. Anmäl dig senast 7 december.'),
 };
 
-/** Young InnoHack's public idea (vfi and IBK) closes on 1 December 2026; other hackathons keep the plain card. */
+/** Kid and Young InnoHack's public idea (vfi and IBK) closes on 1 December 2026; other hackathons keep the plain card. */
 const YOUNG_IDEA_CARD: Choice<ActivityId> = {
   ...ACTIVITY_CARDS.idea,
   desc: bi(
@@ -270,7 +273,7 @@ export function roleChoices(programme: ProgrammeId | undefined, accepts: Accepts
   const ok = (r: RoleId) => !ROLE_TAB[r] || accepts(ROLE_TAB[r]!);
   const cards = roleCards(v2);
   if (programme === 'community') return (['member', 'volunteer', 'mentor', 'partner'] as RoleId[]).filter(ok).map((r) => cards[r]);
-  if (programme === 'hack' && track === 'kid') return [KID_ROLE_CARDS.school, KID_ROLE_CARDS.team, KID_ROLE_CARDS.individual];
+  if (programme === 'hack' && track === 'kid') return [KID_ROLE_CARDS.individual, KID_ROLE_CARDS.school, KID_ROLE_CARDS.team];
   if (programme === 'hack') return [cards.school, cards.team, hackIndividual(v2)];
   return (['school', 'team', 'individual', 'association'] as RoleId[]).filter(ok).map((r) => cards[r]);
 }
@@ -287,19 +290,19 @@ const ACTIVITY_TAB: Record<ActivityId, IntakeProgramTab> = {
 };
 
 /**
- * The pathway cards. Kid InnoHack has one (its idea for selection); Young InnoHack keeps the public idea and the
- * hackathon squad, and individuals can also choose the mentor form; other hackathons keep idea and squad.
+ * The pathway cards. Kid InnoHack: joining the programme, or an idea for the public vote; Young InnoHack keeps the
+ * public idea and the hackathon squad, and individuals can also choose the mentor form; other hackathons keep idea and squad.
  */
 export function activityChoices(programme: ProgrammeId | undefined, accepts: Accepts, path: RegisterPath = {}): Choice<ActivityId>[] {
   // A parent can also sign up for Build & Play (sites that offer it).
   let ids: ActivityId[] = path.role === 'individual' ? ['demo', 'workshop', 'competition', 'build-play'] : ['demo', 'workshop', 'competition'];
-  if (programme === 'hack' && path.track === 'kid') ids = ['kid-idea'];
+  if (programme === 'hack' && path.track === 'kid') ids = ['kid-idea', 'idea'];
   else if (youngChallenges(path)) ids = ['participate', 'idea', 'mentor'];
   else if (programme === 'hack' && path.track === 'young') ids = path.role === 'individual' ? ['idea', 'participate', 'mentor'] : ['idea', 'participate'];
   else if (programme === 'hack') ids = ['idea', 'participate'];
   return ids
     .filter((a) => accepts(ACTIVITY_TAB[a]))
-    .map((a) => (a === 'idea' && path.track === 'young' ? YOUNG_IDEA_CARD : a === 'participate' && youngChallenges(path) ? CHALLENGE_CARD : activityCards(path.v2)[a]));
+    .map((a) => (a === 'idea' && path.track ? YOUNG_IDEA_CARD : a === 'participate' && youngChallenges(path) ? CHALLENGE_CARD : activityCards(path.v2)[a]));
 }
 
 /** The area cards under the pathway: idea areas, or the hackathon's challenge areas. Young InnoHack's squad
@@ -354,7 +357,7 @@ export function isAnswered(kind: StepKind, path: RegisterPath): boolean {
   if (kind === 'activity') {
     if (!path.activity) return false;
     if (path.programme !== 'hack') return true;
-    if (path.track === 'kid') return path.activity === 'kid-idea';
+    if (path.track === 'kid') return path.activity === 'kid-idea' || (path.activity === 'idea' && !!path.theme);
     if (path.activity === 'mentor') return path.track === 'young';
     if (path.activity === 'participate' && path.track === 'young') return true;
     return path.activity !== 'kid-idea' && !!path.theme;
@@ -380,7 +383,7 @@ export function stepLabel(kind: StepKind, path: RegisterPath): Bilingual {
     case 'team':
       return bi('How you take part', 'Hur du deltar');
     case 'choices':
-      return bi('Your two choices', 'Dina två val');
+      return bi('Your themes', 'Dina teman');
     case 'form':
       return bi('Your details', 'Dina uppgifter');
     default:
@@ -407,7 +410,7 @@ export function formFor(path: RegisterPath): FormId | null {
     if (activity === 'kid-idea') return path.track === 'kid' ? 'kid' : null;
     if (activity === 'mentor') return path.track === 'young' ? 'mentor' : null;
     if (activity === 'participate' && path.track === 'young') return 'squad';
-    if (path.track === 'kid') return null;
+    if (path.track === 'kid') return activity === 'idea' && path.theme ? 'idea' : null;
     return path.theme ? (activity === 'idea' ? 'idea' : 'squad') : null;
   }
   if (activity === 'competition') return 'competition';
@@ -439,6 +442,9 @@ export function pathForTab(tab: IntakeProgramTab, programmes: RegisterProgramme[
     case 'submit-idea':
       if (!programmes.some((p) => p.id === 'hack')) return { programme: 'ideas' };
       return tracked ? { programme: 'hack', track: 'young', activity: 'idea' } : { programme: 'hack', activity: 'idea' };
+    case 'kid-submit-idea':
+      if (!programmes.some((p) => p.id === 'hack')) return { programme: 'ideas' };
+      return tracked ? { programme: 'hack', track: 'kid', activity: 'idea' } : { programme: 'hack', activity: 'idea' };
     case 'hackathon':
       return { programme: 'hack', activity: 'participate' };
     case 'community':
@@ -465,7 +471,7 @@ export function tabForPath(path: RegisterPath): IntakeProgramTab | null {
     case 'buildplay':
       return 'build-play';
     case 'idea':
-      return 'submit-idea';
+      return path.track === 'kid' ? 'kid-submit-idea' : 'submit-idea';
     default:
       return form;
   }

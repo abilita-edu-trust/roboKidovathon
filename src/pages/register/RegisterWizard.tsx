@@ -22,7 +22,7 @@ import { useSite, type Bilingual } from '../../context/SiteContext';
 import { useT } from '../../content/useT';
 import { pick } from '../../content/core';
 import { useInnohackTracks } from '../../content/innohackContext';
-import { ideasClosed } from '../../content/sections/innohack';
+import { ideasClosed, kidRegistrationClosed } from '../../content/sections/innohack';
 import type { ProgrammeTrack } from '../../content/sections/audienceJourneys';
 import {
   TRACK_TABS,
@@ -47,8 +47,8 @@ import {
 } from './flow';
 import { FORMS } from './forms';
 import { UserFacingError, type FormCtx, type SubmitResult, type SummaryRow, type Values } from './ui';
-import { challengeName, lookupTeamCode, normaliseCode, useYoungState } from '../../content/youngChallenges';
-import { ChallengesClosed, ChoicesStep, TeamStep, choicesError, teamStepError } from './YoungSteps';
+import { ANY_THEME, lookupTeamCode, normaliseCode, useYoungState, youngRegistrationClosed } from '../../content/youngChallenges';
+import { ChallengesClosed, ChoicesStep, TeamStep, choicesError, teamStepError, themeChoiceName } from './YoungSteps';
 import { AccentContext, ACCENTS, ChoiceGroup, type Accent, type ChoiceItem } from './ChoiceCards';
 import { ClassicChoiceCard } from './ClassicChoiceCard';
 import { registerIcon } from './icons';
@@ -194,7 +194,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
     lookupTeamCode(joinParam)
       .then((found) => {
         const next: RegisterPath = found
-          ? { ...base, activity: 'participate', team: 'join', first: found.first_choice, second: found.second_choice }
+          ? { ...base, activity: 'participate', team: 'join', first: found.open_to_any || !found.first_choice ? ANY_THEME : found.first_choice, second: found.second_choice ?? undefined }
           : { ...base, activity: 'participate', team: 'join' };
         setPath(next);
         setValues((prev) => ({
@@ -227,8 +227,8 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
   const accent = accentOf(path.programme);
   // Kid InnoHack while it is closed: every step after the track explains that instead of asking.
   const kidBlocked = path.track === 'kid' && !kidOpen;
-  // Young InnoHack's public ideas close with Kid's, on 1 December 2026 (its hackathon and mentor forms stay open).
-  const youngIdeaClosed = path.programme === 'hack' && path.track === 'young' && path.activity === 'idea' && ideasClosed();
+  // Public ideas (Kid and Young InnoHack's separate idea activity) close on 1 December 2026; the rest stays as it is.
+  const youngIdeaClosed = path.programme === 'hack' && !!path.track && path.activity === 'idea' && ideasClosed();
   const shownTrack = trackOf(path.track);
   // Build & Play is on the RoboKidovation final's day and at its venue (5 December 2026, MISV).
   const buildPlay = path.programme === 'robo' && path.activity === 'build-play';
@@ -319,6 +319,8 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
   const byChallenge = (id?: string) => young.challenges.find((c) => c.id === id);
   // Published challenges but the switch off (or fewer than two): Young InnoHack's taking part is closed.
   const youngClosed = youngChallenges(path) && path.activity === 'participate' && !young.registrationOpen;
+  // After 7 December 2026 the closed message says so instead of "opening soon".
+  const youngDeadlinePassed = youngRegistrationClosed() || (!!young.closeAt && Date.now() > Date.parse(young.closeAt));
 
   const startOver = () => {
     setPath(basePath);
@@ -468,15 +470,15 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
         return {
           title: L('Kid or Young InnoHack?', 'Kid eller Young InnoHack?'),
           hint: L(
-            'Kid InnoHack is for grades 3–9 with an idea of their own. Young InnoHack is for gymnasium, university and working life.',
-            'Kid InnoHack är för årskurs 3–9 med en egen idé. Young InnoHack är för gymnasiet, universitetet och arbetslivet.',
+            'Kid InnoHack is for grades 3–9: five teams of four, no idea needed. Young InnoHack is for gymnasium, university and working life.',
+            'Kid InnoHack är för årskurs 3–9: fem lag med fyra barn, ingen idé behövs. Young InnoHack är för gymnasiet, universitetet och arbetslivet.',
           ),
         };
       case 'role':
         if (p === 'hack' && path.track === 'kid')
           return {
-            title: L('Who is sending the idea?', 'Vem skickar idén?'),
-            hint: L('Each child’s parent or guardian confirms by email afterwards.', 'Varje barns förälder eller vårdnadshavare bekräftar via e-post efteråt.'),
+            title: L('Who is registering?', 'Vem anmäler?'),
+            hint: L('One child or up to four. Each child’s parent or guardian confirms by email afterwards.', 'Ett barn eller upp till fyra. Varje barns förälder eller vårdnadshavare bekräftar via e-post efteråt.'),
           };
         if (p === 'community')
           return {
@@ -493,13 +495,13 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
       case 'activity':
         if (p === 'hack' && path.track === 'kid')
           return {
-            title: L('Your idea', 'Din idé'),
-            hint: L('Kid InnoHack has one way in: an idea for the selection on 5 December 2026.', 'Kid InnoHack har en väg in: en idé till urvalet den 5 december 2026.'),
+            title: L('Join, or share an idea?', 'Delta, eller dela en idé?'),
+            hint: L('Join the programme (5–12 December 2026), or share an idea for the public vote. They are separate.', 'Delta i programmet (5–12 december 2026), eller dela en idé till den publika omröstningen. De är separata.'),
           };
         if (youngChallenges(path))
           return {
             title: L('What would you like to do?', 'Vad vill du göra?'),
-            hint: L('Take on a company challenge, put an idea to the public vote, or mentor the teams.', 'Anta en utmaning från ett företag, låt alla rösta på din idé eller bli mentor för lagen.'),
+            hint: L('Join the hackathon (10–12 December 2026), put an idea to the public vote, or mentor the teams. They are separate.', 'Delta i hackathonet (10–12 december 2026), låt alla rösta på din idé eller bli mentor för lagen. De är separata.'),
           };
         if (p === 'hack' && path.track === 'young')
           return {
@@ -524,24 +526,26 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
       case 'team':
         return youngClosed
           ? {
-              title: L('Registration opening soon', 'Anmälan öppnar snart'),
-              hint: L(
-                'These are the company challenges for Young InnoHack. When registration opens, you choose two of them, on your own or as a team.',
-                'Här är företagens utmaningar i Young InnoHack. När anmälan öppnar väljer du två av dem, själv eller som lag.',
-              ),
+              title: youngDeadlinePassed ? L('Registration closed', 'Anmälan är stängd') : L('Registration opening soon', 'Anmälan öppnar snart'),
+              hint: youngDeadlinePassed
+                ? L('Registration for Young InnoHack closed on 7 December 2026.', 'Anmälan till Young InnoHack stängde den 7 december 2026.')
+                : L(
+                    'These are the three themes for Young InnoHack. When registration opens, you choose two of them, on your own or as a team.',
+                    'Här är de tre temana i Young InnoHack. När anmälan öppnar väljer du två av dem, själv eller som lag.',
+                  ),
             }
           : {
               title: L('How will you take part?', 'Hur vill du delta?'),
-              hint: L('You can be in one team. A team chooses its challenges together.', 'Du kan vara med i ett lag. Laget väljer sina utmaningar tillsammans.'),
+              hint: L('Register individually and get allocated to a team, create a team, or join an existing team. You can be in one team.', 'Anmäl dig själv och bli placerad i ett lag, skapa ett lag eller gå med i ett befintligt lag. Du kan vara med i ett lag.'),
             };
       case 'choices':
         return path.team === 'join'
           ? { title: L('Your team’s choices', 'Lagets val'), hint: '' }
           : {
-              title: L('Choose two challenges', 'Välj två utmaningar'),
+              title: L('Choose your themes', 'Välj dina teman'),
               hint: L(
-                'Pick a first and a second choice. The organisers match every team with a challenge, using everyone’s choices and the places each company has. We can’t promise your first choice.',
-                'Välj ett förstahands- och ett andrahandsval. Arrangörerna matchar varje lag med en utmaning utifrån allas val och hur många platser varje företag har. Vi kan inte lova ditt förstahandsval.',
+                'A first theme is required and a second is optional, or choose “Open to any theme”. The organisers place every team in a theme; the detailed problem statements come at the kickoff. We can’t promise your first choice.',
+                'Ett första tema krävs och ett andra är valfritt, eller välj ”Öppen för alla teman”. Arrangörerna placerar varje lag i ett tema; de detaljerade problemen presenteras på kickoffen. Vi kan inte lova ditt förstahandsval.',
               ),
             };
       case 'theme':
@@ -613,9 +617,9 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
       ...(formId === 'young'
         ? [
             [L('Taking part', 'Deltar'), T(teamAnswer())] as SummaryRow,
-            [L('1st choice', '1:a val'), challengeName(byChallenge(path.first), T)] as SummaryRow,
-            [L('2nd choice', '2:a val'), challengeName(byChallenge(path.second), T)] as SummaryRow,
-            [L('Final challenge', 'Slutlig utmaning'), L('Decided by the organisers', 'Bestäms av arrangörerna')] as SummaryRow,
+            [L('1st choice', '1:a val'), themeChoiceName(path.first, 1, byChallenge, T, L)] as SummaryRow,
+            [L('2nd choice', '2:a val'), path.first === ANY_THEME ? '' : themeChoiceName(path.second, 2, byChallenge, T, L)] as SummaryRow,
+            [L('Final theme', 'Slutligt tema'), L('Decided by the organisers', 'Bestäms av arrangörerna')] as SummaryRow,
           ]
         : []),
     ];
@@ -736,14 +740,14 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
             {T(trackOf('kid')?.closedMessage ?? { en: 'Kid InnoHack opens soon.', sv: 'Kid InnoHack öppnar snart.' })}
           </p>
           <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
-            {ideasClosed()
+            {kidRegistrationClosed()
               ? L(
-                  'Kid InnoHack took ideas until 1 December 2026. Young InnoHack is open now.',
-                  'Kid InnoHack tog emot idéer till och med den 1 december 2026. Young InnoHack är öppet nu.',
+                  'Kid InnoHack registration closed on 3 December 2026. The programme runs 5–12 December 2026.',
+                  'Anmälan till Kid InnoHack stängde den 3 december 2026. Programmet pågår 5–12 december 2026.',
                 )
               : L(
-                  'Kid InnoHack registration opens once guardian confirmation is ready. Young InnoHack is open now.',
-                  'Anmälan till Kid InnoHack öppnar när vårdnadshavarnas bekräftelse är klar. Young InnoHack är öppet nu.',
+                  'Kid InnoHack registration opens soon. The programme runs 5–12 December 2026.',
+                  'Anmälan till Kid InnoHack öppnar snart. Programmet pågår 5–12 december 2026.',
                 )}
           </p>
           <button type="button" onClick={() => goToKind('track')} className={outlineBtn}>
@@ -866,7 +870,9 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
               {L('Idea submissions closed on 1 December 2026', 'Idéinlämningen stängde den 1 december 2026')}
             </p>
             <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
-              {L('You can still register for the Young InnoHack hackathon.', 'Du kan fortfarande anmäla dig till hackathonet Young InnoHack.')}
+              {path.track === 'kid'
+                ? L('You can still register for Kid InnoHack until 3 December 2026.', 'Du kan fortfarande anmäla dig till Kid InnoHack till och med 3 december 2026.')
+                : L('You can still register for the Young InnoHack hackathon.', 'Du kan fortfarande anmäla dig till hackathonet Young InnoHack.')}
             </p>
             <button type="button" onClick={() => goToKind('activity')} className={outlineBtn}>
               <ArrowLeft className="w-3.5 h-3.5" />
@@ -1095,6 +1101,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                   )}
                   <h2 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#0A1930]">{doneCopy.title}</h2>
                   <p className="mt-2 text-xs sm:text-sm text-slate-600 max-w-lg leading-relaxed">{doneCopy.body}</p>
+                  {done.notice && <p className="mt-3 px-4 py-3 bg-[#FFF8E1] border border-[#F3DE9A] text-sm font-semibold text-[#0A1930] max-w-lg">{done.notice}</p>}
                   {done.id && (
                     <div className="my-6 p-4 bg-slate-50 border border-slate-200 w-full max-w-md text-center">
                       <span className="text-xs font-mono-code text-slate-500 uppercase block mb-1">{L('Your reference', 'Ditt referensnummer')}</span>
@@ -1107,7 +1114,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                           : formId === 'kid'
                           ? L('Next: each guardian confirms by email', 'Nästa steg: varje vårdnadshavare bekräftar via e-post')
                           : formId === 'young'
-                            ? L('Next: the organisers match you with a challenge', 'Nästa steg: arrangörerna matchar dig med en utmaning')
+                            ? L('Next: the organisers place you in a theme and a team', 'Nästa steg: arrangörerna placerar dig i ett tema och ett lag')
                             : L('We’ll look it over and get back to you', 'Vi går igenom den och hör av oss')}
                       </span>
                     </div>

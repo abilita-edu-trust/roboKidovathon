@@ -35,6 +35,40 @@ export interface TrackScheduleItem {
   detail: Bi;
 }
 
+/** A short fact shown as a chip above a track's programme (e.g. "Places · Up to 20 children"). */
+export interface TrackFact {
+  label: Bi;
+  value: Bi;
+}
+
+/** One session of a track's programme (Kid InnoHack): when, where, and what happens. */
+export interface TrackSession {
+  /** Stable key, also stored with each child's availability (s1…s5). */
+  key: string;
+  date: Bi;
+  weekday: Bi;
+  time: Bi;
+  place: Bi;
+  online: boolean;
+  title: Bi;
+  detail: Bi;
+}
+
+/** One letter of NABC (Need, Approach, Benefits, Competition), explained for children with an example. */
+export interface NabcPart {
+  letter: string;
+  word: Bi;
+  question: Bi;
+  example: Bi;
+}
+
+export interface TrackNabc {
+  heading: Bi;
+  intro: Bi;
+  exampleLabel: Bi;
+  parts: NabcPart[];
+}
+
 /** A company's problem statement (Young InnoHack); shown only when switched on. */
 export interface CompanyChallenge {
   visible: boolean;
@@ -70,6 +104,12 @@ export interface ProgrammeTrack {
   /** Shown while no challenge is switched on. */
   challengesNote: Bi;
   challenges: CompanyChallenge[];
+  /** Optional programme layout (Kid InnoHack): key facts, a visual timeline of sessions and NABC. A track saved in the
+   *  Site CMS before these existed gets them blank; trackProgramme() then falls back to the built-in programme. */
+  facts?: TrackFact[];
+  sessionsHeading?: Bi;
+  sessions?: TrackSession[];
+  nabc?: TrackNabc;
 }
 
 export interface ProgrammeJourney {

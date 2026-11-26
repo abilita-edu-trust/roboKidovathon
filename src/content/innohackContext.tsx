@@ -6,7 +6,7 @@ import { useSite, type SiteConfig } from '../context/SiteContext';
 import type { SectionDoc } from './document';
 import type { JourneyData } from './sections/journey';
 import { programmeTracks, visibleChallenges, type CompanyChallenge, type ProgrammeTrack } from './sections/audienceJourneys';
-import { ideasClosed, innohackTracks, type InnohackTrackId } from './sections/innohack';
+import { innohackTracks, kidRegistrationClosed, type InnohackTrackId } from './sections/innohack';
 import { targetToHref } from './sections/frame';
 import { useYoungState, type YoungChallenge } from './youngChallenges';
 
@@ -23,12 +23,12 @@ export function innohackTracksFrom(sections: SectionDoc[], now: number = Date.no
   return [];
 }
 
-/** After the idea deadline (1 December 2026) Kid InnoHack takes no more ideas: closed, with that said. */
+/** After the registration deadline (3 December 2026) Kid InnoHack takes no more registrations: closed, with that said. */
 export const closeKidAfterDeadline = (tracks: ProgrammeTrack[], now: number = Date.now()): ProgrammeTrack[] =>
-  ideasClosed(now)
+  kidRegistrationClosed(now)
     ? tracks.map((t) =>
         t.id === 'kid'
-          ? { ...t, registrationOpen: false, closedMessage: { en: 'Idea submissions closed on 1 December 2026', sv: 'Idéinlämningen stängde den 1 december 2026' } }
+          ? { ...t, registrationOpen: false, closedMessage: { en: 'Registration closed on 3 December 2026', sv: 'Anmälan stängde den 3 december 2026' } }
           : t,
       )
     : tracks;

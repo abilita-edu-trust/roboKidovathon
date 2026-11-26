@@ -23,7 +23,7 @@ export const VenueBanner: React.FC = () => {
           <span className="text-xs sm:text-sm font-mono-code uppercase">Västerås, Sweden · 5 December 2026</span>
         </div>
         <p className="text-sm text-slate-600 font-light leading-relaxed max-w-2xl pt-1">
-          The Robo-Sprint City Final is held at Mälardalen International School (MISV) on 5 December 2026. The Future InnoHack final presentations (Kid InnoHack and Young InnoHack) are on 12 December 2026 at Växhuset, Västerås.
+          The Robo-Sprint City Final is held at Mälardalen International School (MISV) on 5 December 2026. The Future InnoHack final presentations (Kid InnoHack and Young InnoHack) are on 12 December 2026 at Mälardalen University, Västerås.
         </p>
       </div>
     </div>

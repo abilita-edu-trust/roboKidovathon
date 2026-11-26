@@ -74,10 +74,10 @@ export const CLASSIC_ACTIVITY_CARDS: Record<ActivityId, Choice<ActivityId>> = {
   'kid-idea': {
     id: 'kid-idea',
     icon: '💡',
-    title: bi('Submit your idea for Kid InnoHack', 'Skicka in din idé till Kid InnoHack'),
+    title: bi('Join Kid InnoHack', 'Delta i Kid InnoHack'),
     desc: bi(
-      'Describe a problem and how you would solve it, by 1 December 2026. Five ideas are selected for mentoring and the final.',
-      'Beskriv ett problem och hur du skulle lösa det, senast 1 december 2026. Fem idéer väljs ut till handledning och finalen.',
+      '5–12 December 2026. No idea needed: we form five teams of four and give each team a challenge. Register by 3 December.',
+      '5–12 december 2026. Ingen idé behövs: vi bildar fem lag med fyra barn och ger varje lag en utmaning. Anmäl senast 3 december.',
     ),
   },
   mentor: {

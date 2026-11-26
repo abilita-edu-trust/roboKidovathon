@@ -1,19 +1,56 @@
-// Young InnoHack with company challenges (vfi and IBK), step 3: about you. How you take part (on your own, a new team
-// or one you join) and the two challenge choices (a team's when joining it) come from the two steps before;
-// submit_fut_inno_young_registration checks them all again, keeps one registration per email and returns a new
-// team's invite code to its captain. Organisers allocate the final challenge later.
+// Young InnoHack (vfi and IBK), step 3: about you. How you take part (on your own, a new team or one you join) and the
+// two theme choices (a team's when joining it) come from the two steps before; here: hybrid or fully online, the
+// sessions you can attend, and a parent or guardian for anyone under 18 (who confirms by email).
+// submit_fut_inno_young_registration checks them all again, keeps one registration per email and returns a new team's
+// invite code to its captain. Organisers allocate the final theme later.
 import React from 'react';
-import { UserRound } from 'lucide-react';
+import { CalendarDays, Laptop, MapPin, ShieldCheck, UserRound } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
-import { forgetYoungChallenges, formatCode } from '../../../content/youngChallenges';
+import { ANY_THEME, forgetYoungChallenges, formatCode } from '../../../content/youngChallenges';
 import { kidSiteKey } from './kid';
 import { SKILL_OPTIONS, YOUNG_CATEGORIES } from './squad';
+import { ChoiceGroup } from '../ChoiceCards';
 import {
-  Chips, Grid, Section, TextArea, TextField, UserFacingError, chipLabels, rows, str,
-  type FieldsProps, type FormCtx, type FormDef, type Values,
+  Chips, Grid, Note, Section, TextArea, TextField, UserFacingError, chipLabels, rows, str,
+  type ChipOption, type FieldsProps, type FormCtx, type FormDef, type Values,
 } from '../ui';
 
 const PARTICIPATION = { individual: 'individual', create: 'create-team', join: 'join-team' } as const;
+
+/** Young InnoHack's three sessions (keys stored with each registration's availability). */
+export const YOUNG_SESSION_KEYS = ['y1', 'y2', 'y3'] as const;
+export type YoungSessionKey = (typeof YOUNG_SESSION_KEYS)[number];
+export const YOUNG_SESSIONS: Record<YoungSessionKey, { en: string; sv: string; where: { en: string; sv: string } }> = {
+  y1: { en: '10 December · Kickoff, 17:00–18:30', sv: '10 december · Kickoff, kl. 17.00–18.30', where: { en: 'online', sv: 'digitalt' } },
+  y2: { en: '11 December · Flexible teamwork with online checkpoints', sv: '11 december · Flexibelt lagarbete med digitala avstämningar', where: { en: 'online', sv: 'digitalt' } },
+  y3: { en: '12 December · Finale, 09:00–17:00', sv: '12 december · Final, kl. 09.00–17.00', where: { en: 'at MDU (hybrid) or online', sv: 'på MDU (hybrid) eller digitalt' } },
+};
+const youngSessions = (v: Values): YoungSessionKey[] =>
+  (Array.isArray(v.youngSessions) ? v.youngSessions : []).filter((k: string): k is YoungSessionKey => (YOUNG_SESSION_KEYS as readonly string[]).includes(k));
+const UNDER_18: ChipOption[] = [
+  { value: 'no', en: 'No, 18 or older', sv: 'Nej, 18 år eller äldre' },
+  { value: 'yes', en: 'Yes, under 18', sv: 'Ja, under 18 år' },
+];
+const ATTENDANCE = (L: FormCtx['L']) => ({
+  hybrid: L('Hybrid: online on 10 and 11 December, in person at MDU on 12 December', 'Hybrid: digitalt 10 och 11 december, på plats på MDU 12 december'),
+  online: L('Fully online: all three days, including the finale', 'Helt digitalt: alla tre dagarna, även finalen'),
+});
+
+/** What stops the form from going to review, in the visitor's words; '' when it is complete. */
+export function youngProblem(v: Values, L: FormCtx['L']): string {
+  if (!YOUNG_CATEGORIES.some((c) => c.value === v.category))
+    return L('Tell us whether you’re at gymnasium, at university or working.', 'Berätta om du går på gymnasiet, pluggar på universitetet eller jobbar.');
+  if (v.attendance !== 'hybrid' && v.attendance !== 'online') return L('Choose hybrid or fully online.', 'Välj hybrid eller helt digitalt.');
+  if (!youngSessions(v).length) return L('Tick the sessions you can attend.', 'Kryssa i vilka träffar du kan vara med på.');
+  if (v.under18 !== 'yes' && v.under18 !== 'no') return L('Tell us whether you’ll be under 18 on 10 December 2026.', 'Berätta om du är under 18 år den 10 december 2026.');
+  if (v.under18 === 'yes') {
+    const g = str(v.guardianEmail).toLowerCase();
+    if (!str(v.guardianName) || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(g))
+      return L('Add your parent or guardian’s name and email.', 'Fyll i din förälders eller vårdnadshavares namn och e-post.');
+    if (g === str(v.email).toLowerCase()) return L('Use your parent or guardian’s own email, not yours.', 'Använd din förälders eller vårdnadshavares egen e-post, inte din.');
+  }
+  return '';
+}
 
 /** The payload for submit_fut_inno_young_registration. */
 export function youngPayload(v: Values, ctx: FormCtx): Record<string, unknown> {
@@ -22,9 +59,13 @@ export function youngPayload(v: Values, ctx: FormCtx): Record<string, unknown> {
     site: kidSiteKey(ctx),
     language: ctx.language,
     participation: PARTICIPATION[team],
-    // A team's choices are the team's: the database ignores these for someone joining it.
-    first_choice_id: team === 'join' ? null : ctx.path.first,
-    second_choice_id: team === 'join' ? null : ctx.path.second,
+    attendance: v.attendance === 'online' ? 'online' : v.attendance === 'hybrid' ? 'hybrid' : null,
+    availability: Object.fromEntries(YOUNG_SESSION_KEYS.map((k) => [k, youngSessions(v).includes(k)])),
+    // A team's themes are the team's: the database ignores these for someone joining it. "Open to any theme" sends no
+    // themes; the 2nd is optional.
+    open_to_any: team !== 'join' && ctx.path.first === ANY_THEME,
+    first_choice_id: team === 'join' || ctx.path.first === ANY_THEME ? null : ctx.path.first ?? null,
+    second_choice_id: team === 'join' || ctx.path.first === ANY_THEME ? null : ctx.path.second ?? null,
     team:
       team === 'create'
         ? { name: str(v.teamName), listed: !!v.teamListed }
@@ -39,7 +80,9 @@ export function youngPayload(v: Values, ctx: FormCtx): Record<string, unknown> {
       organisation: str(v.organisation),
       skills: Array.isArray(v.skills) ? v.skills : [],
       experience: str(v.experience),
+      under_18: v.under18 === 'yes' ? true : v.under18 === 'no' ? false : null,
     },
+    guardian: v.under18 === 'yes' ? { name: str(v.guardianName), email: str(v.guardianEmail), phone: str(v.guardianPhone) } : null,
     consent: { accurate: !!v.consentAgreed, privacy: !!v.gdprAgreed },
   };
 }
@@ -59,9 +102,17 @@ export function youngError(hint: string, L: FormCtx['L']): string {
     case 'team_not_found':
       return L('We can’t find that team. Ask your captain to check the code.', 'Vi hittar inte laget. Be din lagkapten kontrollera koden.');
     case 'invalid_choice':
-      return L('One of your choices isn’t available any more. Go back and choose again.', 'Ett av dina val finns inte längre. Gå tillbaka och välj igen.');
+      return L('One of your themes isn’t available any more. Go back and choose again.', 'Ett av dina teman finns inte längre. Gå tillbaka och välj igen.');
     case 'closed':
-      return L('Registration for the company challenges is closed.', 'Anmälan till företagens utmaningar är stängd.');
+      return L('Registration for Young InnoHack is closed.', 'Anmälan till Young InnoHack är stängd.');
+    case 'hybrid_full':
+      return L('All 50 on-campus places are taken. You can still take part fully online.', 'Alla 50 platser på campus är tagna. Du kan fortfarande delta helt digitalt.');
+    case 'online_full':
+      return L('All 25 online places are taken. You can still take part in the hybrid format.', 'Alla 25 digitala platser är tagna. Du kan fortfarande delta i hybridformatet.');
+    case 'teams_full':
+      return L('All 15 teams have been started. Join a team with its code, or register on your own.', 'Alla 15 lag är startade. Gå med i ett lag med dess kod, eller anmäl dig själv.');
+    case 'guardian':
+      return L('Under 18, we need your parent or guardian’s name and their own email.', 'Under 18 år behöver vi din förälders eller vårdnadshavares namn och egen e-post.');
     case 'rate_limited':
       return L('Too many tries from this network. Please try again in an hour.', 'För många försök från det här nätverket. Försök igen om en timme.');
     default:
@@ -84,9 +135,77 @@ const YoungFields: React.FC<FieldsProps> = ({ v, set, ctx }) => {
         <Chips k="skills" v={v} set={set} lang={lang} multi label={L('What you’re good at (optional)', 'Vad du är bra på (valfritt)')} options={SKILL_OPTIONS} />
         <TextArea k="experience" v={v} set={set} rows={2} label={L('Anything we should know? (optional)', 'Något vi bör veta? (valfritt)')} />
       </Section>
+      <Section title={L('How you take part', 'Hur du deltar')} icon={CalendarDays} green={false}>
+        <ChoiceGroup
+          label={L('Hybrid or fully online *', 'Hybrid eller helt digitalt *')}
+          accent="hack"
+          columns={2}
+          value={typeof v.attendance === 'string' ? v.attendance : undefined}
+          onChoose={(id) => set('attendance', id)}
+          items={[
+            { id: 'hybrid', icon: MapPin, title: L('Hybrid · 50 places', 'Hybrid · 50 platser'), desc: L('10 December online · 11 December flexible teamwork with online checkpoints · 12 December in person at MDU, Västerås.', '10 december digitalt · 11 december flexibelt lagarbete med digitala avstämningar · 12 december på plats på MDU, Västerås.') },
+            { id: 'online', icon: Laptop, title: L('Fully online · 25 places', 'Helt digitalt · 25 platser'), desc: L('All three days online, including the finale on 12 December.', 'Alla tre dagarna digitalt, även finalen 12 december.') },
+          ]}
+        />
+        <p className="text-sm text-slate-600">
+          {L('When a way of taking part is full, you join its waiting list and we email you if a place opens.', 'När ett sätt att delta är fullt hamnar du på dess väntelista, och vi mejlar dig om en plats blir ledig.')}
+        </p>
+        <fieldset className="space-y-2">
+          <legend className="block text-[15px] font-semibold text-[#0A1930] mb-1.5">{L('Sessions you can attend', 'Träffar du kan vara med på')} *</legend>
+          <div className="flex flex-wrap gap-2">
+            {YOUNG_SESSION_KEYS.map((key) => {
+              const on = youngSessions(v).includes(key);
+              const s = YOUNG_SESSIONS[key];
+              return (
+                <label
+                  key={key}
+                  className={`inline-flex items-center gap-2 min-h-[40px] px-3 py-2 border-2 text-sm cursor-pointer select-none ${
+                    on ? 'border-[#006AA7] bg-[#EEF5FC] text-[#013A63] font-semibold' : 'border-[#E1E7EF] bg-white text-slate-700 hover:border-slate-400'
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={on}
+                    onChange={() => set('youngSessions', YOUNG_SESSION_KEYS.filter((k) => (k === key ? !on : youngSessions(v).includes(k))))}
+                    className="w-4 h-4 accent-[#006AA7]"
+                  />
+                  {L(s.en, s.sv)} · {L(s.where.en, s.where.sv)}
+                </label>
+              );
+            })}
+          </div>
+        </fieldset>
+      </Section>
+      <Section title={L('Age', 'Ålder')} icon={ShieldCheck} green={false}>
+        <Chips k="under18" v={v} set={set} lang={lang} required label={L('Will you be under 18 on 10 December 2026?', 'Är du under 18 år den 10 december 2026?')} options={UNDER_18} />
+        {v.under18 === 'yes' && (
+          <>
+            <Note>
+              {L(
+                'Your parent or guardian gets an email with a link to confirm that you may take part, by 10 December 2026 at 12:00 Swedish time.',
+                'Din förälder eller vårdnadshavare får ett mejl med en länk för att bekräfta att du får delta, senast den 10 december 2026 kl. 12.00 svensk tid.',
+              )}
+            </Note>
+            <Grid>
+              <TextField k="guardianName" v={v} set={set} required maxLength={120} label={L('Parent or guardian’s name', 'Förälderns eller vårdnadshavarens namn')} />
+              <TextField k="guardianEmail" v={v} set={set} type="email" required maxLength={254} label={L('Parent or guardian’s email', 'Förälderns eller vårdnadshavarens e-post')} />
+              <TextField k="guardianPhone" v={v} set={set} type="tel" maxLength={40} label={L('Parent or guardian’s phone (optional)', 'Förälderns eller vårdnadshavarens telefon (valfritt)')} />
+            </Grid>
+          </>
+        )}
+      </Section>
     </>
   );
 };
+
+/** On the done screen for someone under 18: their guardian confirms by email. */
+const guardianLine = (v: Values, ctx: FormCtx) =>
+  v.under18 === 'yes'
+    ? ctx.L(
+        ` Your parent or guardian (${str(v.guardianEmail)}) now gets an email to confirm by 10 December 2026 at 12:00.`,
+        ` Din förälder eller vårdnadshavare (${str(v.guardianEmail)}) får nu ett mejl för att bekräfta senast den 10 december 2026 kl. 12.00.`,
+      )
+    : '';
 
 export const youngForm: FormDef = {
   fees: false,
@@ -96,12 +215,9 @@ export const youngForm: FormDef = {
       'We use this to confirm your place and send you the event details.',
       'Vi använder det för att bekräfta din plats och skicka information om evenemanget.',
     ),
-  initial: () => ({ category: '', skills: [] }),
+  initial: () => ({ category: '', skills: [], attendance: '', youngSessions: [], under18: '' }),
   Fields: YoungFields,
-  validate: (v, ctx) =>
-    !YOUNG_CATEGORIES.some((c) => c.value === v.category)
-      ? ctx.L('Tell us whether you’re at gymnasium, at university or working.', 'Berätta om du går på gymnasiet, pluggar på universitetet eller jobbar.')
-      : '',
+  validate: (v, ctx) => youngProblem(v, ctx.L),
   summary: (v, ctx) => {
     const { L, lang } = ctx;
     return rows(
@@ -112,6 +228,10 @@ export const youngForm: FormDef = {
       [L('Studies or works at', 'Pluggar eller jobbar på'), str(v.organisation)],
       [L('Good at', 'Bra på'), chipLabels(v.skills, SKILL_OPTIONS, lang)],
       [L('Note to the organisers', 'Till arrangörerna'), str(v.experience)],
+      [L('Hybrid or online', 'Hybrid eller digitalt'), v.attendance === 'hybrid' || v.attendance === 'online' ? ATTENDANCE(L)[v.attendance as 'hybrid' | 'online'] : ''],
+      [L('Can attend', 'Kan vara med'), youngSessions(v).map((k) => `${L(YOUNG_SESSIONS[k].en, YOUNG_SESSIONS[k].sv)} (${L(YOUNG_SESSIONS[k].where.en, YOUNG_SESSIONS[k].where.sv)})`).join('\n')],
+      [L('Under 18', 'Under 18 år'), v.under18 === 'yes' ? L('Yes', 'Ja') : v.under18 === 'no' ? L('No', 'Nej') : ''],
+      [L('Parent or guardian', 'Förälder eller vårdnadshavare'), v.under18 === 'yes' ? [str(v.guardianName), str(v.guardianEmail), str(v.guardianPhone)].filter(Boolean).join(' · ') : ''],
     );
   },
   submit: async (v, ctx) => {
@@ -121,9 +241,14 @@ export const youngForm: FormDef = {
       throw message ? new UserFacingError(message) : new Error(error.message || 'Failed to submit');
     }
     forgetYoungChallenges();
-    const d = (data ?? {}) as { reference?: string; role?: 'individual' | 'captain' | 'member'; team?: { name?: string } | null; invite_code?: string | null; invite_link?: string | null };
+    const d = (data ?? {}) as { reference?: string; role?: 'individual' | 'captain' | 'member'; team?: { name?: string } | null; invite_code?: string | null; invite_link?: string | null; waitlist?: boolean; attendance?: string };
     return {
       id: str(d.reference),
+      notice: d.waitlist
+        ? d.attendance === 'online'
+          ? ctx.L('All 25 online places are taken, so you are on the waiting list. We’ll email you if a place opens.', 'Alla 25 digitala platser är tagna, så du står på väntelistan. Vi mejlar dig om en plats blir ledig.')
+          : ctx.L('All 50 on-campus places are taken, so you are on the waiting list. We’ll email you if a place opens.', 'Alla 50 platser på campus är tagna, så du står på väntelistan. Vi mejlar dig om en plats blir ledig.')
+        : undefined,
       role: d.role,
       team: d.team?.name ?? undefined,
       inviteCode: d.invite_code ? formatCode(d.invite_code) : undefined,
@@ -146,17 +271,17 @@ export const youngForm: FormDef = {
     body:
       ctx.path.team === 'create'
         ? ctx.L(
-            `Share the code below with your teammates. We’ll email ${str(v.email)} which challenge your team gets.`,
-            `Dela koden nedan med dina lagkamrater. Vi mejlar ${str(v.email)} vilken utmaning laget får.`,
+            `Share the code below with your teammates. We’ll email ${str(v.email)} which theme your team gets.${guardianLine(v, ctx)}`,
+            `Dela koden nedan med dina lagkamrater. Vi mejlar ${str(v.email)} vilket tema laget får.${guardianLine(v, ctx)}`,
           )
         : ctx.path.team === 'join'
           ? ctx.L(
-              `We’ll email ${str(v.email)} which challenge you get. The organisers decide using everyone’s choices.`,
-              `Vi mejlar ${str(v.email)} vilken utmaning du får. Arrangörerna bestämmer utifrån allas val.`,
+              `We’ll email ${str(v.email)} which theme you get. The organisers decide using everyone’s choices.${guardianLine(v, ctx)}`,
+              `Vi mejlar ${str(v.email)} vilket tema du får. Arrangörerna bestämmer utifrån allas val.${guardianLine(v, ctx)}`,
             )
           : ctx.L(
-              `We’ll email ${str(v.email)} which challenge you get. The organisers decide using everyone’s choices, and they may put you in a team with others.`,
-              `Vi mejlar ${str(v.email)} vilken utmaning du får. Arrangörerna bestämmer utifrån allas val, och de kan sätta ihop dig med andra i ett lag.`,
+              `We’ll email ${str(v.email)} which theme you get. The organisers decide using everyone’s choices, and put you in a team with others.${guardianLine(v, ctx)}`,
+              `Vi mejlar ${str(v.email)} vilket tema du får. Arrangörerna bestämmer utifrån allas val och sätter ihop dig med andra i ett lag.${guardianLine(v, ctx)}`,
             ),
   }),
 };

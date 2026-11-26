@@ -1,11 +1,11 @@
-// Young InnoHack with company challenges: step 1 (on your own, start a team or join one) and step 2 (two different
-// challenge choices; a team's choices, read-only, for someone joining it). Organisers allocate the final challenge;
+// Young InnoHack: step 1 (on your own, create a team or join one) and step 2 (a 1st theme or "open to any theme", an
+// optional 2nd; a team's choices, read-only, for someone joining it). Organisers allocate the final challenge;
 // nothing here promises a first choice. Only team names, sizes and choices are shown, never who is in a team.
 import React, { useEffect, useId, useState } from 'react';
 import { Check, ChevronDown, KeyRound, Lock, User, Users } from 'lucide-react';
 import type { Bilingual } from '../../context/SiteContext';
 import {
-  challengeName, fetchOpenTeams, lookupTeamCode, normaliseCode, teamSizeText,
+  ANY_THEME, challengeName, fetchOpenTeams, lookupTeamCode, normaliseCode, teamSizeText,
   type OpenTeam, type YoungChallenge, type YoungSite, type YoungState,
 } from '../../content/youngChallenges';
 import { ChoiceGroup } from './ChoiceCards';
@@ -36,7 +36,19 @@ export function teamStepError(choice: TeamChoice | undefined, v: Values, L: L): 
 
 /** Step 2's answer is complete. */
 export const choicesError = (first: string | undefined, second: string | undefined, L: L) =>
-  first && second && first !== second ? '' : L('Choose a first and a second challenge.', 'Välj en första och en andra utmaning.');
+  !first
+    ? L('Choose a first theme, or “Open to any theme”.', 'Välj ett första tema, eller ”Öppen för alla teman”.')
+    : first === second
+      ? L('Choose a different second theme, or none.', 'Välj ett annat andra tema, eller inget.')
+      : '';
+
+/** A theme choice in words: a theme, "open to any theme" or "no second choice". */
+export const themeChoiceName = (id: string | null | undefined, place: 1 | 2, byId: (id?: string) => YoungChallenge | undefined, T: T, L: L) =>
+  id === ANY_THEME || (place === 1 && !id)
+    ? L('Open to any theme', 'Öppen för alla teman')
+    : id
+      ? challengeName(byId(id), T) || L('a theme that is no longer shown', 'ett tema som inte längre visas')
+      : L('No second choice', 'Inget andra val');
 
 const ChallengeHead: React.FC<{ c: YoungChallenge; T: T }> = ({ c, T }) => (
   <div className="flex gap-3.5 items-start">
@@ -57,7 +69,7 @@ const ChallengeMore: React.FC<{ c: YoungChallenge; L: L; T: T }> = ({ c, L, T })
   T(c.problem) || T(c.requirements) ? (
     <details className="group mt-3 border-t border-slate-200">
       <summary className="cursor-pointer list-none flex items-center justify-between gap-2 pt-3 text-[15px] font-semibold text-[#0A1930] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-[#0A1930] [&::-webkit-details-marker]:hidden">
-        {L('More about this challenge', 'Mer om utmaningen')}
+        {L('More about this theme', 'Mer om temat')}
         <ChevronDown className="w-4 h-4 motion-safe:transition-transform group-open:rotate-180" aria-hidden="true" />
       </summary>
       {T(c.problem) && (
@@ -93,7 +105,9 @@ export const ChallengesClosed: React.FC<{ state: YoungState; L: L; T: T }> = ({ 
   <div className="space-y-5">
     <p className="flex items-center gap-2.5 p-4 bg-[#FFF8E1] border border-[#F3DE9A] text-[15px] font-semibold text-[#0A1930]">
       <Lock className="w-4 h-4 shrink-0" aria-hidden="true" />
-      {L('Registration opening soon: you can read the challenges now, but not register yet.', 'Anmälan öppnar snart: du kan läsa om utmaningarna nu, men inte anmäla dig än.')}
+      {state.closeAt && Date.now() > Date.parse(state.closeAt)
+        ? L('Registration closed on 7 December 2026.', 'Anmälan stängde den 7 december 2026.')
+        : L('Registration opening soon: you can read the themes now, but not register yet.', 'Anmälan öppnar snart: du kan läsa om temana nu, men inte anmäla dig än.')}
     </p>
     <ChallengeList challenges={state.challenges} L={L} T={T} />
   </div>
@@ -105,7 +119,7 @@ export const TeamStep: React.FC<{
   site: YoungSite;
   choice?: TeamChoice;
   onChoose: (c: TeamChoice) => void;
-  /** A checked code or a chosen listed team: the team's two choices (none: cleared). */
+  /** A checked code or a chosen listed team: the team's themes (none: cleared). */
   onTeamChoices: (first?: string, second?: string) => void;
   v: Values;
   set: SetValue;
@@ -151,7 +165,7 @@ export const TeamStep: React.FC<{
       set('joinChecked', true);
       set('joinJoinable', found.joinable);
       set('joinTeamName', found.team);
-      onTeamChoices(found.first_choice, found.second_choice);
+      onTeamChoices(found.open_to_any || !found.first_choice ? ANY_THEME : found.first_choice, found.second_choice ?? undefined);
     } catch {
       setCodeMsg(L('Too many tries from this network. Please try again later.', 'För många försök från det här nätverket. Försök igen senare.'));
     } finally {
@@ -168,9 +182,9 @@ export const TeamStep: React.FC<{
         value={choice}
         onChoose={(id) => onChoose(id as TeamChoice)}
         items={[
-          { id: 'individual', icon: User, title: L('On my own', 'På egen hand'), desc: L('Register alone. The organisers can put you in a team with others.', 'Anmäl dig själv. Arrangörerna kan sätta ihop dig med andra i ett lag.') },
-          { id: 'create', icon: Users, title: L('Start a team', 'Starta ett lag'), desc: L('You choose the challenges and get a code for your teammates.', 'Du väljer utmaningarna och får en kod till dina lagkamrater.') },
-          { id: 'join', icon: KeyRound, title: L('Join a team', 'Gå med i ett lag'), desc: L('Use the code your captain sent you.', 'Använd koden från din lagkapten.') },
+          { id: 'individual', icon: User, title: L('On my own', 'På egen hand'), desc: L('Register alone and get allocated to a team.', 'Anmäl dig själv och bli placerad i ett lag.') },
+          { id: 'create', icon: Users, title: L('Create a team', 'Skapa ett lag'), desc: state.places && state.places.teams <= 0 ? L('All 15 teams have been started.', 'Alla 15 lag är startade.') : L('You choose the themes and get a code for your teammates.', 'Du väljer temana och får en kod till dina lagkamrater.') },
+          { id: 'join', icon: KeyRound, title: L('Join an existing team', 'Gå med i ett befintligt lag'), desc: L('Use the code your captain sent you.', 'Använd koden från din lagkapten.') },
         ]}
       />
       <p className="text-[15px] text-slate-600">
@@ -270,7 +284,7 @@ export const TeamStep: React.FC<{
                           set('joinTeamId', t.id);
                           set('joinTeamName', t.name);
                           set('joinChecked', false);
-                          onTeamChoices(t.first_choice, t.second_choice);
+                          onTeamChoices(t.open_to_any || !t.first_choice ? ANY_THEME : t.first_choice, t.second_choice ?? undefined);
                         }}
                         className="w-5 h-5 accent-[#0A1930]"
                       />
@@ -280,7 +294,7 @@ export const TeamStep: React.FC<{
                         {t.spaces != null && L(` · room for ${t.spaces} more`, ` · plats för ${t.spaces} till`)}
                       </span>
                       <span className="basis-full text-sm text-slate-600 pl-8">
-                        {L('Choices', 'Val')}: 1. {challengeName(byId(t.first_choice), T)} · 2. {challengeName(byId(t.second_choice), T)}
+                        {L('Themes', 'Teman')}: 1. {themeChoiceName(t.open_to_any ? ANY_THEME : t.first_choice, 1, (id) => (id ? byId(id) : undefined), T, L)} · 2. {themeChoiceName(t.second_choice, 2, (id) => (id ? byId(id) : undefined), T, L)}
                       </span>
                     </label>
                   </li>
@@ -308,19 +322,19 @@ export const ChoicesStep: React.FC<{
   const uid = useId();
   const [said, setSaid] = useState('');
   const byId = (id?: string) => state.challenges.find((c) => c.id === id);
-  const notShown = L('a challenge that is no longer shown', 'en utmaning som inte längre visas');
+  const notShown = L('a theme that is no longer shown', 'ett tema som inte längre visas');
 
   if (joining) {
     return (
       <div className="space-y-4">
         <div className="p-4 bg-[#FFF8E1] border border-[#F3DE9A] space-y-1.5 text-base">
-          <p><b>{L('1st choice', '1:a val')}:</b> {challengeName(byId(first), T) || notShown}</p>
-          <p><b>{L('2nd choice', '2:a val')}:</b> {challengeName(byId(second), T) || notShown}</p>
+          <p><b>{L('1st choice', '1:a val')}:</b> {themeChoiceName(first, 1, byId, T, L) || notShown}</p>
+          <p><b>{L('2nd choice', '2:a val')}:</b> {themeChoiceName(second, 2, byId, T, L)}</p>
         </div>
         <p className="text-[15px] text-slate-600">
           {L(
-            `${teamName ?? 'Your team'}’s captain chose these for the whole team. The organisers decide the final match for the team.`,
-            `Lagkaptenen i ${teamName ?? 'laget'} valde dem för hela laget. Arrangörerna bestämmer vilken utmaning laget får.`,
+            `${teamName ?? 'Your team'}’s captain chose these themes for the whole team. The organisers decide the team’s final theme.`,
+            `Lagkaptenen i ${teamName ?? 'laget'} valde temana för hela laget. Arrangörerna bestämmer vilket tema laget får.`,
           )}
         </p>
       </div>
@@ -328,18 +342,37 @@ export const ChoicesStep: React.FC<{
   }
 
   const pick = (place: 1 | 2, id: string) => {
-    if (place === 1) onChange(id, second === id ? undefined : second);
-    else onChange(first === id ? undefined : first, id);
+    // Picking the same theme again clears it; the 2nd is optional; a 2nd theme ends "open to any theme".
+    if (place === 1) onChange(first === id ? undefined : id, second === id ? undefined : second);
+    else onChange(first === id || first === ANY_THEME ? undefined : first, second === id ? undefined : id);
     setSaid(`${place === 1 ? L('1st choice', 'Första val') : L('2nd choice', 'Andra val')}: ${challengeName(byId(id), T)}.`);
   };
+  const any = first === ANY_THEME;
 
   return (
     <div className="space-y-4">
       <div className="p-4 bg-[#F2F6FA] border-l-4 border-[#0A1930] space-y-1 text-base" aria-hidden="true">
-        <p>{L('1st choice', '1:a val')}: <b>{challengeName(byId(first), T) || L('not chosen yet', 'inte valt än')}</b></p>
-        <p>{L('2nd choice', '2:a val')}: <b>{challengeName(byId(second), T) || L('not chosen yet', 'inte valt än')}</b></p>
+        <p>{L('1st choice (required)', '1:a val (obligatoriskt)')}: <b>{first ? themeChoiceName(first, 1, byId, T, L) : L('not chosen yet', 'inte valt än')}</b></p>
+        <p>{L('2nd choice (optional)', '2:a val (valfritt)')}: <b>{any ? '—' : themeChoiceName(second, 2, byId, T, L)}</b></p>
       </div>
       <p className="sr-only" aria-live="polite">{said}</p>
+      <label
+        className={`flex items-start gap-3 p-4 border-2 cursor-pointer ${any ? 'border-[#0A1930] shadow-[inset_0_0_0_1px_#0A1930] bg-[#FFF8E1]' : 'border-[#E1E7EF] bg-white hover:border-slate-400'}`}
+      >
+        <input
+          type="checkbox"
+          checked={any}
+          onChange={() => {
+            onChange(any ? undefined : ANY_THEME, undefined);
+            setSaid(any ? '' : L('Open to any theme.', 'Öppen för alla teman.'));
+          }}
+          className="mt-1 w-5 h-5 accent-[#0A1930]"
+        />
+        <span>
+          <span className="block font-headline font-bold text-lg leading-snug text-[#0A1930]">{L('Open to any theme', 'Öppen för alla teman')}</span>
+          <span className="block text-[15px] text-slate-700">{L('No preference: the organisers place you in a theme.', 'Inget önskemål: arrangörerna placerar dig i ett tema.')}</span>
+        </span>
+      </label>
       <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {state.challenges.map((c) => {
           const place = c.id === first ? 1 : c.id === second ? 2 : 0;

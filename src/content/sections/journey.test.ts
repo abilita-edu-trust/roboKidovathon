@@ -34,8 +34,8 @@ describe('audience journeys (vfi)', () => {
       ['young', 'Young InnoHack', '10–12 December 2026', true],
     ]);
     expect(tracks.map((t) => t.audiences.map((a) => a.id))).toEqual([['kids'], ['gymnasium', 'university', 'professionals']]);
-    expect(tracks[0].schedule.map((r) => r.date.en)).toEqual(['By 1 December 2026', '5 December 2026', '6–11 December 2026', '12 December 2026']);
-    expect(tracks[1].schedule.map((r) => r.date.en)).toEqual(['10 December 2026, evening', '11 December 2026', '12 December 2026']);
+    expect(tracks[0].schedule.map((r) => r.date.en)).toEqual(['By 3 December 2026', '5 December 2026, 11:00–12:00', '7 December 2026, 17:30–18:30', '9 December 2026, 17:30–18:30', '11 December 2026, 17:30–18:30', '12 December 2026, from the morning']);
+    expect(tracks[1].schedule.map((r) => r.date.en)).toEqual(['By 7 December 2026', '10 December 2026, 17:00–18:30', '11 December 2026', '12 December 2026, 09:00–17:00']);
     // No company is named before they are confirmed: one hidden, empty challenge as the CMS template.
     expect(tracks[1].challenges).toEqual([{ visible: false, company: '', logo: '', title: { en: '', sv: '' }, problem: { en: '', sv: '' } }]);
   });
@@ -50,7 +50,7 @@ describe('audience journeys (vfi)', () => {
   it('gives every audience five steps, three benefits, a button and an empty image slot', () => {
     for (const a of allAudiences(vfi)) {
       expect(a.steps).toHaveLength(5);
-      expect(a.benefits).toHaveLength(3);
+      expect(a.benefits).toHaveLength(a.id === 'kids' ? 4 : 3);
       expect(a.image).toBe('');
       expect(a.imagePosition).toBe('center');
       for (const text of [a.heading, a.description, a.imageAlt, a.cta.label, ...a.benefits, ...a.steps.flatMap((s) => [s.title, s.description])]) {
@@ -65,7 +65,8 @@ describe('audience journeys (vfi)', () => {
       students: ['/register?tab=competition', ''],
       parents: ['/register?tab=competition', ''],
       teachers: ['/register?tab=workshop', ''],
-      kids: ['/register?tab=kid-innohack', ''],
+      // Kid InnoHack: join the programme, or the separate public idea.
+      kids: ['/register?tab=kid-innohack', '/register?tab=kid-submit-idea'],
       gymnasium: ['/register?tab=young-innohack', ''],
       university: ['/register?tab=young-innohack', ''],
       // Professionals: take part, or the mentor form.
