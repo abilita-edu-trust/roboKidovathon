@@ -51,7 +51,9 @@ export const kidChildren = (x: unknown): KidChild[] =>
 /** A session's short label for the availability boxes: "5 December · Kickoff". */
 export const kidSessionLabel = (key: string, L: FormCtx['L']) => {
   const s = KID_SESSIONS.find((x) => x.key === key)!;
-  return `${L(s.date.en.replace(/ \d{4}$/, ''), s.date.sv.replace(/ \d{4}$/, ''))} · ${L(s.title.en, s.title.sv)}`;
+  // An empty Swedish text means "the same as the English" (bi), e.g. "Kickoff".
+  const both = (b: { en: string; sv: string }) => L(b.en, b.sv || b.en);
+  return `${both(s.date).replace(/ \d{4}$/, '')} · ${both(s.title)}`;
 };
 
 /** What stops the form from going to review, in the visitor's language; '' when it is complete. */

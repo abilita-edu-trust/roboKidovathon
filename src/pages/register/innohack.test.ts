@@ -9,7 +9,7 @@ vi.mock('../../lib/supabase', () => ({ supabase: { rpc: vi.fn() }, isSupabaseCon
 const flow = await import('./flow');
 const { VFI_SITE } = await import('../../context/SiteContext');
 const { CITY_SITES } = await import('../../components/city/citySites');
-const { kidChildLimits, kidPayload, kidProblem, kidForm } = await import('./forms/kid');
+const { kidChildLimits, kidPayload, kidProblem, kidForm, kidSessionLabel } = await import('./forms/kid');
 const { squadPayload, squadForm, YOUNG_CATEGORIES } = await import('./forms/squad');
 const { FORMS } = await import('./forms');
 const { GRADE_GROUP_OPTIONS, PROFESSIONALS_GRADE_GROUP } = await import('../../data/vfiFacts');
@@ -112,6 +112,12 @@ describe('Kid InnoHack form', () => {
   it('asks no idea, but the sessions each child can attend', () => {
     expect(kidProblem(values([child(1, { availability: [] })]), 'individual', L)).toMatch(/sessions child 1 can attend/);
     expect(kidProblem(values([child(1, { availability: ['s1', 's5'] })]), 'individual', L)).toBe('');
+  });
+
+  it('names the five sessions in English and Swedish, including texts that are the same in both ("Kickoff")', () => {
+    const SV = (_en: string, sv: string) => sv;
+    expect(['s1', 's2', 's3', 's4', 's5'].map((k) => kidSessionLabel(k, L))).toEqual(['5 December · Kickoff', '7 December · Checkpoint 1', '9 December · Checkpoint 2', '11 December · Checkpoint 3', '12 December · Final day']);
+    expect(['s1', 's2', 's3', 's4', 's5'].map((k) => kidSessionLabel(k, SV))).toEqual(['5 december · Kickoff', '7 december · Avstämning 1', '9 december · Avstämning 2', '11 december · Avstämning 3', '12 december · Finaldag']);
   });
 
   it('needs a grade 3–9 and a guardian with a valid email for every child, and the guardian acknowledgement', () => {

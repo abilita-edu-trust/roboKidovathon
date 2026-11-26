@@ -40,6 +40,8 @@ const box = 'bg-white border-2 border-slate-200 p-5 sm:p-7';
 
 export const GuardianConfirmPage: React.FC<{ onNavigateHome: () => void }> = ({ onNavigateHome }) => {
   const { L } = useT();
+  // An empty Swedish text means "the same as the English" (bi), e.g. "Kickoff" and "MISV, Västerås".
+  const both = (b: { en: string; sv: string }) => L(b.en, b.sv || b.en);
   const site = useSite();
   const [token] = useState(takeToken);
   const [info, setInfo] = useState<GuardianInfo | null>(null);
@@ -182,8 +184,8 @@ export const GuardianConfirmPage: React.FC<{ onNavigateHome: () => void }> = ({ 
                 <ul className="list-disc pl-5 space-y-1">
                   {KID_SESSIONS.map((x) => (
                     <li key={x.key}>
-                      <span className="font-semibold">{L(x.date.en, x.date.sv)}, {L(x.time.en, x.time.sv)}, {L(x.place.en, x.place.sv)}:</span>{' '}
-                      {L(x.title.en, x.title.sv)}. {L(x.detail.en, x.detail.sv)}
+                      <span className="font-semibold">{both(x.date)}, {both(x.time)}, {both(x.place)}:</span>{' '}
+                      {both(x.title)}. {both(x.detail)}
                     </li>
                   ))}
                   <li>{L('Participation is free.', 'Deltagandet är gratis.')}</li>
