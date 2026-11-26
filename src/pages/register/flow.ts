@@ -67,8 +67,8 @@ export interface RegisterPath {
 /** Young InnoHack with published company challenges: asks how you take part and two choices instead of who you are. */
 export const youngChallenges = (path: RegisterPath) => path.programme === 'hack' && path.track === 'young' && !!path.challengeMode;
 
-/** A 1st and a 2nd choice, different from each other. */
-export const twoChoices = (path: RegisterPath) => !!path.first && !!path.second && path.first !== path.second;
+/** A 1st theme (or "open to any theme") and, if given, a different 2nd; someone joining a team keeps the team's. */
+export const twoChoices = (path: RegisterPath) => path.team === 'join' || (!!path.first && path.first !== path.second);
 
 /** A step-1 card: one programme of the site, with its own date and place. */
 export interface RegisterProgramme {
@@ -383,7 +383,7 @@ export function stepLabel(kind: StepKind, path: RegisterPath): Bilingual {
     case 'team':
       return bi('How you take part', 'Hur du deltar');
     case 'choices':
-      return bi('Your two choices', 'Dina två val');
+      return bi('Your themes', 'Dina teman');
     case 'form':
       return bi('Your details', 'Dina uppgifter');
     default:

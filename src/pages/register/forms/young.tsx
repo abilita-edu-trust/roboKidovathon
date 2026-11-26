@@ -6,7 +6,7 @@
 import React from 'react';
 import { CalendarDays, Laptop, MapPin, ShieldCheck, UserRound } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
-import { forgetYoungChallenges, formatCode } from '../../../content/youngChallenges';
+import { ANY_THEME, forgetYoungChallenges, formatCode } from '../../../content/youngChallenges';
 import { kidSiteKey } from './kid';
 import { SKILL_OPTIONS, YOUNG_CATEGORIES } from './squad';
 import { ChoiceGroup } from '../ChoiceCards';
@@ -22,8 +22,8 @@ export const YOUNG_SESSION_KEYS = ['y1', 'y2', 'y3'] as const;
 export type YoungSessionKey = (typeof YOUNG_SESSION_KEYS)[number];
 export const YOUNG_SESSIONS: Record<YoungSessionKey, { en: string; sv: string; where: { en: string; sv: string } }> = {
   y1: { en: '10 December · Kickoff, 17:00–18:30', sv: '10 december · Kickoff, kl. 17.00–18.30', where: { en: 'online', sv: 'digitalt' } },
-  y2: { en: '11 December · Checkpoints and team work', sv: '11 december · Avstämningar och lagarbete', where: { en: 'online', sv: 'digitalt' } },
-  y3: { en: '12 December · Finale, 09:00–17:00', sv: '12 december · Final, kl. 09.00–17.00', where: { en: 'at MDU, or online', sv: 'på MDU, eller digitalt' } },
+  y2: { en: '11 December · Flexible teamwork with online checkpoints', sv: '11 december · Flexibelt lagarbete med digitala avstämningar', where: { en: 'online', sv: 'digitalt' } },
+  y3: { en: '12 December · Finale, 09:00–17:00', sv: '12 december · Final, kl. 09.00–17.00', where: { en: 'at MDU (hybrid) or online', sv: 'på MDU (hybrid) eller digitalt' } },
 };
 const youngSessions = (v: Values): YoungSessionKey[] =>
   (Array.isArray(v.youngSessions) ? v.youngSessions : []).filter((k: string): k is YoungSessionKey => (YOUNG_SESSION_KEYS as readonly string[]).includes(k));
@@ -32,8 +32,8 @@ const UNDER_18: ChipOption[] = [
   { value: 'yes', en: 'Yes, under 18', sv: 'Ja, under 18 år' },
 ];
 const ATTENDANCE = (L: FormCtx['L']) => ({
-  hybrid: L('Hybrid: online on 10–11 December, at MDU on 12 December', 'Hybrid: digitalt 10–11 december, på MDU 12 december'),
-  online: L('Fully online, throughout the hackathon', 'Helt digitalt, under hela hackathonet'),
+  hybrid: L('Hybrid: online on 10 and 11 December, in person at MDU on 12 December', 'Hybrid: digitalt 10 och 11 december, på plats på MDU 12 december'),
+  online: L('Fully online: all three days, including the finale', 'Helt digitalt: alla tre dagarna, även finalen'),
 });
 
 /** What stops the form from going to review, in the visitor's words; '' when it is complete. */
@@ -61,9 +61,11 @@ export function youngPayload(v: Values, ctx: FormCtx): Record<string, unknown> {
     participation: PARTICIPATION[team],
     attendance: v.attendance === 'online' ? 'online' : v.attendance === 'hybrid' ? 'hybrid' : null,
     availability: Object.fromEntries(YOUNG_SESSION_KEYS.map((k) => [k, youngSessions(v).includes(k)])),
-    // A team's choices are the team's: the database ignores these for someone joining it.
-    first_choice_id: team === 'join' ? null : ctx.path.first,
-    second_choice_id: team === 'join' ? null : ctx.path.second,
+    // A team's themes are the team's: the database ignores these for someone joining it. "Open to any theme" sends no
+    // themes; the 2nd is optional.
+    open_to_any: team !== 'join' && ctx.path.first === ANY_THEME,
+    first_choice_id: team === 'join' || ctx.path.first === ANY_THEME ? null : ctx.path.first ?? null,
+    second_choice_id: team === 'join' || ctx.path.first === ANY_THEME ? null : ctx.path.second ?? null,
     team:
       team === 'create'
         ? { name: str(v.teamName), listed: !!v.teamListed }
@@ -141,10 +143,13 @@ const YoungFields: React.FC<FieldsProps> = ({ v, set, ctx }) => {
           value={typeof v.attendance === 'string' ? v.attendance : undefined}
           onChoose={(id) => set('attendance', id)}
           items={[
-            { id: 'hybrid', icon: MapPin, title: L('Hybrid', 'Hybrid'), desc: L('Online on 10–11 December, in person at MDU on 12 December. 50 places.', 'Digitalt 10–11 december, på plats på MDU 12 december. 50 platser.') },
-            { id: 'online', icon: Laptop, title: L('Fully online', 'Helt digitalt'), desc: L('Remote throughout the hackathon, 10–12 December. 25 places.', 'På distans under hela hackathonet, 10–12 december. 25 platser.') },
+            { id: 'hybrid', icon: MapPin, title: L('Hybrid · 50 places', 'Hybrid · 50 platser'), desc: L('10 December online · 11 December flexible teamwork with online checkpoints · 12 December in person at MDU, Västerås.', '10 december digitalt · 11 december flexibelt lagarbete med digitala avstämningar · 12 december på plats på MDU, Västerås.') },
+            { id: 'online', icon: Laptop, title: L('Fully online · 25 places', 'Helt digitalt · 25 platser'), desc: L('All three days online, including the finale on 12 December.', 'Alla tre dagarna digitalt, även finalen 12 december.') },
           ]}
         />
+        <p className="text-sm text-slate-600">
+          {L('When a way of taking part is full, you join its waiting list and we email you if a place opens.', 'När ett sätt att delta är fullt hamnar du på dess väntelista, och vi mejlar dig om en plats blir ledig.')}
+        </p>
         <fieldset className="space-y-2">
           <legend className="block text-[15px] font-semibold text-[#0A1930] mb-1.5">{L('Sessions you can attend', 'Träffar du kan vara med på')} *</legend>
           <div className="flex flex-wrap gap-2">
@@ -223,7 +228,7 @@ export const youngForm: FormDef = {
       [L('Studies or works at', 'Pluggar eller jobbar på'), str(v.organisation)],
       [L('Good at', 'Bra på'), chipLabels(v.skills, SKILL_OPTIONS, lang)],
       [L('Note to the organisers', 'Till arrangörerna'), str(v.experience)],
-      [L('Taking part', 'Deltar'), v.attendance === 'hybrid' || v.attendance === 'online' ? ATTENDANCE(L)[v.attendance as 'hybrid' | 'online'] : ''],
+      [L('Hybrid or online', 'Hybrid eller digitalt'), v.attendance === 'hybrid' || v.attendance === 'online' ? ATTENDANCE(L)[v.attendance as 'hybrid' | 'online'] : ''],
       [L('Can attend', 'Kan vara med'), youngSessions(v).map((k) => `${L(YOUNG_SESSIONS[k].en, YOUNG_SESSIONS[k].sv)} (${L(YOUNG_SESSIONS[k].where.en, YOUNG_SESSIONS[k].where.sv)})`).join('\n')],
       [L('Under 18', 'Under 18 år'), v.under18 === 'yes' ? L('Yes', 'Ja') : v.under18 === 'no' ? L('No', 'Nej') : ''],
       [L('Parent or guardian', 'Förälder eller vårdnadshavare'), v.under18 === 'yes' ? [str(v.guardianName), str(v.guardianEmail), str(v.guardianPhone)].filter(Boolean).join(' · ') : ''],
@@ -236,9 +241,14 @@ export const youngForm: FormDef = {
       throw message ? new UserFacingError(message) : new Error(error.message || 'Failed to submit');
     }
     forgetYoungChallenges();
-    const d = (data ?? {}) as { reference?: string; role?: 'individual' | 'captain' | 'member'; team?: { name?: string } | null; invite_code?: string | null; invite_link?: string | null };
+    const d = (data ?? {}) as { reference?: string; role?: 'individual' | 'captain' | 'member'; team?: { name?: string } | null; invite_code?: string | null; invite_link?: string | null; waitlist?: boolean; attendance?: string };
     return {
       id: str(d.reference),
+      notice: d.waitlist
+        ? d.attendance === 'online'
+          ? ctx.L('All 25 online places are taken, so you are on the waiting list. We’ll email you if a place opens.', 'Alla 25 digitala platser är tagna, så du står på väntelistan. Vi mejlar dig om en plats blir ledig.')
+          : ctx.L('All 50 on-campus places are taken, so you are on the waiting list. We’ll email you if a place opens.', 'Alla 50 platser på campus är tagna, så du står på väntelistan. Vi mejlar dig om en plats blir ledig.')
+        : undefined,
       role: d.role,
       team: d.team?.name ?? undefined,
       inviteCode: d.invite_code ? formatCode(d.invite_code) : undefined,

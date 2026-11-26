@@ -43,16 +43,18 @@ export interface OpenTeam {
   name: string;
   members: number;
   spaces: number | null;
-  first_choice: string;
-  second_choice: string;
+  first_choice: string | null;
+  second_choice: string | null;
+  open_to_any?: boolean;
 }
 
 export interface TeamLookup {
   team: string;
   members: number;
   spaces: number | null;
-  first_choice: string;
-  second_choice: string;
+  first_choice: string | null;
+  second_choice: string | null;
+  open_to_any?: boolean;
   joinable: boolean;
 }
 
@@ -140,4 +142,7 @@ export function teamSizeText(min: number | null, max: number | null, L: (en: str
 }
 
 /** "Company: Title" in the visitor's language. */
-export const challengeName = (c: YoungChallenge | undefined, T: (b: Bilingual) => string) => (c ? `${c.company}: ${T(c.title)}` : '');
+export const challengeName = (c: YoungChallenge | undefined, T: (b: Bilingual) => string) => (c ? (c.company ? `${c.company}: ${T(c.title)}` : T(c.title)) : '');
+
+/** The first choice that means "the organisers pick the theme". */
+export const ANY_THEME = 'any';

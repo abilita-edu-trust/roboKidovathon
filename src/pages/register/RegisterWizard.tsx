@@ -47,8 +47,8 @@ import {
 } from './flow';
 import { FORMS } from './forms';
 import { UserFacingError, type FormCtx, type SubmitResult, type SummaryRow, type Values } from './ui';
-import { challengeName, lookupTeamCode, normaliseCode, useYoungState, youngRegistrationClosed } from '../../content/youngChallenges';
-import { ChallengesClosed, ChoicesStep, TeamStep, choicesError, teamStepError } from './YoungSteps';
+import { ANY_THEME, lookupTeamCode, normaliseCode, useYoungState, youngRegistrationClosed } from '../../content/youngChallenges';
+import { ChallengesClosed, ChoicesStep, TeamStep, choicesError, teamStepError, themeChoiceName } from './YoungSteps';
 import { AccentContext, ACCENTS, ChoiceGroup, type Accent, type ChoiceItem } from './ChoiceCards';
 import { ClassicChoiceCard } from './ClassicChoiceCard';
 import { registerIcon } from './icons';
@@ -194,7 +194,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
     lookupTeamCode(joinParam)
       .then((found) => {
         const next: RegisterPath = found
-          ? { ...base, activity: 'participate', team: 'join', first: found.first_choice, second: found.second_choice }
+          ? { ...base, activity: 'participate', team: 'join', first: found.open_to_any || !found.first_choice ? ANY_THEME : found.first_choice, second: found.second_choice ?? undefined }
           : { ...base, activity: 'participate', team: 'join' };
         setPath(next);
         setValues((prev) => ({
@@ -617,8 +617,8 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
       ...(formId === 'young'
         ? [
             [L('Taking part', 'Deltar'), T(teamAnswer())] as SummaryRow,
-            [L('1st choice', '1:a val'), challengeName(byChallenge(path.first), T)] as SummaryRow,
-            [L('2nd choice', '2:a val'), challengeName(byChallenge(path.second), T)] as SummaryRow,
+            [L('1st choice', '1:a val'), themeChoiceName(path.first, 1, byChallenge, T, L)] as SummaryRow,
+            [L('2nd choice', '2:a val'), path.first === ANY_THEME ? '' : themeChoiceName(path.second, 2, byChallenge, T, L)] as SummaryRow,
             [L('Final theme', 'Slutligt tema'), L('Decided by the organisers', 'Bestäms av arrangörerna')] as SummaryRow,
           ]
         : []),
@@ -1101,6 +1101,7 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
                   )}
                   <h2 className="font-headline font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#0A1930]">{doneCopy.title}</h2>
                   <p className="mt-2 text-xs sm:text-sm text-slate-600 max-w-lg leading-relaxed">{doneCopy.body}</p>
+                  {done.notice && <p className="mt-3 px-4 py-3 bg-[#FFF8E1] border border-[#F3DE9A] text-sm font-semibold text-[#0A1930] max-w-lg">{done.notice}</p>}
                   {done.id && (
                     <div className="my-6 p-4 bg-slate-50 border border-slate-200 w-full max-w-md text-center">
                       <span className="text-xs font-mono-code text-slate-500 uppercase block mb-1">{L('Your reference', 'Ditt referensnummer')}</span>

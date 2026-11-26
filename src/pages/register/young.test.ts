@@ -41,13 +41,14 @@ describe('Young InnoHack with company challenges: how you take part, then two ch
     expect(formFor({ ...path, role: 'team' })).toBe('squad');
   });
 
-  it('needs two different choices before the details form; the final challenge is not part of the answers', () => {
+  it('needs a 1st theme (a different 2nd is optional) before the details form; the final theme is not part of the answers', () => {
     expect(formFor(young({ activity: 'participate', team: 'individual' }))).toBeNull();
     expect(formFor(young({ activity: 'participate', team: 'individual', first: 'c1', second: 'c1' }))).toBeNull();
     expect(formFor(young({ activity: 'participate', team: 'individual', first: 'c1', second: 'c2' }))).toBe('young');
     expect(formFor(young({ activity: 'participate', team: 'join', first: 'c1', second: 'c2' }))).toBe('young');
     expect(isAnswered('choices', young({ first: 'c1', second: 'c2' }))).toBe(true);
-    expect(isAnswered('choices', young({ first: 'c1' }))).toBe(false);
+    expect(isAnswered('choices', young({ first: 'c1' }))).toBe(true);
+    expect(isAnswered('choices', young({}))).toBe(false);
     expect(tabForPath(young({ activity: 'participate', team: 'create', first: 'c1', second: 'c2' }))).toBe('young-innohack');
     expect(pathForTab('young-innohack', VFI)).toEqual({ programme: 'hack', track: 'young', activity: 'participate' });
     expect(FORMS.young).toBe(youngForm);
@@ -91,7 +92,10 @@ describe('steps 1 and 2', () => {
   });
 
   it('step 2 needs two different challenges', () => {
-    expect(choicesError(undefined, undefined, L)).toBe('Choose a first and a second theme.');
+    expect(choicesError(undefined, undefined, L)).toBe('Choose a first theme, or “Open to any theme”.');
+    expect(choicesError('c1', undefined, L)).toBe('');
+    expect(choicesError('any', undefined, L)).toBe('');
+    expect(choicesError('c1', 'c1', L)).toBe('Choose a different second theme, or none.');
     expect(choicesError('a', 'a', L)).not.toBe('');
     expect(choicesError('a', 'b', L)).toBe('');
   });
@@ -111,6 +115,17 @@ describe('what the details form sends', () => {
     skills: [], experience: '', teamName: ' Night Owls ', teamListed: true, joinCode: 'ABCDEFGH23', consentAgreed: true, gdprAgreed: true,
     attendance: 'hybrid', youngSessions: ['y1', 'y3'], under18: 'no',
   };
+
+  it('a 1st theme is enough; the 2nd is optional; "open to any theme" sends no themes', () => {
+    const one = youngPayload(v, ctxFor(young({ team: 'individual', first: 'c1' })));
+    expect(one).toMatchObject({ open_to_any: false, first_choice_id: 'c1', second_choice_id: null });
+    const any = youngPayload(v, ctxFor(young({ team: 'create', first: 'any', second: 'c2' })));
+    expect(any).toMatchObject({ open_to_any: true, first_choice_id: null, second_choice_id: null });
+    expect(flow.twoChoices(young({ team: 'individual', first: 'c1' }))).toBe(true);
+    expect(flow.twoChoices(young({ team: 'individual', first: 'any' }))).toBe(true);
+    expect(flow.twoChoices(young({ team: 'individual' }))).toBe(false);
+    expect(flow.twoChoices(young({ team: 'join' }))).toBe(true);
+  });
 
   it('sends hybrid or fully online, the sessions you can attend, and no guardian when 18 or older', () => {
     const p = youngPayload(v, ctxFor(young({ team: 'individual', first: 'c1', second: 'c2' })));

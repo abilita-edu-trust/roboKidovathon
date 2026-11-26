@@ -78,11 +78,11 @@ export const YOUNG_SESSIONS: TrackSession[] = [
     ['Online kickoff', 'Digital kickoff'],
     ['Meet the organisers and the themes, and get started with your team.', 'Träffa arrangörerna och temana, och kom igång med ert lag.']),
   session('y2', ['11 December 2026', '11 december 2026'], ['Friday', 'fredag'], ['Flexible', 'Flexibelt'], ONLINE, true,
-    ['Online checkpoints', 'Digitala avstämningar'],
-    ['Short checkpoints with mentors, and team work at your own pace.', 'Korta avstämningar med mentorer, och lagarbete i egen takt.']),
+    ['Flexible teamwork, online checkpoints', 'Flexibelt lagarbete, digitala avstämningar'],
+    ['Team work at your own pace, with short online checkpoints with mentors.', 'Lagarbete i egen takt, med korta digitala avstämningar med mentorer.']),
   session('y3', ['12 December 2026', '12 december 2026'], ['Saturday', 'lördag'], ['09:00–17:00', 'kl. 09.00–17.00'],
     ['Mälardalen University (MDU), Västerås, or online', 'Mälardalens universitet (MDU), Västerås, eller digitalt'], false,
-    ['Hybrid finale', 'Hybridfinal'],
+    ['Hybrid finale: MDU or online', 'Hybridfinal: MDU eller digitalt'],
     ['Build, pitch to the jury and celebrate: on campus at MDU or online.', 'Bygg, pitcha för juryn och fira: på campus på MDU eller digitalt.']),
 ];
 
@@ -139,9 +139,9 @@ export function trackProgramme(t: ProgrammeTrack): { facts: TrackFact[]; session
 const YOUNG_STEPS = steps(
   ['Choose how you take part', 'Välj hur du deltar', 'Hybrid (online 10–11 December, at MDU on 12 December) or fully online.', 'Hybrid (digitalt 10–11 december, på MDU 12 december) eller helt digitalt.'],
   ['Join a team', 'Gå med i ett lag', 'Register alone and get allocated to a team, create a team, or join one with its code.', 'Anmäl dig själv och bli placerad i ett lag, skapa ett lag eller gå med i ett med dess kod.'],
-  ['Pick two themes', 'Välj två teman', 'AI Apps & Fan Engagement, Smart Systems & Automation, or Circular Battery & Sustainability.', 'AI-appar och publikengagemang, Smarta system och automation, eller Cirkulära batterier och hållbarhet.'],
-  ['Kick off and build', 'Kickoff och bygg', 'Online kickoff on 10 December, 17:00–18:30; online checkpoints on 11 December.', 'Digital kickoff 10 december kl. 17.00–18.30; digitala avstämningar 11 december.'],
-  ['Pitch at the finale', 'Pitcha på finalen', 'Hybrid finale at MDU on 12 December 2026, 09:00–17:00.', 'Hybridfinal på MDU 12 december 2026 kl. 09.00–17.00.'],
+  ['Pick your themes', 'Välj dina teman', 'A first and an optional second: AI Apps & Fan Engagement, Smart Systems & Automation, or Circular Battery & Sustainability. Or be open to any theme.', 'Ett första och ett valfritt andra: AI-appar och publikengagemang, Smarta system och automation, eller Cirkulära batterier och hållbarhet. Eller var öppen för alla teman.'],
+  ['Kick off and build', 'Kickoff och bygg', 'Online kickoff on 10 December, 17:00–18:30; flexible teamwork with online checkpoints on 11 December.', 'Digital kickoff 10 december kl. 17.00–18.30; flexibelt lagarbete med digitala avstämningar 11 december.'],
+  ['Pitch at the finale', 'Pitcha på finalen', 'Hybrid finale on 12 December 2026, 09:00–17:00: at MDU or online.', 'Hybridfinal 12 december 2026 kl. 09.00–17.00: på MDU eller digitalt.'],
 );
 
 /** The two tracks; `register(tab)` is the site's register page on that form. */
@@ -218,8 +218,8 @@ export function innohackTracks(register: (tab: string) => string): ProgrammeTrac
       label: bi('Young InnoHack'),
       eligibility: bi('Gymnasium, University and Professionals', 'Gymnasium, universitet och yrkesverksamma'),
       summary: bi(
-        'Free, 10–12 December 2026: online kickoff and checkpoints, then a hybrid finale at MDU. 50 places on campus and 25 online, up to 15 teams. Register by 7 December 2026.',
-        'Gratis, 10–12 december 2026: digital kickoff och avstämningar, sedan hybridfinal på MDU. 50 platser på campus och 25 digitalt, upp till 15 lag. Anmäl dig senast 7 december 2026.',
+        'Free, 10–12 December 2026: online kickoff, flexible teamwork with online checkpoints, then a hybrid finale at MDU or online. 50 places on campus and 25 online (then a waiting list), up to 15 teams. Register by 7 December 2026.',
+        'Gratis, 10–12 december 2026: digital kickoff, flexibelt lagarbete med digitala avstämningar, sedan hybridfinal på MDU eller digitalt. 50 platser på campus och 25 digitalt (sedan väntelista), upp till 15 lag. Anmäl dig senast 7 december 2026.',
       ),
       dateLabel: bi('10–12 December 2026', '10–12 december 2026'),
       venue: FINAL_VENUE,
@@ -293,7 +293,7 @@ export function innohackTracks(register: (tab: string) => string): ProgrammeTrac
       schedule: [
         row(bi('By 7 December 2026', 'Senast 7 december 2026'), bi('Register', 'Anmälan'), bi('Free. Choose hybrid or fully online, two themes and how you join a team.', 'Gratis. Välj hybrid eller helt digitalt, två teman och hur du går med i ett lag.')),
         row(bi('10 December 2026, 17:00–18:30', '10 december 2026 kl. 17.00–18.30'), bi('Online kickoff', 'Digital kickoff'), bi('Meet the themes, the mentors and your team.', 'Träffa temana, mentorerna och ert lag.')),
-        row(bi('11 December 2026', '11 december 2026'), bi('Online checkpoints', 'Digitala avstämningar'), bi('Checkpoints with mentors and flexible team development.', 'Avstämningar med mentorer och flexibelt lagarbete.')),
+        row(bi('11 December 2026', '11 december 2026'), bi('Flexible teamwork', 'Flexibelt lagarbete'), bi('Team work at your own pace, with online checkpoints with mentors.', 'Lagarbete i egen takt, med digitala avstämningar med mentorer.')),
         row(bi('12 December 2026, 09:00–17:00', '12 december 2026 kl. 09.00–17.00'), bi('Hybrid finale at MDU', 'Hybridfinal på MDU'), bi('On campus at Mälardalen University, Västerås, or online: build, pitch and awards.', 'På campus på Mälardalens universitet i Västerås, eller digitalt: bygg, pitcha och prisutdelning.')),
       ],
       challengesHeading: bi('Three innovation themes', 'Tre innovationsteman'),
