@@ -542,10 +542,10 @@ export const RegisterWizard: React.FC<RegisterWizardProps> = ({
         return path.team === 'join'
           ? { title: L('Your team’s choices', 'Lagets val'), hint: '' }
           : {
-              title: L('Choose two themes', 'Välj två teman'),
+              title: L('Choose your themes', 'Välj dina teman'),
               hint: L(
-                'Pick a first and a second choice. The organisers place every team in a theme using everyone’s choices; the detailed problem statements come at the kickoff. We can’t promise your first choice.',
-                'Välj ett förstahands- och ett andrahandsval. Arrangörerna placerar varje lag i ett tema utifrån allas val; de detaljerade problemen presenteras på kickoffen. Vi kan inte lova ditt förstahandsval.',
+                'A first theme is required and a second is optional, or choose “Open to any theme”. The organisers place every team in a theme; the detailed problem statements come at the kickoff. We can’t promise your first choice.',
+                'Ett första tema krävs och ett andra är valfritt, eller välj ”Öppen för alla teman”. Arrangörerna placerar varje lag i ett tema; de detaljerade problemen presenteras på kickoffen. Vi kan inte lova ditt förstahandsval.',
               ),
             };
       case 'theme':

@@ -1,5 +1,5 @@
-// Young InnoHack with company challenges: step 1 (on your own, start a team or join one) and step 2 (two different
-// challenge choices; a team's choices, read-only, for someone joining it). Organisers allocate the final challenge;
+// Young InnoHack: step 1 (on your own, create a team or join one) and step 2 (a 1st theme or "open to any theme", an
+// optional 2nd; a team's choices, read-only, for someone joining it). Organisers allocate the final challenge;
 // nothing here promises a first choice. Only team names, sizes and choices are shown, never who is in a team.
 import React, { useEffect, useId, useState } from 'react';
 import { Check, ChevronDown, KeyRound, Lock, User, Users } from 'lucide-react';
